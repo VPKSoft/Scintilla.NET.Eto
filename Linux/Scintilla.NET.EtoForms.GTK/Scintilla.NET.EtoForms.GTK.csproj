@@ -1,0 +1,37 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+	  <DocumentationFile>bin\$(Configuration)\Scintilla.NET.EtoForms.GTK.xml</DocumentationFile>
+	  <OutputType>Library</OutputType>
+	  <Title>Scintilla.NET.EtoForms</Title>
+	  <Company>VPKSoft</Company>
+	  <Description>Eto.Forms wrapper for Scintilla control.</Description>
+	  <Copyright>Copyright © VPKSoft 2023</Copyright>
+	  <PackageProjectUrl>https://github.com/VPKSoft/ScintillaNET</PackageProjectUrl>
+	  <RepositoryUrl>https://github.com/VPKSoft/ScintillaNET</RepositoryUrl>
+	  <LangVersion>latest</LangVersion>
+	  <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+	  <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+	  <PackageOutputPath>$(SolutionDir)LocalNuGets</PackageOutputPath>
+	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Eto.Platform.Gtk" Version="2.7.2" />
+    <PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="liblexilla.so">
+      <Pack>true</Pack>
+      <PackagePath>runtimes/linux-x64/native</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="libscintilla.so">
+      <Pack>true</Pack>
+      <PackagePath>runtimes/linux-x64/native</PackagePath>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+</Project>

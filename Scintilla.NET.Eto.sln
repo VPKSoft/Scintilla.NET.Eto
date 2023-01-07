@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33205.214
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Eto", "Scintilla.NET.Eto\Scintilla.NET.Eto.csproj", "{E939A4CF-61B5-4EEC-9A5C-464C2C468223}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApplication", "TestApplication\TestApplication.csproj", "{D71451F8-A203-4A0F-B9CE-3E8D1225A606}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{E939A4CF-61B5-4EEC-9A5C-464C2C468223}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E939A4CF-61B5-4EEC-9A5C-464C2C468223}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E939A4CF-61B5-4EEC-9A5C-464C2C468223}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E939A4CF-61B5-4EEC-9A5C-464C2C468223}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D71451F8-A203-4A0F-B9CE-3E8D1225A606}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D71451F8-A203-4A0F-B9CE-3E8D1225A606}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D71451F8-A203-4A0F-B9CE-3E8D1225A606}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D71451F8-A203-4A0F-B9CE-3E8D1225A606}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {EC8131D3-442A-4067-8AB9-7D2AFBF68FA9}
+	EndGlobalSection
+EndGlobal

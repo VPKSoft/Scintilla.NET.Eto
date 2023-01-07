@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<DocumentationFile>bin\$(Configuration)\Scintilla.NET.EtoForms.WinForms.xml</DocumentationFile>
+		<OutputType>Library</OutputType>
+		<Title>Scintilla.NET.EtoForms</Title>
+		<Company>VPKSoft</Company>
+		<Description>Eto.Forms wrapper for Scintilla control.</Description>
+		<Copyright>Copyright © VPKSoft 2023</Copyright>
+		<PackageProjectUrl>https://github.com/VPKSoft/ScintillaNET</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/VPKSoft/ScintillaNET</RepositoryUrl>
+		<LangVersion>latest</LangVersion>
+		<TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+		<PackageOutputPath>$(SolutionDir)LocalNuGets</PackageOutputPath>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<UseWindowsForms>true</UseWindowsForms>
+	</PropertyGroup>
+	<ItemGroup>
+	  <None Include="..\..\Shared\packages.config" Link="packages.config" />
+	</ItemGroup>
+	<ItemGroup>
+	  <PackageReference Include="Eto.Platform.Windows" Version="2.7.2" />
+	  <PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.0" />
+	</ItemGroup>
+
+	<!--<PropertyGroup>
+		<RestoreSources>$(RestoreSources);../foo/bin/Debug;https://api.nuget.org/v3/index.json</RestoreSources>
+	</PropertyGroup>-->
+
+	<ItemGroup>
+	  <None Update="Lexilla.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Scintilla.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+</Project>

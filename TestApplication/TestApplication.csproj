@@ -1,0 +1,47 @@
+<Project Sdk="Eto.Forms/2.7.2">
+
+	<!--
+    Set the BuildPlatform property to the Eto platform you wish to build for.
+    The default is the platform you are building on.
+    Valid values: Wpf, Windows, Mac64, XamMac2, Gtk, Direct2D
+  -->
+
+	<PropertyGroup>
+		<OutputType>Exe</OutputType>
+		<TargetFramework>net7.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<Copyright>Copyright © VPKSoft 2023</Copyright>
+		<PackageProjectUrl>https://github.com/VPKSoft/amp-multi</PackageProjectUrl>
+		<Company>VPKSoft</Company>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+		<IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(IsOSX)'=='true'">
+		<DefineConstants>OSX</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(IsWindows)'=='true'">
+		<DefineConstants>Windows</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(IsLinux)'=='true'">
+		<DefineConstants>Linux</DefineConstants>
+	</PropertyGroup>
+
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+	  <PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+
+	<PropertyGroup>
+		<RestoreSources>$(RestoreSources);../LocalNuGets;https://api.nuget.org/v3/index.json</RestoreSources>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<PackageReference Include="Scintilla.NET.Eto" Version="1.0.0" />
+	</ItemGroup>
+
+</Project>
