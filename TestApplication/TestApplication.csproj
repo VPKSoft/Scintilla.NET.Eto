@@ -29,6 +29,7 @@
 
 	<ItemGroup>
 	  <ProjectReference Include="..\Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj" />
+<!--      <ProjectReference Include="..\Scintilla.NET.Eto.Linux\Scintilla.NET.Eto.Linux.csproj" />-->
 	</ItemGroup>
 
 </Project>
