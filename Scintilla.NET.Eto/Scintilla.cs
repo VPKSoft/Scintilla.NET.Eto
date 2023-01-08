@@ -56,12 +56,15 @@ public class Scintilla: ScintillaControl
             return;
         }
         
+        #if Linux
         if (!initialized && RuntimeInformation.IsOSPlatform(OSPlatform.Linux))
         {
             global::Eto.Platform.Instance.Add<IScintillaControl>(() => new EtoForms.GTK.ScintillaControlHandler());
             initialized = true;
         }
+        #endif
 
+        #if Windows
         if (!initialized && RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
             if (global::Eto.Platform.Instance.IsWpf)
@@ -75,6 +78,7 @@ public class Scintilla: ScintillaControl
             }
             initialized = true;
         }
+        #endif
     }
 
     private IScintillaControl BaseControl => (IScintillaControl)Handler;
