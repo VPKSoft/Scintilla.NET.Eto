@@ -21,7 +21,9 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <PackageReference Include="Eto.Platform.Windows" Version="2.7.2" />
-	  <PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.0" />
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\..\Shared\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
 	</ItemGroup>
 
 	<!--<PropertyGroup>

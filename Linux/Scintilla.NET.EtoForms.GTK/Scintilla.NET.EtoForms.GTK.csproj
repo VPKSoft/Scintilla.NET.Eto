@@ -11,27 +11,25 @@
 	  <PackageProjectUrl>https://github.com/VPKSoft/ScintillaNET</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/VPKSoft/ScintillaNET</RepositoryUrl>
 	  <LangVersion>latest</LangVersion>
-	  <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-	  <RuntimeIdentifier>linux-x64</RuntimeIdentifier>
+	  <TargetFrameworks>netstandard2.1</TargetFrameworks>
 	  <PackageOutputPath>$(SolutionDir)LocalNuGets</PackageOutputPath>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Eto.Platform.Gtk" Version="2.7.2" />
-    <PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="liblexilla.so">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/linux-x64/native</PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="libscintilla.so">
-      <Pack>true</Pack>
-      <PackagePath>runtimes/linux-x64/native</PackagePath>
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <ProjectReference Include="..\..\Shared\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+	<None Update="liblexilla.so">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
+	<None Update="libscintilla.so">
+	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	</None>
   </ItemGroup>
 </Project>

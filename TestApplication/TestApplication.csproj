@@ -39,9 +39,8 @@
 	<PropertyGroup>
 		<RestoreSources>$(RestoreSources);../LocalNuGets;https://api.nuget.org/v3/index.json</RestoreSources>
 	</PropertyGroup>
-
 	<ItemGroup>
-		<PackageReference Include="Scintilla.NET.Eto" Version="1.0.0" />
+	  <ProjectReference Include="..\Scintilla.NET.Eto\Scintilla.NET.Eto.csproj" />
 	</ItemGroup>
 
 </Project>
