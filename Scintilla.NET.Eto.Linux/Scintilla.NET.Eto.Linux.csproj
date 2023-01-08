@@ -1,16 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
-    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
-	<TargetFrameworks>net6.0-windows;net7.0-windows</TargetFrameworks>
-  </PropertyGroup>
-
-  <PropertyGroup>
+	<PropertyGroup>
+	  <TargetFrameworks>net6.0-windows;net7.0-windows</TargetFrameworks>
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
-	  <DocumentationFile>bin\$(Configuration)\Scintilla.NET.Eto.xml</DocumentationFile>
+	  <DocumentationFile>bin\$(Configuration)\Scintilla.NET.Eto.Linux.xml</DocumentationFile>
 	  <OutputType>Library</OutputType>
 	  <Title>Scintilla.NET.Eto</Title>
 	  <Company>VPKSoft</Company>
@@ -50,18 +43,16 @@
   <PropertyGroup Condition="'$(Configuration)'=='DebugLinux'">
     <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
-
-  <PropertyGroup>
-	<RestoreSources>$(RestoreSources);../LocalNuGets;https://api.nuget.org/v3/index.json</RestoreSources>
-  </PropertyGroup>
+	
+  <ItemGroup>
+    <Compile Include="..\Shared\Scintilla.cs" Link="Scintilla.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Eto.Forms" Version="2.7.2" />
   </ItemGroup>
 
   <ItemGroup>
-	<ProjectReference Include="..\Shared\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
-	<ProjectReference Include="..\Linux\Scintilla.NET.EtoForms.GTK\Scintilla.NET.EtoForms.GTK.csproj" />
 	<ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.WinForms\Scintilla.NET.EtoForms.WinForms.csproj" />
 	<ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj" />
   </ItemGroup>

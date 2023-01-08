@@ -26,8 +26,9 @@
 	<PropertyGroup>
 		<RestoreSources>$(RestoreSources);../LocalNuGets;https://api.nuget.org/v3/index.json</RestoreSources>
 	</PropertyGroup>
+
 	<ItemGroup>
-	  <ProjectReference Include="..\Scintilla.NET.Eto\Scintilla.NET.Eto.csproj" />
+	  <ProjectReference Include="..\Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj" />
 	</ItemGroup>
 
 </Project>
