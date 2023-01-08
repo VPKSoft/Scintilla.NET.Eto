@@ -1,5 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
+  <PropertyGroup Condition=" '$(OS)' != 'Windows_NT' ">
+    <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(OS)' == 'Windows_NT' ">
+	<TargetFrameworks>net6.0-windows;net7.0-windows</TargetFrameworks>
+  </PropertyGroup>
+
   <PropertyGroup>
 	  <ImplicitUsings>enable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
@@ -12,23 +19,50 @@
 	  <PackageProjectUrl>https://github.com/VPKSoft/ScintillaNET</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/VPKSoft/ScintillaNET</RepositoryUrl>
 	  <LangVersion>latest</LangVersion>
-	  <TargetFrameworks>netcoreapp3.1</TargetFrameworks>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <PackageOutputPath>$(SolutionDir)LocalNuGets</PackageOutputPath>
+	  <Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
+	  <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+	  <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+	  <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+  </PropertyGroup>
+	
+  <PropertyGroup Condition="'$(IsOSX)'=='true'">
+	<DefineConstants>OSX</DefineConstants>
+  </PropertyGroup>
+	
+  <PropertyGroup Condition="'$(IsWindows)'=='true'">
+    <DefineConstants>Windows</DefineConstants>
+  </PropertyGroup>
+	
+  <PropertyGroup Condition="'$(IsLinux)'=='true'">
+	<DefineConstants>Linux</DefineConstants>
+  </PropertyGroup>
+	
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+	<PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+	
+  <PropertyGroup Condition="'$(Configuration)'=='ReleaseLinux'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+  </PropertyGroup>
+	
+  <PropertyGroup Condition="'$(Configuration)'=='DebugLinux'">
+    <PlatformTarget>AnyCPU</PlatformTarget>
   </PropertyGroup>
 
-	<PropertyGroup>
-		<RestoreSources>$(RestoreSources);../LocalNuGets;https://api.nuget.org/v3/index.json</RestoreSources>
-	</PropertyGroup>
+  <PropertyGroup>
+	<RestoreSources>$(RestoreSources);../LocalNuGets;https://api.nuget.org/v3/index.json</RestoreSources>
+  </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Eto.Forms" Version="2.7.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Linux\Scintilla.NET.EtoForms.GTK\Scintilla.NET.EtoForms.GTK.csproj" />
-    <ProjectReference Include="..\Shared\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
-    <ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.WinForms\Scintilla.NET.EtoForms.WinForms.csproj" />
-    <ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj" />
+	<ProjectReference Include="..\Shared\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
+	<ProjectReference Include="..\Linux\Scintilla.NET.EtoForms.GTK\Scintilla.NET.EtoForms.GTK.csproj" />
+	<ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.WinForms\Scintilla.NET.EtoForms.WinForms.csproj" />
+	<ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj" />
   </ItemGroup>
 </Project>

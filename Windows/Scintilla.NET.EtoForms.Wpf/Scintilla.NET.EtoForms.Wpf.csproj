@@ -12,9 +12,10 @@
 		<PackageProjectUrl>https://github.com/VPKSoft/ScintillaNET</PackageProjectUrl>
 		<RepositoryUrl>https://github.com/VPKSoft/ScintillaNET</RepositoryUrl>
 		<LangVersion>latest</LangVersion>
-		<TargetFrameworks>netcoreapp3.1</TargetFrameworks>
+		<TargetFrameworks>net6.0-windows;net7.0-windows</TargetFrameworks>
 		<PackageOutputPath>$(SolutionDir)LocalNuGets</PackageOutputPath>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 	</PropertyGroup>
 	<ItemGroup>
 	  <None Include="..\..\Shared\packages.config" Link="packages.config" />
