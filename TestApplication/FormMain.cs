@@ -36,7 +36,6 @@ public class FormMain : Form
     
     public FormMain()
     {
-        Scintilla.NET.Eto.Scintilla.PlatformInitialize();
         ClientSize = new Size(500, 500);
         base.Size = new Size(600, 500);
         scintilla = new Scintilla.NET.Eto.Scintilla();

@@ -18,6 +18,9 @@
 		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Include="..\..\Scintilla.NET\Shared\NativeMethods.cs" Link="NativeMethods.cs" />
+	</ItemGroup>
+	<ItemGroup>
 	  <None Include="..\..\Shared\packages.config" Link="packages.config" />
 	</ItemGroup>
 	<ItemGroup>

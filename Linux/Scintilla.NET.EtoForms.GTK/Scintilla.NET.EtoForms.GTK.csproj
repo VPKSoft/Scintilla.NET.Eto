@@ -15,7 +15,11 @@
 	  <PackageOutputPath>$(SolutionDir)LocalNuGets</PackageOutputPath>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="..\..\Scintilla.NET\Shared\NativeMethods.cs" Link="NativeMethods.cs" />
+  </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="Eto.Platform.Gtk" Version="2.7.2" />
