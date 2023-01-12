@@ -2,7 +2,7 @@
 /*
 MIT License
 
-Copyright(c) 2023 Petteri Kautonen
+Copyright(c) 2022 Petteri Kautonen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,28 +24,21 @@ SOFTWARE.
 */
 #endregion
 
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Linq;
 using System.Text;
-using Eto;
-using Eto.Forms;
-using ScintillaNET;
+using System.Threading.Tasks;
 
 namespace Scintilla.NET.EtoForms.Shared;
-
-/// <summary>
-/// The Scintilla control base wrapper for the actual Scintilla control.
-/// Implements the <see cref="Control" />
-/// </summary>
-/// <seealso cref="Control" />
-[Handler(typeof(IScintillaControl))]
-public abstract class ScintillaControl : Control
+public interface IScintillaMethods
 {
-    internal new IScintillaControl Handler => (IScintillaControl)base.Handler;
-
-    internal event EventHandler<SCNotificationEventArgs> SCNotification;
-
     /// <summary>
-    /// Gets the encoding of the Scintilla control.
+    /// Gets a collection representing lines of text in the <see cref="Scintilla" /> control.
     /// </summary>
-    /// <value>The encoding of the Scintilla control.</value>
-    public abstract Encoding Encoding { get; }
+    /// <returns>A collection of text lines.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public LineCollection Lines { get; private set; }
 }

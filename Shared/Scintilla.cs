@@ -25,6 +25,7 @@ SOFTWARE.
 #endregion
 
 using System.Runtime.InteropServices;
+using System.Text;
 using Scintilla.NET.EtoForms.Shared;
 
 namespace Scintilla.NET.Eto;
@@ -88,4 +89,7 @@ public class Scintilla: ScintillaControl
     /// </summary>
     /// <value>The lexilla library access.</value>
     public ILexilla Lexilla => BaseControl.Lexilla;
+
+    /// <inheritdoc />
+    public override Encoding Encoding { get; }
 }

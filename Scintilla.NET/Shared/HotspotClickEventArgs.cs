@@ -7,9 +7,9 @@ namespace ScintillaNET;
 /// Provides data for the <see cref="Scintilla.HotspotClick" />, <see cref="Scintilla.HotspotDoubleClick" />,
 /// and <see cref="Scintilla.HotspotReleaseClick" /> events.
 /// </summary>
-public class HotspotClickEventArgs : EventArgs
+public class HotspotClickEventArgs<T> : EventArgs
 {
-    private readonly Scintilla scintilla;
+    private readonly T scintilla;
     private readonly int bytePosition;
     private int? position;
 

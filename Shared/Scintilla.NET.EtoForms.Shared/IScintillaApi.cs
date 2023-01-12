@@ -2,7 +2,7 @@
 /*
 MIT License
 
-Copyright(c) 2023 Petteri Kautonen
+Copyright(c) 2022 Petteri Kautonen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,19 +24,14 @@ SOFTWARE.
 */
 #endregion
 
-using System.Text;
-using Eto.Forms;
-
 namespace Scintilla.NET.EtoForms.Shared;
 
 /// <summary>
-/// An interface for the Scintilla control.
-/// Implements the <see cref="Eto.Forms.Control.IHandler" />
+/// An interface for messaging with the Scintilla native control.
 /// </summary>
-/// <seealso cref="Eto.Forms.Control.IHandler" />
-public interface IScintillaControl : Control.IHandler
+public interface IScintillaApi
 {
-    /// <summary>
+ /// <summary>
     /// The platform-depended implementation of the <see cref="IScintillaControl.DirectMessage(int, IntPtr, IntPtr)"/> method.
     /// </summary>
     /// <param name="message">The message.</param>
@@ -81,14 +76,4 @@ public interface IScintillaControl : Control.IHandler
     /// <param name="lParam">The message <c>lParam</c> field.</param>
     /// <returns>The message result as <see cref="IntPtr"/>.</returns>
     IntPtr DirectMessage(IntPtr scintillaPointer, int message, IntPtr wParam, IntPtr lParam);
-
-    /// <summary>
-    /// Releases the unmanaged resources after all the Scintilla control instances have been destroyed.
-    /// </summary>
-    void ReleaseUnmanagedResources();
-
-    /// <summary>
-    /// Gets the Lexilla instance.
-    /// </summary>
-    ILexilla Lexilla { get; }
 }

@@ -16,8 +16,10 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<UseWindowsForms>true</UseWindowsForms>
 		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<ItemGroup>
+	  <Compile Include="..\..\Scintilla.NET\Shared\HotspotClickEventArgs.cs" Link="HotspotClickEventArgs.cs" />
 	  <Compile Include="..\..\Scintilla.NET\Shared\NativeMethods.cs" Link="NativeMethods.cs" />
 	</ItemGroup>
 	<ItemGroup>

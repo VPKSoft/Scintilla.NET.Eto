@@ -24,21 +24,28 @@ SOFTWARE.
 */
 #endregion
 
+using Eto.Forms;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
-using System.Windows.Forms;
+using Control = System.Windows.Forms.Control;
+using NativeMethods = ScintillaNET.NativeMethods;
 
 namespace Scintilla.NET.EtoForms.WinForms;
 
 public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
 {
+    #region Fields
     private IntPtr moduleHandle;
     private IntPtr sciPtr;
 
     private BorderStyle borderStyle;
     //private static NativeMethods.Scintilla_DirectFunction directFunction;
     public NativeMethods.Scintilla_DirectFunction directFunction;
+
+    // Double-click
+    private bool doubleClick;
+    #endregion
 
     private IntPtr SciPointer
     {
@@ -126,6 +133,15 @@ public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
         }
     }
 
+    #region WinFormsSpecific
+    // WM_DESTROY workaround
+    private static bool? reparentAll;
+    private bool reparent;
+
+    /// <summary>
+    /// Processes Windows messages.
+    /// </summary>
+    /// <param name="m">The Windows Message to process.</param>
     protected override void WndProc(ref Message m)
     {
         switch (m.Msg)
@@ -141,13 +157,13 @@ public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
             case NativeMethods.WM_LBUTTONDBLCLK:
             case NativeMethods.WM_RBUTTONDBLCLK:
             case NativeMethods.WM_MBUTTONDBLCLK:
-            //case NativeMethods.WM_XBUTTONDBLCLK:
-            //    doubleClick = true;
-            //    goto default;
+            case NativeMethods.WM_XBUTTONDBLCLK:
+                doubleClick = true;
+                goto default;
 
-            //case NativeMethods.WM_DESTROY:
-            //    WmDestroy(ref m);
-            //    break;
+            case NativeMethods.WM_DESTROY:
+                WmDestroy(ref m);
+                break;
 
             default:
                 base.WndProc(ref m);
@@ -155,8 +171,138 @@ public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
         }
     }
 
-    private void WmReflectNotify(ref Message m)
+    private void WmDestroy(ref Message m)
     {
+        // WM_DESTROY workaround
+        if (reparent && IsHandleCreated)
+        {
+            // In some circumstances it's possible for the control's window handle to be destroyed
+            // and recreated during the life of the control. I have no idea why Windows Forms was coded
+            // this way but that creates an issue for us because most/all of our control state is stored
+            // in the native Scintilla control (i.e. Handle) and to destroy it will bork us. So, rather
+            // than destroying the handle as requested, we "reparent" ourselves to a message-only
+            // (invisible) window to keep our handle alive. It doesn't appear that this causes any
+            // issues to Windows Forms because it is completely unaware of it. When a control goes through
+            // its regular (re)create handle process one of the steps is to assign the parent and so our
+            // temporary bait-and-switch gets reconciled again automatically. Our Dispose method ensures
+            // that we truly get destroyed when the time is right.
+
+            NativeMethods.SetParent(Handle, new IntPtr(NativeMethods.HWND_MESSAGE));
+            m.Result = IntPtr.Zero;
+            return;
+        }
+
+        base.WndProc(ref m);
     }
+
+            private void WmReflectNotify(ref Message m)
+        {
+            // A standard Windows notification and a Scintilla notification header are compatible
+            NativeMethods.SCNotification scn = (NativeMethods.SCNotification)Marshal.PtrToStructure(m.LParam, typeof(NativeMethods.SCNotification));
+            if (scn.nmhdr.code >= NativeMethods.SCN_STYLENEEDED && scn.nmhdr.code <= NativeMethods.SCN_AUTOCCOMPLETED)
+            {
+                var handler = Events[scNotificationEventKey] as EventHandler<SCNotificationEventArgs>;
+                if (handler != null)
+                    handler(this, new SCNotificationEventArgs(scn));
+
+                switch (scn.nmhdr.code)
+                {
+                    case NativeMethods.SCN_PAINTED:
+                        OnPainted(EventArgs.Empty);
+                        break;
+
+                    case NativeMethods.SCN_MODIFIED:
+                        ScnModified(ref scn);
+                        break;
+
+                    case NativeMethods.SCN_MODIFYATTEMPTRO:
+                        OnModifyAttempt(EventArgs.Empty);
+                        break;
+
+                    case NativeMethods.SCN_STYLENEEDED:
+                        OnStyleNeeded(new StyleNeededEventArgs(this, scn.position.ToInt32()));
+                        break;
+
+                    case NativeMethods.SCN_SAVEPOINTLEFT:
+                        OnSavePointLeft(EventArgs.Empty);
+                        break;
+
+                    case NativeMethods.SCN_SAVEPOINTREACHED:
+                        OnSavePointReached(EventArgs.Empty);
+                        break;
+
+                    case NativeMethods.SCN_MARGINCLICK:
+                    case NativeMethods.SCN_MARGINRIGHTCLICK:
+                        ScnMarginClick(ref scn);
+                        break;
+
+                    case NativeMethods.SCN_UPDATEUI:
+                        OnUpdateUI(new UpdateUIEventArgs((UpdateChange)scn.updated));
+                        break;
+
+                    case NativeMethods.SCN_CHARADDED:
+                        OnCharAdded(new CharAddedEventArgs(scn.ch));
+                        break;
+
+                    case NativeMethods.SCN_AUTOCSELECTION:
+                        OnAutoCSelection(new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch, (ListCompletionMethod)scn.listCompletionMethod));
+                        break;
+
+                    case NativeMethods.SCN_AUTOCCOMPLETED:
+                        OnAutoCCompleted(new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch, (ListCompletionMethod)scn.listCompletionMethod));
+                        break;
+
+                    case NativeMethods.SCN_AUTOCCANCELLED:
+                        OnAutoCCancelled(EventArgs.Empty);
+                        break;
+
+                    case NativeMethods.SCN_AUTOCCHARDELETED:
+                        OnAutoCCharDeleted(EventArgs.Empty);
+                        break;
+
+                    case NativeMethods.SCN_DWELLSTART:
+                        OnDwellStart(new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
+                        break;
+
+                    case NativeMethods.SCN_DWELLEND:
+                        OnDwellEnd(new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
+                        break;
+
+                    case NativeMethods.SCN_DOUBLECLICK:
+                        ScnDoubleClick(ref scn);
+                        break;
+
+                    case NativeMethods.SCN_NEEDSHOWN:
+                        OnNeedShown(new NeedShownEventArgs(this, scn.position.ToInt32(), scn.length.ToInt32()));
+                        break;
+
+                    case NativeMethods.SCN_HOTSPOTCLICK:
+                    case NativeMethods.SCN_HOTSPOTDOUBLECLICK:
+                    case NativeMethods.SCN_HOTSPOTRELEASECLICK:
+                        ScnHotspotClick(ref scn);
+                        break;
+
+                    case NativeMethods.SCN_INDICATORCLICK:
+                    case NativeMethods.SCN_INDICATORRELEASE:
+                        ScnIndicatorClick(ref scn);
+                        break;
+
+                    case NativeMethods.SCN_ZOOM:
+                        OnZoomChanged(EventArgs.Empty);
+                        break;
+
+                    case NativeMethods.SCN_CALLTIPCLICK:
+                        OnCallTipClick(new CallTipClickEventArgs(this, (CallTipClickType)scn.position.ToInt32()));
+                        // scn.position: 1 = Up Arrow, 2 = DownArrow: 0 = Elsewhere
+                    break;
+
+                    default:
+                        // Not our notification
+                        base.WndProc(ref m);
+                        break;
+                }
+            }
+        }
+    #endregion
 }
 
