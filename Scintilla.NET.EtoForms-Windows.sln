@@ -13,6 +13,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApplication", "TestAppl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Eto.Windows", "Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj", "{B6DC10B2-0C91-4D99-A3D9-4F412C846131}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Abstractions", "Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj", "{AE76966D-3EA4-49C2-AC7B-EB65D1DB3215}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -39,6 +41,10 @@ Global
 		{B6DC10B2-0C91-4D99-A3D9-4F412C846131}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B6DC10B2-0C91-4D99-A3D9-4F412C846131}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B6DC10B2-0C91-4D99-A3D9-4F412C846131}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AE76966D-3EA4-49C2-AC7B-EB65D1DB3215}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE76966D-3EA4-49C2-AC7B-EB65D1DB3215}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE76966D-3EA4-49C2-AC7B-EB65D1DB3215}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE76966D-3EA4-49C2-AC7B-EB65D1DB3215}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
