@@ -24,12 +24,8 @@ SOFTWARE.
 */
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ScintillaNET;
+using Scintilla.NET.Abstractions;
+using Scintilla.NET.EtoForms.Shared.EventArgs;
 
 namespace Scintilla.NET.EtoForms.Shared;
 public interface IScintillaEventRaising
@@ -38,15 +34,15 @@ public interface IScintillaEventRaising
     /// Raises the <see cref="Painted" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    void OnPainted(EventArgs e);
+    void OnPainted(System.EventArgs e);
 
-    void ScnModified(ref NativeMethods.SCNotification scn);
+    void ScnModified(ref ScintillaApiStructs.SCNotification scn);
 
     /// <summary>
     /// Raises the <see cref="ModifyAttempt" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    void OnModifyAttempt(EventArgs e);
+    void OnModifyAttempt(System.EventArgs e);
 
     /// <summary>
     /// Raises the <see cref="StyleNeeded" /> event.
@@ -58,15 +54,15 @@ public interface IScintillaEventRaising
     /// Raises the <see cref="SavePointLeft" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    void OnSavePointLeft(EventArgs e);
+    void OnSavePointLeft(System.EventArgs e);
 
     /// <summary>
     /// Raises the <see cref="SavePointReached" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    void OnSavePointReached(EventArgs e);
+    void OnSavePointReached(System.EventArgs e);
 
-    void ScnMarginClick(ref NativeMethods.SCNotification scn);
+    void ScnMarginClick(ref ScintillaApiStructs.SCNotification scn);
 
     /// <summary>
     /// Raises the <see cref="UpdateUI" /> event.
@@ -96,13 +92,13 @@ public interface IScintillaEventRaising
     /// Raises the <see cref="AutoCCancelled" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    void OnAutoCCancelled(EventArgs e);
+    void OnAutoCCancelled(System.EventArgs e);
 
     /// <summary>
     /// Raises the <see cref="AutoCCharDeleted" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    void OnAutoCCharDeleted(EventArgs e);
+    void OnAutoCCharDeleted(System.EventArgs e);
 
     /// <summary>
     /// Raises the <see cref="DwellStart" /> event.
@@ -116,7 +112,7 @@ public interface IScintillaEventRaising
     /// <param name="e">A <see cref="DwellEventArgs" /> that contains the event data.</param>
     void OnDwellEnd(DwellEventArgs e);
 
-    void ScnDoubleClick(ref NativeMethods.SCNotification scn);
+    void ScnDoubleClick(ref ScintillaApiStructs.SCNotification scn);
     
     /// <summary>
     /// Raises the <see cref="NeedShown" /> event.
@@ -129,15 +125,15 @@ public interface IScintillaEventRaising
     /// Class either the OnHotspotClick, OnHotspotDoubleClick or OnHotspotReleaseClick
     /// </summary>
     /// <param name="scn">The SCN.</param>
-    void ScnHotspotClick(ref NativeMethods.SCNotification scn);
+    void ScnHotspotClick(ref ScintillaApiStructs.SCNotification scn);
 
-    void ScnIndicatorClick(ref NativeMethods.SCNotification scn);
+    void ScnIndicatorClick(ref ScintillaApiStructs.SCNotification scn);
 
     /// <summary>
     /// Raises the <see cref="ZoomChanged" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    void OnZoomChanged(EventArgs e);
+    void OnZoomChanged(System.EventArgs e);
 
     /// <summary>
     /// Raises the <see cref="CallTipClick" /> event.

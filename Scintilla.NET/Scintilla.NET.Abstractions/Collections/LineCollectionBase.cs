@@ -293,7 +293,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         perLineData[index] = data;
 
         // Insert the new line
-        data = new PerLine { Start = lineStart };
+        data = new PerLine { Start = lineStart, };
         perLineData.Insert(index, data);
 
         // Move the step
@@ -337,8 +337,8 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         stepLength = 0;
 
         perLineData = new GapBuffer<PerLine>();
-        perLineData.Add(new PerLine { Start = 0 });
-        perLineData.Add(new PerLine { Start = 0 }); // Terminal
+        perLineData.Add(new PerLine { Start = 0, });
+        perLineData.Add(new PerLine { Start = 0, }); // Terminal
 
         // Fake an insert notification
         var scn = new SCNotification();
@@ -479,9 +479,11 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         this.scintilla = scintilla;
         this.scintilla.SCNotification += scintilla_SCNotification;
 
-        this.perLineData = new GapBuffer<PerLine>();
-        this.perLineData.Add(new PerLine { Start = 0 });
-        this.perLineData.Add(new PerLine { Start = 0 }); // Terminal
+        this.perLineData = new GapBuffer<PerLine>
+        {
+            new() { Start = 0, },
+            new() { Start = 0, }, // Terminal
+        };
     }
 
     #endregion Constructors
@@ -509,7 +511,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     {
         No = -1,
         Unkown,
-        Yes
+        Yes,
     }
 
     #endregion Types

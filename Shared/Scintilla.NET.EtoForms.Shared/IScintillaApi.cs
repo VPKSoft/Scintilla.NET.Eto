@@ -77,3 +77,25 @@ public interface IScintillaApi
     /// <returns>The message result as <see cref="IntPtr"/>.</returns>
     IntPtr DirectMessage(IntPtr scintillaPointer, int message, IntPtr wParam, IntPtr lParam);
 }
+
+/// <summary>
+/// Provides direct call to the Scintilla native API.
+/// </summary>
+public abstract class ScintillaDirect
+{
+    /// <summary>
+    /// A delegate for the native Scintilla API call to be used by  <see cref="IScintillaApi.DirectMessage(IntPtr, int, IntPtr, IntPtr)"/>
+    /// </summary>
+    /// <param name="ptr">The Scintilla control pointer.</param>
+    /// <param name="iMessage">The message identifier to send to the control.</param>
+    /// <param name="wParam">The message <c>wParam</c> field.</param>
+    /// <param name="lParam">The message <c>lParam</c> field.</param>
+    /// <returns>The message result as <see cref="IntPtr"/>.</returns>
+    public delegate IntPtr ScintillaCallDelegate(IntPtr ptr, int iMessage, IntPtr wParam, IntPtr lParam);
+
+    /// <summary>
+    /// Gets or sets the direct native Scintilla API call.
+    /// </summary>
+    /// <value>The direct native Scintilla API call.</value>
+    public static ScintillaCallDelegate? ScintillaCall { get; set; }
+}

@@ -28,20 +28,22 @@ using Eto.Forms;
 using System.ComponentModel;
 using System.Globalization;
 using System.Runtime.InteropServices;
+using System.Text;
+using Scintilla.NET.Abstractions;
+using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.EtoForms.Shared.EventArgs;
 using Control = System.Windows.Forms.Control;
-using NativeMethods = ScintillaNET.NativeMethods;
+using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.EtoForms.WinForms;
 
-public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
+public partial class ScintillaWinForms : Control, IScintillaApi //, CodeEditor.IHandler
 {
     #region Fields
     private IntPtr moduleHandle;
     private IntPtr sciPtr;
 
     private BorderStyle borderStyle;
-    //private static NativeMethods.Scintilla_DirectFunction directFunction;
-    public NativeMethods.Scintilla_DirectFunction directFunction;
 
     // Double-click
     private bool doubleClick;
@@ -63,7 +65,7 @@ public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
             {
                 // Get a pointer to the native Scintilla object (i.e. C++ 'this') to use with the
                 // direct function. This will happen for each Scintilla control instance.
-                sciPtr = NativeMethods.SendMessage(new HandleRef(this, Handle), NativeMethods.SCI_GETDIRECTPOINTER,
+                sciPtr = NativeMethods.SendMessage(new HandleRef(this, Handle), SCI_GETDIRECTPOINTER,
                     IntPtr.Zero, IntPtr.Zero);
             }
 
@@ -105,11 +107,6 @@ public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
                     var message = "The Scintilla module has no export for the 'Scintilla_DirectFunction' procedure.";
                     throw new Win32Exception(message, new Win32Exception()); // Calls GetLastError
                 }
-
-                // Create a managed callback
-                directFunction = (NativeMethods.Scintilla_DirectFunction)Marshal.GetDelegateForFunctionPointer(
-                    directFunctionPointer,
-                    typeof(NativeMethods.Scintilla_DirectFunction));
             }
 
             CreateParams cp = base.CreateParams;
@@ -117,15 +114,15 @@ public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
             cp.ClassName = "Scintilla";
 
             // The border effect is achieved through a native Windows style
-            cp.ExStyle &= (~NativeMethods.WS_EX_CLIENTEDGE);
-            cp.Style &= (~NativeMethods.WS_BORDER);
+            cp.ExStyle &= (~WS_EX_CLIENTEDGE);
+            cp.Style &= (~WS_BORDER);
             switch (borderStyle)
             {
                 case BorderStyle.Fixed3D:
-                    cp.ExStyle |= NativeMethods.WS_EX_CLIENTEDGE;
+                    cp.ExStyle |= WS_EX_CLIENTEDGE;
                     break;
                 case BorderStyle.FixedSingle:
-                    cp.Style |= NativeMethods.WS_BORDER;
+                    cp.Style |= WS_BORDER;
                     break;
             }
 
@@ -146,22 +143,22 @@ public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
     {
         switch (m.Msg)
         {
-            case (NativeMethods.WM_REFLECT + NativeMethods.WM_NOTIFY):
-                WmReflectNotify(ref m);
+            case (WM_REFLECT + WM_NOTIFY):
+                //WmReflectNotify(ref m);
                 break;
 
-            case NativeMethods.WM_SETCURSOR:
+            case WM_SETCURSOR:
                 DefWndProc(ref m);
                 break;
 
-            case NativeMethods.WM_LBUTTONDBLCLK:
-            case NativeMethods.WM_RBUTTONDBLCLK:
-            case NativeMethods.WM_MBUTTONDBLCLK:
-            case NativeMethods.WM_XBUTTONDBLCLK:
+            case WM_LBUTTONDBLCLK:
+            case WM_RBUTTONDBLCLK:
+            case WM_MBUTTONDBLCLK:
+            case WM_XBUTTONDBLCLK:
                 doubleClick = true;
                 goto default;
 
-            case NativeMethods.WM_DESTROY:
+            case WM_DESTROY:
                 WmDestroy(ref m);
                 break;
 
@@ -187,7 +184,7 @@ public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
             // temporary bait-and-switch gets reconciled again automatically. Our Dispose method ensures
             // that we truly get destroyed when the time is right.
 
-            NativeMethods.SetParent(Handle, new IntPtr(NativeMethods.HWND_MESSAGE));
+            NativeMethods.SetParent(Handle, new IntPtr(HWND_MESSAGE));
             m.Result = IntPtr.Zero;
             return;
         }
@@ -195,114 +192,168 @@ public partial class ScintillaWinForms : Control //, CodeEditor.IHandler
         base.WndProc(ref m);
     }
 
-            private void WmReflectNotify(ref Message m)
-        {
-            // A standard Windows notification and a Scintilla notification header are compatible
-            NativeMethods.SCNotification scn = (NativeMethods.SCNotification)Marshal.PtrToStructure(m.LParam, typeof(NativeMethods.SCNotification));
-            if (scn.nmhdr.code >= NativeMethods.SCN_STYLENEEDED && scn.nmhdr.code <= NativeMethods.SCN_AUTOCCOMPLETED)
-            {
-                var handler = Events[scNotificationEventKey] as EventHandler<SCNotificationEventArgs>;
-                if (handler != null)
-                    handler(this, new SCNotificationEventArgs(scn));
+        //    private void WmReflectNotify(ref Message m)
+        //{
+        //    // A standard Windows notification and a Scintilla notification header are compatible
+        //    ScintillaApiStructs.SCNotification scn = (ScintillaApiStructs.SCNotification)Marshal.PtrToStructure(m.LParam, typeof(ScintillaApiStructs.SCNotification));
+        //    if (scn.nmhdr.code >= SCN_STYLENEEDED && scn.nmhdr.code <= SCN_AUTOCCOMPLETED)
+        //    {
+        //        var handler = Events[scNotificationEventKey] as EventHandler<SCNotificationEventArgs>;
+        //        if (handler != null)
+        //            handler(this, new SCNotificationEventArgs(scn));
 
-                switch (scn.nmhdr.code)
-                {
-                    case NativeMethods.SCN_PAINTED:
-                        OnPainted(EventArgs.Empty);
-                        break;
+        //        switch (scn.nmhdr.code)
+        //        {
+        //            case NativeMethods.SCN_PAINTED:
+        //                OnPainted(EventArgs.Empty);
+        //                break;
 
-                    case NativeMethods.SCN_MODIFIED:
-                        ScnModified(ref scn);
-                        break;
+        //            case NativeMethods.SCN_MODIFIED:
+        //                ScnModified(ref scn);
+        //                break;
 
-                    case NativeMethods.SCN_MODIFYATTEMPTRO:
-                        OnModifyAttempt(EventArgs.Empty);
-                        break;
+        //            case NativeMethods.SCN_MODIFYATTEMPTRO:
+        //                OnModifyAttempt(EventArgs.Empty);
+        //                break;
 
-                    case NativeMethods.SCN_STYLENEEDED:
-                        OnStyleNeeded(new StyleNeededEventArgs(this, scn.position.ToInt32()));
-                        break;
+        //            case NativeMethods.SCN_STYLENEEDED:
+        //                OnStyleNeeded(new StyleNeededEventArgs(this, scn.position.ToInt32()));
+        //                break;
 
-                    case NativeMethods.SCN_SAVEPOINTLEFT:
-                        OnSavePointLeft(EventArgs.Empty);
-                        break;
+        //            case NativeMethods.SCN_SAVEPOINTLEFT:
+        //                OnSavePointLeft(EventArgs.Empty);
+        //                break;
 
-                    case NativeMethods.SCN_SAVEPOINTREACHED:
-                        OnSavePointReached(EventArgs.Empty);
-                        break;
+        //            case NativeMethods.SCN_SAVEPOINTREACHED:
+        //                OnSavePointReached(EventArgs.Empty);
+        //                break;
 
-                    case NativeMethods.SCN_MARGINCLICK:
-                    case NativeMethods.SCN_MARGINRIGHTCLICK:
-                        ScnMarginClick(ref scn);
-                        break;
+        //            case NativeMethods.SCN_MARGINCLICK:
+        //            case NativeMethods.SCN_MARGINRIGHTCLICK:
+        //                ScnMarginClick(ref scn);
+        //                break;
 
-                    case NativeMethods.SCN_UPDATEUI:
-                        OnUpdateUI(new UpdateUIEventArgs((UpdateChange)scn.updated));
-                        break;
+        //            case NativeMethods.SCN_UPDATEUI:
+        //                OnUpdateUI(new UpdateUIEventArgs((UpdateChange)scn.updated));
+        //                break;
 
-                    case NativeMethods.SCN_CHARADDED:
-                        OnCharAdded(new CharAddedEventArgs(scn.ch));
-                        break;
+        //            case NativeMethods.SCN_CHARADDED:
+        //                OnCharAdded(new CharAddedEventArgs(scn.ch));
+        //                break;
 
-                    case NativeMethods.SCN_AUTOCSELECTION:
-                        OnAutoCSelection(new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch, (ListCompletionMethod)scn.listCompletionMethod));
-                        break;
+        //            case NativeMethods.SCN_AUTOCSELECTION:
+        //                OnAutoCSelection(new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch, (ListCompletionMethod)scn.listCompletionMethod));
+        //                break;
 
-                    case NativeMethods.SCN_AUTOCCOMPLETED:
-                        OnAutoCCompleted(new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch, (ListCompletionMethod)scn.listCompletionMethod));
-                        break;
+        //            case NativeMethods.SCN_AUTOCCOMPLETED:
+        //                OnAutoCCompleted(new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch, (ListCompletionMethod)scn.listCompletionMethod));
+        //                break;
 
-                    case NativeMethods.SCN_AUTOCCANCELLED:
-                        OnAutoCCancelled(EventArgs.Empty);
-                        break;
+        //            case NativeMethods.SCN_AUTOCCANCELLED:
+        //                OnAutoCCancelled(EventArgs.Empty);
+        //                break;
 
-                    case NativeMethods.SCN_AUTOCCHARDELETED:
-                        OnAutoCCharDeleted(EventArgs.Empty);
-                        break;
+        //            case NativeMethods.SCN_AUTOCCHARDELETED:
+        //                OnAutoCCharDeleted(EventArgs.Empty);
+        //                break;
 
-                    case NativeMethods.SCN_DWELLSTART:
-                        OnDwellStart(new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
-                        break;
+        //            case NativeMethods.SCN_DWELLSTART:
+        //                OnDwellStart(new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
+        //                break;
 
-                    case NativeMethods.SCN_DWELLEND:
-                        OnDwellEnd(new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
-                        break;
+        //            case NativeMethods.SCN_DWELLEND:
+        //                OnDwellEnd(new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
+        //                break;
 
-                    case NativeMethods.SCN_DOUBLECLICK:
-                        ScnDoubleClick(ref scn);
-                        break;
+        //            case NativeMethods.SCN_DOUBLECLICK:
+        //                ScnDoubleClick(ref scn);
+        //                break;
 
-                    case NativeMethods.SCN_NEEDSHOWN:
-                        OnNeedShown(new NeedShownEventArgs(this, scn.position.ToInt32(), scn.length.ToInt32()));
-                        break;
+        //            case NativeMethods.SCN_NEEDSHOWN:
+        //                OnNeedShown(new NeedShownEventArgs(this, scn.position.ToInt32(), scn.length.ToInt32()));
+        //                break;
 
-                    case NativeMethods.SCN_HOTSPOTCLICK:
-                    case NativeMethods.SCN_HOTSPOTDOUBLECLICK:
-                    case NativeMethods.SCN_HOTSPOTRELEASECLICK:
-                        ScnHotspotClick(ref scn);
-                        break;
+        //            case NativeMethods.SCN_HOTSPOTCLICK:
+        //            case NativeMethods.SCN_HOTSPOTDOUBLECLICK:
+        //            case NativeMethods.SCN_HOTSPOTRELEASECLICK:
+        //                ScnHotspotClick(ref scn);
+        //                break;
 
-                    case NativeMethods.SCN_INDICATORCLICK:
-                    case NativeMethods.SCN_INDICATORRELEASE:
-                        ScnIndicatorClick(ref scn);
-                        break;
+        //            case NativeMethods.SCN_INDICATORCLICK:
+        //            case NativeMethods.SCN_INDICATORRELEASE:
+        //                ScnIndicatorClick(ref scn);
+        //                break;
 
-                    case NativeMethods.SCN_ZOOM:
-                        OnZoomChanged(EventArgs.Empty);
-                        break;
+        //            case NativeMethods.SCN_ZOOM:
+        //                OnZoomChanged(EventArgs.Empty);
+        //                break;
 
-                    case NativeMethods.SCN_CALLTIPCLICK:
-                        OnCallTipClick(new CallTipClickEventArgs(this, (CallTipClickType)scn.position.ToInt32()));
-                        // scn.position: 1 = Up Arrow, 2 = DownArrow: 0 = Elsewhere
-                    break;
+        //            case NativeMethods.SCN_CALLTIPCLICK:
+        //                OnCallTipClick(new CallTipClickEventArgs(this, (CallTipClickType)scn.position.ToInt32()));
+        //                // scn.position: 1 = Up Arrow, 2 = DownArrow: 0 = Elsewhere
+        //            break;
 
-                    default:
-                        // Not our notification
-                        base.WndProc(ref m);
-                        break;
-                }
-            }
-        }
+        //            default:
+        //                // Not our notification
+        //                base.WndProc(ref m);
+        //                break;
+        //        }
+        //    }
+        //}
     #endregion
+
+    /// <inheritdoc />
+    public IntPtr SetParameter(int message, IntPtr wParam, IntPtr lParam)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public IntPtr DirectMessage(int message)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public IntPtr DirectMessage(int message, IntPtr wParam)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public IntPtr DirectMessage(int message, IntPtr wParam, IntPtr lParam)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public IntPtr DirectMessage(IntPtr scintillaPointer, int message, IntPtr wParam, IntPtr lParam)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public void MarkerDeleteAll(int marker)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public Encoding Encoding { get; }
+
+    /// <inheritdoc />
+    public int TextLength { get; }
+
+    /// <inheritdoc />
+    public string GetTextRange(int position, int length)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public void FoldAll(FoldAction action)
+    {
+        throw new NotImplementedException();
+    }
 }
 

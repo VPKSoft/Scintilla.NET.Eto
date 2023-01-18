@@ -20,21 +20,15 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\Scintilla.NET\Shared\AutoCSelectionEventArgs.cs" Link="AutoCSelectionEventArgs.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\CallTipClickEventArgs.cs" Link="CallTipClickEventArgs.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\CharAddedEventArgs.cs" Link="CharAddedEventArgs.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\DwellEventArgs.cs" Link="DwellEventArgs.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\GapBuffer.cs" Link="GapBuffer.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\Helpers.cs" Link="Helpers.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\Line.cs" Link="Line.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\NativeMethods.cs" Link="NativeMethods.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\NeedShownEventArgs.cs" Link="NeedShownEventArgs.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\SCNotificationEventArgs.cs" Link="SCNotificationEventArgs.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\StyleNeededEventArgs.cs" Link="StyleNeededEventArgs.cs" />
-    <Compile Include="..\..\Scintilla.NET\Shared\UpdateUIEventArgs.cs" Link="UpdateUIEventArgs.cs" />
+    <PackageReference Include="Eto.Forms" Version="2.7.2" />
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="Eto.Forms" Version="2.7.2" />
+    <ProjectReference Include="..\..\Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="EventArgs\" />
+    <Folder Include="Collections\" />
   </ItemGroup>
 </Project>

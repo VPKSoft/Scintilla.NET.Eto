@@ -27,7 +27,7 @@ SOFTWARE.
 using System.Text;
 using Eto;
 using Eto.Forms;
-using ScintillaNET;
+using Scintilla.NET.EtoForms.Shared.EventArgs;
 
 namespace Scintilla.NET.EtoForms.Shared;
 

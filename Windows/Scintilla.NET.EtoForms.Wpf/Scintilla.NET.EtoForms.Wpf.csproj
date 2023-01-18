@@ -17,9 +17,6 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 	</PropertyGroup>
-	<ItemGroup>
-	  <None Include="..\..\Shared\packages.config" Link="packages.config" />
-	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Eto.Platform.Wpf" Version="2.7.2" />
