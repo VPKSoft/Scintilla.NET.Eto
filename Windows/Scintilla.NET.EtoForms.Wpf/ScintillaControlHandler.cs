@@ -1,5 +1,6 @@
-﻿using System.Runtime.InteropServices;
+﻿using System.Text;
 using Eto.Wpf.Forms;
+using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.EtoForms.Shared;
 using Scintilla.NET.EtoForms.WinForms;
 using Control = Eto.Forms.Control;
@@ -16,20 +17,6 @@ namespace Scintilla.NET.EtoForms.Wpf;
 
 public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForms, ScintillaControl, Control.ICallback>, IScintillaControl
 {
-    /// <summary>
-    /// The main entry point allows sending any of the messages described in this document.
-    /// </summary>
-    /// <param name="ptr">The ScintillaObject pointer.</param>
-    /// <param name="iMessage">The message identifier to send to the control.</param>
-    /// <param name="wParam">The message <c>wParam</c> field.</param>
-    /// <param name="lParam">The message <c>lParam</c> field.</param>
-    /// <returns>IntPtr.</returns>
-    [DllImport("Scintilla.dll", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr Scintilla_DirectFunction(IntPtr ptr, int iMessage, IntPtr wParam, IntPtr lParam);
-
-    [DllImport("user32.dll", EntryPoint = "SendMessageW", CharSet = CharSet.Unicode, SetLastError = true)]
-    public static extern IntPtr SendMessage(HandleRef hWnd, int msg, IntPtr wParam, IntPtr lParam);
-
     readonly IntPtr editor;
     
 
@@ -38,10 +25,10 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
     /// </summary>
     public ScintillaControlHandler()
     {
-//        editor = SciPointer;
         var nativeControl = new ScintillaWinForms();
         WinFormsControl = nativeControl;
         Lexilla = LexillaSingleton;
+        editor = nativeControl.SciPointer;
     }
     
 
@@ -63,37 +50,55 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
     /// <inheritdoc cref="IScintillaControl.SetParameter"/>
     public IntPtr SetParameter(int message, IntPtr wParam, IntPtr lParam)
     {
-        return Scintilla_DirectFunction(editor, message, wParam, lParam);
+        return WinFormsControl.DirectMessage(editor, message, wParam, lParam);
     }
 
     /// <inheritdoc cref="IScintillaControl.DirectMessage(int)"/>
     public IntPtr DirectMessage(int msg)
     {
-        return SetParameter(msg, IntPtr.Zero, IntPtr.Zero);
+        return WinFormsControl.DirectMessage(msg, IntPtr.Zero, IntPtr.Zero);
     }
 
     /// <inheritdoc cref="IScintillaControl.DirectMessage(int, IntPtr)"/>
     public IntPtr DirectMessage(int msg, IntPtr wParam)
     {
-        return SetParameter(msg, wParam, IntPtr.Zero);
+        return WinFormsControl.DirectMessage(msg, wParam, IntPtr.Zero);
     }
 
     /// <inheritdoc cref="IScintillaControl.DirectMessage(int, IntPtr, IntPtr)"/>
     public IntPtr DirectMessage(int msg, IntPtr wParam, IntPtr lParam)
     {
-        return SetParameter(msg, wParam, lParam);
+        return WinFormsControl.DirectMessage(msg, wParam, lParam);
     }
 
     /// <inheritdoc cref="IScintillaControl.DirectMessage(int, IntPtr, IntPtr)"/>
     public IntPtr DirectMessage(IntPtr sciPtr, int msg, IntPtr wParam, IntPtr lParam)
     {
-        return Scintilla_DirectFunction(sciPtr, msg, wParam, lParam);
+        return WinFormsControl.DirectMessage(sciPtr, msg, wParam, lParam);
     }
 
-    /// <inheritdoc cref="IScintillaControl.ReleaseUnmanagedResources" />
-    public void ReleaseUnmanagedResources()
+    /// <inheritdoc />
+    public void MarkerDeleteAll(int marker)
     {
+        WinFormsControl.MarkerDeleteAll(marker);
+    }
 
+    /// <inheritdoc />
+    public Encoding Encoding => WinFormsControl.Encoding;
+
+    /// <inheritdoc />
+    public int TextLength => WinFormsControl.TextLength;
+
+    /// <inheritdoc />
+    public string GetTextRange(int position, int length)
+    {
+        return WinFormsControl.GetTextRange(position, length);
+    }
+
+    /// <inheritdoc />
+    public void FoldAll(FoldAction action)
+    {
+        WinFormsControl.FoldAll(action);
     }
 
     /// <summary>

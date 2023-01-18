@@ -49,7 +49,7 @@ public partial class ScintillaWinForms : Control, IScintillaApi //, CodeEditor.I
     private bool doubleClick;
     #endregion
 
-    private IntPtr SciPointer
+    public IntPtr SciPointer
     {
         get
         {
@@ -76,6 +76,7 @@ public partial class ScintillaWinForms : Control, IScintillaApi //, CodeEditor.I
     public ScintillaWinForms()
     {
         base.SetStyle(ControlStyles.UserPaint, false);
+        sciPtr = SciPointer;
     }
 
     /// <summary>
