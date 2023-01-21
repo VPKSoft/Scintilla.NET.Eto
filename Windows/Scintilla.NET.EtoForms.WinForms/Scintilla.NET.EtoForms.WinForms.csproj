@@ -19,7 +19,7 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Eto.Platform.Windows" Version="2.7.2" />
+	  <PackageReference Include="Eto.Platform.Windows" Version="2.7.3" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Shared\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
