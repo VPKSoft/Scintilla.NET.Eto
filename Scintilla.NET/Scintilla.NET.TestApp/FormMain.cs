@@ -2,7 +2,9 @@
 using System.Drawing;
 using System.IO;
 using System.Windows.Forms;
+using Scintilla.NET.Abstractions.Enumerations;
 using ScintillaNET;
+
 
 namespace Scintilla.NET.TestApp;
 
@@ -25,6 +27,8 @@ public partial class FormMain : Form
             //scintilla.Lexer = Lexer.Xml;
             SetLexerCs();
         }
+
+        scintilla.AnnotationVisible = Annotation.Boxed;
     }
 
     private void SetLexerCs()
