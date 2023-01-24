@@ -1,0 +1,93 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+	<PropertyGroup>
+		<ProjectGuid>{22AE2386-60F1-476E-9303-61CDB0AAC4CF}</ProjectGuid>
+		<TargetFrameworks>netcoreapp3.1;net5.0-windows;net461;net6-windows;net7-windows</TargetFrameworks>
+		<AssemblyTitle>ScintillaNET</AssemblyTitle>
+		<Company>Jacob Slusser, VPKSoft, cyber960</Company>
+		<Product>Scintilla.NET.WinForms</Product>
+		<NeutralLanguage>en-US</NeutralLanguage>
+		<Description>Source Editing Component based on Scintilla 5 series.</Description>
+		<Copyright>Copyright (c) 2018, Jacob Slusser. All rights reserved. VPKSoft, cyber960 2023.</Copyright>
+		<Version>1.0.0.5320</Version>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DocumentationFile>bin\$(Configuration)\Scintilla.NET.xml</DocumentationFile>
+		<UseWindowsForms>true</UseWindowsForms>
+		<OutputPath>bin\$(Configuration)\</OutputPath>
+		<Platforms>AnyCPU</Platforms>
+	</PropertyGroup>
+	<PropertyGroup>
+		<LangVersion>10</LangVersion>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Debug|net461|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+	<PropertyGroup>
+		<DefineConstants>SCINTILLA5</DefineConstants>
+	</PropertyGroup>
+	<PropertyGroup>
+		<PackageId>Scintilla.NET.WinForms</PackageId>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageProjectUrl>https://github.com/VPKSoft/Scintilla.NET</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/VPKSoft/Scintilla.NET</RepositoryUrl>
+		<PackageIcon>vpksoft_logo.png</PackageIcon>
+		<RepositoryType>git</RepositoryType>
+		<PackageTags>ScintillaNET Scintilla Editor</PackageTags>
+		<PackageReleaseNotes>Please visit https://github.com/VPKSoft/Scintilla.NET/releases to view the release notes.</PackageReleaseNotes>
+		<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+		<AssemblyName>Scintilla.NET.WinForms</AssemblyName>
+		<RootNamespace>Scintilla.NET.WinForms</RootNamespace>
+		<Authors>Jacob Slusser, VPKSoft, cyber960</Authors>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|netcoreapp3.1|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+		<DefineConstants>TRACE</DefineConstants>
+		<GenerateSerializationAssemblies>Auto</GenerateSerializationAssemblies>
+	</PropertyGroup>
+	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
+		<PlatformTarget>AnyCPU</PlatformTarget>
+	</PropertyGroup>
+	<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
+		<Reference Include="System.Windows.Forms" />
+		<Reference Include="System.Data.DataSetExtensions" />
+		<Reference Include="Microsoft.CSharp" />
+		<Reference Include="System.IO.Compression" />
+	</ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="..\Shared\x64\Scintilla.zip" Link="x64\Scintilla.zip" />
+		<EmbeddedResource Include="..\Shared\x86\Scintilla.zip" Link="x86\Scintilla.zip" />
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Scintilla.cs">
+			<SubType>Component</SubType>
+		</Compile>
+	</ItemGroup>
+	<ItemGroup>
+		<!-- Native dlls and nuget support -->
+		<None Include="..\native\**\*.*">
+			<Pack>True</Pack>
+			<PackagePath>build</PackagePath>
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+		</None>	
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="..\Assets\vpksoft_logo.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
+	<ItemGroup>
+	  <ProjectReference Include="..\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj">
+		  <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+		  <IncludeAssets>Scintilla.NET.Abstractions.dll</IncludeAssets>
+	  </ProjectReference>
+	</ItemGroup>
+	<PropertyGroup>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+	</PropertyGroup>
+	<Target DependsOnTargets="BuildOnlySettings;ResolveReferences" Name="CopyProjectReferencesToPackage">
+		<ItemGroup>
+			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+		</ItemGroup>
+	</Target>
+</Project>
