@@ -27,7 +27,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     /// <param name="lParam">The message <c>lParam</c> field.</param>
     /// <returns>IntPtr.</returns>
     [DllImport("Scintilla.dll", CallingConvention = CallingConvention.Cdecl)]
-    public static extern IntPtr Scintilla_DirectFunction(IntPtr ptr, int iMessage, IntPtr wParam, IntPtr lParam);
+    private static extern IntPtr Scintilla_DirectFunction(IntPtr ptr, int iMessage, IntPtr wParam, IntPtr lParam);
 
 
     readonly IntPtr editor;

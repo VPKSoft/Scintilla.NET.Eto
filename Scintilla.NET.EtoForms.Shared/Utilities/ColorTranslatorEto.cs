@@ -74,9 +74,9 @@ public static class ColorTranslatorEto
         var bytes = new byte[4 * image.Width * image.Height];
 
         var i = 0;
-        for (int y = 0; y < image.Height; y++)
+        for (var y = 0; y < image.Height; y++)
         {
-            for (int x = 0; x < image.Width; x++)
+            for (var x = 0; x < image.Width; x++)
             {
                 var color = image.GetPixel(x, y);
                 bytes[i++] = (byte)color.R;

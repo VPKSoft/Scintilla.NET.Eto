@@ -20,7 +20,6 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
 {
     readonly IntPtr editor;
     
-
     /// <summary>
     /// Initializes a new instance of the <see cref="ScintillaControlHandler"/> class.
     /// </summary>
@@ -32,7 +31,6 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
         editor = nativeControl.SciPointer;
     }
     
-
     private static Lexilla? lexillaInstance;
 
     /// <summary>
