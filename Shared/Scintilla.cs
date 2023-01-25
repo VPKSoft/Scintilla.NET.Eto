@@ -26,6 +26,7 @@ SOFTWARE.
 
 using System.Runtime.InteropServices;
 using System.Text;
+using Scintilla.NET.Abstractions;
 using Scintilla.NET.EtoForms.Shared;
 
 namespace Scintilla.NET.Eto;

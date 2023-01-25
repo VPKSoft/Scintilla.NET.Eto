@@ -1,5 +1,6 @@
 ﻿using System.Text;
 using Eto.Wpf.Forms;
+using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.EtoForms.Shared;
 using Scintilla.NET.EtoForms.WinForms;

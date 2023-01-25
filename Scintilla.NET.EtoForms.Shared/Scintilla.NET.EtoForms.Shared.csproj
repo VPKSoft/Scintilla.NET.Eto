@@ -24,11 +24,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="EventArgs\" />
-    <Folder Include="Collections\" />
+    <ProjectReference Include="..\Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj" />
   </ItemGroup>
 </Project>

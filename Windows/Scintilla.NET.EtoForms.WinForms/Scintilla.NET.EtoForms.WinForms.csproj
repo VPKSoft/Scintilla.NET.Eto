@@ -22,7 +22,8 @@
 	  <PackageReference Include="Eto.Platform.Windows" Version="2.7.3" />
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Shared\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
+	  <ProjectReference Include="..\..\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
+	  <ProjectReference Include="..\..\Scintilla.NET\Scintilla.NET.WinForms\Scintilla.NET.WinForms.csproj" />
 	</ItemGroup>
 
 	<!--<PropertyGroup>

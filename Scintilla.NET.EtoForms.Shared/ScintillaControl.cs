@@ -27,7 +27,7 @@ SOFTWARE.
 using System.Text;
 using Eto;
 using Eto.Forms;
-using Scintilla.NET.EtoForms.Shared.EventArgs;
+using Scintilla.NET.Abstractions.EventArguments;
 
 namespace Scintilla.NET.EtoForms.Shared;
 
@@ -41,7 +41,7 @@ public abstract class ScintillaControl : Control
 {
     internal new IScintillaControl Handler => (IScintillaControl)base.Handler;
 
-    internal event EventHandler<SCNotificationEventArgs> SCNotification;
+    internal event EventHandler<SCNotificationEventArgsBase> SCNotification;
 
     /// <summary>
     /// Gets the encoding of the Scintilla control.

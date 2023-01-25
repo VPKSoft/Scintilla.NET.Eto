@@ -25,6 +25,7 @@ SOFTWARE.
 #endregion
 
 using System.Runtime.InteropServices;
+using Scintilla.NET.Abstractions;
 using Scintilla.NET.EtoForms.Shared;
 
 namespace Scintilla.NET.EtoForms.WinForms;
@@ -45,6 +46,16 @@ public class Lexilla: ILexilla
         GetLexerName(index, pointer, 1024);
         return Marshal.PtrToStringAnsi(pointer) ?? string.Empty;
     }
+
+    /// <inheritdoc />
+    public IntPtr CreateLexer(string lexerName)
+    {
+        return CreateLexerDll(lexerName);
+    }
+
+    [DllImport("Lexilla.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, EntryPoint = "CreateLexer")]
+    private static extern IntPtr CreateLexerDll(string lexerName);
+
 
     [DllImport("Lexilla.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
     private static extern int GetLexerCount();
