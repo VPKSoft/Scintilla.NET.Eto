@@ -1,0 +1,4 @@
+[submodule "Scintilla.NET"]
+	path = Scintilla.NET
+	url = ../Scintilla.NET.git
+	branch = mutiplatform_abstractions
