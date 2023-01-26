@@ -1,5 +1,6 @@
 ﻿using Eto.Forms;
-using TestApplication;
+
+namespace TestApplication;
 
 public static class Program
 {
@@ -9,4 +10,3 @@ public static class Program
         new Application().Run(new FormMain());
     }
 }
-
