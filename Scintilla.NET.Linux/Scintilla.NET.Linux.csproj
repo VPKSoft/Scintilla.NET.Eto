@@ -1,9 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
-  <PropertyGroup>
-	  <TargetFrameworks>netstandard2.1</TargetFrameworks>
+	<PropertyGroup>
+	  <TargetFramework>netstandard2.1</TargetFramework>
 	  <OutputType>Library</OutputType>
-	  <ImplicitUsings>enable</ImplicitUsings>
+	  <ImplicitUsings>disable</ImplicitUsings>
 	  <Nullable>enable</Nullable>
 	  <AssemblyTitle>Scintilla.NET.Linux</AssemblyTitle>
 	  <Company>Jacob Slusser, VPKSoft, cyber960</Company>
@@ -15,12 +14,14 @@
 	  <DocumentationFile>bin\$(Configuration)\Scintilla.NET.Linux.xml</DocumentationFile>
 	  <UseWindowsForms>true</UseWindowsForms>
 	  <OutputPath>bin\$(Configuration)\</OutputPath>
-	  <Platforms>AnyCPU</Platforms>
 	  <LangVersion>latest</LangVersion>
-  </PropertyGroup>
-
+	</PropertyGroup>
   <ItemGroup>
     <PackageReference Include="GtkSharp" Version="3.24.24.38" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj" />
   </ItemGroup>
 
 </Project>
