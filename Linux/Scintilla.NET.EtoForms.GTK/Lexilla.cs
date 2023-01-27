@@ -25,11 +25,16 @@ SOFTWARE.
 #endregion
 
 using System.Runtime.InteropServices;
-using Scintilla.NET.EtoForms.Shared;
+using Scintilla.NET.Abstractions;
 
 namespace Scintilla.NET.EtoForms.GTK;
 
-internal class Lexilla: ILexilla
+/// <summary>
+/// Linux handler for the Scintilla's Lexilla library.
+/// Implements the <see cref="ILexilla" />
+/// </summary>
+/// <seealso cref="ILexilla" />
+public class Lexilla: ILexilla
 {
     /// <inheritdoc cref="ILexilla.LexerCount"/>
     public int LexerCount => GetLexerCount();
@@ -45,6 +50,16 @@ internal class Lexilla: ILexilla
         GetLexerName(index, pointer, 1024);
         return Marshal.PtrToStringAnsi(pointer) ?? string.Empty;
     }
+
+    /// <inheritdoc />
+    public IntPtr CreateLexer(string lexerName)
+    {
+        return CreateLexerDll(lexerName);
+    }
+
+    [DllImport("liblexilla", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, EntryPoint = "CreateLexer")]
+    private static extern IntPtr CreateLexerDll(string lexerName);
+
 
     [DllImport("liblexilla", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
     private static extern int GetLexerCount();

@@ -1,7 +1,10 @@
 ﻿using System.Runtime.InteropServices;
+using System.Text;
 using Eto.Forms;
 using Eto.GtkSharp.Forms;
 using Gtk;
+using Scintilla.NET.Abstractions;
+using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.EtoForms.Shared;
 
 namespace Scintilla.NET.EtoForms.GTK;
@@ -50,7 +53,7 @@ public class ScintillaControlHandler : GtkControl<Widget, ScintillaControl, Cont
     }
     
 
-    private static Lexilla? lexillaInstance;
+    private static ILexilla? lexillaInstance;
 
     /// <summary>
     /// Gets the singleton instance of the <see cref="Lexilla"/> class.
@@ -95,6 +98,27 @@ public class ScintillaControlHandler : GtkControl<Widget, ScintillaControl, Cont
         return scintilla_send_message(sciPtr, msg, wParam, lParam);
     }
 
+    /// <inheritdoc />
+    public void MarkerDeleteAll(int marker)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public string GetTextRange(int position, int length)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public void FoldAll(FoldAction action)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public int TextLength { get; }
+
     /// <inheritdoc cref="IScintillaControl.ReleaseUnmanagedResources" />
     public void ReleaseUnmanagedResources()
     {
@@ -106,4 +130,10 @@ public class ScintillaControlHandler : GtkControl<Widget, ScintillaControl, Cont
     /// </summary>
     /// <value>The lexilla library access.</value>
     public ILexilla Lexilla { get; }
+
+    /// <inheritdoc />
+    public Encoding Encoding { get; }
+
+    /// <inheritdoc />
+    ILexilla IScintillaControl.Lexilla => Lexilla;
 }

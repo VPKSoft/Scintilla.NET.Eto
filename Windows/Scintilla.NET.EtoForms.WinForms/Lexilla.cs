@@ -26,10 +26,14 @@ SOFTWARE.
 
 using System.Runtime.InteropServices;
 using Scintilla.NET.Abstractions;
-using Scintilla.NET.EtoForms.Shared;
 
 namespace Scintilla.NET.EtoForms.WinForms;
 
+/// <summary>
+/// Windows handler for the Scintilla's Lexilla library.
+/// Implements the <see cref="ILexilla" />
+/// </summary>
+/// <seealso cref="ILexilla" />
 public class Lexilla: ILexilla
 {
     /// <inheritdoc cref="ILexilla.LexerCount"/>

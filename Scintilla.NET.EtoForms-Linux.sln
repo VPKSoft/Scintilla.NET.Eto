@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.Shared", "Shared\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj", "{1FEE2C2A-C19B-4486-B823-5CC6BD8FCCE1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApplication", "TestApplication\TestApplication.csproj", "{5EEED95E-E2DC-4A2A-AB9E-F261316104CC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.GTK", "Linux\Scintilla.NET.EtoForms.GTK\Scintilla.NET.EtoForms.GTK.csproj", "{DFE93268-D701-4089-9B13-3E98561335A8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Eto.Linux", "Scintilla.NET.Eto.Linux\Scintilla.NET.Eto.Linux.csproj", "{B2298968-16E5-4A3A-9184-4671A061E8B1}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.Shared", "Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj", "{A55A9C64-1ABA-4D13-9789-398D8A75EC9B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Abstractions", "Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj", "{796DC0D8-E8F0-41C7-9A50-8BF9B0550F0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,14 +21,6 @@ Global
 		ReleaseLinux|Any CPU = ReleaseLinux|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{1FEE2C2A-C19B-4486-B823-5CC6BD8FCCE1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{1FEE2C2A-C19B-4486-B823-5CC6BD8FCCE1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{1FEE2C2A-C19B-4486-B823-5CC6BD8FCCE1}.DebugLinux|Any CPU.ActiveCfg = DebugLinux|Any CPU
-		{1FEE2C2A-C19B-4486-B823-5CC6BD8FCCE1}.DebugLinux|Any CPU.Build.0 = DebugLinux|Any CPU
-		{1FEE2C2A-C19B-4486-B823-5CC6BD8FCCE1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{1FEE2C2A-C19B-4486-B823-5CC6BD8FCCE1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{1FEE2C2A-C19B-4486-B823-5CC6BD8FCCE1}.ReleaseLinux|Any CPU.ActiveCfg = ReleaseLinux|Any CPU
-		{1FEE2C2A-C19B-4486-B823-5CC6BD8FCCE1}.ReleaseLinux|Any CPU.Build.0 = ReleaseLinux|Any CPU
 		{5EEED95E-E2DC-4A2A-AB9E-F261316104CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{5EEED95E-E2DC-4A2A-AB9E-F261316104CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5EEED95E-E2DC-4A2A-AB9E-F261316104CC}.DebugLinux|Any CPU.ActiveCfg = DebugLinux|Any CPU
@@ -51,6 +45,22 @@ Global
 		{B2298968-16E5-4A3A-9184-4671A061E8B1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B2298968-16E5-4A3A-9184-4671A061E8B1}.ReleaseLinux|Any CPU.ActiveCfg = ReleaseLinux|Any CPU
 		{B2298968-16E5-4A3A-9184-4671A061E8B1}.ReleaseLinux|Any CPU.Build.0 = ReleaseLinux|Any CPU
+		{A55A9C64-1ABA-4D13-9789-398D8A75EC9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A55A9C64-1ABA-4D13-9789-398D8A75EC9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A55A9C64-1ABA-4D13-9789-398D8A75EC9B}.DebugLinux|Any CPU.ActiveCfg = DebugLinux|Any CPU
+		{A55A9C64-1ABA-4D13-9789-398D8A75EC9B}.DebugLinux|Any CPU.Build.0 = DebugLinux|Any CPU
+		{A55A9C64-1ABA-4D13-9789-398D8A75EC9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A55A9C64-1ABA-4D13-9789-398D8A75EC9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A55A9C64-1ABA-4D13-9789-398D8A75EC9B}.ReleaseLinux|Any CPU.ActiveCfg = ReleaseLinux|Any CPU
+		{A55A9C64-1ABA-4D13-9789-398D8A75EC9B}.ReleaseLinux|Any CPU.Build.0 = ReleaseLinux|Any CPU
+		{796DC0D8-E8F0-41C7-9A50-8BF9B0550F0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{796DC0D8-E8F0-41C7-9A50-8BF9B0550F0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{796DC0D8-E8F0-41C7-9A50-8BF9B0550F0E}.DebugLinux|Any CPU.ActiveCfg = Debug|Any CPU
+		{796DC0D8-E8F0-41C7-9A50-8BF9B0550F0E}.DebugLinux|Any CPU.Build.0 = Debug|Any CPU
+		{796DC0D8-E8F0-41C7-9A50-8BF9B0550F0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{796DC0D8-E8F0-41C7-9A50-8BF9B0550F0E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{796DC0D8-E8F0-41C7-9A50-8BF9B0550F0E}.ReleaseLinux|Any CPU.ActiveCfg = Release|Any CPU
+		{796DC0D8-E8F0-41C7-9A50-8BF9B0550F0E}.ReleaseLinux|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
