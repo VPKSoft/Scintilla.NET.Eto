@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+	  <TargetFrameworks>netstandard2.1</TargetFrameworks>
+	  <OutputType>Library</OutputType>
+	  <ImplicitUsings>enable</ImplicitUsings>
+	  <Nullable>enable</Nullable>
+	  <AssemblyTitle>Scintilla.NET.Linux</AssemblyTitle>
+	  <Company>Jacob Slusser, VPKSoft, cyber960</Company>
+	  <Product>Scintilla.NET.Linux</Product>
+	  <Description>Source Editing Component based on Scintilla 5 series.</Description>
+	  <Copyright>Copyright © VPKSoft 2023.</Copyright>
+	  <Version>1.0.0.5320</Version>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <DocumentationFile>bin\$(Configuration)\Scintilla.NET.Linux.xml</DocumentationFile>
+	  <UseWindowsForms>true</UseWindowsForms>
+	  <OutputPath>bin\$(Configuration)\</OutputPath>
+	  <Platforms>AnyCPU</Platforms>
+	  <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="GtkSharp" Version="3.24.24.38" />
+  </ItemGroup>
+
+</Project>

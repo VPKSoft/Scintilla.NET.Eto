@@ -2,6 +2,7 @@
 using System.Windows.Forms;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.EventArguments;
+using Scintilla.NET.WinForms.Collections;
 
 namespace Scintilla.NET.WinForms.EventArguments;
 

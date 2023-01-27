@@ -9,6 +9,7 @@ using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.EtoForms.Shared;
 using Scintilla.NET.EtoForms.WinForms;
 using Scintilla.NET.WinForms;
+using Scintilla.NET.WinForms.Collections;
 using Scintilla.NET.WinForms.EventArguments;
 using Control = Eto.Forms.Control;
 using Lexilla = Scintilla.NET.EtoForms.WinForms.Lexilla;

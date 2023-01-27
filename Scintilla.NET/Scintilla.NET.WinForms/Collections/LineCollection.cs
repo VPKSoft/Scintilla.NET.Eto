@@ -5,7 +5,7 @@ using Scintilla.NET.Abstractions.UtilityClasses;
 using Scintilla.NET.WinForms.EventArguments;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.WinForms;
+namespace Scintilla.NET.WinForms.Collections;
 
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.

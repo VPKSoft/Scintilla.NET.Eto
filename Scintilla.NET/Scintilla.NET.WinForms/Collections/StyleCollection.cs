@@ -3,7 +3,7 @@ using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.WinForms.EventArguments;
 
-namespace Scintilla.NET.WinForms;
+namespace Scintilla.NET.WinForms.Collections;
 
 /// <summary>
 /// An immutable collection of style definitions in a <see cref="Scintilla" /> control.

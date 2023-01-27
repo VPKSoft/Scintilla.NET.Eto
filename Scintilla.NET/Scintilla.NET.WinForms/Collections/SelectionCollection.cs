@@ -5,7 +5,7 @@ using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.WinForms.EventArguments;
 
-namespace Scintilla.NET.WinForms;
+namespace Scintilla.NET.WinForms.Collections;
 
 /// <summary>
 /// A multiple selection collection.

@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.WinForms.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 using static Scintilla.NET.WinForms.Helpers;
 

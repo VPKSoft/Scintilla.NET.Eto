@@ -2,6 +2,7 @@
 using System.Linq;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.WinForms.Collections;
 using Scintilla.NET.WinForms.EventArguments;
 
 namespace Scintilla.NET.WinForms;

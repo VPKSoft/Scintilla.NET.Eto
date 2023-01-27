@@ -6,7 +6,7 @@ using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.WinForms.EventArguments;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.WinForms;
+namespace Scintilla.NET.WinForms.Collections;
 
 /// <summary>
 /// Represents a margin marker in a <see cref="Scintilla" /> control.

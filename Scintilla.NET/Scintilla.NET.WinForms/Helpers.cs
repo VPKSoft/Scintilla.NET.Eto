@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.WinForms.Collections;
 using Scintilla.NET.WinForms.EventArguments;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;

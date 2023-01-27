@@ -3,7 +3,7 @@ using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.WinForms.EventArguments;
 
-namespace Scintilla.NET.WinForms;
+namespace Scintilla.NET.WinForms.Collections;
 
 /// <summary>
 /// Represents a selection when there are multiple active selections in a <see cref="Scintilla" /> control.
