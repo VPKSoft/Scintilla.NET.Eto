@@ -65,7 +65,8 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
 
     public Scintilla() : base(scintilla_new())
     {
-        Lines = new LineCollection(this);
+        editor = base.Raw;
+        //Lines = new LineCollection(this); TODO::Needs implementation of the IScintillaNotificationEvent<SCNotificationEventArgs>.SCNotification
         Styles = new StyleCollection(this);
         Indicators = new IndicatorCollection(this);
         Margins = new MarginCollection(this);

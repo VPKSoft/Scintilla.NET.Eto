@@ -11,7 +11,7 @@
 	  <PackageProjectUrl>https://github.com/VPKSoft/ScintillaNET</PackageProjectUrl>
 	  <RepositoryUrl>https://github.com/VPKSoft/ScintillaNET</RepositoryUrl>
 	  <LangVersion>latest</LangVersion>
-	  <TargetFrameworks>netstandard2.1</TargetFrameworks>
+	  <TargetFramework>netstandard2.1</TargetFramework>
 	  <PackageOutputPath>$(SolutionDir)LocalNuGets</PackageOutputPath>
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
@@ -24,6 +24,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
+    <ProjectReference Include="..\..\Scintilla.NET.Linux\Scintilla.NET.Linux.csproj" />
   </ItemGroup>
 
   <ItemGroup>
