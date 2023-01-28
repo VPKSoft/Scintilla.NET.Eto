@@ -62,11 +62,13 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         SCNotificationEventArgs>
 {
     
-
+    /// <summary>
+    /// Initializes a new instance of the <see cref="Scintilla" /> class.
+    /// </summary>
     public Scintilla() : base(scintilla_new())
     {
         editor = base.Raw;
-        //Lines = new LineCollection(this); TODO::Needs implementation of the IScintillaNotificationEvent<SCNotificationEventArgs>.SCNotification
+        Lines = new LineCollection(this);
         Styles = new StyleCollection(this);
         Indicators = new IndicatorCollection(this);
         Margins = new MarginCollection(this);
@@ -89,9 +91,11 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <param name="wParam">The message <c>wParam</c> field.</param>
     /// <param name="lParam">The message <c>lParam</c> field.</param>
     /// <returns>IntPtr.</returns>
+    // ReSharper disable once StringLiteralTypo
     [DllImport("libscintilla", CallingConvention = CallingConvention.Cdecl)]
     private static extern IntPtr scintilla_send_message(IntPtr ptr, int iMessage, IntPtr wParam, IntPtr lParam);
 
+    // ReSharper disable once StringLiteralTypo
     [DllImport("libscintilla", CallingConvention = CallingConvention.Cdecl)]
     private static extern void scintilla_release_resources();
 
@@ -1085,11 +1089,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     public event EventHandler<NeedShownEventArgs>? NeedShown;
 
     /// <inheritdoc />
-    public event EventHandler<SCNotificationEventArgs>? SCNotification
-    {
-        add => throw new NotImplementedException();
-        remove => throw new NotImplementedException();
-    }
+    public event EventHandler<SCNotificationEventArgs>? SCNotification;
 
     /// <inheritdoc />
     public event EventHandler<EventArgs>? Painted;
@@ -1108,13 +1108,6 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
 
     /// <inheritdoc />
     public event EventHandler<EventArgs>? ZoomChanged;
-
-    /// <inheritdoc />
-    event EventHandler<SCNotificationEventArgs>? IScintillaNotificationEvent<SCNotificationEventArgs>.SCNotification
-    {
-        add => throw new NotImplementedException();
-        remove => throw new NotImplementedException();
-    }
 
     /// <inheritdoc />
     public MarkerCollection Markers { get; }
