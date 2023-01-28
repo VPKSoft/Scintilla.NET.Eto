@@ -52,7 +52,9 @@ public abstract class DoubleClickEventArgsBase<TMarkers, TStyles, TIndicators, T
         get
         {
             if (position == null)
+            {
                 position = scintilla.Lines.ByteToCharPosition(bytePosition);
+            }
 
             return (int)position;
         }
@@ -75,6 +77,8 @@ public abstract class DoubleClickEventArgsBase<TMarkers, TStyles, TIndicators, T
         Line = line;
 
         if (bytePosition == -1)
+        {
             position = -1;
+        }
     }
 }

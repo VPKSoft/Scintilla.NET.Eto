@@ -23,7 +23,9 @@ public abstract class LoaderBase : ILoader
             {
                 var status = IntPtr.Size == 4 ? loader32.AddData(self, bp, bytes.Length) : loader64.AddData(self, bp, bytes.Length);
                 if (status != SC_STATUS_OK)
+                {
                     return false;
+                }
             }
         }
 

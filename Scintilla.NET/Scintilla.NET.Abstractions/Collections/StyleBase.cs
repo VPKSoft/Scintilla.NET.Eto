@@ -85,7 +85,9 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     public void CopyTo(StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>? destination)
     {
         if (destination == null)
+        {
             return;
+        }
 
         destination.BackColor = BackColor;
         // destination.Bold = Bold;
@@ -194,7 +196,9 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
         set
         {
             if (string.IsNullOrEmpty(value))
+            {
                 value = "Verdana";
+            }
 
             // Scintilla expects UTF-8
             var font = HelpersGeneral.GetBytes(value, Encoding.UTF8, true);

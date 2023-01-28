@@ -158,14 +158,18 @@ public sealed class GapBuffer<T> : IEnumerable<T>
         get
         {
             if (index < gapStart)
+            {
                 return buffer[index];
+            }
 
             return buffer[index + (gapEnd - gapStart)];
         }
         set
         {
             if (index >= gapStart)
+            {
                 index += gapEnd - gapStart;
+            }
 
             buffer[index] = value;
         }

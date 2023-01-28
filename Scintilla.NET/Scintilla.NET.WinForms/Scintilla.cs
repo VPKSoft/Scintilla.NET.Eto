@@ -13,6 +13,7 @@ using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Extensions;
 using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.WinForms.Collections;
@@ -173,8 +174,7 @@ public class Scintilla : Control,
     /// <param name="document">The document reference count to increase.</param>
     public void AddRefDocument(Document document)
     {
-        var ptr = document.Value;
-        DirectMessage(SCI_ADDREFDOCUMENT, IntPtr.Zero, ptr);
+        this.AddRefDocumentExtension(document);
     }
 
     /// <summary>
@@ -185,14 +185,7 @@ public class Scintilla : Control,
     /// <remarks>A main selection must first have been set by a call to <see cref="SetSelection" />.</remarks>
     public void AddSelection(int caret, int anchor)
     {
-        var textLength = TextLength;
-        caret = Helpers.Clamp(caret, 0, textLength);
-        anchor = Helpers.Clamp(anchor, 0, textLength);
-
-        caret = Lines.CharToBytePosition(caret);
-        anchor = Lines.CharToBytePosition(anchor);
-
-        DirectMessage(SCI_ADDSELECTION, new IntPtr(caret), new IntPtr(anchor));
+        this.AddSelectionExtension(caret, anchor, Lines);
     }
 
     /// <summary>
@@ -200,13 +193,9 @@ public class Scintilla : Control,
     /// </summary>
     /// <param name="text">The text to insert at the current caret position.</param>
     /// <remarks>The caret position is set to the end of the inserted text, but it is not scrolled into view.</remarks>
-    public unsafe void AddText(string text)
+    public void AddText(string text)
     {
-        var bytes = Helpers.GetBytes(text ?? string.Empty, Encoding, zeroTerminated: false);
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_ADDTEXT, new IntPtr(bytes.Length), new IntPtr(bp));
-        }
+        this.AddTextExtension(text);
     }
 
     /// <summary>
@@ -217,7 +206,7 @@ public class Scintilla : Control,
     /// <returns>Returns the first sub-style number allocated.</returns>
     public int AllocateSubStyles(int styleBase, int numberStyles)
     {
-        return DirectMessage(SCI_ALLOCATESUBSTYLES, new IntPtr(styleBase), new IntPtr(numberStyles)).ToInt32();
+        return this.AllocateSubStylesExtension(styleBase, numberStyles);
     }
 
     /// <summary>
@@ -225,7 +214,7 @@ public class Scintilla : Control,
     /// </summary>
     public void AnnotationClearAll()
     {
-        DirectMessage(SCI_ANNOTATIONCLEARALL);
+        this.AnnotationClearAllExtension();
     }
 
     /// <summary>
@@ -233,13 +222,9 @@ public class Scintilla : Control,
     /// </summary>
     /// <param name="text">The text to add to the document.</param>
     /// <remarks>The current selection is not changed and the new text is not scrolled into view.</remarks>
-    public unsafe void AppendText(string text)
+    public void AppendText(string text)
     {
-        var bytes = Helpers.GetBytes(text ?? string.Empty, Encoding, zeroTerminated: false);
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_APPENDTEXT, new IntPtr(bytes.Length), new IntPtr(bp));
-        }
+        this.AppendTextExtension(text);
     }
 
     /// <summary>
@@ -249,8 +234,7 @@ public class Scintilla : Control,
     /// <param name="sciCommand">The command to assign.</param>
     public void AssignCmdKey(Keys keyDefinition, Command sciCommand)
     {
-        var keys = Helpers.TranslateKeys(keyDefinition);
-        DirectMessage(SCI_ASSIGNCMDKEY, new IntPtr(keys), new IntPtr((int)sciCommand));
+        this.AssignCmdKeyExtension(keyDefinition, sciCommand, Helpers.TranslateKeys);
     }
 
     /// <summary>
@@ -259,7 +243,7 @@ public class Scintilla : Control,
     /// <seealso cref="AutoCStops" />
     public void AutoCCancel()
     {
-        DirectMessage(SCI_AUTOCCANCEL);
+        this.AutoCCancelExtension();
     }
 
     /// <summary>
@@ -267,7 +251,7 @@ public class Scintilla : Control,
     /// </summary>
     public void AutoCComplete()
     {
-        DirectMessage(SCI_AUTOCCOMPLETE);
+        this.AutoCCompleteExtension();
     }
 
     /// <summary>
@@ -287,11 +271,7 @@ public class Scintilla : Control,
     /// <seealso cref="AutoCIgnoreCase" />
     public unsafe void AutoCSelect(string select)
     {
-        var bytes = Helpers.GetBytes(select, Encoding, zeroTerminated: true);
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_AUTOCSELECT, IntPtr.Zero, new IntPtr(bp));
-        }
+        this.AutoCSelectExtension(select);
     }
 
     /// <summary>
@@ -299,33 +279,9 @@ public class Scintilla : Control,
     /// </summary>
     /// <param name="chars">A string of characters that trigger auto-completion. The default is null.</param>
     /// <remarks>Common fill-up characters are '(', '[', and '.' depending on the language.</remarks>
-    public unsafe void AutoCSetFillUps(string chars)
+    public void AutoCSetFillUps(string chars)
     {
-        // Apparently Scintilla doesn't make a copy of our fill up string; it just keeps a pointer to it....
-        // That means we need to keep a copy of the string around for the life of the control AND put it
-        // in a place where it won't get moved by the GC.
-
-        chars ??= string.Empty;
-
-        if (fillUpChars != IntPtr.Zero)
-        {
-            Marshal.FreeHGlobal(fillUpChars);
-            fillUpChars = IntPtr.Zero;
-        }
-
-        var count = Encoding.GetByteCount(chars) + 1;
-        var newFillUpChars = Marshal.AllocHGlobal(count);
-        fixed (char* ch = chars)
-        {
-            Encoding.GetBytes(ch, chars.Length, (byte*)newFillUpChars, count);
-        }
-
-        ((byte*)newFillUpChars)![count - 1] = 0; // Null terminate
-        fillUpChars = newFillUpChars;
-
-        // var str = new String((sbyte*)fillUpChars, 0, count, Encoding);
-
-        DirectMessage(SCI_AUTOCSETFILLUPS, IntPtr.Zero, fillUpChars);
+        this.AutoCSetFillUpsExtension(chars, ref fillUpChars);
     }
 
     /// <summary>
@@ -335,28 +291,7 @@ public class Scintilla : Control,
     /// <param name="list">A list of auto-completion words separated by the <see cref="AutoCSeparator" /> character.</param>
     public unsafe void AutoCShow(int lenEntered, string list)
     {
-        if (string.IsNullOrEmpty(list))
-        {
-            return;
-        }
-
-        lenEntered = Helpers.ClampMin(lenEntered, 0);
-        if (lenEntered > 0)
-        {
-            // Convert to bytes by counting back the specified number of characters
-            var endPos = DirectMessage(SCI_GETCURRENTPOS).ToInt32();
-            var startPos = endPos;
-            for (var i = 0; i < lenEntered; i++)
-                startPos = DirectMessage(SCI_POSITIONRELATIVE, new IntPtr(startPos), new IntPtr(-1)).ToInt32();
-
-            lenEntered = endPos - startPos;
-        }
-
-        var bytes = Helpers.GetBytes(list, Encoding, zeroTerminated: true);
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_AUTOCSHOW, new IntPtr(lenEntered), new IntPtr(bp));
-        }
+        this.AutoCShowExtension(lenEntered, list);
     }
 
     /// <summary>
@@ -366,11 +301,7 @@ public class Scintilla : Control,
     /// <remarks>Characters specified should be limited to printable ASCII characters.</remarks>
     public unsafe void AutoCStops(string chars)
     {
-        var bytes = Helpers.GetBytes(chars ?? string.Empty, Encoding.ASCII, zeroTerminated: true);
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_AUTOCSTOPS, IntPtr.Zero, new IntPtr(bp));
-        }
+        this.AutoCStopsExtension(chars);
     }
 
     /// <summary>
@@ -380,7 +311,7 @@ public class Scintilla : Control,
     /// <seealso cref="EndUndoAction" />
     public void BeginUndoAction()
     {
-        DirectMessage(SCI_BEGINUNDOACTION);
+        this.BeginUndoActionExtension();
     }
 
     /// <summary>
@@ -389,13 +320,7 @@ public class Scintilla : Control,
     /// <param name="position">The zero-based document position of the unmatched brace character or <seealso cref="ApiConstants.InvalidPosition"/> to remove the highlight.</param>
     public void BraceBadLight(int position)
     {
-        position = Helpers.Clamp(position, -1, TextLength);
-        if (position > 0)
-        {
-            position = Lines.CharToBytePosition(position);
-        }
-
-        DirectMessage(SCI_BRACEBADLIGHT, new IntPtr(position));
+        this.BraceBadLightExtension(position, Lines);
     }
 
     /// <summary>
@@ -407,21 +332,7 @@ public class Scintilla : Control,
     /// <seealso cref="HighlightGuide" />
     public void BraceHighlight(int position1, int position2)
     {
-        var textLength = TextLength;
-
-        position1 = Helpers.Clamp(position1, -1, textLength);
-        if (position1 > 0)
-        {
-            position1 = Lines.CharToBytePosition(position1);
-        }
-
-        position2 = Helpers.Clamp(position2, -1, textLength);
-        if (position2 > 0)
-        {
-            position2 = Lines.CharToBytePosition(position2);
-        }
-
-        DirectMessage(SCI_BRACEHIGHLIGHT, new IntPtr(position1), new IntPtr(position2));
+        this.BraceHighlightExtension(position1, position2, Lines);
     }
 
     /// <summary>
@@ -433,16 +344,7 @@ public class Scintilla : Control,
     /// <remarks>A match only occurs if the style of the matching brace is the same as the starting brace. Nested braces are handled correctly.</remarks>
     public int BraceMatch(int position)
     {
-        position = Helpers.Clamp(position, 0, TextLength);
-        position = Lines.CharToBytePosition(position);
-
-        var match = DirectMessage(SCI_BRACEMATCH, new IntPtr(position), IntPtr.Zero).ToInt32();
-        if (match > 0)
-        {
-            match = Lines.ByteToCharPosition(match);
-        }
-
-        return match;
+        return this.BraceMatchExtension(position, Lines);
     }
 
     /// <summary>
@@ -450,7 +352,7 @@ public class Scintilla : Control,
     /// </summary>
     public void CallTipCancel()
     {
-        DirectMessage(SCI_CALLTIPCANCEL);
+        this.CallTipCancelExtension();
     }
 
     /// <summary>
@@ -459,8 +361,7 @@ public class Scintilla : Control,
     /// <param name="color">The new highlight text Color. The default is dark blue.</param>
     public void CallTipSetForeHlt(Color color)
     {
-        var intColor = ColorTranslator.ToWin32(color);
-        DirectMessage(SCI_CALLTIPSETFOREHLT, new IntPtr(intColor));
+        this.CallTipSetForeHltExtension(color, ColorTranslator.ToWin32);
     }
 
     /// <summary>
@@ -468,20 +369,9 @@ public class Scintilla : Control,
     /// </summary>
     /// <param name="hlStart">The zero-based index in the call tip text to start highlighting.</param>
     /// <param name="hlEnd">The zero-based index in the call tip text to stop highlighting (exclusive).</param>
-    public unsafe void CallTipSetHlt(int hlStart, int hlEnd)
+    public void CallTipSetHlt(int hlStart, int hlEnd)
     {
-        // To do the char->byte translation we need to use a cached copy of the last call tip
-        hlStart = Helpers.Clamp(hlStart, 0, lastCallTip.Length);
-        hlEnd = Helpers.Clamp(hlEnd, 0, lastCallTip.Length);
-
-        fixed (char* cp = lastCallTip)
-        {
-            hlEnd = Encoding.GetByteCount(cp + hlStart, hlEnd - hlStart);  // The bytes between start and end
-            hlStart = Encoding.GetByteCount(cp, hlStart);                  // The bytes between 0 and start
-            hlEnd += hlStart;                                              // The bytes between 0 and end
-        }
-
-        DirectMessage(SCI_CALLTIPSETHLT, new IntPtr(hlStart), new IntPtr(hlEnd));
+        this.CallTipSetHltExtension(hlStart, hlEnd, lastCallTip);
     }
 
     /// <summary>
@@ -490,8 +380,7 @@ public class Scintilla : Control,
     /// <param name="above">true to display above text; otherwise, false. The default is false.</param>
     public void CallTipSetPosition(bool above)
     {
-        var val = above ? new IntPtr(1) : IntPtr.Zero;
-        DirectMessage(SCI_CALLTIPSETPOSITION, val);
+        this.CallTipSetPositionExtension(above);
     }
 
     /// <summary>
@@ -503,21 +392,9 @@ public class Scintilla : Control,
     /// Call tips can contain multiple lines separated by '\n' characters. Do not include '\r', as this will most likely print as an empty box.
     /// The '\t' character is supported and the size can be set by using <see cref="CallTipTabSize" />.
     /// </remarks>
-    public unsafe void CallTipShow(int posStart, string definition)
+    public void CallTipShow(int posStart, string definition)
     {
-        posStart = Helpers.Clamp(posStart, 0, TextLength);
-        if (definition == null)
-        {
-            return;
-        }
-
-        lastCallTip = definition;
-        posStart = Lines.CharToBytePosition(posStart);
-        var bytes = Helpers.GetBytes(definition, Encoding, zeroTerminated: true);
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_CALLTIPSHOW, new IntPtr(posStart), new IntPtr(bp));
-        }
+        this.CallTipShowExtension(posStart, definition, ref lastCallTip, Lines);
     }
 
     /// <summary>
@@ -526,13 +403,7 @@ public class Scintilla : Control,
     /// <param name="tabSize">The width in pixels of a tab '\t' character in a call tip. Specifying 0 disables special treatment of tabs.</param>
     public void CallTipTabSize(int tabSize)
     {
-        // ReSharper disable twice CommentTypo
-        // To support the STYLE_CALLTIP style we call SCI_CALLTIPUSESTYLE when the control is created. At
-        // this point we're only adjusting the tab size. This breaks a bit with Scintilla convention, but
-        // that's okay because the Scintilla convention is lame.
-
-        tabSize = Helpers.ClampMin(tabSize, 0);
-        DirectMessage(SCI_CALLTIPUSESTYLE, new IntPtr(tabSize));
+        this.CallTipTabSizeExtension(tabSize);
     }
 
     /// <summary>
@@ -543,14 +414,7 @@ public class Scintilla : Control,
     /// <param name="endPos">The zero-based document position at which the lexer state change ends.</param>
     public void ChangeLexerState(int startPos, int endPos)
     {
-        var textLength = TextLength;
-        startPos = Helpers.Clamp(startPos, 0, textLength);
-        endPos = Helpers.Clamp(endPos, 0, textLength);
-
-        startPos = Lines.CharToBytePosition(startPos);
-        endPos = Lines.CharToBytePosition(endPos);
-
-        DirectMessage(SCI_CHANGELEXERSTATE, new IntPtr(startPos), new IntPtr(endPos));
+        this.ChangeLexerStateExtension(startPos, endPos, Lines);
     }
 
     /// <summary>
@@ -561,10 +425,7 @@ public class Scintilla : Control,
     /// <returns>The zero-based document position of the nearest character to the point specified.</returns>
     public int CharPositionFromPoint(int x, int y)
     {
-        var pos = DirectMessage(SCI_CHARPOSITIONFROMPOINT, new IntPtr(x), new IntPtr(y)).ToInt32();
-        pos = Lines.ByteToCharPosition(pos);
-
-        return pos;
+        return this.CharPositionFromPointExtension(x, y, Lines);
     }
 
     /// <summary>
@@ -576,13 +437,7 @@ public class Scintilla : Control,
     /// <returns>The zero-based document position of the nearest character to the point specified when near a character; otherwise, -1.</returns>
     public int CharPositionFromPointClose(int x, int y)
     {
-        var pos = DirectMessage(SCI_CHARPOSITIONFROMPOINTCLOSE, new IntPtr(x), new IntPtr(y)).ToInt32();
-        if (pos >= 0)
-        {
-            pos = Lines.ByteToCharPosition(pos);
-        }
-
-        return pos;
+        return this.CharPositionFromPointCloseExtension(x, y, Lines);
     }
 
     /// <summary>
@@ -595,7 +450,7 @@ public class Scintilla : Control,
     /// </remarks>
     public void ChooseCaretX()
     {
-        DirectMessage(SCI_CHOOSECARETX);
+        this.ChooseCaretXExtension();
     }
 
     /// <summary>
@@ -603,7 +458,7 @@ public class Scintilla : Control,
     /// </summary>
     public void Clear()
     {
-        DirectMessage(SCI_CLEAR);
+        this.ClearExtension();
     }
 
     /// <summary>
@@ -611,7 +466,7 @@ public class Scintilla : Control,
     /// </summary>
     public void ClearAll()
     {
-        DirectMessage(SCI_CLEARALL);
+        this.ClearAllExtension();
     }
 
     /// <summary>
@@ -621,8 +476,7 @@ public class Scintilla : Control,
     /// <remarks>This is equivalent to binding the keys to <see cref="Command.Null" />.</remarks>
     public void ClearCmdKey(Keys keyDefinition)
     {
-        var keys = Helpers.TranslateKeys(keyDefinition);
-        DirectMessage(SCI_CLEARCMDKEY, new IntPtr(keys));
+        this.ClearCmdKeyExtension(keyDefinition, Helpers.TranslateKeys);
     }
 
     /// <summary>
@@ -630,7 +484,7 @@ public class Scintilla : Control,
     /// </summary>
     public void ClearAllCmdKeys()
     {
-        DirectMessage(SCI_CLEARALLCMDKEYS);
+        this.ClearAllCmdKeysExtension();
     }
 
     /// <summary>
@@ -638,7 +492,7 @@ public class Scintilla : Control,
     /// </summary>
     public void ClearDocumentStyle()
     {
-        DirectMessage(SCI_CLEARDOCUMENTSTYLE);
+        this.ClearDocumentStyleExtension();
     }
 
     /// <summary>
@@ -646,7 +500,7 @@ public class Scintilla : Control,
     /// </summary>
     public void ClearRegisteredImages()
     {
-        DirectMessage(SCI_CLEARREGISTEREDIMAGES);
+        this.ClearRegisteredImagesExtension();
     }
 
     /// <summary>
@@ -654,7 +508,7 @@ public class Scintilla : Control,
     /// </summary>
     public void ClearSelections()
     {
-        DirectMessage(SCI_CLEARSELECTIONS);
+        this.ClearSelectionsExtension();
     }
 
     /// <summary>
@@ -665,14 +519,7 @@ public class Scintilla : Control,
     /// <remarks>This will also cause fold levels in the range specified to be reset.</remarks>
     public void Colorize(int startPos, int endPos)
     {
-        var textLength = TextLength;
-        startPos = Helpers.Clamp(startPos, 0, textLength);
-        endPos = Helpers.Clamp(endPos, 0, textLength);
-
-        startPos = Lines.CharToBytePosition(startPos);
-        endPos = Lines.CharToBytePosition(endPos);
-
-        DirectMessage(SCI_COLOURISE, new IntPtr(startPos), new IntPtr(endPos));
+       this.ColorizeExtension(startPos, endPos, Lines);
     }
 
     /// <summary>
@@ -681,8 +528,7 @@ public class Scintilla : Control,
     /// <param name="eolMode">One of the <see cref="Eol" /> enumeration values.</param>
     public void ConvertEols(Eol eolMode)
     {
-        var eol = (int)eolMode;
-        DirectMessage(SCI_CONVERTEOLS, new IntPtr(eol));
+        this.ConvertEolsExtension(eolMode);
     }
 
     /// <summary>
@@ -690,7 +536,7 @@ public class Scintilla : Control,
     /// </summary>
     public void Copy()
     {
-        DirectMessage(SCI_COPY);
+        this.CopyExtension();
     }
 
     /// <summary>
@@ -712,7 +558,7 @@ public class Scintilla : Control,
     /// </remarks>
     public void CopyAllowLine()
     {
-        DirectMessage(SCI_COPYALLOWLINE);
+        this.CopyAllowLineExtension();
     }
 
     /// <summary>
@@ -736,15 +582,7 @@ public class Scintilla : Control,
     /// <param name="end">The zero-based character position (exclusive) in the document to stop copying.</param>
     public void CopyRange(int start, int end)
     {
-        var textLength = TextLength;
-        start = Helpers.Clamp(start, 0, textLength);
-        end = Helpers.Clamp(end, 0, textLength);
-
-        // Convert to byte positions
-        start = Lines.CharToBytePosition(start);
-        end = Lines.CharToBytePosition(end);
-
-        DirectMessage(SCI_COPYRANGE, new IntPtr(start), new IntPtr(end));
+        this.CopyRangeExtension(start, end, Lines);
     }
 
     /// <summary>
@@ -777,8 +615,7 @@ public class Scintilla : Control,
     /// <remarks>You are responsible for ensuring the reference count eventually reaches 0 or memory leaks will occur.</remarks>
     public Document CreateDocument()
     {
-        var ptr = DirectMessage(SCI_CREATEDOCUMENT);
-        return new Document { Value = ptr };
+        return this.CreateDocumentExtension();
     }
 
     /// <summary>
@@ -803,7 +640,7 @@ public class Scintilla : Control,
     /// </summary>
     public void Cut()
     {
-        DirectMessage(SCI_CUT);
+        this.CutExtension();
     }
 
     /// <summary>
@@ -813,33 +650,16 @@ public class Scintilla : Control,
     /// <param name="length">The number of characters to delete.</param>
     public void DeleteRange(int position, int length)
     {
-        var textLength = TextLength;
-        position = Helpers.Clamp(position, 0, textLength);
-        length = Helpers.Clamp(length, 0, textLength - position);
-
-        // Convert to byte position/length
-        var byteStartPos = Lines.CharToBytePosition(position);
-        var byteEndPos = Lines.CharToBytePosition(position + length);
-
-        DirectMessage(SCI_DELETERANGE, new IntPtr(byteStartPos), new IntPtr(byteEndPos - byteStartPos));
+        this.DeleteRangeExtension(position, length, Lines);
     }
 
     /// <summary>
     /// Retrieves a description of keyword sets supported by the current <see cref="Lexer" />.
     /// </summary>
     /// <returns>A String describing each keyword set separated by line breaks for the current lexer.</returns>
-    public unsafe string DescribeKeywordSets()
+    public string DescribeKeywordSets()
     {
-        var length = DirectMessage(SCI_DESCRIBEKEYWORDSETS).ToInt32();
-        var bytes = new byte[length + 1];
-
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_DESCRIBEKEYWORDSETS, IntPtr.Zero, new IntPtr(bp));
-        }
-
-        var str = Encoding.ASCII.GetString(bytes, 0, length);
-        return str;
+        return this.DescribeKeywordSetsExtension();
     }
 
     /// <summary>
@@ -848,29 +668,9 @@ public class Scintilla : Control,
     /// <param name="name">A property name supported by the current <see cref="Lexer" />.</param>
     /// <returns>A String describing the lexer property name if found; otherwise, String.Empty.</returns>
     /// <remarks>A list of supported property names for the current <see cref="Lexer" /> can be obtained by calling <see cref="PropertyNames" />.</remarks>
-    public unsafe string DescribeProperty(string name)
+    public string DescribeProperty(string name)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return string.Empty;
-        }
-
-        var nameBytes = Helpers.GetBytes(name, Encoding.ASCII, zeroTerminated: true);
-        fixed (byte* nb = nameBytes)
-        {
-            var length = DirectMessage(SCI_DESCRIBEPROPERTY, new IntPtr(nb), IntPtr.Zero).ToInt32();
-            if (length == 0)
-            {
-                return string.Empty;
-            }
-
-            var descriptionBytes = new byte[length + 1];
-            fixed (byte* db = descriptionBytes)
-            {
-                DirectMessage(SCI_DESCRIBEPROPERTY, new IntPtr(nb), new IntPtr(db));
-                return Helpers.GetString(new IntPtr(db), length, Encoding.ASCII);
-            }
-        }
+        return this.DescribePropertyExtension(name);
     }
 
     /// <inheritdoc />
@@ -948,8 +748,7 @@ public class Scintilla : Control,
     /// <seealso cref="Line.DisplayIndex" />
     public int DocLineFromVisible(int displayLine)
     {
-        displayLine = Helpers.Clamp(displayLine, 0, VisibleLineCount);
-        return DirectMessage(SCI_DOCLINEFROMVISIBLE, new IntPtr(displayLine)).ToInt32();
+        return this.DocLineFromVisibleExtension(displayLine, VisibleLineCount);
     }
 
     /// <summary>
@@ -959,8 +758,7 @@ public class Scintilla : Control,
     /// <seealso cref="Selections" />
     public void DropSelection(int selection)
     {
-        selection = Helpers.ClampMin(selection, 0);
-        DirectMessage(SCI_DROPSELECTIONN, new IntPtr(selection));
+        this.DropSelectionExtension(selection);
     }
 
     /// <summary>
@@ -969,7 +767,7 @@ public class Scintilla : Control,
     /// <remarks>This will also cause <see cref="SetSavePoint" /> to be called but will not raise the <see cref="SavePointReached" /> event.</remarks>
     public void EmptyUndoBuffer()
     {
-        DirectMessage(SCI_EMPTYUNDOBUFFER);
+        this.EmptyUndoBufferExtension();
     }
 
     /// <summary>
@@ -978,7 +776,7 @@ public class Scintilla : Control,
     /// <seealso cref="BeginUndoAction" />
     public void EndUndoAction()
     {
-        DirectMessage(SCI_ENDUNDOACTION);
+        this.EndUndoActionExtension();
     }
 
     /// <summary>
@@ -987,8 +785,7 @@ public class Scintilla : Control,
     /// <param name="sciCommand">The command to perform.</param>
     public void ExecuteCmd(Command sciCommand)
     {
-        var cmd = (int)sciCommand;
-        DirectMessage(cmd);
+        this.ExecuteCmdExtension(sciCommand);
     }
 
     /// <summary>
@@ -998,7 +795,7 @@ public class Scintilla : Control,
     /// <remarks>When using <see cref="FoldAction.Toggle" /> the first fold header in the document is examined to decide whether to expand or contract.</remarks>
     public void FoldAll(FoldAction action)
     {
-        DirectMessage(SCI_FOLDALL, new IntPtr((int)action));
+        this.FoldAllExtension(action);
     }
 
     /// <summary>
@@ -1009,7 +806,7 @@ public class Scintilla : Control,
     /// <seealso cref="Line.ToggleFoldShowText" />.
     public void FoldDisplayTextSetStyle(FoldDisplayText style)
     {
-        DirectMessage(SCI_FOLDDISPLAYTEXTSETSTYLE, new IntPtr((int)style));
+        this.FoldDisplayTextSetStyleExtension(style);
     }
 
     /// <summary>
@@ -1017,7 +814,7 @@ public class Scintilla : Control,
     /// </summary>
     public void FreeSubStyles()
     {
-        DirectMessage(SCI_FREESUBSTYLES);
+        this.FreeSubStylesExtension();
     }
 
     /// <summary>
@@ -1025,32 +822,9 @@ public class Scintilla : Control,
     /// </summary>
     /// <param name="position">The zero-based document position of the character to get.</param>
     /// <returns>The character at the specified <paramref name="position" />.</returns>
-    public unsafe int GetCharAt(int position)
+    public int GetCharAt(int position)
     {
-        position = Helpers.Clamp(position, 0, TextLength);
-        position = Lines.CharToBytePosition(position);
-
-        var nextPosition = DirectMessage(SCI_POSITIONRELATIVE, new IntPtr(position), new IntPtr(1)).ToInt32();
-        var length = nextPosition - position;
-        if (length <= 1)
-        {
-            // Position is at single-byte character
-            return DirectMessage(SCI_GETCHARAT, new IntPtr(position)).ToInt32();
-        }
-
-        // Position is at multi-byte character
-        var bytes = new byte[length + 1];
-        fixed (byte* bp = bytes)
-        {
-            var range = stackalloc Sci_TextRange[1];
-            range->chrg.cpMin = position;
-            range->chrg.cpMax = nextPosition;
-            range->lpstrText = new IntPtr(bp);
-
-            DirectMessage(SCI_GETTEXTRANGE, IntPtr.Zero, new IntPtr(range));
-            var str = Helpers.GetString(new IntPtr(bp), length, Encoding);
-            return str[0];
-        }
+        return this.GetCharAtExtension(position, Lines);
     }
 
     /// <summary>
@@ -1060,9 +834,7 @@ public class Scintilla : Control,
     /// <returns>The number of columns from the start of the line to the specified document <paramref name="position" />.</returns>
     public int GetColumn(int position)
     {
-        position = Helpers.Clamp(position, 0, TextLength);
-        position = Lines.CharToBytePosition(position);
-        return DirectMessage(SCI_GETCOLUMN, new IntPtr(position)).ToInt32();
+        return this.GetColumnExtension(position, Lines);
     }
 
     /// <summary>
@@ -1071,8 +843,7 @@ public class Scintilla : Control,
     /// <returns>The zero-based document position of the last styled character.</returns>
     public int GetEndStyled()
     {
-        var pos = DirectMessage(SCI_GETENDSTYLED).ToInt32();
-        return Lines.ByteToCharPosition(pos);
+        return this.GetEndStyledExtension(Lines);
     }
 
     private static readonly string scintillaVersion;
@@ -1095,7 +866,7 @@ public class Scintilla : Control,
     /// <returns>For a secondary style, return the primary style, else return the argument.</returns>
     public int GetPrimaryStyleFromStyle(int style)
     {
-        return DirectMessage(SCI_GETPRIMARYSTYLEFROMSTYLE, new IntPtr(style)).ToInt32();
+        return this.GetPrimaryStyleFromStyleExtension(style);
     }
 
     /// <summary>
@@ -1107,29 +878,9 @@ public class Scintilla : Control,
     /// Any embedded property name macros as described in <see cref="SetProperty" /> will not be replaced (expanded).
     /// </returns>
     /// <seealso cref="GetPropertyExpanded" />
-    public unsafe string GetProperty(string name)
+    public string GetProperty(string name)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return string.Empty;
-        }
-
-        var nameBytes = Helpers.GetBytes(name, Encoding.ASCII, zeroTerminated: true);
-        fixed (byte* nb = nameBytes)
-        {
-            var length = DirectMessage(SCI_GETPROPERTY, new IntPtr(nb)).ToInt32();
-            if (length == 0)
-            {
-                return string.Empty;
-            }
-
-            var valueBytes = new byte[length + 1];
-            fixed (byte* vb = valueBytes)
-            {
-                DirectMessage(SCI_GETPROPERTY, new IntPtr(nb), new IntPtr(vb));
-                return Helpers.GetString(new IntPtr(vb), length, Encoding.ASCII);
-            }
-        }
+        return this.GetPropertyExtension(name);
     }
 
     /// <summary>
@@ -1141,29 +892,9 @@ public class Scintilla : Control,
     /// Any embedded property name macros as described in <see cref="SetProperty" /> will be replaced (expanded).
     /// </returns>
     /// <seealso cref="GetProperty" />
-    public unsafe string GetPropertyExpanded(string name)
+    public string GetPropertyExpanded(string name)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return string.Empty;
-        }
-
-        var nameBytes = Helpers.GetBytes(name, Encoding.ASCII, zeroTerminated: true);
-        fixed (byte* nb = nameBytes)
-        {
-            var length = DirectMessage(SCI_GETPROPERTYEXPANDED, new IntPtr(nb)).ToInt32();
-            if (length == 0)
-            {
-                return string.Empty;
-            }
-
-            var valueBytes = new byte[length + 1];
-            fixed (byte* vb = valueBytes)
-            {
-                DirectMessage(SCI_GETPROPERTYEXPANDED, new IntPtr(nb), new IntPtr(vb));
-                return Helpers.GetString(new IntPtr(vb), length, Encoding.ASCII);
-            }
-        }
+        return this.GetPropertyExpandedExtension(name);
     }
 
     /// <summary>
@@ -1176,18 +907,9 @@ public class Scintilla : Control,
     /// otherwise, <paramref name="defaultValue" /> if not found or the property has no value;
     /// otherwise, 0 if the property is not a number.
     /// </returns>
-    public unsafe int GetPropertyInt(string name, int defaultValue)
+    public int GetPropertyInt(string name, int defaultValue)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return defaultValue;
-        }
-
-        var bytes = Helpers.GetBytes(name, Encoding.ASCII, zeroTerminated: true);
-        fixed (byte* bp = bytes)
-        {
-            return DirectMessage(SCI_GETPROPERTYINT, new IntPtr(bp), new IntPtr(defaultValue)).ToInt32();
-        }
+        return this.GetPropertyIntExtension(name, defaultValue);
     }
 
     /// <summary>
@@ -1197,10 +919,7 @@ public class Scintilla : Control,
     /// <returns>The zero-based <see cref="Style" /> index used at the specified <paramref name="position" />.</returns>
     public int GetStyleAt(int position)
     {
-        position = Helpers.Clamp(position, 0, TextLength);
-        position = Lines.CharToBytePosition(position);
-
-        return DirectMessage(SCI_GETSTYLEAT, new IntPtr(position)).ToInt32();
+        return this.GetStyleAtExtension(position, Lines);
     }
 
     /// <summary>
@@ -1210,7 +929,7 @@ public class Scintilla : Control,
     /// <returns>Returns the base style, else returns the argument.</returns>
     public int GetStyleFromSubStyle(int subStyle)
     {
-        return DirectMessage(SCI_GETSTYLEFROMSUBSTYLE, new IntPtr(subStyle)).ToInt32();
+        return this.GetStyleFromSubStyleExtension(subStyle);
     }
 
     /// <summary>
@@ -1220,7 +939,7 @@ public class Scintilla : Control,
     /// <returns>Returns the length of the sub-styles allocated for a base style.</returns>
     public int GetSubStylesLength(int styleBase)
     {
-        return DirectMessage(SCI_GETSUBSTYLESLENGTH, new IntPtr(styleBase)).ToInt32();
+        return this.GetSubStylesLengthExtension(styleBase);
     }
 
     /// <summary>
@@ -1230,7 +949,7 @@ public class Scintilla : Control,
     /// <returns>Returns the start of the sub-styles allocated for a base style.</returns>
     public int GetSubStylesStart(int styleBase)
     {
-        return DirectMessage(SCI_GETSUBSTYLESSTART, new IntPtr(styleBase)).ToInt32();
+        return this.GetSubStylesStartExtension(styleBase);
     }
 
     /// <summary>
@@ -1239,21 +958,9 @@ public class Scintilla : Control,
     /// <param name="tagNumber">The capture group (1 through 9) to get the text for.</param>
     /// <returns>A String containing the capture group text if it participated in the match; otherwise, an empty string.</returns>
     /// <seealso cref="SearchInTarget" />
-    public unsafe string GetTag(int tagNumber)
+    public string GetTag(int tagNumber)
     {
-        tagNumber = Helpers.Clamp(tagNumber, 1, 9);
-        var length = DirectMessage(SCI_GETTAG, new IntPtr(tagNumber), IntPtr.Zero).ToInt32();
-        if (length <= 0)
-        {
-            return string.Empty;
-        }
-
-        var bytes = new byte[length + 1];
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_GETTAG, new IntPtr(tagNumber), new IntPtr(bp));
-            return Helpers.GetString(new IntPtr(bp), length, Encoding);
-        }
+        return this.GetTagExtension(tagNumber);
     }
 
     /// <summary>
@@ -1264,21 +971,7 @@ public class Scintilla : Control,
     /// <returns>A string representing the text range.</returns>
     public string GetTextRange(int position, int length)
     {
-        var textLength = TextLength;
-        position = Helpers.Clamp(position, 0, textLength);
-        length = Helpers.Clamp(length, 0, textLength - position);
-
-        // Convert to byte position/length
-        var byteStartPos = Lines.CharToBytePosition(position);
-        var byteEndPos = Lines.CharToBytePosition(position + length);
-
-        var ptr = DirectMessage(SCI_GETRANGEPOINTER, new IntPtr(byteStartPos), new IntPtr(byteEndPos - byteStartPos));
-        if (ptr == IntPtr.Zero)
-        {
-            return string.Empty;
-        }
-
-        return Helpers.GetString(ptr, byteEndPos - byteStartPos, Encoding);
+        return this.GetTextRangeExtension(position, length, Lines);
     }
 
     /// <summary>
@@ -1316,9 +1009,7 @@ public class Scintilla : Control,
     /// <returns>The word at the specified position.</returns>
     public string GetWordFromPosition(int position)
     {
-        var startPosition = WordStartPosition(position, true);
-        var endPosition = WordEndPosition(position, true);
-        return GetTextRange(startPosition, endPosition - startPosition);
+        return this.GetWordFromPositionExtension(position, Lines);
     }
 
     /// <summary>
@@ -1328,9 +1019,7 @@ public class Scintilla : Control,
     /// <remarks>Any selection is discarded.</remarks>
     public void GotoPosition(int position)
     {
-        position = Helpers.Clamp(position, 0, TextLength);
-        position = Lines.CharToBytePosition(position);
-        DirectMessage(SCI_GOTOPOS, new IntPtr(position));
+        this.GotoPositionExtension(position, Lines);
     }
 
     /// <summary>
@@ -1342,10 +1031,7 @@ public class Scintilla : Control,
     /// <seealso cref="Line.Visible" />
     public void HideLines(int lineStart, int lineEnd)
     {
-        lineStart = Helpers.Clamp(lineStart, 0, Lines.Count);
-        lineEnd = Helpers.Clamp(lineEnd, lineStart, Lines.Count);
-
-        DirectMessage(SCI_HIDELINES, new IntPtr(lineStart), new IntPtr(lineEnd));
+        this.HideLinesExtension(lineStart, lineEnd, Lines);
     }
 
     /// <summary>
@@ -1355,11 +1041,7 @@ public class Scintilla : Control,
     /// <returns>A bitmap indicating which of the 32 indicators are in use at the specified <paramref name="position" />.</returns>
     public uint IndicatorAllOnFor(int position)
     {
-        position = Helpers.Clamp(position, 0, TextLength);
-        position = Lines.CharToBytePosition(position);
-
-        var bitmap = DirectMessage(SCI_INDICATORALLONFOR, new IntPtr(position)).ToInt32();
-        return unchecked((uint)bitmap);
+        return this.IndicatorAllOnForExtension(position, Lines);
     }
 
     /// <summary>
@@ -1369,14 +1051,7 @@ public class Scintilla : Control,
     /// <param name="length">The number of characters to clear.</param>
     public void IndicatorClearRange(int position, int length)
     {
-        var textLength = TextLength;
-        position = Helpers.Clamp(position, 0, textLength);
-        length = Helpers.Clamp(length, 0, textLength - position);
-
-        var startPos = Lines.CharToBytePosition(position);
-        var endPos = Lines.CharToBytePosition(position + length);
-
-        DirectMessage(SCI_INDICATORCLEARRANGE, new IntPtr(startPos), new IntPtr(endPos - startPos));
+        this.IndicatorClearRangeExtension(position, length, Lines);
     }
 
     /// <summary>
@@ -1386,32 +1061,12 @@ public class Scintilla : Control,
     /// <param name="length">The number of characters to fill.</param>
     public void IndicatorFillRange(int position, int length)
     {
-        var textLength = TextLength;
-        position = Helpers.Clamp(position, 0, textLength);
-        length = Helpers.Clamp(length, 0, textLength - position);
-
-        var startPos = Lines.CharToBytePosition(position);
-        var endPos = Lines.CharToBytePosition(position + length);
-
-        DirectMessage(SCI_INDICATORFILLRANGE, new IntPtr(startPos), new IntPtr(endPos - startPos));
+        this.IndicatorFillRangeExtension(position, length, Lines);
     }
 
     private void InitDocument(Eol eolMode = Eol.CrLf, bool useTabs = false, int tabWidth = 4, int indentWidth = 0)
     {
-        // Document.h
-        // These properties are stored in the Scintilla document, not the control; meaning, when
-        // a user changes documents these properties will change. If the user changes to a new
-        // document, these properties will reset to defaults. That can cause confusion for our users
-        // who would expect their tab settings, for example, to be unchanged based on which document
-        // they have selected into the control. This is where we carry forward any of the user's
-        // current settings -- and our default overrides -- to a new document.
-
-        DirectMessage(SCI_SETCODEPAGE, new IntPtr(SC_CP_UTF8));
-        DirectMessage(SCI_SETUNDOCOLLECTION, new IntPtr(1));
-        DirectMessage(SCI_SETEOLMODE, new IntPtr((int)eolMode));
-        DirectMessage(SCI_SETUSETABS, useTabs ? new IntPtr(1) : IntPtr.Zero);
-        DirectMessage(SCI_SETTABWIDTH, new IntPtr(tabWidth));
-        DirectMessage(SCI_SETINDENT, new IntPtr(indentWidth));
+        this.InitDocumentExtension(eolMode, useTabs, tabWidth, indentWidth);
     }
 
     /// <summary>
@@ -1424,28 +1079,9 @@ public class Scintilla : Control,
     /// <paramref name="position" /> is greater than the document length.
     /// </exception>
     /// <remarks>No scrolling is performed.</remarks>
-    public unsafe void InsertText(int position, string text)
+    public void InsertText(int position, string text)
     {
-        if (position < -1)
-        {
-            throw new ArgumentOutOfRangeException(nameof(position), "Position must be greater or equal to zero, or -1.");
-        }
-
-        if (position != -1)
-        {
-            var textLength = TextLength;
-            if (position > textLength)
-            {
-                throw new ArgumentOutOfRangeException(nameof(position), "Position cannot exceed document length.");
-            }
-
-            position = Lines.CharToBytePosition(position);
-        }
-
-        fixed (byte* bp = Helpers.GetBytes(text ?? string.Empty, Encoding, zeroTerminated: true))
-        {
-            DirectMessage(SCI_INSERTTEXT, new IntPtr(position), new IntPtr(bp));
-        }
+       this.InsertTextExtension(position, text, Lines);
     }
 
     /// <summary>
@@ -1464,14 +1100,7 @@ public class Scintilla : Control,
     /// </remarks>
     public bool IsRangeWord(int start, int end)
     {
-        var textLength = TextLength;
-        start = Helpers.Clamp(start, 0, textLength);
-        end = Helpers.Clamp(end, 0, textLength);
-
-        start = Lines.CharToBytePosition(start);
-        end = Lines.CharToBytePosition(end);
-
-        return DirectMessage(SCI_ISRANGEWORD, new IntPtr(start), new IntPtr(end)) != IntPtr.Zero;
+        return this.IsRangeWordExtension(start, end, Lines);
     }
 
     /// <summary>
@@ -1481,8 +1110,7 @@ public class Scintilla : Control,
     /// <returns>The zero-based document line index containing the character <paramref name="position" />.</returns>
     public int LineFromPosition(int position)
     {
-        position = Helpers.Clamp(position, 0, TextLength);
-        return Lines.LineFromCharPosition(position);
+        return this.LineFromPositionExtension(position, Lines);
     }
 
     /// <summary>
@@ -1496,25 +1124,16 @@ public class Scintilla : Control,
     /// </remarks>
     public void LineScroll(int lines, int columns)
     {
-        DirectMessage(SCI_LINESCROLL, new IntPtr(columns), new IntPtr(lines));
+        this.LineScrollExtension(lines, columns);
     }
 
     /// <summary>
     /// Loads a <see cref="Scintilla" /> compatible lexer from an external DLL.
     /// </summary>
     /// <param name="path">The path to the external lexer DLL.</param>
-    public unsafe void LoadLexerLibrary(string path)
+    public void LoadLexerLibrary(string path)
     {
-        if (string.IsNullOrEmpty(path))
-        {
-            return;
-        }
-
-        var bytes = Helpers.GetBytes(path, Encoding.Default, zeroTerminated: true);
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_LOADLEXERLIBRARY, IntPtr.Zero, new IntPtr(bp));
-        }
+        this.LoadLexerLibraryExtension(path);
     }
 
     /// <summary>
@@ -1523,8 +1142,7 @@ public class Scintilla : Control,
     /// <param name="marker">The zero-based <see cref="Marker" /> index to remove from all lines, or -1 to remove all markers from all lines.</param>
     public void MarkerDeleteAll(int marker)
     {
-        marker = Helpers.Clamp(marker, -1, Markers.Count - 1);
-        DirectMessage(SCI_MARKERDELETEALL, new IntPtr(marker));
+        this.MarkerDeleteAllExtension(marker, Markers); 
     }
 
     /// <summary>
@@ -1533,7 +1151,7 @@ public class Scintilla : Control,
     /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="Line.MarkerAdd" /> of the marker to delete.</param>
     public void MarkerDeleteHandle(MarkerHandle markerHandle)
     {
-        DirectMessage(SCI_MARKERDELETEHANDLE, markerHandle.Value);
+        this.MarkerDeleteHandleExtension(markerHandle);
     }
 
     /// <summary>
@@ -1542,8 +1160,7 @@ public class Scintilla : Control,
     /// <param name="enabled">true to highlight the current folding block; otherwise, false.</param>
     public void MarkerEnableHighlight(bool enabled)
     {
-        var val = enabled ? new IntPtr(1) : IntPtr.Zero;
-        DirectMessage(SCI_MARKERENABLEHIGHLIGHT, val);
+        this.MarkerEnableHighlightExtension(enabled);
     }
 
     /// <summary>
@@ -1553,7 +1170,7 @@ public class Scintilla : Control,
     /// <returns>If found, the zero-based line index containing the marker; otherwise, -1.</returns>
     public int MarkerLineFromHandle(MarkerHandle markerHandle)
     {
-        return DirectMessage(SCI_MARKERLINEFROMHANDLE, markerHandle.Value).ToInt32();
+        return this.MarkerLineFromHandleExtension(markerHandle);
     }
 
     /// <summary>
@@ -1565,10 +1182,7 @@ public class Scintilla : Control,
     /// <seealso cref="MultiEdgeClearAll" />
     public void MultiEdgeAddLine(int column, Color edgeColor)
     {
-        column = Helpers.ClampMin(column, 0);
-        var intColor = ColorTranslator.ToWin32(edgeColor);
-
-        DirectMessage(SCI_MULTIEDGEADDLINE, new IntPtr(column), new IntPtr(intColor));
+        this.MultiEdgeAddLineExtension(column, edgeColor, ColorTranslator.ToWin32);
     }
 
     /// <summary>
@@ -1577,7 +1191,7 @@ public class Scintilla : Control,
     /// <seealso cref="MultiEdgeAddLine" />
     public void MultiEdgeClearAll()
     {
-        DirectMessage(SCI_MULTIEDGECLEARALL);
+        this.MultiEdgeClearAllExtension();
     }
 
     /// <summary>
@@ -1591,7 +1205,7 @@ public class Scintilla : Control,
     /// <seealso cref="MultipleSelectAddNext" />
     public void MultipleSelectAddEach()
     {
-        DirectMessage(SCI_MULTIPLESELECTADDEACH);
+        this.MultipleSelectAddEachExtension();
     }
 
     /// <summary>
@@ -1605,441 +1219,7 @@ public class Scintilla : Control,
     /// <seealso cref="MultipleSelectAddNext" />
     public void MultipleSelectAddNext()
     {
-        DirectMessage(SCI_MULTIPLESELECTADDNEXT);
-    }
-
-    /// <summary>
-    /// Raises the <see cref="AutoCCancelled" /> event.
-    /// </summary>
-    /// <param name="e">An EventArgs that contains the event data.</param>
-    protected virtual void OnAutoCCancelled(EventArgs e)
-    {
-        if (Events[autoCCancelledEventKey] is EventHandler<EventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="AutoCCharDeleted" /> event.
-    /// </summary>
-    /// <param name="e">An EventArgs that contains the event data.</param>
-    protected virtual void OnAutoCCharDeleted(EventArgs e)
-    {
-        if (Events[autoCCharDeletedEventKey] is EventHandler<EventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="AutoCCompleted" /> event.
-    /// </summary>
-    /// <param name="e">An <see cref="AutoCSelectionEventArgs" /> that contains the event data.</param>
-    protected virtual void OnAutoCCompleted(AutoCSelectionEventArgs e)
-    {
-        if (Events[autoCCompletedEventKey] is EventHandler<AutoCSelectionEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="AutoCSelection" /> event.
-    /// </summary>
-    /// <param name="e">An <see cref="AutoCSelectionEventArgs" /> that contains the event data.</param>
-    protected virtual void OnAutoCSelection(AutoCSelectionEventArgs e)
-    {
-        if (Events[autoCSelectionEventKey] is EventHandler<AutoCSelectionEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="BeforeDelete" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="BeforeModificationEventArgs" /> that contains the event data.</param>
-    protected virtual void OnBeforeDelete(BeforeModificationEventArgs e)
-    {
-        if (Events[beforeDeleteEventKey] is EventHandler<BeforeModificationEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="BeforeInsert" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="BeforeModificationEventArgs" /> that contains the event data.</param>
-    protected virtual void OnBeforeInsert(BeforeModificationEventArgs e)
-    {
-        if (Events[beforeInsertEventKey] is EventHandler<BeforeModificationEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="BorderStyleChanged" /> event.
-    /// </summary>
-    /// <param name="e">An EventArgs that contains the event data.</param>
-    protected virtual void OnBorderStyleChanged(EventArgs e)
-    {
-        if (Events[borderStyleChangedEventKey] is EventHandler handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="ChangeAnnotation" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="ChangeAnnotationEventArgs" /> that contains the event data.</param>
-    protected virtual void OnChangeAnnotation(ChangeAnnotationEventArgs e)
-    {
-        if (Events[changeAnnotationEventKey] is EventHandler<ChangeAnnotationEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="CharAdded" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="CharAddedEventArgs" /> that contains the event data.</param>
-    protected virtual void OnCharAdded(CharAddedEventArgs e)
-    {
-        if (Events[charAddedEventKey] is EventHandler<CharAddedEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="Delete" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="ModificationEventArgs" /> that contains the event data.</param>
-    protected virtual void OnDelete(ModificationEventArgs e)
-    {
-        if (Events[deleteEventKey] is EventHandler<ModificationEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="DoubleClick" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="DoubleClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnDoubleClick(DoubleClickEventArgs e)
-    {
-        if (Events[doubleClickEventKey] is EventHandler<DoubleClickEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="DwellEnd" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="DwellEventArgs" /> that contains the event data.</param>
-    protected virtual void OnDwellEnd(DwellEventArgs e)
-    {
-        if (Events[dwellEndEventKey] is EventHandler<DwellEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="DwellStart" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="DwellEventArgs" /> that contains the event data.</param>
-    protected virtual void OnDwellStart(DwellEventArgs e)
-    {
-        if (Events[dwellStartEventKey] is EventHandler<DwellEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="CallTipClick" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="CallTipClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnCallTipClick(CallTipClickEventArgs e)
-    {
-        if (Events[callTipClickEventKey] is EventHandler<CallTipClickEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the HandleCreated event.
-    /// </summary>
-    /// <param name="e">An EventArgs that contains the event data.</param>
-    protected override unsafe void OnHandleCreated(EventArgs e)
-    {
-        // Set more intelligent defaults...
-        InitDocument();
-
-        // I would like to see all of my text please
-        DirectMessage(SCI_SETSCROLLWIDTH, new IntPtr(1));
-        DirectMessage(SCI_SETSCROLLWIDTHTRACKING, new IntPtr(1));
-
-        //hide all default margins
-        foreach (var margin in Margins)
-        {
-            margin.Width = 0;
-        }
-
-        // Enable support for the call tip style and tabs
-        DirectMessage(SCI_CALLTIPUSESTYLE, new IntPtr(16));
-
-        // Reset the valid "word chars" to work around a bug? in Scintilla which includes those below plus non-printable (beyond ASCII 127) characters
-        var bytes = Helpers.GetBytes("abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", Encoding.ASCII, zeroTerminated: true);
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_SETWORDCHARS, IntPtr.Zero, new IntPtr(bp));
-        }
-
-        // Native Scintilla uses the WM_CREATE message to register itself as an
-        // IDropTarget... beating Windows Forms to the punch. There are many possible
-        // ways to solve this, but my favorite is to revoke drag and drop from the
-        // native Scintilla control before base.OnHandleCreated does the standard
-        // processing of AllowDrop.
-        NativeMethods.RevokeDragDrop(Handle);
-
-        base.OnHandleCreated(e);
-    }
-
-    /// <summary>
-    /// Raises the <see cref="HotspotClick" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnHotspotClick(HotspotClickEventArgs e)
-    {
-        if (Events[hotspotClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="HotspotDoubleClick" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnHotspotDoubleClick(HotspotClickEventArgs e)
-    {
-        if (Events[hotspotDoubleClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="HotspotReleaseClick" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnHotspotReleaseClick(HotspotClickEventArgs e)
-    {
-        if (Events[hotspotReleaseClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="IndicatorClick" /> event.
-    /// </summary>
-    /// <param name="e">An <see cref="IndicatorClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnIndicatorClick(IndicatorClickEventArgs e)
-    {
-        if (Events[indicatorClickEventKey] is EventHandler<IndicatorClickEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="IndicatorRelease" /> event.
-    /// </summary>
-    /// <param name="e">An <see cref="IndicatorReleaseEventArgs" /> that contains the event data.</param>
-    protected virtual void OnIndicatorRelease(IndicatorReleaseEventArgs e)
-    {
-        if (Events[indicatorReleaseEventKey] is EventHandler<IndicatorReleaseEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="Insert" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="ModificationEventArgs" /> that contains the event data.</param>
-    protected virtual void OnInsert(ModificationEventArgs e)
-    {
-        if (Events[insertEventKey] is EventHandler<ModificationEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="InsertCheck" /> event.
-    /// </summary>
-    /// <param name="e">An <see cref="InsertCheckEventArgs" /> that contains the event data.</param>
-    protected virtual void OnInsertCheck(InsertCheckEventArgs e)
-    {
-        if (Events[insertCheckEventKey] is EventHandler<InsertCheckEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="MarginClick" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="MarginClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnMarginClick(MarginClickEventArgs e)
-    {
-        if (Events[marginClickEventKey] is EventHandler<MarginClickEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="MarginRightClick" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="MarginClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnMarginRightClick(MarginClickEventArgs e)
-    {
-        if (Events[marginRightClickEventKey] is EventHandler<MarginClickEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="ModifyAttempt" /> event.
-    /// </summary>
-    /// <param name="e">An EventArgs that contains the event data.</param>
-    protected virtual void OnModifyAttempt(EventArgs e)
-    {
-        if (Events[modifyAttemptEventKey] is EventHandler<EventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the MouseUp event.
-    /// </summary>
-    /// <param name="e">A MouseEventArgs that contains the event data.</param>
-    protected override void OnMouseUp(MouseEventArgs e)
-    {
-        // Borrowed this from TextBoxBase.OnMouseUp
-        if (!doubleClick)
-        {
-            OnClick(e);
-            OnMouseClick(e);
-        }
-        else
-        {
-            var doubleE = new MouseEventArgs(e.Button, 2, e.X, e.Y, e.Delta);
-            OnDoubleClick(doubleE);
-            OnMouseDoubleClick(doubleE);
-            doubleClick = false;
-        }
-
-        base.OnMouseUp(e);
-    }
-
-    /// <summary>
-    /// Raises the <see cref="NeedShown" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="NeedShownEventArgs" /> that contains the event data.</param>
-    protected virtual void OnNeedShown(NeedShownEventArgs e)
-    {
-        if (Events[needShownEventKey] is EventHandler<NeedShownEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="Painted" /> event.
-    /// </summary>
-    /// <param name="e">An EventArgs that contains the event data.</param>
-    protected virtual void OnPainted(EventArgs e)
-    {
-        if (Events[paintedEventKey] is EventHandler<EventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="SavePointLeft" /> event.
-    /// </summary>
-    /// <param name="e">An EventArgs that contains the event data.</param>
-    protected virtual void OnSavePointLeft(EventArgs e)
-    {
-        if (Events[savePointLeftEventKey] is EventHandler<EventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="SavePointReached" /> event.
-    /// </summary>
-    /// <param name="e">An EventArgs that contains the event data.</param>
-    protected virtual void OnSavePointReached(EventArgs e)
-    {
-        if (Events[savePointReachedEventKey] is EventHandler<EventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="StyleNeeded" /> event.
-    /// </summary>
-    /// <param name="e">A <see cref="StyleNeededEventArgs" /> that contains the event data.</param>
-    protected virtual void OnStyleNeeded(StyleNeededEventArgs e)
-    {
-        if (Events[styleNeededEventKey] is EventHandler<StyleNeededEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="UpdateUi" /> event.
-    /// </summary>
-    /// <param name="e">An <see cref="UpdateUIEventArgs" /> that contains the event data.</param>
-    protected virtual void OnUpdateUI(UpdateUIEventArgs e)
-    {
-        if (Events[updateUiEventKey] is EventHandler<UpdateUIEventArgs> handler)
-        {
-            handler(this, e);
-        }
-    }
-
-    /// <summary>
-    /// Raises the <see cref="ZoomChanged" /> event.
-    /// </summary>
-    /// <param name="e">An EventArgs that contains the event data.</param>
-    protected virtual void OnZoomChanged(EventArgs e)
-    {
-        if (Events[zoomChangedEventKey] is EventHandler<EventArgs> handler)
-        {
-            handler(this, e);
-        }
+        this.MultipleSelectAddNextExtension();
     }
 
     /// <summary>
@@ -2047,7 +1227,7 @@ public class Scintilla : Control,
     /// </summary>
     public void Paste()
     {
-        DirectMessage(SCI_PASTE);
+        this.PasteExtension();
     }
 
     /// <summary>
@@ -2057,9 +1237,7 @@ public class Scintilla : Control,
     /// <returns>The x-coordinate of the specified <paramref name="pos" /> within the client rectangle of the control.</returns>
     public int PointXFromPosition(int pos)
     {
-        pos = Helpers.Clamp(pos, 0, TextLength);
-        pos = Lines.CharToBytePosition(pos);
-        return DirectMessage(SCI_POINTXFROMPOSITION, IntPtr.Zero, new IntPtr(pos)).ToInt32();
+        return this.PointXFromPositionExtension(pos, Lines);
     }
 
     /// <summary>
@@ -2069,29 +1247,16 @@ public class Scintilla : Control,
     /// <returns>The y-coordinate of the specified <paramref name="pos" /> within the client rectangle of the control.</returns>
     public int PointYFromPosition(int pos)
     {
-        pos = Helpers.Clamp(pos, 0, TextLength);
-        pos = Lines.CharToBytePosition(pos);
-        return DirectMessage(SCI_POINTYFROMPOSITION, IntPtr.Zero, new IntPtr(pos)).ToInt32();
+        return this.PointYFromPositionExtension(pos, Lines);
     }
 
     /// <summary>
     /// Retrieves a list of property names that can be set for the current <see cref="Lexer" />.
     /// </summary>
     /// <returns>A String of property names separated by line breaks.</returns>
-    public unsafe string PropertyNames()
+    public string PropertyNames()
     {
-        var length = DirectMessage(SCI_PROPERTYNAMES).ToInt32();
-        if (length == 0)
-        {
-            return string.Empty;
-        }
-
-        var bytes = new byte[length + 1];
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_PROPERTYNAMES, IntPtr.Zero, new IntPtr(bp));
-            return Helpers.GetString(new IntPtr(bp), length, Encoding.ASCII);
-        }
+        return this.PropertyNamesExtension();
     }
 
     /// <summary>
@@ -2100,18 +1265,9 @@ public class Scintilla : Control,
     /// <param name="name">A property name supported by the current <see cref="Lexer" />.</param>
     /// <returns>One of the <see cref="PropertyType" /> enumeration values. The default is <see cref="bool" />.</returns>
     /// <remarks>A list of supported property names for the current <see cref="Lexer" /> can be obtained by calling <see cref="PropertyNames" />.</remarks>
-    public unsafe PropertyType PropertyType(string name)
+    public PropertyType PropertyType(string name)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return Abstractions.Enumerations.PropertyType.Boolean;
-        }
-
-        var bytes = Helpers.GetBytes(name, Encoding.ASCII, zeroTerminated: true);
-        fixed (byte* bp = bytes)
-        {
-            return (PropertyType)DirectMessage(SCI_PROPERTYTYPE, new IntPtr(bp));
-        }
+        return this.PropertyTypeExtension(name);
     }
 
     /// <summary>
@@ -2119,7 +1275,7 @@ public class Scintilla : Control,
     /// </summary>
     public void Redo()
     {
-        DirectMessage(SCI_REDO);
+        this.RedoExtension();
     }
 
     /// <summary>
@@ -2159,8 +1315,7 @@ public class Scintilla : Control,
     /// </param>
     public void ReleaseDocument(Document document)
     {
-        var ptr = document.Value;
-        DirectMessage(SCI_RELEASEDOCUMENT, IntPtr.Zero, ptr);
+        this.ReleaseDocumentExtension(document);
     }
 
     /// <summary>
@@ -2171,12 +1326,9 @@ public class Scintilla : Control,
     /// If there is not a current selection, the text will be inserted at the current caret position.
     /// Following the operation the caret is placed at the end of the inserted text and scrolled into view.
     /// </remarks>
-    public unsafe void ReplaceSelection(string text)
+    public void ReplaceSelection(string text)
     {
-        fixed (byte* bp = Helpers.GetBytes(text ?? string.Empty, Encoding, zeroTerminated: true))
-        {
-            DirectMessage(SCI_REPLACESEL, IntPtr.Zero, new IntPtr(bp));
-        }
+        this.ReplaceSelectionExtension(text);
     }
 
     /// <summary>
@@ -2188,17 +1340,9 @@ public class Scintilla : Control,
     /// The <see cref="TargetStart" /> and <see cref="TargetEnd" /> properties will be updated to the start and end positions of the replaced text.
     /// The recommended way to delete text in the document is to set the target range to be removed and replace the target with an empty string.
     /// </remarks>
-    public unsafe int ReplaceTarget(string text)
+    public int ReplaceTarget(string text)
     {
-        text ??= string.Empty;
-
-        var bytes = Helpers.GetBytes(text, Encoding, false);
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_REPLACETARGET, new IntPtr(bytes.Length), new IntPtr(bp));
-        }
-
-        return text.Length;
+        return this.ReplaceTargetExtension(text);
     }
 
     /// <summary>
@@ -2212,15 +1356,9 @@ public class Scintilla : Control,
     /// The <see cref="TargetStart" /> and <see cref="TargetEnd" /> properties will be updated to the start and end positions of the replaced text.
     /// </remarks>
     /// <seealso cref="GetTag" />
-    public unsafe int ReplaceTargetRe(string text)
+    public int ReplaceTargetRe(string text)
     {
-        var bytes = Helpers.GetBytes(text ?? string.Empty, Encoding, false);
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_REPLACETARGETRE, new IntPtr(bytes.Length), new IntPtr(bp));
-        }
-
-        return Math.Abs(TargetEnd - TargetStart);
+        return this.ReplaceTargetReExtension(text, TargetStart, TargetEnd);
     }
 
     private void ResetAdditionalCaretForeColor()
@@ -2233,7 +1371,7 @@ public class Scintilla : Control,
     /// </summary>
     public void RotateSelection()
     {
-        DirectMessage(SCI_ROTATESELECTION);
+        this.RotateSelectionExtension();
     }
 
     private void ScnDoubleClick(ref SCNotification scn)
@@ -2371,7 +1509,7 @@ public class Scintilla : Control,
     /// </summary>
     public void ScrollCaret()
     {
-        DirectMessage(SCI_SCROLLCARET);
+        this.ScrollCaretExtension();
     }
 
     /// <summary>
@@ -2385,17 +1523,7 @@ public class Scintilla : Control,
     /// <remarks>This may be used to make a search match visible.</remarks>
     public void ScrollRange(int start, int end)
     {
-        var textLength = TextLength;
-        start = Helpers.Clamp(start, 0, textLength);
-        end = Helpers.Clamp(end, 0, textLength);
-
-        // Convert to byte positions
-        start = Lines.CharToBytePosition(start);
-        end = Lines.CharToBytePosition(end);
-
-        // The arguments would  seem reverse from Scintilla documentation
-        // but empirical  evidence suggests this is correct....
-        DirectMessage(SCI_SCROLLRANGE, new IntPtr(start), new IntPtr(end));
+       this.ScrollRangeExtension(start, end, TextLength, Lines);
     }
 
     /// <summary>
@@ -2407,16 +1535,9 @@ public class Scintilla : Control,
     /// If successful, the <see cref="TargetStart" /> and <see cref="TargetEnd" /> properties will be updated to the start and end positions of the matched text.
     /// Searching can be performed in reverse using a <see cref="TargetStart" /> greater than the <see cref="TargetEnd" />.
     /// </remarks>
-    public unsafe int SearchInTarget(string text)
+    public int SearchInTarget(string text)
     {
-        int bytePos;
-        var bytes = Helpers.GetBytes(text ?? string.Empty, Encoding, zeroTerminated: false);
-        fixed (byte* bp = bytes)
-        {
-            bytePos = DirectMessage(SCI_SEARCHINTARGET, new IntPtr(bytes.Length), new IntPtr(bp)).ToInt32();
-        }
-
-        return bytePos == -1 ? bytePos : Lines.ByteToCharPosition(bytePos);
+        return this.SearchInTargetExtension(text, Lines);
     }
 
     /// <summary>
@@ -2425,7 +1546,7 @@ public class Scintilla : Control,
     /// <remarks>The current position is not scrolled into view.</remarks>
     public void SelectAll()
     {
-        DirectMessage(SCI_SELECTALL);
+        this.SelectAllExtension();
     }
 
     /// <summary>
@@ -2435,8 +1556,7 @@ public class Scintilla : Control,
     /// <remarks>Calling <see cref="SetSelectionBackColor" /> will reset the <paramref name="color" /> specified.</remarks>
     public void SetAdditionalSelBack(Color color)
     {
-        var intColor = ColorTranslator.ToWin32(color);
-        DirectMessage(SCI_SETADDITIONALSELBACK, new IntPtr(intColor));
+        this.SetAdditionalSelBackExtension(color, ColorTranslator.ToWin32);
     }
 
     /// <summary>
@@ -2446,8 +1566,7 @@ public class Scintilla : Control,
     /// <remarks>Calling <see cref="SetSelectionForeColor" /> will reset the <paramref name="color" /> specified.</remarks>
     public void SetAdditionalSelFore(Color color)
     {
-        var intColor = ColorTranslator.ToWin32(color);
-        DirectMessage(SCI_SETADDITIONALSELFORE, new IntPtr(intColor));
+        this.SetAdditionalSelForeExtension(color, ColorTranslator.ToWin32);
     }
 
     /// <summary>
@@ -2457,9 +1576,7 @@ public class Scintilla : Control,
     /// <remarks>The caret is not scrolled into view.</remarks>
     public void SetEmptySelection(int pos)
     {
-        pos = Helpers.Clamp(pos, 0, TextLength);
-        pos = Lines.CharToBytePosition(pos);
-        DirectMessage(SCI_SETEMPTYSELECTION, new IntPtr(pos));
+        this.SetEmptySelectionExtension(pos, TextLength, Lines);
     }
 
     /// <summary>
@@ -2468,7 +1585,7 @@ public class Scintilla : Control,
     /// <param name="flags">A bitwise combination of the <see cref="FoldFlags" /> enumeration.</param>
     public void SetFoldFlags(FoldFlags flags)
     {
-        DirectMessage(SCI_SETFOLDFLAGS, new IntPtr((int)flags));
+        this.SetFoldFlagsExtension(flags);
     }
 
     /// <summary>
@@ -2479,10 +1596,7 @@ public class Scintilla : Control,
     /// <seealso cref="SetFoldMarginHighlightColor" />
     public void SetFoldMarginColor(bool use, Color color)
     {
-        var intColor = ColorTranslator.ToWin32(color);
-        var useFoldMarginColor = use ? new IntPtr(1) : IntPtr.Zero;
-
-        DirectMessage(SCI_SETFOLDMARGINCOLOUR, useFoldMarginColor, new IntPtr(intColor));
+        this.SetFoldMarginColorExtension(use, color, ColorTranslator.ToWin32);
     }
 
     /// <summary>
@@ -2493,10 +1607,7 @@ public class Scintilla : Control,
     /// <seealso cref="SetFoldMarginColor" />
     public void SetFoldMarginHighlightColor(bool use, Color color)
     {
-        var intColor = ColorTranslator.ToWin32(color);
-        var useFoldMarginHighlightColor = use ? new IntPtr(1) : IntPtr.Zero;
-
-        DirectMessage(SCI_SETFOLDMARGINHICOLOUR, useFoldMarginHighlightColor, new IntPtr(intColor));
+        this.SetFoldMarginHighlightColorExtension(use, color, ColorTranslator.ToWin32);
     }
 
     /// <summary>
@@ -2504,20 +1615,9 @@ public class Scintilla : Control,
     /// </summary>
     /// <param name="style">The sub-style integer index</param>
     /// <param name="identifiers">A list of words separated by whitespace (space, tab, '\n', '\r') characters.</param>
-    public unsafe void SetIdentifiers(int style, string identifiers)
+    public void SetIdentifiers(int style, string identifiers)
     {
-        var baseStyle = GetStyleFromSubStyle(style);
-        var min = GetSubStylesStart(baseStyle);
-        var length = GetSubStylesLength(baseStyle);
-        var max = length > 0 ? min + length - 1 : min;
-
-        style = Helpers.Clamp(style, min, max);
-        var bytes = Helpers.GetBytes(identifiers ?? string.Empty, Encoding.ASCII, zeroTerminated: true);
-
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_SETIDENTIFIERS, new IntPtr(style), new IntPtr(bp));
-        }
+        this.SetIdentifiersExtension(style, identifiers);
     }
 
     /// <summary>
@@ -2529,15 +1629,9 @@ public class Scintilla : Control,
     /// </param>
     /// <remarks>The keywords specified will be styled according to the current <see cref="Lexer" />.</remarks>
     /// <seealso cref="DescribeKeywordSets" />
-    public unsafe void SetKeywords(int set, string keywords)
+    public void SetKeywords(int set, string keywords)
     {
-        set = Helpers.Clamp(set, 0, KEYWORDSET_MAX);
-        var bytes = Helpers.GetBytes(keywords ?? string.Empty, Encoding.ASCII, zeroTerminated: true);
-
-        fixed (byte* bp = bytes)
-        {
-            DirectMessage(SCI_SETKEYWORDS, new IntPtr(set), new IntPtr(bp));
-        }
+        this.SetKeywordsExtension(set, keywords);
     }
 
     /// <summary>
@@ -2566,21 +1660,7 @@ public class Scintilla : Control,
     /// <remarks>Property names are case-sensitive.</remarks>
     public unsafe void SetProperty(string name, string value)
     {
-        if (string.IsNullOrEmpty(name))
-        {
-            return;
-        }
-
-        var nameBytes = Helpers.GetBytes(name, Encoding.ASCII, zeroTerminated: true);
-        var valueBytes = Helpers.GetBytes(value ?? string.Empty, Encoding.ASCII, zeroTerminated: true);
-
-        fixed (byte* nb = nameBytes)
-        {
-            fixed (byte* vb = valueBytes)
-            {
-                DirectMessage(SCI_SETPROPERTY, new IntPtr(nb), new IntPtr(vb));
-            }
-        }
+        this.SetPropertyExtension(name, value);
     }
 
     /// <summary>
@@ -2589,7 +1669,7 @@ public class Scintilla : Control,
     /// <seealso cref="Modified" />
     public void SetSavePoint()
     {
-        DirectMessage(SCI_SETSAVEPOINT);
+        this.SetSavePointExtension();
     }
 
     /// <summary>
@@ -2605,28 +1685,7 @@ public class Scintilla : Control,
     /// </remarks>
     public void SetSel(int anchorPos, int currentPos)
     {
-        if (anchorPos == currentPos)
-        {
-            // Optimization so that we don't have to translate the anchor position
-            // when we can instead just pass -1 and have Scintilla handle it.
-            anchorPos = -1;
-        }
-
-        var textLength = TextLength;
-
-        if (anchorPos >= 0)
-        {
-            anchorPos = Helpers.Clamp(anchorPos, 0, textLength);
-            anchorPos = Lines.CharToBytePosition(anchorPos);
-        }
-
-        if (currentPos >= 0)
-        {
-            currentPos = Helpers.Clamp(currentPos, 0, textLength);
-            currentPos = Lines.CharToBytePosition(currentPos);
-        }
-
-        DirectMessage(SCI_SETSEL, new IntPtr(anchorPos), new IntPtr(currentPos));
+        this.SetSelExtension(anchorPos, currentPos, TextLength, Lines);
     }
 
     /// <summary>
@@ -2636,15 +1695,7 @@ public class Scintilla : Control,
     /// <param name="anchor">The zero-based document position to start the selection.</param>
     public void SetSelection(int caret, int anchor)
     {
-        var textLength = TextLength;
-
-        caret = Helpers.Clamp(caret, 0, textLength);
-        anchor = Helpers.Clamp(anchor, 0, textLength);
-
-        caret = Lines.CharToBytePosition(caret);
-        anchor = Lines.CharToBytePosition(anchor);
-
-        DirectMessage(SCI_SETSELECTION, new IntPtr(caret), new IntPtr(anchor));
+        this.SetSelectionExtension(caret, anchor, TextLength, Lines);
     }
 
     /// <summary>
@@ -2655,10 +1706,7 @@ public class Scintilla : Control,
     /// <seealso cref="SetSelectionForeColor" />
     public void SetSelectionBackColor(bool use, Color color)
     {
-        var intColor = ColorTranslator.ToWin32(color);
-        var useSelectionForeColor = use ? new IntPtr(1) : IntPtr.Zero;
-
-        DirectMessage(SCI_SETSELBACK, useSelectionForeColor, new IntPtr(intColor));
+        this.SetSelectionBackColorExtension(use, color, ColorTranslator.ToWin32);
     }
 
     /// <summary>
@@ -2669,26 +1717,7 @@ public class Scintilla : Control,
     /// <seealso cref="SetSelectionBackColor" />
     public void SetSelectionForeColor(bool use, Color color)
     {
-        var intColor = ColorTranslator.ToWin32(color);
-        var useSelectionForeColor = use ? new IntPtr(1) : IntPtr.Zero;
-
-        DirectMessage(SCI_SETSELFORE, useSelectionForeColor, new IntPtr(intColor));
-    }
-
-    /// <summary>
-    /// Gets or sets the layer where the text selection will be painted. Default value is <see cref="Layer.Base"/>
-    /// </summary>
-    [DefaultValue(Layer.Base)]
-    [Category("Selection")]
-    [Description("The layer where the text selection will be painted.")]
-    public Layer SelectionLayer
-    {
-        get => (Layer)DirectMessage(SCI_GETSELECTIONLAYER).ToInt32();
-        set
-        {
-            var layer = (int)value;
-            DirectMessage(SCI_SETSELECTIONLAYER, new IntPtr(layer), IntPtr.Zero);
-        }
+        this.SetSelectionForeColorExtension(use, color, ColorTranslator.ToWin32);
     }
 
     /// <summary>
@@ -2708,30 +1737,7 @@ public class Scintilla : Control,
     /// <seealso cref="StartStyling" />
     public void SetStyling(int length, int style)
     {
-        var textLength = TextLength;
-
-        if (length < 0)
-        {
-            throw new ArgumentOutOfRangeException(nameof(length), "Length cannot be less than zero.");
-        }
-
-        if (stylingPosition + length > textLength)
-        {
-            throw new ArgumentOutOfRangeException(nameof(length), "Position and length must refer to a range within the document.");
-        }
-
-        if (style < 0 || style >= Styles.Count)
-        {
-            throw new ArgumentOutOfRangeException(nameof(style), "Style must be non-negative and less than the size of the collection.");
-        }
-
-        var endPos = stylingPosition + length;
-        var endBytePos = Lines.CharToBytePosition(endPos);
-        DirectMessage(SCI_SETSTYLING, new IntPtr(endBytePos - stylingBytePosition), new IntPtr(style));
-
-        // Track this for the next call
-        stylingPosition = endPos;
-        stylingBytePosition = endBytePos;
+        this.SetStylingExtension(length, style, TextLength, ref stylingPosition, ref stylingBytePosition, Lines, Styles);
     }
 
     /// <summary>
@@ -2743,14 +1749,7 @@ public class Scintilla : Control,
     /// <seealso cref="TargetEnd" />
     public void SetTargetRange(int start, int end)
     {
-        var textLength = TextLength;
-        start = Helpers.Clamp(start, 0, textLength);
-        end = Helpers.Clamp(end, 0, textLength);
-
-        start = Lines.CharToBytePosition(start);
-        end = Lines.CharToBytePosition(end);
-
-        DirectMessage(SCI_SETTARGETRANGE, new IntPtr(start), new IntPtr(end));
+        this.SetTargetRangeExtension(start, end, TextLength, Lines);
     }
 
     /// <summary>
@@ -2763,10 +1762,7 @@ public class Scintilla : Control,
     /// <seealso cref="SetWhitespaceForeColor" />
     public void SetWhitespaceBackColor(bool use, Color color)
     {
-        var intColor = ColorTranslator.ToWin32(color);
-        var useWhitespaceBackColor = use ? new IntPtr(1) : IntPtr.Zero;
-
-        DirectMessage(SCI_SETWHITESPACEBACK, useWhitespaceBackColor, new IntPtr(intColor));
+        this.SetWhitespaceBackColorExtension(use, color, ColorTranslator.ToWin32);
     }
 
     /// <summary>
@@ -2779,10 +1775,7 @@ public class Scintilla : Control,
     /// <seealso cref="SetWhitespaceBackColor" />
     public void SetWhitespaceForeColor(bool use, Color color)
     {
-        var intColor = ColorTranslator.ToWin32(color);
-        var useWhitespaceForeColor = use ? new IntPtr(1) : IntPtr.Zero;
-
-        DirectMessage(SCI_SETWHITESPACEFORE, useWhitespaceForeColor, new IntPtr(intColor));
+        this.SetWhitespaceForeColorExtension(use, color, ColorTranslator.ToWin32);
     }
 
     private bool ShouldSerializeAdditionalCaretForeColor()
@@ -2799,10 +1792,7 @@ public class Scintilla : Control,
     /// <seealso cref="Line.Visible" />
     public void ShowLines(int lineStart, int lineEnd)
     {
-        lineStart = Helpers.Clamp(lineStart, 0, Lines.Count);
-        lineEnd = Helpers.Clamp(lineEnd, lineStart, Lines.Count);
-
-        DirectMessage(SCI_SHOWLINES, new IntPtr(lineStart), new IntPtr(lineEnd));
+        this.ShowLinesExtension(lineStart, lineEnd, Lines);
     }
 
     /// <summary>
@@ -2816,13 +1806,7 @@ public class Scintilla : Control,
     /// <seealso cref="SetStyling" />
     public void StartStyling(int position)
     {
-        position = Helpers.Clamp(position, 0, TextLength);
-        var pos = Lines.CharToBytePosition(position);
-        DirectMessage(SCI_STARTSTYLING, new IntPtr(pos));
-
-        // Track this so we can validate calls to SetStyling
-        stylingPosition = position;
-        stylingBytePosition = pos;
+        this.StartStylingExtension(position, ref stylingPosition, ref stylingBytePosition, TextLength, Lines);
     }
 
     /// <summary>
@@ -2831,7 +1815,7 @@ public class Scintilla : Control,
     /// <seealso cref="StyleResetDefault" />
     public void StyleClearAll()
     {
-        DirectMessage(SCI_STYLECLEARALL);
+        this.StyleClearAllExtension();
     }
 
     /// <summary>
@@ -2840,7 +1824,7 @@ public class Scintilla : Control,
     /// <seealso cref="StyleClearAll" />
     public void StyleResetDefault()
     {
-        DirectMessage(SCI_STYLERESETDEFAULT);
+        this.StyleResetDefaultExtension();
     }
 
     /// <summary>
@@ -2848,7 +1832,7 @@ public class Scintilla : Control,
     /// </summary>
     public void SwapMainAnchorCaret()
     {
-        DirectMessage(SCI_SWAPMAINANCHORCARET);
+        this.SwapMainAnchorCaretExtension();
     }
 
     /// <summary>
@@ -2857,7 +1841,7 @@ public class Scintilla : Control,
     /// <seealso cref="TargetWholeDocument" />
     public void TargetFromSelection()
     {
-        DirectMessage(SCI_TARGETFROMSELECTION);
+        this.TargetFromSelectionExtension();
     }
 
     /// <summary>
@@ -2866,7 +1850,7 @@ public class Scintilla : Control,
     /// <seealso cref="TargetFromSelection" />
     public void TargetWholeDocument()
     {
-        DirectMessage(SCI_TARGETWHOLEDOCUMENT);
+        this.TargetWholeDocumentExtension();
     }
 
     /// <summary>
@@ -2875,15 +1859,9 @@ public class Scintilla : Control,
     /// <param name="style">The index of the <see cref="Style" /> to use when rendering the text to measure.</param>
     /// <param name="text">The text to measure.</param>
     /// <returns>The width in pixels.</returns>
-    public unsafe int TextWidth(int style, string text)
+    public int TextWidth(int style, string text)
     {
-        style = Helpers.Clamp(style, 0, Styles.Count - 1);
-        var bytes = Helpers.GetBytes(text ?? string.Empty, Encoding, zeroTerminated: true);
-
-        fixed (byte* bp = bytes)
-        {
-            return DirectMessage(SCI_TEXTWIDTH, new IntPtr(style), new IntPtr(bp)).ToInt32();
-        }
+        return this.TextWidthExtension(style, text, Styles);
     }
 
     /// <summary>
@@ -2891,7 +1869,7 @@ public class Scintilla : Control,
     /// </summary>
     public void Undo()
     {
-        DirectMessage(SCI_UNDO);
+        this.UndoExtension();
     }
 
     /// <summary>
@@ -2901,9 +1879,7 @@ public class Scintilla : Control,
     /// <seealso cref="UsePopup(PopupMode)" />
     public void UsePopup(bool enablePopup)
     {
-        // NOTE: The behavior of UsePopup has changed in v3.7.1, however, this approach is still valid
-        var bEnablePopup = enablePopup ? new IntPtr(1) : IntPtr.Zero;
-        DirectMessage(SCI_USEPOPUP, bEnablePopup);
+        this.UsePopupExtension(enablePopup);
     }
 
     /// <summary>
@@ -2912,7 +1888,7 @@ public class Scintilla : Control,
     /// <param name="popupMode">One of the <seealso cref="PopupMode" /> enumeration values.</param>
     public void UsePopup(PopupMode popupMode)
     {
-        DirectMessage(SCI_USEPOPUP, new IntPtr((int)popupMode));
+        this.UsePopupExtension(popupMode);
     }
 
     private void WmDestroy(ref Message m)
@@ -3094,11 +2070,7 @@ public class Scintilla : Control,
     /// <seealso cref="WordStartPosition" />
     public int WordEndPosition(int position, bool onlyWordCharacters)
     {
-        var onlyWordChars = onlyWordCharacters ? new IntPtr(1) : IntPtr.Zero;
-        position = Helpers.Clamp(position, 0, TextLength);
-        position = Lines.CharToBytePosition(position);
-        position = DirectMessage(SCI_WORDENDPOSITION, new IntPtr(position), onlyWordChars).ToInt32();
-        return Lines.ByteToCharPosition(position);
+        this.WordEndPositionExtension(position, onlyWordCharacters, Lines);
     }
 
     /// <summary>
@@ -3113,11 +2085,7 @@ public class Scintilla : Control,
     /// <seealso cref="WordEndPosition" />
     public int WordStartPosition(int position, bool onlyWordCharacters)
     {
-        var onlyWordChars = onlyWordCharacters ? new IntPtr(1) : IntPtr.Zero;
-        position = Helpers.Clamp(position, 0, TextLength);
-        position = Lines.CharToBytePosition(position);
-        position = DirectMessage(SCI_WORDSTARTPOSITION, new IntPtr(position), onlyWordChars).ToInt32();
-        return Lines.ByteToCharPosition(position);
+        this.WordStartPositionExtension(position, onlyWordCharacters, Lines);
     }
 
     /// <summary>
@@ -3126,7 +2094,7 @@ public class Scintilla : Control,
     /// <seealso cref="Zoom" />
     public void ZoomIn()
     {
-        DirectMessage(SCI_ZOOMIN);
+        this.ZoomInExtension();
     }
 
     /// <summary>
@@ -3135,7 +2103,7 @@ public class Scintilla : Control,
     /// <seealso cref="Zoom" />
     public void ZoomOut()
     {
-        DirectMessage(SCI_ZOOMOUT);
+        this.ZoomOutExtension();
     }
 
     /// <summary>
@@ -3144,17 +2112,9 @@ public class Scintilla : Control,
     /// <param name="encodedString">The encoded string. I.e. the Ohm character: Ω = \u2126.</param>
     /// <param name="representationString">The representation string for the <paramref name="encodedString"/>. I.e. "OHM".</param>
     /// <remarks>The <see cref="ViewWhitespace"/> must be set to <see cref="WhitespaceMode.VisibleAlways"/> for this to work.</remarks>
-    public unsafe void SetRepresentation(string encodedString, string representationString)
+    public void SetRepresentation(string encodedString, string representationString)
     {
-        var bytesEncoded = Helpers.GetBytes(encodedString, Encoding, zeroTerminated: true);
-        var bytesRepresentation = Helpers.GetBytes(representationString, Encoding, zeroTerminated: true);
-        fixed (byte* bpEncoded = bytesEncoded)
-        {
-            fixed (byte* bpRepresentation = bytesRepresentation)
-            {
-                DirectMessage(SCI_SETREPRESENTATION, new IntPtr(bpEncoded), new IntPtr(bpRepresentation));
-            }
-        }
+        this.SetRepresentationExtension(encodedString, representationString);
     }
 
     /// <summary>
@@ -3162,34 +2122,18 @@ public class Scintilla : Control,
     /// </summary>
     /// <param name="encodedString">The encoded string. I.e. the Ohm character: Ω = \u2126.</param>
     /// <returns>The representation string for the <paramref name="encodedString"/>. I.e. "OHM".</returns>
-    public unsafe string GetRepresentation(string encodedString)
+    public string GetRepresentation(string encodedString)
     {
-        var bytesEncoded = Helpers.GetBytes(encodedString, Encoding, zeroTerminated: true);
-
-        fixed (byte* bpEncoded = bytesEncoded)
-        {
-            var length = DirectMessage(SCI_GETREPRESENTATION, new IntPtr(bpEncoded), IntPtr.Zero)
-                .ToInt32();
-            var bytesRepresentation = new byte[length + 1];
-            fixed (byte* bpRepresentation = bytesRepresentation)
-            {
-                DirectMessage(SCI_GETREPRESENTATION, new IntPtr(bpEncoded), new IntPtr(bpRepresentation));
-                return Helpers.GetString(new IntPtr(bpRepresentation), length, Encoding);
-            }
-        }
+        return this.GetRepresentationExtension(encodedString);
     }
 
     /// <summary>
     /// Clears the representation from a specified character string.
     /// </summary>
     /// <param name="encodedString">The encoded string. I.e. the Ohm character: Ω = \u2126.</param>
-    public unsafe void ClearRepresentation(string encodedString)
+    public void ClearRepresentation(string encodedString)
     {
-        var bytesEncoded = Helpers.GetBytes(encodedString, Encoding, zeroTerminated: true);
-        fixed (byte* bpEncoded = bytesEncoded)
-        {
-            DirectMessage(SCI_CLEARREPRESENTATION, new IntPtr(bpEncoded), IntPtr.Zero);
-        }
+        this.ClearRepresentationExtension(encodedString);
     }
     #endregion Methods
 
@@ -5018,6 +3962,22 @@ public class Scintilla : Control,
     }
 
     /// <summary>
+    /// Gets or sets the layer where the text selection will be painted. Default value is <see cref="Layer.Base"/>
+    /// </summary>
+    [DefaultValue(Layer.Base)]
+    [Category("Selection")]
+    [Description("The layer where the text selection will be painted.")]
+    public Layer SelectionLayer
+    {
+        get => (Layer)DirectMessage(SCI_GETSELECTIONLAYER).ToInt32();
+        set
+        {
+            var layer = (int)value;
+            DirectMessage(SCI_SETSELECTIONLAYER, new IntPtr(layer), IntPtr.Zero);
+        }
+    }
+
+    /// <summary>
     /// Gets or sets the range of the horizontal scroll bar.
     /// </summary>
     /// <returns>The range in pixels of the horizontal scroll bar. The default is 2000.</returns>
@@ -6183,6 +5143,442 @@ public class Scintilla : Control,
     }
 
     #endregion Events
+
+    #region EventMethods
+/// <summary>
+    /// Raises the <see cref="AutoCCancelled" /> event.
+    /// </summary>
+    /// <param name="e">An EventArgs that contains the event data.</param>
+    protected virtual void OnAutoCCancelled(EventArgs e)
+    {
+        if (Events[autoCCancelledEventKey] is EventHandler<EventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="AutoCCharDeleted" /> event.
+    /// </summary>
+    /// <param name="e">An EventArgs that contains the event data.</param>
+    protected virtual void OnAutoCCharDeleted(EventArgs e)
+    {
+        if (Events[autoCCharDeletedEventKey] is EventHandler<EventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="AutoCCompleted" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="AutoCSelectionEventArgs" /> that contains the event data.</param>
+    protected virtual void OnAutoCCompleted(AutoCSelectionEventArgs e)
+    {
+        if (Events[autoCCompletedEventKey] is EventHandler<AutoCSelectionEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="AutoCSelection" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="AutoCSelectionEventArgs" /> that contains the event data.</param>
+    protected virtual void OnAutoCSelection(AutoCSelectionEventArgs e)
+    {
+        if (Events[autoCSelectionEventKey] is EventHandler<AutoCSelectionEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="BeforeDelete" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="BeforeModificationEventArgs" /> that contains the event data.</param>
+    protected virtual void OnBeforeDelete(BeforeModificationEventArgs e)
+    {
+        if (Events[beforeDeleteEventKey] is EventHandler<BeforeModificationEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="BeforeInsert" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="BeforeModificationEventArgs" /> that contains the event data.</param>
+    protected virtual void OnBeforeInsert(BeforeModificationEventArgs e)
+    {
+        if (Events[beforeInsertEventKey] is EventHandler<BeforeModificationEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="BorderStyleChanged" /> event.
+    /// </summary>
+    /// <param name="e">An EventArgs that contains the event data.</param>
+    protected virtual void OnBorderStyleChanged(EventArgs e)
+    {
+        if (Events[borderStyleChangedEventKey] is EventHandler handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="ChangeAnnotation" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="ChangeAnnotationEventArgs" /> that contains the event data.</param>
+    protected virtual void OnChangeAnnotation(ChangeAnnotationEventArgs e)
+    {
+        if (Events[changeAnnotationEventKey] is EventHandler<ChangeAnnotationEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="CharAdded" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="CharAddedEventArgs" /> that contains the event data.</param>
+    protected virtual void OnCharAdded(CharAddedEventArgs e)
+    {
+        if (Events[charAddedEventKey] is EventHandler<CharAddedEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="Delete" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="ModificationEventArgs" /> that contains the event data.</param>
+    protected virtual void OnDelete(ModificationEventArgs e)
+    {
+        if (Events[deleteEventKey] is EventHandler<ModificationEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="DoubleClick" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="DoubleClickEventArgs" /> that contains the event data.</param>
+    protected virtual void OnDoubleClick(DoubleClickEventArgs e)
+    {
+        if (Events[doubleClickEventKey] is EventHandler<DoubleClickEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="DwellEnd" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="DwellEventArgs" /> that contains the event data.</param>
+    protected virtual void OnDwellEnd(DwellEventArgs e)
+    {
+        if (Events[dwellEndEventKey] is EventHandler<DwellEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="DwellStart" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="DwellEventArgs" /> that contains the event data.</param>
+    protected virtual void OnDwellStart(DwellEventArgs e)
+    {
+        if (Events[dwellStartEventKey] is EventHandler<DwellEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="CallTipClick" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="CallTipClickEventArgs" /> that contains the event data.</param>
+    protected virtual void OnCallTipClick(CallTipClickEventArgs e)
+    {
+        if (Events[callTipClickEventKey] is EventHandler<CallTipClickEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the HandleCreated event.
+    /// </summary>
+    /// <param name="e">An EventArgs that contains the event data.</param>
+    protected override unsafe void OnHandleCreated(EventArgs e)
+    {
+        // Set more intelligent defaults...
+        InitDocument();
+
+        // I would like to see all of my text please
+        DirectMessage(SCI_SETSCROLLWIDTH, new IntPtr(1));
+        DirectMessage(SCI_SETSCROLLWIDTHTRACKING, new IntPtr(1));
+
+        //hide all default margins
+        foreach (var margin in Margins)
+        {
+            margin.Width = 0;
+        }
+
+        // Enable support for the call tip style and tabs
+        DirectMessage(SCI_CALLTIPUSESTYLE, new IntPtr(16));
+
+        // Reset the valid "word chars" to work around a bug? in Scintilla which includes those below plus non-printable (beyond ASCII 127) characters
+        var bytes = Helpers.GetBytes("abcdefghijklmnopqrstuvwxyz_ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789", Encoding.ASCII, zeroTerminated: true);
+        fixed (byte* bp = bytes)
+        {
+            DirectMessage(SCI_SETWORDCHARS, IntPtr.Zero, new IntPtr(bp));
+        }
+
+        // Native Scintilla uses the WM_CREATE message to register itself as an
+        // IDropTarget... beating Windows Forms to the punch. There are many possible
+        // ways to solve this, but my favorite is to revoke drag and drop from the
+        // native Scintilla control before base.OnHandleCreated does the standard
+        // processing of AllowDrop.
+        NativeMethods.RevokeDragDrop(Handle);
+
+        base.OnHandleCreated(e);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="HotspotClick" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
+    protected virtual void OnHotspotClick(HotspotClickEventArgs e)
+    {
+        if (Events[hotspotClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="HotspotDoubleClick" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
+    protected virtual void OnHotspotDoubleClick(HotspotClickEventArgs e)
+    {
+        if (Events[hotspotDoubleClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="HotspotReleaseClick" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
+    protected virtual void OnHotspotReleaseClick(HotspotClickEventArgs e)
+    {
+        if (Events[hotspotReleaseClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="IndicatorClick" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="IndicatorClickEventArgs" /> that contains the event data.</param>
+    protected virtual void OnIndicatorClick(IndicatorClickEventArgs e)
+    {
+        if (Events[indicatorClickEventKey] is EventHandler<IndicatorClickEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="IndicatorRelease" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="IndicatorReleaseEventArgs" /> that contains the event data.</param>
+    protected virtual void OnIndicatorRelease(IndicatorReleaseEventArgs e)
+    {
+        if (Events[indicatorReleaseEventKey] is EventHandler<IndicatorReleaseEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="Insert" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="ModificationEventArgs" /> that contains the event data.</param>
+    protected virtual void OnInsert(ModificationEventArgs e)
+    {
+        if (Events[insertEventKey] is EventHandler<ModificationEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="InsertCheck" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="InsertCheckEventArgs" /> that contains the event data.</param>
+    protected virtual void OnInsertCheck(InsertCheckEventArgs e)
+    {
+        if (Events[insertCheckEventKey] is EventHandler<InsertCheckEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="MarginClick" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="MarginClickEventArgs" /> that contains the event data.</param>
+    protected virtual void OnMarginClick(MarginClickEventArgs e)
+    {
+        if (Events[marginClickEventKey] is EventHandler<MarginClickEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="MarginRightClick" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="MarginClickEventArgs" /> that contains the event data.</param>
+    protected virtual void OnMarginRightClick(MarginClickEventArgs e)
+    {
+        if (Events[marginRightClickEventKey] is EventHandler<MarginClickEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="ModifyAttempt" /> event.
+    /// </summary>
+    /// <param name="e">An EventArgs that contains the event data.</param>
+    protected virtual void OnModifyAttempt(EventArgs e)
+    {
+        if (Events[modifyAttemptEventKey] is EventHandler<EventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the MouseUp event.
+    /// </summary>
+    /// <param name="e">A MouseEventArgs that contains the event data.</param>
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+        // Borrowed this from TextBoxBase.OnMouseUp
+        if (!doubleClick)
+        {
+            OnClick(e);
+            OnMouseClick(e);
+        }
+        else
+        {
+            var doubleE = new MouseEventArgs(e.Button, 2, e.X, e.Y, e.Delta);
+            OnDoubleClick(doubleE);
+            OnMouseDoubleClick(doubleE);
+            doubleClick = false;
+        }
+
+        base.OnMouseUp(e);
+    }
+
+    /// <summary>
+    /// Raises the <see cref="NeedShown" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="NeedShownEventArgs" /> that contains the event data.</param>
+    protected virtual void OnNeedShown(NeedShownEventArgs e)
+    {
+        if (Events[needShownEventKey] is EventHandler<NeedShownEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="Painted" /> event.
+    /// </summary>
+    /// <param name="e">An EventArgs that contains the event data.</param>
+    protected virtual void OnPainted(EventArgs e)
+    {
+        if (Events[paintedEventKey] is EventHandler<EventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="SavePointLeft" /> event.
+    /// </summary>
+    /// <param name="e">An EventArgs that contains the event data.</param>
+    protected virtual void OnSavePointLeft(EventArgs e)
+    {
+        if (Events[savePointLeftEventKey] is EventHandler<EventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="SavePointReached" /> event.
+    /// </summary>
+    /// <param name="e">An EventArgs that contains the event data.</param>
+    protected virtual void OnSavePointReached(EventArgs e)
+    {
+        if (Events[savePointReachedEventKey] is EventHandler<EventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="StyleNeeded" /> event.
+    /// </summary>
+    /// <param name="e">A <see cref="StyleNeededEventArgs" /> that contains the event data.</param>
+    protected virtual void OnStyleNeeded(StyleNeededEventArgs e)
+    {
+        if (Events[styleNeededEventKey] is EventHandler<StyleNeededEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="UpdateUi" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="UpdateUIEventArgs" /> that contains the event data.</param>
+    protected virtual void OnUpdateUI(UpdateUIEventArgs e)
+    {
+        if (Events[updateUiEventKey] is EventHandler<UpdateUIEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="ZoomChanged" /> event.
+    /// </summary>
+    /// <param name="e">An EventArgs that contains the event data.</param>
+    protected virtual void OnZoomChanged(EventArgs e)
+    {
+        if (Events[zoomChangedEventKey] is EventHandler<EventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+    #endregion
 
     #region Constructors
 

@@ -10,7 +10,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IEnumerable<TLine>
+public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IEnumerable<TLine>, ILineCollection
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -86,11 +86,17 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         // the end of the list so we can calculate the length of the last line.
 
         if (index + 1 <= stepLine)
+        {
             return perLineData[index + 1].Start - perLineData[index].Start;
+        }
         else if (index <= stepLine)
+        {
             return perLineData[index + 1].Start + stepLength - perLineData[index].Start;
+        }
         else
+        {
             return perLineData[index + 1].Start + stepLength - (perLineData[index].Start + stepLength);
+        }
     }
 
     /// <summary>
@@ -103,11 +109,18 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
 
         var start = perLineData[index].Start;
         if (index > stepLine)
+        {
             start += stepLength;
+        }
 
         return start;
     }
 
+    /// <summary>
+    /// Gets the byte position from the specified character position.
+    /// </summary>
+    /// <param name="pos">The character position within the document.</param>
+    /// <returns>The byte position of the specified character position.</returns>
     public virtual int CharToBytePosition(int pos)
     {
         Debug.Assert(pos >= 0);
@@ -119,8 +132,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         pos -= CharPositionFromLine(line);
 
         // Optimization when the line contains NO multibyte characters
-        if (!LineContainsMultibyteChar(line))
+        if (!LineContainsMultiByteChar(line))
+        {
             return bytePos + pos;
+        }
 
         while (pos > 0)
         {
@@ -132,6 +147,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         return bytePos;
     }
 
+    /// <summary>
+    /// Deletes the specified line characters specified by the line index.
+    /// </summary>
+    /// <param name="index">The line index.</param>
     public virtual void DeletePerLine(int index)
     {
         Debug.Assert(index != 0);
@@ -192,9 +211,13 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
                 var str = scintilla.Encoding.GetString(bytes);
                 var containsMultibyte = "U";
                 if (perLineData[i].ContainsMultibyte == ContainsMultibyte.Yes)
+                {
                     containsMultibyte = "Y";
+                }
                 else if (perLineData[i].ContainsMultibyte == ContainsMultibyte.No)
+                {
                     containsMultibyte = "N";
+                }
 
                 writer.WriteLine("{0}[{1}] {2}:{3}:{4} {5}", error, i, CharPositionFromLine(i), str.Length, containsMultibyte, str.Replace("\r", "\\r").Replace("\n", "\\n"));
                 totalChars += str.Length;
@@ -230,7 +253,12 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         return GetEnumerator();
     }
 
-    public virtual bool LineContainsMultibyteChar(int index)
+    /// <summary>
+    /// Gets a value indicating whether a line specified by its index contains multi-byte character(s).
+    /// </summary>
+    /// <param name="index">The line index.</param>
+    /// <returns><c>true</c> if the line specified by its index contains multi-byte character(s), <c>false</c> otherwise.</returns>
+    public virtual bool LineContainsMultiByteChar(int index)
     {
         var perLine = perLineData[index];
         if (perLine.ContainsMultibyte == ContainsMultibyte.Unkown)
@@ -266,11 +294,17 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
             var start = CharPositionFromLine(mid);
 
             if (pos == start)
+            {
                 return mid;
+            }
             else if (start < pos)
+            {
                 low = mid + 1;
+            }
             else
+            {
                 high = mid - 1;
+            }
         }
 
         // After while exit, 'low' will point to the index where 'pos' should be
@@ -303,6 +337,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         stepLine++;
     }
 
+    /// <summary>
+    /// Moves the step.
+    /// </summary>
+    /// <param name="line">The line.</param>
     public virtual void MoveStep(int line)
     {
         if (stepLength == 0)
@@ -311,21 +349,19 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         }
         else if (stepLine < line)
         {
-            PerLine data;
             while (stepLine < line)
             {
                 stepLine++;
-                data = perLineData[stepLine];
+                var data = perLineData[stepLine];
                 data.Start += stepLength;
                 perLineData[stepLine] = data;
             }
         }
         else if (stepLine > line)
         {
-            PerLine data;
             while (stepLine > line)
             {
-                data = perLineData[stepLine];
+                var data = perLineData[stepLine];
                 data.Start -= stepLength;
                 perLineData[stepLine] = data;
                 stepLine--;
@@ -333,14 +369,19 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         }
     }
 
+    /// <summary>
+    /// Rebuilds the line data.
+    /// </summary>
     public virtual void RebuildLineData()
     {
         stepLine = 0;
         stepLength = 0;
 
-        perLineData = new GapBuffer<PerLine>();
-        perLineData.Add(new PerLine { Start = 0 });
-        perLineData.Add(new PerLine { Start = 0 }); // Terminal
+        perLineData = new GapBuffer<PerLine>
+        {
+            new() { Start = 0 },
+            new() { Start = 0 } // Terminal
+        };
 
         // Fake an insert notification
         var scn = new SCNotification();

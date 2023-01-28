@@ -38,7 +38,9 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
         {
             var pos = scintilla.DirectMessage(SCI_GETSELECTIONNANCHOR, new IntPtr(Index)).ToInt32();
             if (pos <= 0)
+            {
                 return pos;
+            }
 
             return scintilla.Lines.ByteToCharPosition(pos);
         }
@@ -77,7 +79,9 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
         {
             var pos = scintilla.DirectMessage(SCI_GETSELECTIONNCARET, new IntPtr(Index)).ToInt32();
             if (pos <= 0)
+            {
                 return pos;
+            }
 
             return scintilla.Lines.ByteToCharPosition(pos);
         }
@@ -116,7 +120,9 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
         {
             var pos = scintilla.DirectMessage(SCI_GETSELECTIONNEND, new IntPtr(Index)).ToInt32();
             if (pos <= 0)
+            {
                 return pos;
+            }
 
             return scintilla.Lines.ByteToCharPosition(pos);
         }
@@ -144,7 +150,9 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
         {
             var pos = scintilla.DirectMessage(SCI_GETSELECTIONNSTART, new IntPtr(Index)).ToInt32();
             if (pos <= 0)
+            {
                 return pos;
+            }
 
             return scintilla.Lines.ByteToCharPosition(pos);
         }

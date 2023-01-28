@@ -236,7 +236,9 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
         {
             var length = scintilla.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
+            {
                 return new byte[0];
+            }
 
             var text = new byte[length + 1];
             var styles = new byte[length + 1];
@@ -256,7 +258,9 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
         {
             var length = scintilla.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
+            {
                 return;
+            }
 
             var text = new byte[length + 1];
             fixed (byte* textPtr = text)
@@ -282,7 +286,9 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
         {
             var length = scintilla.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
+            {
                 return string.Empty;
+            }
 
             var bytes = new byte[length + 1];
             fixed (byte* bp = bytes)
@@ -458,7 +464,9 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
         {
             var length = scintilla.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
+            {
                 return Array.Empty<byte>();
+            }
 
             var text = new byte[length + 1];
             var styles = new byte[length + 1];
@@ -478,7 +486,9 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
         {
             var length = scintilla.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
+            {
                 return;
+            }
 
             var text = new byte[length + 1];
             fixed (byte* textPtr = text)
@@ -505,7 +515,9 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
         {
             var length = scintilla.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
+            {
                 return string.Empty;
+            }
 
             var bytes = new byte[length + 1];
             fixed (byte* bp = bytes)
@@ -551,7 +563,9 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             var length = scintilla.DirectMessage(SCI_LINELENGTH, new IntPtr(Index));
             var ptr = scintilla.DirectMessage(SCI_GETRANGEPOINTER, start, length);
             if (ptr == IntPtr.Zero)
+            {
                 return string.Empty;
+            }
 
             var text = new string((sbyte*)ptr, 0, length.ToInt32(), scintilla.Encoding);
             return text;

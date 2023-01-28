@@ -76,7 +76,9 @@ public abstract class BeforeModificationEventArgsBase<TMarkers, TStyles, TIndica
         get
         {
             if (Source != ModificationSource.User)
+            {
                 return null;
+            }
 
             if (CachedText == null)
             {

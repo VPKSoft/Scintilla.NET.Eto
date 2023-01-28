@@ -53,7 +53,9 @@ public abstract class AutoCSelectionEventArgsBase<TMarkers, TStyles, TIndicators
         get
         {
             if (position == null)
+            {
                 position = scintilla.Lines.ByteToCharPosition(bytePosition);
+            }
 
             return (int)position;
         }

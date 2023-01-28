@@ -58,10 +58,14 @@ public static class HelpersGeneral
     public static int Clamp(int value, int min, int max)
     {
         if (value < min)
+        {
             return min;
+        }
 
         if (value > max)
+        {
             return max;
+        }
 
         return value;
     }
@@ -69,7 +73,9 @@ public static class HelpersGeneral
     public static int ClampMin(int value, int min)
     {
         if (value < min)
+        {
             return min;
+        }
 
         return value;
     }
@@ -101,7 +107,9 @@ public static class HelpersGeneral
     public static unsafe byte[] GetBytes(string text, Encoding encoding, bool zeroTerminated)
     {
         if (string.IsNullOrEmpty(text))
+        {
             return zeroTerminated ? new byte[] { 0 } : new byte[0];
+        }
 
         var count = encoding.GetByteCount(text);
         var buffer = new byte[count + (zeroTerminated ? 1 : 0)];
@@ -115,7 +123,9 @@ public static class HelpersGeneral
         }
 
         if (zeroTerminated)
+        {
             buffer[buffer.Length - 1] = 0;
+        }
 
         return buffer;
     }
@@ -132,7 +142,9 @@ public static class HelpersGeneral
             }
 
             if (zeroTerminated)
+            {
                 buffer[buffer.Length - 1] = 0;
+            }
 
             return buffer;
         }
@@ -152,7 +164,9 @@ public static class HelpersGeneral
         while (bytePos < length)
         {
             if (decoder.GetCharCount(text + bytePos, 1, false) > 0)
+            {
                 result[charPos++] = *(styles + bytePos); // New char
+            }
 
             bytePos++;
         }
@@ -175,7 +189,9 @@ public static class HelpersGeneral
         {
             result[bytePos] = styles[charPos];
             if (decoder.GetCharCount(text + bytePos, 1, false) > 0)
+            {
                 charPos++; // Move a char
+            }
 
             bytePos++;
         }
@@ -189,7 +205,9 @@ public static class HelpersGeneral
     public static unsafe int GetCharCount(IntPtr text, int length, Encoding encoding)
     {
         if (text == IntPtr.Zero || length == 0)
+        {
             return 0;
+        }
 
         // Never use SCI_COUNTCHARACTERS. It counts CRLF as 1 char!
         var count = encoding.GetCharCount((byte*)text, length);
