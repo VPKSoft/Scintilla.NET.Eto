@@ -269,7 +269,7 @@ public class Scintilla : Control,
     /// <seealso cref="AutoCCurrent" />
     /// <seealso cref="AutoCAutoHide" />
     /// <seealso cref="AutoCIgnoreCase" />
-    public unsafe void AutoCSelect(string select)
+    public void AutoCSelect(string select)
     {
         this.AutoCSelectExtension(select);
     }
@@ -289,7 +289,7 @@ public class Scintilla : Control,
     /// </summary>
     /// <param name="lenEntered">The number of characters already entered to match on.</param>
     /// <param name="list">A list of auto-completion words separated by the <see cref="AutoCSeparator" /> character.</param>
-    public unsafe void AutoCShow(int lenEntered, string list)
+    public void AutoCShow(int lenEntered, string list)
     {
         this.AutoCShowExtension(lenEntered, list);
     }
@@ -299,7 +299,7 @@ public class Scintilla : Control,
     /// </summary>
     /// <param name="chars">A String of the characters that will cancel auto-completion. The default is empty.</param>
     /// <remarks>Characters specified should be limited to printable ASCII characters.</remarks>
-    public unsafe void AutoCStops(string chars)
+    public void AutoCStops(string chars)
     {
         this.AutoCStopsExtension(chars);
     }
@@ -679,11 +679,24 @@ public class Scintilla : Control,
         return DirectMessage(SciPointer, message, wParam, lParam);
     }
 
+    /// <summary>
+    /// Sends the specified message directly to the native Scintilla control.
+    /// </summary>
+    /// <param name="msg">The MSG.</param>
+    /// <returns>The message result as <see cref="IntPtr" />.</returns>
+    /// <remarks>The WParam of the call is set to <see cref="IntPtr.Zero" />.</remarks>
     public IntPtr DirectMessage(int msg)
     {
         return DirectMessage(msg, IntPtr.Zero, IntPtr.Zero);
     }
 
+    /// <summary>
+    /// Sends the specified message directly to the native Scintilla control.
+    /// </summary>
+    /// <param name="msg">The MSG.</param>
+    /// <param name="wParam">The message <c>wParam</c> field.</param>
+    /// <returns>The message result as <see cref="IntPtr" />.</returns>
+    /// <remarks>The lParam of the call is set to <see cref="IntPtr.Zero" />.</remarks>
     public IntPtr DirectMessage(int msg, IntPtr wParam)
     {
         return DirectMessage(msg, wParam, IntPtr.Zero);
@@ -1658,7 +1671,7 @@ public class Scintilla : Control,
     /// the embedded property name macro will be replaced (expanded) with that current property value.
     /// </param>
     /// <remarks>Property names are case-sensitive.</remarks>
-    public unsafe void SetProperty(string name, string value)
+    public void SetProperty(string name, string value)
     {
         this.SetPropertyExtension(name, value);
     }
@@ -1806,7 +1819,7 @@ public class Scintilla : Control,
     /// <seealso cref="SetStyling" />
     public void StartStyling(int position)
     {
-        this.StartStylingExtension(position, ref stylingPosition, ref stylingBytePosition, TextLength, Lines);
+        this.StartStylingExtension(position, out stylingPosition, out stylingBytePosition, TextLength, Lines);
     }
 
     /// <summary>
@@ -2070,7 +2083,7 @@ public class Scintilla : Control,
     /// <seealso cref="WordStartPosition" />
     public int WordEndPosition(int position, bool onlyWordCharacters)
     {
-        this.WordEndPositionExtension(position, onlyWordCharacters, Lines);
+        return this.WordEndPositionExtension(position, onlyWordCharacters, Lines);
     }
 
     /// <summary>
@@ -2085,7 +2098,7 @@ public class Scintilla : Control,
     /// <seealso cref="WordEndPosition" />
     public int WordStartPosition(int position, bool onlyWordCharacters)
     {
-        this.WordStartPositionExtension(position, onlyWordCharacters, Lines);
+        return this.WordStartPositionExtension(position, onlyWordCharacters, Lines);
     }
 
     /// <summary>
@@ -3163,6 +3176,10 @@ public class Scintilla : Control,
         }
     }
 
+    /// <summary>
+    /// Gets the encoding of the <see cref="T:Scintilla.NET.Abstractions.IScintillaApi" /> control interface.
+    /// </summary>
+    /// <value>The encoding of the control.</value>
     public Encoding Encoding
     {
         get
@@ -3939,6 +3956,11 @@ public class Scintilla : Control,
         }
     }
 
+    /// <summary>
+    /// Gets the Scintilla pointer.
+    /// </summary>
+    /// <value>The Scintilla pointer.</value>
+    /// <exception cref="System.InvalidOperationException">Control Scintilla accessed from a thread other than the thread it was created on.</exception>
     public IntPtr SciPointer
     {
         get
@@ -5047,6 +5069,9 @@ public class Scintilla : Control,
         remove => Events.RemoveHandler(needShownEventKey, value);
     }
 
+    /// <summary>
+    /// The Scintilla native notification.
+    /// </summary>
     public event EventHandler<SCNotificationEventArgs> SCNotification
     {
         add => Events.AddHandler(scNotificationEventKey, value);
