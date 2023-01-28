@@ -61,6 +61,18 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs,
         SCNotificationEventArgs>
 {
+    
+
+    public Scintilla() : base(scintilla_new())
+    {
+        Lines = new LineCollection(this);
+        Styles = new StyleCollection(this);
+        Indicators = new IndicatorCollection(this);
+        Margins = new MarginCollection(this);
+        Markers = new MarkerCollection(this);
+        Selections = new SelectionCollection(this);
+    }
+
     /// <summary>
     /// Create a new Scintilla widget. The returned pointer can be added to a container and displayed in the same way as other widgets.
     /// </summary>
