@@ -3673,17 +3673,6 @@ public class Scintilla : Control,
     }
 
     /// <summary>
-    /// Not supported.
-    /// </summary>
-    [Browsable(false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public new Padding Padding
-    {
-        get => base.Padding;
-        set => base.Padding = value;
-    }
-
-    /// <summary>
     /// Gets or sets whether line endings in pasted text are converted to the document <see cref="EolMode" />.
     /// </summary>
     /// <returns>true to convert line endings in pasted text; otherwise, false. The default is true.</returns>
@@ -5652,6 +5641,17 @@ public class Scintilla : Control,
     {
         get => base.ForeColor;
         set => base.ForeColor = value;
+    }
+
+    /// <summary>
+    /// Not supported.
+    /// </summary>
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public new Padding Padding
+    {
+        get => base.Padding;
+        set => base.Padding = value;
     }
     #endregion
 
