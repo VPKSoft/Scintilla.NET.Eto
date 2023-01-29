@@ -683,7 +683,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <param name="edgeColor">The color of the vertical long line indicator.</param>
     /// <remarks>A column is defined as the width of a space character in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.</remarks>
     /// <seealso cref="MultiEdgeClearAll" />
-    void MultiEdgeAddLine(int column, Color edgeColor);
+    void MultiEdgeAddLine(int column, TColor edgeColor);
 
     /// <summary>
     /// Removes all the long line column indicators specified using <seealso cref="MultiEdgeAddLine" />.
@@ -854,14 +854,14 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// </summary>
     /// <param name="color">Additional selections background color.</param>
     /// <remarks>Calling <see cref="SetSelectionBackColor" /> will reset the <paramref name="color" /> specified.</remarks>
-    void SetAdditionalSelBack(Color color);
+    void SetAdditionalSelBack(TColor color);
 
     /// <summary>
     /// Sets the foreground color of additional selections.
     /// </summary>
     /// <param name="color">Additional selections foreground color.</param>
     /// <remarks>Calling <see cref="SetSelectionForeColor" /> will reset the <paramref name="color" /> specified.</remarks>
-    void SetAdditionalSelFore(Color color);
+    void SetAdditionalSelFore(TColor color);
 
     /// <summary>
     /// Removes any selection and places the caret at the specified position.
@@ -882,7 +882,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <param name="use">true to override the fold margin color; otherwise, false.</param>
     /// <param name="color">The global fold margin color.</param>
     /// <seealso cref="SetFoldMarginHighlightColor" />
-    void SetFoldMarginColor(bool use, Color color);
+    void SetFoldMarginColor(bool use, TColor color);
 
     /// <summary>
     /// Sets a global override to the fold margin highlight color.
@@ -890,7 +890,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <param name="use">true to override the fold margin highlight color; otherwise, false.</param>
     /// <param name="color">The global fold margin highlight color.</param>
     /// <seealso cref="SetFoldMarginColor" />
-    void SetFoldMarginHighlightColor(bool use, Color color);
+    void SetFoldMarginHighlightColor(bool use, TColor color);
 
     /// <summary>
     /// Similar to <see cref="SetKeywords" /> but for sub-styles.
@@ -954,7 +954,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <param name="use">true to override the selection background color; otherwise, false.</param>
     /// <param name="color">The global selection background color.</param>
     /// <seealso cref="SetSelectionForeColor" />
-    void SetSelectionBackColor(bool use, Color color);
+    void SetSelectionBackColor(bool use, TColor color);
 
     /// <summary>
     /// Sets a global override to the selection foreground color.
@@ -962,7 +962,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <param name="use">true to override the selection foreground color; otherwise, false.</param>
     /// <param name="color">The global selection foreground color.</param>
     /// <seealso cref="SetSelectionBackColor" />
-    void SetSelectionForeColor(bool use, Color color);
+    void SetSelectionForeColor(bool use, TColor color);
 
     /// <summary>
     /// Styles the specified length of characters.
@@ -998,7 +998,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <remarks>When not overridden globally, the whitespace background color is determined by the current lexer.</remarks>
     /// <seealso cref="IScintillaProperties{TColor}.ViewWhitespace" />
     /// <seealso cref="SetWhitespaceForeColor" />
-    void SetWhitespaceBackColor(bool use, Color color);
+    void SetWhitespaceBackColor(bool use, TColor color);
 
     /// <summary>
     /// Sets a global override to the whitespace foreground color.
@@ -1008,7 +1008,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <remarks>When not overridden globally, the whitespace foreground color is determined by the current lexer.</remarks>
     /// <seealso cref="IScintillaProperties{TColor}.ViewWhitespace" />
     /// <seealso cref="SetWhitespaceBackColor" />
-    void SetWhitespaceForeColor(bool use, Color color);
+    void SetWhitespaceForeColor(bool use, TColor color);
 
     /// <summary>
     /// Shows the range of lines specified.

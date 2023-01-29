@@ -155,8 +155,9 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         return scintilla_send_message(sciPtr, msg, wParam, lParam);
     }
 
+    #region Methods
     /// <inheritdoc />
-    void IScintillaMethods<Color, Key, Image>.MarkerDeleteAll(int marker)
+    public void MarkerDeleteAll(int marker)
     {
         throw new NotImplementedException();
     }
@@ -180,7 +181,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <inheritdoc />
-    public void MultiEdgeAddLine(int column, System.Drawing.Color edgeColor)
+    public void MultiEdgeAddLine(int column, Color edgeColor)
     {
         throw new NotImplementedException();
     }
@@ -300,13 +301,13 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <inheritdoc />
-    public void SetAdditionalSelBack(System.Drawing.Color color)
+    public void SetAdditionalSelBack(Color color)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc />
-    public void SetAdditionalSelFore(System.Drawing.Color color)
+    public void SetAdditionalSelFore(Color color)
     {
         throw new NotImplementedException();
     }
@@ -324,13 +325,13 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <inheritdoc />
-    public void SetFoldMarginColor(bool use, System.Drawing.Color color)
+    public void SetFoldMarginColor(bool use, Color color)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc />
-    public void SetFoldMarginHighlightColor(bool use, System.Drawing.Color color)
+    public void SetFoldMarginHighlightColor(bool use, Color color)
     {
         throw new NotImplementedException();
     }
@@ -372,13 +373,13 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <inheritdoc />
-    public void SetSelectionBackColor(bool use, System.Drawing.Color color)
+    public void SetSelectionBackColor(bool use, Color color)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc />
-    public void SetSelectionForeColor(bool use, System.Drawing.Color color)
+    public void SetSelectionForeColor(bool use, Color color)
     {
         throw new NotImplementedException();
     }
@@ -396,13 +397,13 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <inheritdoc />
-    public void SetWhitespaceBackColor(bool use, System.Drawing.Color color)
+    public void SetWhitespaceBackColor(bool use, Color color)
     {
         throw new NotImplementedException();
     }
 
     /// <inheritdoc />
-    public void SetWhitespaceForeColor(bool use, System.Drawing.Color color)
+    public void SetWhitespaceForeColor(bool use, Color color)
     {
         throw new NotImplementedException();
     }
@@ -1011,11 +1012,13 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <inheritdoc />
-    void IScintillaApi.FoldAll(FoldAction action)
+    public void FoldAll(FoldAction action)
     {
         throw new NotImplementedException();
     }
+    #endregion
 
+    #region Events
     /// <inheritdoc />
     public event EventHandler<EventArgs>? AutoCCancelled;
 
@@ -1108,7 +1111,9 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
 
     /// <inheritdoc />
     public event EventHandler<EventArgs>? ZoomChanged;
+    #endregion
 
+    #region Properties
     /// <inheritdoc />
     public MarkerCollection Markers { get; }
 
@@ -1459,4 +1464,5 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
 
     /// <inheritdoc />
     public int Zoom { get; set; }
+    #endregion
 }
