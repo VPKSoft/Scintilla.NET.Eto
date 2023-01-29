@@ -108,6 +108,15 @@ public interface IScintillaApi : IHasEncoding
     /// <param name="action">One of the <see cref="FoldAction" /> enumeration values.</param>
     /// <remarks>When using <see cref="FoldAction.Toggle" /> the first fold header in the document is examined to decide whether to expand or contract.</remarks>
     void FoldAll(FoldAction action);
+
+    /// <summary>
+    /// Initializes the Scintilla document.
+    /// </summary>
+    /// <param name="eolMode">The eol mode.</param>
+    /// <param name="useTabs">if set to <c>true</c> use tabs instead of spaces.</param>
+    /// <param name="tabWidth">Width of the tab.</param>
+    /// <param name="indentWidth">Width of the indent.</param>
+    void InitDocument(Eol eolMode = Eol.CrLf, bool useTabs = false, int tabWidth = 4, int indentWidth = 0);
 }
 
 /// <summary>
@@ -147,7 +156,7 @@ public interface IScintillaApi<
     TMargin,
     TSelection,
     TBitmap,
-    TColor> : IScintillaApi, IScintillaNotificationEvent<TEventArgs>
+    TColor> : IScintillaApi, IScintillaNotificationEvent<TEventArgs>, IScintillaCollectionProperties<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -164,39 +173,4 @@ public interface IScintillaApi<
     where TBitmap: class
     where TColor: struct
 {
-    /// <summary>
-    /// Gets a collection representing markers in a <see cref="IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> control.
-    /// </summary>
-    /// <returns>A collection of markers.</returns>
-    TMarkers Markers { get; }
-
-    /// <summary>
-    /// Gets a collection representing style definitions in a <see cref="IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> control.
-    /// </summary>
-    /// <returns>A collection of style definitions.</returns>
-    TStyles Styles { get; }
-
-    /// <summary>
-    /// Gets a collection of objects for working with indicators.
-    /// </summary>
-    /// <returns>A collection of the indicator objects.</returns>
-    TIndicators Indicators { get; }
-
-    /// <summary>
-    /// Gets a collection representing lines of text in the <see cref="IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> control interface.
-    /// </summary>
-    /// <returns>A collection of text lines.</returns>
-    TLines Lines { get; }
-        
-    /// <summary>
-    /// Gets a collection representing margins in a <see cref="IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> control interface.
-    /// </summary>
-    /// <returns>A collection of margins.</returns>
-    TMargins Margins { get; }
-
-    /// <summary>
-    /// Gets a collection representing multiple selections in a <see cref="IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> control interface.
-    /// </summary>
-    /// <returns>A collection of selections.</returns>
-    TSelections Selections { get; }
 }

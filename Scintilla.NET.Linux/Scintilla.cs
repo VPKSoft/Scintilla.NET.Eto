@@ -36,20 +36,18 @@ using Color = Gdk.Color;
 using Image = Gtk.Image;
 using Key = Gdk.Key;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Extensions;
 using Scintilla.NET.Abstractions.Structs;
+using Scintilla.NET.Linux.GdkUtils;
 using Style = Scintilla.NET.Linux.Collections.Style;
 using Selection = Scintilla.NET.Linux.Collections.Selection;
 using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
-
 namespace Scintilla.NET.Linux;
 
 public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
     IScintillaProperties<Color>,
-    IScintillaCollectionProperties<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection,
-        MarginCollection,
-        SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
     IScintillaMethods<Color, Key, Image>,
     IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color,
@@ -76,6 +74,19 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         Selections = new SelectionCollection(this);
     }
 
+    #region Fields
+    // Pinned dataDwellStart
+    private IntPtr fillUpChars;
+
+    // For highlight calculations
+    private string lastCallTip = string.Empty;
+
+    // Set style
+    private int stylingPosition;
+    private int stylingBytePosition;
+    #endregion
+
+    #region Native
     /// <summary>
     /// Create a new Scintilla widget. The returned pointer can be added to a container and displayed in the same way as other widgets.
     /// </summary>
@@ -104,11 +115,6 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <inheritdoc />
     public Encoding Encoding { get; }
 
-    /// <inheritdoc />
-    public void LoadLexerLibrary(string path)
-    {
-        throw new NotImplementedException();
-    }
 
     private static ILexilla? lexillaInstance;
 
@@ -125,710 +131,407 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         }
     }
 
-    /// <inheritdoc cref="IScintillaControl.SetParameter"/>
+    /// <inheritdoc cref="IScintillaApi.SetParameter"/>
     public IntPtr SetParameter(int message, IntPtr wParam, IntPtr lParam)
     {
         return scintilla_send_message(editor, message, wParam, lParam);
     }
 
-    /// <inheritdoc cref="IScintillaControl.DirectMessage(int)"/>
+    /// <inheritdoc cref="IScintillaApi.DirectMessage(int)"/>
     public IntPtr DirectMessage(int msg)
     {
         return SetParameter(msg, IntPtr.Zero, IntPtr.Zero);
     }
 
-    /// <inheritdoc cref="IScintillaControl.DirectMessage(int, IntPtr)"/>
+    /// <inheritdoc cref="IScintillaApi.DirectMessage(int, IntPtr)"/>
     public IntPtr DirectMessage(int msg, IntPtr wParam)
     {
         return SetParameter(msg, wParam, IntPtr.Zero);
     }
 
-    /// <inheritdoc cref="IScintillaControl.DirectMessage(int, IntPtr, IntPtr)"/>
+    /// <inheritdoc cref="IScintillaApi.DirectMessage(int, IntPtr, IntPtr)"/>
     public IntPtr DirectMessage(int msg, IntPtr wParam, IntPtr lParam)
     {
         return SetParameter(msg, wParam, lParam);
     }
 
-    /// <inheritdoc cref="IScintillaControl.DirectMessage(int, IntPtr, IntPtr)"/>
+    /// <inheritdoc cref="IScintillaApi.DirectMessage(int, IntPtr, IntPtr)"/>
     public IntPtr DirectMessage(IntPtr sciPtr, int msg, IntPtr wParam, IntPtr lParam)
     {
         return scintilla_send_message(sciPtr, msg, wParam, lParam);
     }
+    #endregion
 
     #region Methods
-    /// <inheritdoc />
-    public void MarkerDeleteAll(int marker)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void MarkerDeleteHandle(MarkerHandle markerHandle)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void MarkerEnableHighlight(bool enabled)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int MarkerLineFromHandle(MarkerHandle markerHandle)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void MultiEdgeAddLine(int column, Color edgeColor)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void MultiEdgeClearAll()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void MultipleSelectAddEach()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void MultipleSelectAddNext()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void Paste()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int PointXFromPosition(int pos)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int PointYFromPosition(int pos)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public string PropertyNames()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public PropertyType PropertyType(string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void Redo()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void RegisterRgbaImage(int type, Image image)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void ReleaseDocument(Document document)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void ReplaceSelection(string text)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int ReplaceTarget(string text)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int ReplaceTargetRe(string text)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void RotateSelection()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void ScrollCaret()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void ScrollRange(int start, int end)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int SearchInTarget(string text)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SelectAll()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetAdditionalSelBack(Color color)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetAdditionalSelFore(Color color)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetEmptySelection(int pos)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetFoldFlags(FoldFlags flags)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetFoldMarginColor(bool use, Color color)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetFoldMarginHighlightColor(bool use, Color color)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetIdentifiers(int style, string identifiers)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetKeywords(int set, string keywords)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetProperty(string name, string value)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetSavePoint()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetSel(int anchorPos, int currentPos)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetSelection(int caret, int anchor)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetSelectionBackColor(bool use, Color color)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetSelectionForeColor(bool use, Color color)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetStyling(int length, int style)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetTargetRange(int start, int end)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetWhitespaceBackColor(bool use, Color color)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetWhitespaceForeColor(bool use, Color color)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void ShowLines(int lineStart, int lineEnd)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void StartStyling(int position)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void StyleClearAll()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void StyleResetDefault()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SwapMainAnchorCaret()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void TargetFromSelection()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void TargetWholeDocument()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int TextWidth(int style, string text)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void Undo()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void UsePopup(bool enablePopup)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void UsePopup(PopupMode popupMode)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int WordEndPosition(int position, bool onlyWordCharacters)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int WordStartPosition(int position, bool onlyWordCharacters)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void ZoomIn()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void ZoomOut()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void SetRepresentation(string encodedString, string representationString)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public string GetRepresentation(string encodedString)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void ClearRepresentation(string encodedString)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    void IScintillaApi.MarkerDeleteAll(int marker)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int TextLength { get; }
-
-    /// <inheritdoc />
-    public string GetTag(int tagNumber)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    string IScintillaMethods<Color, Key, Image>.GetTextRange(int position, int length)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public string GetTextRangeAsHtml(int position, int length)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public string GetWordFromPosition(int position)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void GotoPosition(int position)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void HideLines(int lineStart, int lineEnd)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public uint IndicatorAllOnFor(int position)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void IndicatorClearRange(int position, int length)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void IndicatorFillRange(int position, int length)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void InsertText(int position, string text)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public bool IsRangeWord(int start, int end)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int LineFromPosition(int position)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void LineScroll(int lines, int columns)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    string IScintillaApi.GetTextRange(int position, int length)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
+    /// <summary>
+    /// Increases the reference count of the specified document by 1.
+    /// </summary>
+    /// <param name="document">The document reference count to increase.</param>
     public void AddRefDocument(Document document)
     {
-        throw new NotImplementedException();
+        this.AddRefDocumentExtension(document);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Adds an additional selection range to the existing main selection.
+    /// </summary>
+    /// <param name="caret">The zero-based document position to end the selection.</param>
+    /// <param name="anchor">The zero-based document position to start the selection.</param>
+    /// <remarks>A main selection must first have been set by a call to <see cref="SetSelection" />.</remarks>
     public void AddSelection(int caret, int anchor)
     {
-        throw new NotImplementedException();
+        this.AddSelectionExtension(caret, anchor, Lines);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Inserts the specified text at the current caret position.
+    /// </summary>
+    /// <param name="text">The text to insert at the current caret position.</param>
+    /// <remarks>The caret position is set to the end of the inserted text, but it is not scrolled into view.</remarks>
     public void AddText(string text)
     {
-        throw new NotImplementedException();
+        this.AddTextExtension(text);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Allocates some number of sub-styles for a particular base style. Sub-styles are allocated contiguously.
+    /// </summary>
+    /// <param name="styleBase">The lexer style integer</param>
+    /// <param name="numberStyles">The amount of sub-styles to allocate</param>
+    /// <returns>Returns the first sub-style number allocated.</returns>
     public int AllocateSubStyles(int styleBase, int numberStyles)
     {
-        throw new NotImplementedException();
+        return this.AllocateSubStylesExtension(styleBase, numberStyles);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Removes the annotation text for every <see cref="Line" /> in the document.
+    /// </summary>
     public void AnnotationClearAll()
     {
-        throw new NotImplementedException();
+        this.AnnotationClearAllExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Adds the specified text to the end of the document.
+    /// </summary>
+    /// <param name="text">The text to add to the document.</param>
+    /// <remarks>The current selection is not changed and the new text is not scrolled into view.</remarks>
     public void AppendText(string text)
     {
-        throw new NotImplementedException();
+        this.AppendTextExtension(text);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Assigns the specified key definition to a <see cref="Scintilla" /> command.
+    /// </summary>
+    /// <param name="keyDefinition">The key combination to bind.</param>
+    /// <param name="sciCommand">The command to assign.</param>
     public void AssignCmdKey(Key keyDefinition, Command sciCommand)
     {
-        throw new NotImplementedException();
+        this.AssignCmdKeyExtension(keyDefinition, sciCommand, Helpers.TranslateKeys);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Cancels any displayed auto-completion list.
+    /// </summary>
+    /// <seealso cref="AutoCStops" />
     public void AutoCCancel()
     {
-        throw new NotImplementedException();
+        this.AutoCCancelExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Triggers completion of the current auto-completion word.
+    /// </summary>
     public void AutoCComplete()
     {
-        throw new NotImplementedException();
+        this.AutoCCompleteExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Selects an item in the auto-completion list.
+    /// </summary>
+    /// <param name="select">
+    /// The auto-completion word to select.
+    /// If found, the word in the auto-completion list is selected and the index can be obtained by calling <see cref="AutoCCurrent" />.
+    /// If not found, the behavior is determined by <see cref="AutoCAutoHide" />.
+    /// </param>
+    /// <remarks>
+    /// Comparisons are performed according to the <see cref="AutoCIgnoreCase" /> property
+    /// and will match the first word starting with <paramref name="select" />.
+    /// </remarks>
+    /// <seealso cref="AutoCCurrent" />
+    /// <seealso cref="AutoCAutoHide" />
+    /// <seealso cref="AutoCIgnoreCase" />
     public void AutoCSelect(string select)
     {
-        throw new NotImplementedException();
+        this.AutoCSelectExtension(select);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Sets the characters that, when typed, cause the auto-completion item to be added to the document.
+    /// </summary>
+    /// <param name="chars">A string of characters that trigger auto-completion. The default is null.</param>
+    /// <remarks>Common fill-up characters are '(', '[', and '.' depending on the language.</remarks>
     public void AutoCSetFillUps(string chars)
     {
-        throw new NotImplementedException();
+        this.AutoCSetFillUpsExtension(chars, ref fillUpChars);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Displays an auto completion list.
+    /// </summary>
+    /// <param name="lenEntered">The number of characters already entered to match on.</param>
+    /// <param name="list">A list of auto-completion words separated by the <see cref="AutoCSeparator" /> character.</param>
     public void AutoCShow(int lenEntered, string list)
     {
-        throw new NotImplementedException();
+        this.AutoCShowExtension(lenEntered, list);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Specifies the characters that will automatically cancel auto-completion without the need to call <see cref="AutoCCancel" />.
+    /// </summary>
+    /// <param name="chars">A String of the characters that will cancel auto-completion. The default is empty.</param>
+    /// <remarks>Characters specified should be limited to printable ASCII characters.</remarks>
     public void AutoCStops(string chars)
     {
-        throw new NotImplementedException();
+        this.AutoCStopsExtension(chars);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Marks the beginning of a set of actions that should be treated as a single undo action.
+    /// </summary>
+    /// <remarks>A call to <see cref="BeginUndoAction" /> should be followed by a call to <see cref="EndUndoAction" />.</remarks>
+    /// <seealso cref="EndUndoAction" />
     public void BeginUndoAction()
     {
-        throw new NotImplementedException();
+        this.BeginUndoActionExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Styles the specified character position with the <see cref="Style.BraceBad" /> style when there is an unmatched brace.
+    /// </summary>
+    /// <param name="position">The zero-based document position of the unmatched brace character or <seealso cref="ApiConstants.InvalidPosition"/> to remove the highlight.</param>
     public void BraceBadLight(int position)
     {
-        throw new NotImplementedException();
+        this.BraceBadLightExtension(position, Lines);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Styles the specified character positions with the <see cref="Style.BraceLight" /> style.
+    /// </summary>
+    /// <param name="position1">The zero-based document position of the open brace character.</param>
+    /// <param name="position2">The zero-based document position of the close brace character.</param>
+    /// <remarks>Brace highlighting can be removed by specifying <see cref="ApiConstants.InvalidPosition" /> for <paramref name="position1" /> and <paramref name="position2" />.</remarks>
+    /// <seealso cref="HighlightGuide" />
     public void BraceHighlight(int position1, int position2)
     {
-        throw new NotImplementedException();
+        this.BraceHighlightExtension(position1, position2, Lines);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Finds a corresponding matching brace starting at the position specified.
+    /// The brace characters handled are '(', ')', '[', ']', '{', '}', '&lt;', and '&gt;'.
+    /// </summary>
+    /// <param name="position">The zero-based document position of a brace character to start the search from for a matching brace character.</param>
+    /// <returns>The zero-based document position of the corresponding matching brace or <see cref="ApiConstants.InvalidPosition" /> it no matching brace could be found.</returns>
+    /// <remarks>A match only occurs if the style of the matching brace is the same as the starting brace. Nested braces are handled correctly.</remarks>
     public int BraceMatch(int position)
     {
-        throw new NotImplementedException();
+        return this.BraceMatchExtension(position, Lines);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Cancels the display of a call tip window.
+    /// </summary>
     public void CallTipCancel()
     {
-        throw new NotImplementedException();
+        this.CallTipCancelExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Sets the color of highlighted text in a call tip.
+    /// </summary>
+    /// <param name="color">The new highlight text Color. The default is dark blue.</param>
     public void CallTipSetForeHlt(Color color)
     {
-        throw new NotImplementedException();
+        this.CallTipSetForeHltExtension(color, ColorTranslator.ToInt);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Sets the specified range of the call tip text to display in a highlighted style.
+    /// </summary>
+    /// <param name="hlStart">The zero-based index in the call tip text to start highlighting.</param>
+    /// <param name="hlEnd">The zero-based index in the call tip text to stop highlighting (exclusive).</param>
     public void CallTipSetHlt(int hlStart, int hlEnd)
     {
-        throw new NotImplementedException();
+        this.CallTipSetHltExtension(hlStart, hlEnd, lastCallTip);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Determines whether to display a call tip above or below text.
+    /// </summary>
+    /// <param name="above">true to display above text; otherwise, false. The default is false.</param>
     public void CallTipSetPosition(bool above)
     {
-        throw new NotImplementedException();
+        this.CallTipSetPositionExtension(above);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Displays a call tip window.
+    /// </summary>
+    /// <param name="posStart">The zero-based document position where the call tip window should be aligned.</param>
+    /// <param name="definition">The call tip text.</param>
+    /// <remarks>
+    /// Call tips can contain multiple lines separated by '\n' characters. Do not include '\r', as this will most likely print as an empty box.
+    /// The '\t' character is supported and the size can be set by using <see cref="CallTipTabSize" />.
+    /// </remarks>
     public void CallTipShow(int posStart, string definition)
     {
-        throw new NotImplementedException();
+        this.CallTipShowExtension(posStart, definition, ref lastCallTip, Lines);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Sets the call tip tab size in pixels.
+    /// </summary>
+    /// <param name="tabSize">The width in pixels of a tab '\t' character in a call tip. Specifying 0 disables special treatment of tabs.</param>
     public void CallTipTabSize(int tabSize)
     {
-        throw new NotImplementedException();
+        this.CallTipTabSizeExtension(tabSize);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Indicates to the current <see cref="Lexer" /> that the internal lexer state has changed in the specified
+    /// range and therefore may need to be redrawn.
+    /// </summary>
+    /// <param name="startPos">The zero-based document position at which the lexer state change starts.</param>
+    /// <param name="endPos">The zero-based document position at which the lexer state change ends.</param>
     public void ChangeLexerState(int startPos, int endPos)
     {
-        throw new NotImplementedException();
+        this.ChangeLexerStateExtension(startPos, endPos, Lines);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Finds the closest character position to the specified display point.
+    /// </summary>
+    /// <param name="x">The x pixel coordinate within the client rectangle of the control.</param>
+    /// <param name="y">The y pixel coordinate within the client rectangle of the control.</param>
+    /// <returns>The zero-based document position of the nearest character to the point specified.</returns>
     public int CharPositionFromPoint(int x, int y)
     {
-        throw new NotImplementedException();
+        return this.CharPositionFromPointExtension(x, y, Lines);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Finds the closest character position to the specified display point or returns -1
+    /// if the point is outside the window or not close to any characters.
+    /// </summary>
+    /// <param name="x">The x pixel coordinate within the client rectangle of the control.</param>
+    /// <param name="y">The y pixel coordinate within the client rectangle of the control.</param>
+    /// <returns>The zero-based document position of the nearest character to the point specified when near a character; otherwise, -1.</returns>
     public int CharPositionFromPointClose(int x, int y)
     {
-        throw new NotImplementedException();
+        return this.CharPositionFromPointCloseExtension(x, y, Lines);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Explicitly sets the current horizontal offset of the caret as the X position to track
+    /// when the user moves the caret vertically using the up and down keys.
+    /// </summary>
+    /// <remarks>
+    /// When not set explicitly, Scintilla automatically sets this value each time the user moves
+    /// the caret horizontally.
+    /// </remarks>
     public void ChooseCaretX()
     {
-        throw new NotImplementedException();
+        this.ChooseCaretXExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Removes the selected text from the document.
+    /// </summary>
     public void Clear()
     {
-        throw new NotImplementedException();
+        this.ClearExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Deletes all document text, unless the document is read-only.
+    /// </summary>
     public void ClearAll()
     {
-        throw new NotImplementedException();
+        this.ClearAllExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Makes the specified key definition do nothing.
+    /// </summary>
+    /// <param name="keyDefinition">The key combination to bind.</param>
+    /// <remarks>This is equivalent to binding the keys to <see cref="Command.Null" />.</remarks>
     public void ClearCmdKey(Key keyDefinition)
     {
-        throw new NotImplementedException();
+        this.ClearCmdKeyExtension(keyDefinition, Helpers.TranslateKeys);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Removes all the key definition command mappings.
+    /// </summary>
     public void ClearAllCmdKeys()
     {
-        throw new NotImplementedException();
+        this.ClearAllCmdKeysExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Removes all styling from the document and resets the folding state.
+    /// </summary>
     public void ClearDocumentStyle()
     {
-        throw new NotImplementedException();
+        this.ClearDocumentStyleExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Removes all images registered for auto-completion lists.
+    /// </summary>
     public void ClearRegisteredImages()
     {
-        throw new NotImplementedException();
+        this.ClearRegisteredImagesExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Sets a single empty selection at the start of the document.
+    /// </summary>
     public void ClearSelections()
     {
-        throw new NotImplementedException();
+        this.ClearSelectionsExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Requests that the current lexer restyle the specified range.
+    /// </summary>
+    /// <param name="startPos">The zero-based document position at which to start styling.</param>
+    /// <param name="endPos">The zero-based document position at which to stop styling (exclusive).</param>
+    /// <remarks>This will also cause fold levels in the range specified to be reset.</remarks>
     public void Colorize(int startPos, int endPos)
     {
-        throw new NotImplementedException();
+       this.ColorizeExtension(startPos, endPos, Lines);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Changes all end-of-line characters in the document to the format specified.
+    /// </summary>
+    /// <param name="eolMode">One of the <see cref="Eol" /> enumeration values.</param>
     public void ConvertEols(Eol eolMode)
     {
-        throw new NotImplementedException();
+        this.ConvertEolsExtension(eolMode);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Copies the selected text from the document and places it on the clipboard.
+    /// </summary>
     public void Copy()
     {
-        throw new NotImplementedException();
+        this.CopyExtension();
     }
 
     /// <inheritdoc />
@@ -837,10 +540,18 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         throw new NotImplementedException();
     }
 
-    /// <inheritdoc />
+
+    /// <summary>
+    /// Copies the selected text from the document and places it on the clipboard.
+    /// If the selection is empty the current line is copied.
+    /// </summary>
+    /// <remarks>
+    /// If the selection is empty and the current line copied, an extra "MSDEVLineSelect" marker is added to the
+    /// clipboard which is then used in <see cref="Paste" /> to paste the whole line before the current line.
+    /// </remarks>
     public void CopyAllowLine()
     {
-        throw new NotImplementedException();
+        this.CopyAllowLineExtension();
     }
 
     /// <inheritdoc />
@@ -849,10 +560,14 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         throw new NotImplementedException();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Copies the specified range of text to the clipboard.
+    /// </summary>
+    /// <param name="start">The zero-based character position in the document to start copying.</param>
+    /// <param name="end">The zero-based character position (exclusive) in the document to stop copying.</param>
     public void CopyRange(int start, int end)
     {
-        throw new NotImplementedException();
+        this.CopyRangeExtension(start, end, Lines);
     }
 
     /// <inheritdoc />
@@ -861,10 +576,14 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         throw new NotImplementedException();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Create a new, empty document.
+    /// </summary>
+    /// <returns>A new <see cref="Document" /> with a reference count of 1.</returns>
+    /// <remarks>You are responsible for ensuring the reference count eventually reaches 0 or memory leaks will occur.</remarks>
     public Document CreateDocument()
     {
-        throw new NotImplementedException();
+        return this.CreateDocumentExtension();
     }
 
     /// <inheritdoc />
@@ -873,149 +592,1072 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         throw new NotImplementedException();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Cuts the selected text from the document and places it on the clipboard.
+    /// </summary>
     public void Cut()
     {
-        throw new NotImplementedException();
+        this.CutExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Deletes a range of text from the document.
+    /// </summary>
+    /// <param name="position">The zero-based character position to start deleting.</param>
+    /// <param name="length">The number of characters to delete.</param>
     public void DeleteRange(int position, int length)
     {
-        throw new NotImplementedException();
+        this.DeleteRangeExtension(position, length, Lines);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Retrieves a description of keyword sets supported by the current <see cref="Lexer" />.
+    /// </summary>
+    /// <returns>A String describing each keyword set separated by line breaks for the current lexer.</returns>
     public string DescribeKeywordSets()
     {
-        throw new NotImplementedException();
+        return this.DescribeKeywordSetsExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Retrieves a brief description of the specified property name for the current <see cref="Lexer" />.
+    /// </summary>
+    /// <param name="name">A property name supported by the current <see cref="Lexer" />.</param>
+    /// <returns>A String describing the lexer property name if found; otherwise, String.Empty.</returns>
+    /// <remarks>A list of supported property names for the current <see cref="Lexer" /> can be obtained by calling <see cref="PropertyNames" />.</remarks>
     public string DescribeProperty(string name)
     {
-        throw new NotImplementedException();
+        return this.DescribePropertyExtension(name);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Returns the zero-based document line index from the specified display line index.
+    /// </summary>
+    /// <param name="displayLine">The zero-based display line index.</param>
+    /// <returns>The zero-based document line index.</returns>
+    /// <seealso cref="Line.DisplayIndex" />
     public int DocLineFromVisible(int displayLine)
     {
-        throw new NotImplementedException();
+        return this.DocLineFromVisibleExtension(displayLine, VisibleLineCount);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// If there are multiple selections, removes the specified selection.
+    /// </summary>
+    /// <param name="selection">The zero-based selection index.</param>
+    /// <seealso cref="Selections" />
     public void DropSelection(int selection)
     {
-        throw new NotImplementedException();
+        this.DropSelectionExtension(selection);
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Clears any undo or redo history.
+    /// </summary>
+    /// <remarks>This will also cause <see cref="SetSavePoint" /> to be called but will not raise the <see cref="SavePointReached" /> event.</remarks>
     public void EmptyUndoBuffer()
     {
-        throw new NotImplementedException();
+        this.EmptyUndoBufferExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Marks the end of a set of actions that should be treated as a single undo action.
+    /// </summary>
+    /// <seealso cref="BeginUndoAction" />
     public void EndUndoAction()
     {
-        throw new NotImplementedException();
+        this.EndUndoActionExtension();
     }
 
-    /// <inheritdoc />
+    /// <summary>
+    /// Performs the specified <see cref="Scintilla" />command.
+    /// </summary>
+    /// <param name="sciCommand">The command to perform.</param>
     public void ExecuteCmd(Command sciCommand)
     {
-        throw new NotImplementedException();
+        this.ExecuteCmdExtension(sciCommand);
     }
 
-    /// <inheritdoc />
-    void IScintillaMethods<Color, Key, Image>.FoldAll(FoldAction action)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void FoldDisplayTextSetStyle(FoldDisplayText style)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public void FreeSubStyles()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int GetCharAt(int position)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int GetColumn(int position)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int GetEndStyled()
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int GetPrimaryStyleFromStyle(int style)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public string GetProperty(string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public string GetPropertyExpanded(string name)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int GetPropertyInt(string name, int defaultValue)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int GetStyleAt(int position)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int GetStyleFromSubStyle(int subStyle)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int GetSubStylesLength(int styleBase)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
-    public int GetSubStylesStart(int styleBase)
-    {
-        throw new NotImplementedException();
-    }
-
-    /// <inheritdoc />
+    /// <summary>
+    /// Performs the specified fold action on the entire document.
+    /// </summary>
+    /// <param name="action">One of the <see cref="FoldAction" /> enumeration values.</param>
+    /// <remarks>When using <see cref="FoldAction.Toggle" /> the first fold header in the document is examined to decide whether to expand or contract.</remarks>
     public void FoldAll(FoldAction action)
     {
+        this.FoldAllExtension(action);
+    }
+
+    /// <summary>
+    /// Changes the appearance of fold text tags.
+    /// </summary>
+    /// <param name="style">One of the <see cref="FoldDisplayText" /> enumeration values.</param>
+    /// <remarks>The text tag to display on a folded line can be set using <see cref="Line.ToggleFoldShowText" />.</remarks>
+    /// <seealso cref="Line.ToggleFoldShowText" />.
+    public void FoldDisplayTextSetStyle(FoldDisplayText style)
+    {
+        this.FoldDisplayTextSetStyleExtension(style);
+    }
+
+    /// <summary>
+    /// Frees all allocated sub-styles.
+    /// </summary>
+    public void FreeSubStyles()
+    {
+        this.FreeSubStylesExtension();
+    }
+
+    /// <summary>
+    /// Returns the character as the specified document position.
+    /// </summary>
+    /// <param name="position">The zero-based document position of the character to get.</param>
+    /// <returns>The character at the specified <paramref name="position" />.</returns>
+    public int GetCharAt(int position)
+    {
+        return this.GetCharAtExtension(position, Lines);
+    }
+
+    /// <summary>
+    /// Returns the column number of the specified document position, taking the width of tabs into account.
+    /// </summary>
+    /// <param name="position">The zero-based document position to get the column for.</param>
+    /// <returns>The number of columns from the start of the line to the specified document <paramref name="position" />.</returns>
+    public int GetColumn(int position)
+    {
+        return this.GetColumnExtension(position, Lines);
+    }
+
+    /// <summary>
+    /// Returns the last document position likely to be styled correctly.
+    /// </summary>
+    /// <returns>The zero-based document position of the last styled character.</returns>
+    public int GetEndStyled()
+    {
+        return this.GetEndStyledExtension(Lines);
+    }
+
+    /// <summary>
+    /// Gets the Primary style associated with the given Secondary style.
+    /// </summary>
+    /// <param name="style">The secondary style</param>
+    /// <returns>For a secondary style, return the primary style, else return the argument.</returns>
+    public int GetPrimaryStyleFromStyle(int style)
+    {
+        return this.GetPrimaryStyleFromStyleExtension(style);
+    }
+
+    /// <summary>
+    /// Lookup a property value for the current <see cref="Lexer" />.
+    /// </summary>
+    /// <param name="name">The property name to lookup.</param>
+    /// <returns>
+    /// A String representing the property value if found; otherwise, String.Empty.
+    /// Any embedded property name macros as described in <see cref="SetProperty" /> will not be replaced (expanded).
+    /// </returns>
+    /// <seealso cref="GetPropertyExpanded" />
+    public string GetScintillaProperty(string name)
+    {
+        return this.GetPropertyExtension(name);
+    }
+
+    /// <summary>
+    /// Lookup a property value for the current <see cref="Lexer" /> and expand any embedded property macros.
+    /// </summary>
+    /// <param name="name">The property name to lookup.</param>
+    /// <returns>
+    /// A String representing the property value if found; otherwise, String.Empty.
+    /// Any embedded property name macros as described in <see cref="SetProperty" /> will be replaced (expanded).
+    /// </returns>
+    /// <seealso cref="GetScintillaProperty" />
+    public string GetPropertyExpanded(string name)
+    {
+        return this.GetPropertyExpandedExtension(name);
+    }
+
+    /// <summary>
+    /// Lookup a property value for the current <see cref="Lexer" /> and convert it to an integer.
+    /// </summary>
+    /// <param name="name">The property name to lookup.</param>
+    /// <param name="defaultValue">A default value to return if the property name is not found or has no value.</param>
+    /// <returns>
+    /// An Integer representing the property value if found;
+    /// otherwise, <paramref name="defaultValue" /> if not found or the property has no value;
+    /// otherwise, 0 if the property is not a number.
+    /// </returns>
+    public int GetPropertyInt(string name, int defaultValue)
+    {
+        return this.GetPropertyIntExtension(name, defaultValue);
+    }
+
+    /// <summary>
+    /// Gets the style of the specified document position.
+    /// </summary>
+    /// <param name="position">The zero-based document position of the character to get the style for.</param>
+    /// <returns>The zero-based <see cref="Style" /> index used at the specified <paramref name="position" />.</returns>
+    public int GetStyleAt(int position)
+    {
+        return this.GetStyleAtExtension(position, Lines);
+    }
+
+    /// <summary>
+    /// Gets the lexer base style of a sub-style.
+    /// </summary>
+    /// <param name="subStyle">The integer index of the sub-style</param>
+    /// <returns>Returns the base style, else returns the argument.</returns>
+    public int GetStyleFromSubStyle(int subStyle)
+    {
+        return this.GetStyleFromSubStyleExtension(subStyle);
+    }
+
+    /// <summary>
+    /// Gets the length of the number of sub-styles allocated for a given lexer base style.
+    /// </summary>
+    /// <param name="styleBase">The lexer style integer</param>
+    /// <returns>Returns the length of the sub-styles allocated for a base style.</returns>
+    public int GetSubStylesLength(int styleBase)
+    {
+        return this.GetSubStylesLengthExtension(styleBase);
+    }
+
+    /// <summary>
+    /// Gets the start index of the sub-styles for a given lexer base style.
+    /// </summary>
+    /// <param name="styleBase">The lexer style integer</param>
+    /// <returns>Returns the start of the sub-styles allocated for a base style.</returns>
+    public int GetSubStylesStart(int styleBase)
+    {
+        return this.GetSubStylesStartExtension(styleBase);
+    }
+
+    /// <summary>
+    /// Returns the capture group text of the most recent regular expression search.
+    /// </summary>
+    /// <param name="tagNumber">The capture group (1 through 9) to get the text for.</param>
+    /// <returns>A String containing the capture group text if it participated in the match; otherwise, an empty string.</returns>
+    /// <seealso cref="SearchInTarget" />
+    public string GetTag(int tagNumber)
+    {
+        return this.GetTagExtension(tagNumber);
+    }
+
+    /// <summary>
+    /// Gets a range of text from the document.
+    /// </summary>
+    /// <param name="position">The zero-based starting character position of the range to get.</param>
+    /// <param name="length">The number of characters to get.</param>
+    /// <returns>A string representing the text range.</returns>
+    public string GetTextRange(int position, int length)
+    {
+        return this.GetTextRangeExtension(position, length, Lines);
+    }
+
+    /// <inheritdoc />
+    public string GetTextRangeAsHtml(int position, int length)
+    {
         throw new NotImplementedException();
     }
+
+    ///<summary>
+    /// Gets the word from the position specified.
+    /// </summary>
+    /// <param name="position">The zero-based document character position to get the word from.</param>
+    /// <returns>The word at the specified position.</returns>
+    public string GetWordFromPosition(int position)
+    {
+        return this.GetWordFromPositionExtension(position, Lines);
+    }
+
+    /// <summary>
+    /// Navigates the caret to the document position specified.
+    /// </summary>
+    /// <param name="position">The zero-based document character position to navigate to.</param>
+    /// <remarks>Any selection is discarded.</remarks>
+    public void GotoPosition(int position)
+    {
+        this.GotoPositionExtension(position, Lines);
+    }
+
+    /// <summary>
+    /// Hides the range of lines specified.
+    /// </summary>
+    /// <param name="lineStart">The zero-based index of the line range to start hiding.</param>
+    /// <param name="lineEnd">The zero-based index of the line range to end hiding.</param>
+    /// <seealso cref="ShowLines" />
+    /// <seealso cref="Line.Visible" />
+    public void HideLines(int lineStart, int lineEnd)
+    {
+        this.HideLinesExtension(lineStart, lineEnd, Lines);
+    }
+
+    /// <summary>
+    /// Returns a bitmap representing the 32 indicators in use at the specified position.
+    /// </summary>
+    /// <param name="position">The zero-based character position within the document to test.</param>
+    /// <returns>A bitmap indicating which of the 32 indicators are in use at the specified <paramref name="position" />.</returns>
+    public uint IndicatorAllOnFor(int position)
+    {
+        return this.IndicatorAllOnForExtension(position, Lines);
+    }
+
+    /// <summary>
+    /// Removes the <see cref="IndicatorCurrent" /> indicator (and user-defined value) from the specified range of text.
+    /// </summary>
+    /// <param name="position">The zero-based character position within the document to start clearing.</param>
+    /// <param name="length">The number of characters to clear.</param>
+    public void IndicatorClearRange(int position, int length)
+    {
+        this.IndicatorClearRangeExtension(position, length, Lines);
+    }
+
+    /// <summary>
+    /// Adds the <see cref="IndicatorCurrent" /> indicator and <see cref="IndicatorValue" /> value to the specified range of text.
+    /// </summary>
+    /// <param name="position">The zero-based character position within the document to start filling.</param>
+    /// <param name="length">The number of characters to fill.</param>
+    public void IndicatorFillRange(int position, int length)
+    {
+        this.IndicatorFillRangeExtension(position, length, Lines);
+    }
+
+
+    /// <summary>
+    /// Initializes the Scintilla document.
+    /// </summary>
+    /// <param name="eolMode">The eol mode.</param>
+    /// <param name="useTabs">if set to <c>true</c> use tabs instead of spaces.</param>
+    /// <param name="tabWidth">Width of the tab.</param>
+    /// <param name="indentWidth">Width of the indent.</param>
+    public void InitDocument(Eol eolMode = Eol.CrLf, bool useTabs = false, int tabWidth = 4, int indentWidth = 0)
+    {
+        this.InitDocumentExtension(eolMode, useTabs, tabWidth, indentWidth);
+    }
+
+    /// <summary>
+    /// Inserts text at the specified position.
+    /// </summary>
+    /// <param name="position">The zero-based character position to insert the text. Specify -1 to use the current caret position.</param>
+    /// <param name="text">The text to insert into the document.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="position" /> less than zero and not equal to -1. -or-
+    /// <paramref name="position" /> is greater than the document length.
+    /// </exception>
+    /// <remarks>No scrolling is performed.</remarks>
+    public void InsertText(int position, string text)
+    {
+       this.InsertTextExtension(position, text, Lines);
+    }
+
+    /// <summary>
+    /// Determines whether the specified <paramref name="start" /> and <paramref name="end" /> positions are
+    /// at the beginning and end of a word, respectively.
+    /// </summary>
+    /// <param name="start">The zero-based document position of the possible word start.</param>
+    /// <param name="end">The zero-based document position of the possible word end.</param>
+    /// <returns>
+    /// true if <paramref name="start" /> and <paramref name="end" /> are at the beginning and end of a word, respectively;
+    /// otherwise, false.
+    /// </returns>
+    /// <remarks>
+    /// This method does not check whether there is whitespace in the search range,
+    /// only that the <paramref name="start" /> and <paramref name="end" /> are at word boundaries.
+    /// </remarks>
+    public bool IsRangeWord(int start, int end)
+    {
+        return this.IsRangeWordExtension(start, end, Lines);
+    }
+
+    /// <summary>
+    /// Returns the line that contains the document position specified.
+    /// </summary>
+    /// <param name="position">The zero-based document character position.</param>
+    /// <returns>The zero-based document line index containing the character <paramref name="position" />.</returns>
+    public int LineFromPosition(int position)
+    {
+        return this.LineFromPositionExtension(position, Lines);
+    }
+
+    /// <summary>
+    /// Scrolls the display the number of lines and columns specified.
+    /// </summary>
+    /// <param name="lines">The number of lines to scroll.</param>
+    /// <param name="columns">The number of columns to scroll.</param>
+    /// <remarks>
+    /// Negative values scroll in the opposite direction.
+    /// A column is the width in pixels of a space character in the <see cref="Style.Default" /> style.
+    /// </remarks>
+    public void LineScroll(int lines, int columns)
+    {
+        this.LineScrollExtension(lines, columns);
+    }
+
+    /// <summary>
+    /// Loads a <see cref="Scintilla" /> compatible lexer from an external DLL.
+    /// </summary>
+    /// <param name="path">The path to the external lexer DLL.</param>
+    public void LoadLexerLibrary(string path)
+    {
+        this.LoadLexerLibraryExtension(path);
+    }
+
+    /// <summary>
+    /// Removes the specified marker from all lines.
+    /// </summary>
+    /// <param name="marker">The zero-based <see cref="Marker" /> index to remove from all lines, or -1 to remove all markers from all lines.</param>
+    public void MarkerDeleteAll(int marker)
+    {
+        this.MarkerDeleteAllExtension(marker, Markers); 
+    }
+
+    /// <summary>
+    /// Searches the document for the marker handle and deletes the marker if found.
+    /// </summary>
+    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="Line.MarkerAdd" /> of the marker to delete.</param>
+    public void MarkerDeleteHandle(MarkerHandle markerHandle)
+    {
+        this.MarkerDeleteHandleExtension(markerHandle);
+    }
+
+    /// <summary>
+    /// Enable or disable highlighting of the current folding block.
+    /// </summary>
+    /// <param name="enabled">true to highlight the current folding block; otherwise, false.</param>
+    public void MarkerEnableHighlight(bool enabled)
+    {
+        this.MarkerEnableHighlightExtension(enabled);
+    }
+
+    /// <summary>
+    /// Searches the document for the marker handle and returns the line number containing the marker if found.
+    /// </summary>
+    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="Line.MarkerAdd" /> of the marker to search for.</param>
+    /// <returns>If found, the zero-based line index containing the marker; otherwise, -1.</returns>
+    public int MarkerLineFromHandle(MarkerHandle markerHandle)
+    {
+        return this.MarkerLineFromHandleExtension(markerHandle);
+    }
+
+    /// <summary>
+    /// Specifies the long line indicator column number and color when <see cref="EdgeMode" /> is <see cref="global::Scintilla.NET.Abstractions.Enumerations.EdgeMode.MultiLine" />.
+    /// </summary>
+    /// <param name="column">The zero-based column number to indicate.</param>
+    /// <param name="edgeColor">The color of the vertical long line indicator.</param>
+    /// <remarks>A column is defined as the width of a space character in the <see cref="Style.Default" /> style.</remarks>
+    /// <seealso cref="MultiEdgeClearAll" />
+    public void MultiEdgeAddLine(int column, Color edgeColor)
+    {
+        this.MultiEdgeAddLineExtension(column, edgeColor, ColorTranslator.ToInt);
+    }
+
+    /// <summary>
+    /// Removes all the long line column indicators specified using <seealso cref="MultiEdgeAddLine" />.
+    /// </summary>
+    /// <seealso cref="MultiEdgeAddLine" />
+    public void MultiEdgeClearAll()
+    {
+        this.MultiEdgeClearAllExtension();
+    }
+
+    /// <summary>
+    /// Searches for all instances of the main selection within the <see cref="TargetStart" /> and <see cref="TargetEnd" />
+    /// range and adds any matches to the selection.
+    /// </summary>
+    /// <remarks>
+    /// The <see cref="SearchFlags" /> property is respected when searching, allowing additional
+    /// selections to match on different case sensitivity and word search options.
+    /// </remarks>
+    /// <seealso cref="MultipleSelectAddNext" />
+    public void MultipleSelectAddEach()
+    {
+        this.MultipleSelectAddEachExtension();
+    }
+
+    /// <summary>
+    /// Searches for the next instance of the main selection within the <see cref="TargetStart" /> and <see cref="TargetEnd" />
+    /// range and adds any match to the selection.
+    /// </summary>
+    /// <remarks>
+    /// The <see cref="SearchFlags" /> property is respected when searching, allowing additional
+    /// selections to match on different case sensitivity and word search options.
+    /// </remarks>
+    /// <seealso cref="MultipleSelectAddNext" />
+    public void MultipleSelectAddNext()
+    {
+        this.MultipleSelectAddNextExtension();
+    }
+
+    /// <summary>
+    /// Pastes the contents of the clipboard into the current selection.
+    /// </summary>
+    public void Paste()
+    {
+        this.PasteExtension();
+    }
+
+    /// <summary>
+    /// Returns the X display pixel location of the specified document position.
+    /// </summary>
+    /// <param name="pos">The zero-based document character position.</param>
+    /// <returns>The x-coordinate of the specified <paramref name="pos" /> within the client rectangle of the control.</returns>
+    public int PointXFromPosition(int pos)
+    {
+        return this.PointXFromPositionExtension(pos, Lines);
+    }
+
+    /// <summary>
+    /// Returns the Y display pixel location of the specified document position.
+    /// </summary>
+    /// <param name="pos">The zero-based document character position.</param>
+    /// <returns>The y-coordinate of the specified <paramref name="pos" /> within the client rectangle of the control.</returns>
+    public int PointYFromPosition(int pos)
+    {
+        return this.PointYFromPositionExtension(pos, Lines);
+    }
+
+    /// <summary>
+    /// Retrieves a list of property names that can be set for the current <see cref="Lexer" />.
+    /// </summary>
+    /// <returns>A String of property names separated by line breaks.</returns>
+    public string PropertyNames()
+    {
+        return this.PropertyNamesExtension();
+    }
+
+    /// <summary>
+    /// Retrieves the data type of the specified property name for the current <see cref="Lexer" />.
+    /// </summary>
+    /// <param name="name">A property name supported by the current <see cref="Lexer" />.</param>
+    /// <returns>One of the <see cref="Abstractions.Enumerations.PropertyType" /> enumeration values. The default is <see cref="bool" />.</returns>
+    /// <remarks>A list of supported property names for the current <see cref="Lexer" /> can be obtained by calling <see cref="PropertyNames" />.</remarks>
+    public PropertyType PropertyType(string name)
+    {
+        return this.PropertyTypeExtension(name);
+    }
+
+    /// <summary>
+    /// Redoes the effect of an <see cref="Undo" /> operation.
+    /// </summary>
+    public void Redo()
+    {
+        this.RedoExtension();
+    }
+
+    /// <inheritdoc />
+    public void RegisterRgbaImage(int type, Image image)
+    {
+        throw new NotImplementedException();
+    }
+
+    /// <summary>
+    /// Decreases the reference count of the specified document by 1.
+    /// </summary>
+    /// <param name="document">
+    /// The document reference count to decrease.
+    /// When a document's reference count reaches 0 it is destroyed and any associated memory released.
+    /// </param>
+    public void ReleaseDocument(Document document)
+    {
+        this.ReleaseDocumentExtension(document);
+    }
+
+    /// <summary>
+    /// Replaces the current selection with the specified text.
+    /// </summary>
+    /// <param name="text">The text that should replace the current selection.</param>
+    /// <remarks>
+    /// If there is not a current selection, the text will be inserted at the current caret position.
+    /// Following the operation the caret is placed at the end of the inserted text and scrolled into view.
+    /// </remarks>
+    public void ReplaceSelection(string text)
+    {
+        this.ReplaceSelectionExtension(text);
+    }
+
+    /// <summary>
+    /// Replaces the target defined by <see cref="TargetStart" /> and <see cref="TargetEnd" /> with the specified <paramref name="text" />.
+    /// </summary>
+    /// <param name="text">The text that will replace the current target.</param>
+    /// <returns>The length of the replaced text.</returns>
+    /// <remarks>
+    /// The <see cref="TargetStart" /> and <see cref="TargetEnd" /> properties will be updated to the start and end positions of the replaced text.
+    /// The recommended way to delete text in the document is to set the target range to be removed and replace the target with an empty string.
+    /// </remarks>
+    public int ReplaceTarget(string text)
+    {
+        return this.ReplaceTargetExtension(text);
+    }
+
+    /// <summary>
+    /// Replaces the target text defined by <see cref="TargetStart" /> and <see cref="TargetEnd" /> with the specified value after first substituting
+    /// "\1" through "\9" macros in the <paramref name="text" /> with the most recent regular expression capture groups.
+    /// </summary>
+    /// <param name="text">The text containing "\n" macros that will be substituted with the most recent regular expression capture groups and then replace the current target.</param>
+    /// <returns>The length of the replaced text.</returns>
+    /// <remarks>
+    /// The "\0" macro will be substituted by the entire matched text from the most recent search.
+    /// The <see cref="TargetStart" /> and <see cref="TargetEnd" /> properties will be updated to the start and end positions of the replaced text.
+    /// </remarks>
+    /// <seealso cref="GetTag" />
+    public int ReplaceTargetRe(string text)
+    {
+        return this.ReplaceTargetReExtension(text, TargetStart, TargetEnd);
+    }
+
+    /// <summary>
+    /// Makes the next selection the main selection.
+    /// </summary>
+    public void RotateSelection()
+    {
+        this.RotateSelectionExtension();
+    }
+
+    /// <summary>
+    /// Scrolls the current position into view, if it is not already visible.
+    /// </summary>
+    public void ScrollCaret()
+    {
+        this.ScrollCaretExtension();
+    }
+
+    /// <summary>
+    /// Scrolls the specified range into view.
+    /// </summary>
+    /// <param name="start">The zero-based document start position to scroll to.</param>
+    /// <param name="end">
+    /// The zero-based document end position to scroll to if doing so does not cause the <paramref name="start" />
+    /// position to scroll out of view.
+    /// </param>
+    /// <remarks>This may be used to make a search match visible.</remarks>
+    public void ScrollRange(int start, int end)
+    {
+       this.ScrollRangeExtension(start, end, TextLength, Lines);
+    }
+
+    /// <summary>
+    /// Searches for the first occurrence of the specified text in the target defined by <see cref="TargetStart" /> and <see cref="TargetEnd" />.
+    /// </summary>
+    /// <param name="text">The text to search for. The interpretation of the text (i.e. whether it is a regular expression) is defined by the <see cref="SearchFlags" /> property.</param>
+    /// <returns>The zero-based start position of the matched text within the document if successful; otherwise, -1.</returns>
+    /// <remarks>
+    /// If successful, the <see cref="TargetStart" /> and <see cref="TargetEnd" /> properties will be updated to the start and end positions of the matched text.
+    /// Searching can be performed in reverse using a <see cref="TargetStart" /> greater than the <see cref="TargetEnd" />.
+    /// </remarks>
+    public int SearchInTarget(string text)
+    {
+        return this.SearchInTargetExtension(text, Lines);
+    }
+
+    /// <summary>
+    /// Selects all the text in the document.
+    /// </summary>
+    /// <remarks>The current position is not scrolled into view.</remarks>
+    public void SelectAll()
+    {
+        this.SelectAllExtension();
+    }
+
+    /// <summary>
+    /// Sets the background color of additional selections.
+    /// </summary>
+    /// <param name="color">Additional selections background color.</param>
+    /// <remarks>Calling <see cref="SetSelectionBackColor" /> will reset the <paramref name="color" /> specified.</remarks>
+    public void SetAdditionalSelBack(Color color)
+    {
+        this.SetAdditionalSelBackExtension(color, ColorTranslator.ToInt);
+    }
+
+    /// <summary>
+    /// Sets the foreground color of additional selections.
+    /// </summary>
+    /// <param name="color">Additional selections foreground color.</param>
+    /// <remarks>Calling <see cref="SetSelectionForeColor" /> will reset the <paramref name="color" /> specified.</remarks>
+    public void SetAdditionalSelFore(Color color)
+    {
+        this.SetAdditionalSelForeExtension(color, ColorTranslator.ToInt);
+    }
+
+    /// <summary>
+    /// Removes any selection and places the caret at the specified position.
+    /// </summary>
+    /// <param name="pos">The zero-based document position to place the caret at.</param>
+    /// <remarks>The caret is not scrolled into view.</remarks>
+    public void SetEmptySelection(int pos)
+    {
+        this.SetEmptySelectionExtension(pos, TextLength, Lines);
+    }
+
+    /// <summary>
+    /// Sets additional options for displaying folds.
+    /// </summary>
+    /// <param name="flags">A bitwise combination of the <see cref="FoldFlags" /> enumeration.</param>
+    public void SetFoldFlags(FoldFlags flags)
+    {
+        this.SetFoldFlagsExtension(flags);
+    }
+
+    /// <summary>
+    /// Sets a global override to the fold margin color.
+    /// </summary>
+    /// <param name="use">true to override the fold margin color; otherwise, false.</param>
+    /// <param name="color">The global fold margin color.</param>
+    /// <seealso cref="SetFoldMarginHighlightColor" />
+    public void SetFoldMarginColor(bool use, Color color)
+    {
+        this.SetFoldMarginColorExtension(use, color, ColorTranslator.ToInt);
+    }
+
+    /// <summary>
+    /// Sets a global override to the fold margin highlight color.
+    /// </summary>
+    /// <param name="use">true to override the fold margin highlight color; otherwise, false.</param>
+    /// <param name="color">The global fold margin highlight color.</param>
+    /// <seealso cref="SetFoldMarginColor" />
+    public void SetFoldMarginHighlightColor(bool use, Color color)
+    {
+        this.SetFoldMarginHighlightColorExtension(use, color, ColorTranslator.ToInt);
+    }
+
+    /// <summary>
+    /// Similar to <see cref="SetKeywords" /> but for sub-styles.
+    /// </summary>
+    /// <param name="style">The sub-style integer index</param>
+    /// <param name="identifiers">A list of words separated by whitespace (space, tab, '\n', '\r') characters.</param>
+    public void SetIdentifiers(int style, string identifiers)
+    {
+        this.SetIdentifiersExtension(style, identifiers);
+    }
+
+    /// <summary>
+    /// Updates a keyword set used by the current <see cref="Lexer" />.
+    /// </summary>
+    /// <param name="set">The zero-based index of the keyword set to update.</param>
+    /// <param name="keywords">
+    /// A list of keywords pertaining to the current <see cref="Lexer" /> separated by whitespace (space, tab, '\n', '\r') characters.
+    /// </param>
+    /// <remarks>The keywords specified will be styled according to the current <see cref="Lexer" />.</remarks>
+    /// <seealso cref="DescribeKeywordSets" />
+    public void SetKeywords(int set, string keywords)
+    {
+        this.SetKeywordsExtension(set, keywords);
+    }
+
+    /// <summary>
+    /// Passes the specified property name-value pair to the current <see cref="Lexer" />.
+    /// </summary>
+    /// <param name="name">The property name to set.</param>
+    /// <param name="value">
+    /// The property value. Values can refer to other property names using the syntax $(name), where 'name' is another property
+    /// name for the current <see cref="Lexer" />. When the property value is retrieved by a call to <see cref="GetPropertyExpanded" />
+    /// the embedded property name macro will be replaced (expanded) with that current property value.
+    /// </param>
+    /// <remarks>Property names are case-sensitive.</remarks>
+    public void SetProperty(string name, string value)
+    {
+        this.SetPropertyExtension(name, value);
+    }
+
+    /// <summary>
+    /// Marks the document as unmodified.
+    /// </summary>
+    /// <seealso cref="Modified" />
+    public void SetSavePoint()
+    {
+        this.SetSavePointExtension();
+    }
+
+    /// <summary>
+    /// Sets the anchor and current position.
+    /// </summary>
+    /// <param name="anchorPos">The zero-based document position to start the selection.</param>
+    /// <param name="currentPos">The zero-based document position to end the selection.</param>
+    /// <remarks>
+    /// A negative value for <paramref name="currentPos" /> signifies the end of the document.
+    /// A negative value for <paramref name="anchorPos" /> signifies no selection (i.e. sets the <paramref name="anchorPos" />
+    /// to the same position as the <paramref name="currentPos" />).
+    /// The current position is scrolled into view following this operation.
+    /// </remarks>
+    public void SetSel(int anchorPos, int currentPos)
+    {
+        this.SetSelExtension(anchorPos, currentPos, TextLength, Lines);
+    }
+
+    /// <summary>
+    /// Sets a single selection from anchor to caret.
+    /// </summary>
+    /// <param name="caret">The zero-based document position to end the selection.</param>
+    /// <param name="anchor">The zero-based document position to start the selection.</param>
+    public void SetSelection(int caret, int anchor)
+    {
+        this.SetSelectionExtension(caret, anchor, TextLength, Lines);
+    }
+
+    /// <summary>
+    /// Sets a global override to the selection background color.
+    /// </summary>
+    /// <param name="use">true to override the selection background color; otherwise, false.</param>
+    /// <param name="color">The global selection background color.</param>
+    /// <seealso cref="SetSelectionForeColor" />
+    public void SetSelectionBackColor(bool use, Color color)
+    {
+        this.SetSelectionBackColorExtension(use, color, ColorTranslator.ToInt);
+    }
+
+    /// <summary>
+    /// Sets a global override to the selection foreground color.
+    /// </summary>
+    /// <param name="use">true to override the selection foreground color; otherwise, false.</param>
+    /// <param name="color">The global selection foreground color.</param>
+    /// <seealso cref="SetSelectionBackColor" />
+    public void SetSelectionForeColor(bool use, Color color)
+    {
+        this.SetSelectionForeColorExtension(use, color, ColorTranslator.ToInt);
+    }
+
+    /// <summary>
+    /// Styles the specified length of characters.
+    /// </summary>
+    /// <param name="length">The number of characters to style.</param>
+    /// <param name="style">The <see cref="Style" /> definition index to assign each character.</param>
+    /// <exception cref="ArgumentOutOfRangeException">
+    /// <paramref name="length" /> or <paramref name="style" /> is less than zero. -or-
+    /// The sum of a preceding call to <see cref="StartStyling" /> or <see name="SetStyling" /> and <paramref name="length" /> is greater than the document length. -or-
+    /// <paramref name="style" /> is greater than or equal to the number of style definitions.
+    /// </exception>
+    /// <remarks>
+    /// The styling position is advanced by <paramref name="length" /> after each call allowing multiple
+    /// calls to <see cref="SetStyling" /> for a single call to <see cref="StartStyling" />.
+    /// </remarks>
+    /// <seealso cref="StartStyling" />
+    public void SetStyling(int length, int style)
+    {
+        this.SetStylingExtension(length, style, TextLength, ref stylingPosition, ref stylingBytePosition, Lines, Styles);
+    }
+
+    /// <summary>
+    /// Sets the <see cref="TargetStart" /> and <see cref="TargetEnd" /> properties in a single call.
+    /// </summary>
+    /// <param name="start">The zero-based character position within the document to start a search or replace operation.</param>
+    /// <param name="end">The zero-based character position within the document to end a search or replace operation.</param>
+    /// <seealso cref="TargetStart" />
+    /// <seealso cref="TargetEnd" />
+    public void SetTargetRange(int start, int end)
+    {
+        this.SetTargetRangeExtension(start, end, TextLength, Lines);
+    }
+
+    /// <summary>
+    /// Sets a global override to the whitespace background color.
+    /// </summary>
+    /// <param name="use">true to override the whitespace background color; otherwise, false.</param>
+    /// <param name="color">The global whitespace background color.</param>
+    /// <remarks>When not overridden globally, the whitespace background color is determined by the current lexer.</remarks>
+    /// <seealso cref="ViewWhitespace" />
+    /// <seealso cref="SetWhitespaceForeColor" />
+    public void SetWhitespaceBackColor(bool use, Color color)
+    {
+        this.SetWhitespaceBackColorExtension(use, color, ColorTranslator.ToInt);
+    }
+
+    /// <summary>
+    /// Sets a global override to the whitespace foreground color.
+    /// </summary>
+    /// <param name="use">true to override the whitespace foreground color; otherwise, false.</param>
+    /// <param name="color">The global whitespace foreground color.</param>
+    /// <remarks>When not overridden globally, the whitespace foreground color is determined by the current lexer.</remarks>
+    /// <seealso cref="ViewWhitespace" />
+    /// <seealso cref="SetWhitespaceBackColor" />
+    public void SetWhitespaceForeColor(bool use, Color color)
+    {
+        this.SetWhitespaceForeColorExtension(use, color, ColorTranslator.ToInt);
+    }
+
+    /// <summary>
+    /// Shows the range of lines specified.
+    /// </summary>
+    /// <param name="lineStart">The zero-based index of the line range to start showing.</param>
+    /// <param name="lineEnd">The zero-based index of the line range to end showing.</param>
+    /// <seealso cref="HideLines" />
+    /// <seealso cref="Line.Visible" />
+    public void ShowLines(int lineStart, int lineEnd)
+    {
+        this.ShowLinesExtension(lineStart, lineEnd, Lines);
+    }
+
+    /// <summary>
+    /// Prepares for styling by setting the styling <paramref name="position" /> to start at.
+    /// </summary>
+    /// <param name="position">The zero-based character position in the document to start styling.</param>
+    /// <remarks>
+    /// After preparing the document for styling, use successive calls to <see cref="SetStyling" />
+    /// to style the document.
+    /// </remarks>
+    /// <seealso cref="SetStyling" />
+    public void StartStyling(int position)
+    {
+        this.StartStylingExtension(position, out stylingPosition, out stylingBytePosition, TextLength, Lines);
+    }
+
+    /// <summary>
+    /// Resets all style properties to those currently configured for the <see cref="Style.Default" /> style.
+    /// </summary>
+    /// <seealso cref="StyleResetDefault" />
+    public void StyleClearAll()
+    {
+        this.StyleClearAllExtension();
+    }
+
+    /// <summary>
+    /// Resets the <see cref="Style.Default" /> style to its initial state.
+    /// </summary>
+    /// <seealso cref="StyleClearAll" />
+    public void StyleResetDefault()
+    {
+        this.StyleResetDefaultExtension();
+    }
+
+    /// <summary>
+    /// Moves the caret to the opposite end of the main selection.
+    /// </summary>
+    public void SwapMainAnchorCaret()
+    {
+        this.SwapMainAnchorCaretExtension();
+    }
+
+    /// <summary>
+    /// Sets the <see cref="TargetStart" /> and <see cref="TargetEnd" /> to the start and end positions of the selection.
+    /// </summary>
+    /// <seealso cref="TargetWholeDocument" />
+    public void TargetFromSelection()
+    {
+        this.TargetFromSelectionExtension();
+    }
+
+    /// <summary>
+    /// Sets the <see cref="TargetStart" /> and <see cref="TargetEnd" /> to the start and end positions of the document.
+    /// </summary>
+    /// <seealso cref="TargetFromSelection" />
+    public void TargetWholeDocument()
+    {
+        this.TargetWholeDocumentExtension();
+    }
+
+    /// <summary>
+    /// Measures the width in pixels of the specified string when rendered in the specified style.
+    /// </summary>
+    /// <param name="style">The index of the <see cref="Style" /> to use when rendering the text to measure.</param>
+    /// <param name="text">The text to measure.</param>
+    /// <returns>The width in pixels.</returns>
+    public int TextWidth(int style, string text)
+    {
+        return this.TextWidthExtension(style, text, Styles);
+    }
+
+    /// <summary>
+    /// Undoes the previous action.
+    /// </summary>
+    public void Undo()
+    {
+        this.UndoExtension();
+    }
+
+    /// <summary>
+    /// Determines whether to show the right-click context menu.
+    /// </summary>
+    /// <param name="enablePopup">true to enable the popup window; otherwise, false.</param>
+    /// <seealso cref="UsePopup(PopupMode)" />
+    public void UsePopup(bool enablePopup)
+    {
+        this.UsePopupExtension(enablePopup);
+    }
+
+    /// <summary>
+    /// Determines the conditions for displaying the standard right-click context menu.
+    /// </summary>
+    /// <param name="popupMode">One of the <seealso cref="PopupMode" /> enumeration values.</param>
+    public void UsePopup(PopupMode popupMode)
+    {
+        this.UsePopupExtension(popupMode);
+    }
+
+    /// <summary>
+    /// Returns the position where a word ends, searching forward from the position specified.
+    /// </summary>
+    /// <param name="position">The zero-based document position to start searching from.</param>
+    /// <param name="onlyWordCharacters">
+    /// true to stop searching at the first non-word character regardless of whether the search started at a word or non-word character.
+    /// false to use the first character in the search as a word or non-word indicator and then search for that word or non-word boundary.
+    /// </param>
+    /// <returns>The zero-based document position of the word boundary.</returns>
+    /// <seealso cref="WordStartPosition" />
+    public int WordEndPosition(int position, bool onlyWordCharacters)
+    {
+        return this.WordEndPositionExtension(position, onlyWordCharacters, Lines);
+    }
+
+    /// <summary>
+    /// Returns the position where a word starts, searching backward from the position specified.
+    /// </summary>
+    /// <param name="position">The zero-based document position to start searching from.</param>
+    /// <param name="onlyWordCharacters">
+    /// true to stop searching at the first non-word character regardless of whether the search started at a word or non-word character.
+    /// false to use the first character in the search as a word or non-word indicator and then search for that word or non-word boundary.
+    /// </param>
+    /// <returns>The zero-based document position of the word boundary.</returns>
+    /// <seealso cref="WordEndPosition" />
+    public int WordStartPosition(int position, bool onlyWordCharacters)
+    {
+        return this.WordStartPositionExtension(position, onlyWordCharacters, Lines);
+    }
+
+    /// <summary>
+    /// Increases the zoom factor by 1 until it reaches 20 points.
+    /// </summary>
+    /// <seealso cref="Zoom" />
+    public void ZoomIn()
+    {
+        this.ZoomInExtension();
+    }
+
+    /// <summary>
+    /// Decreases the zoom factor by 1 until it reaches -10 points.
+    /// </summary>
+    /// <seealso cref="Zoom" />
+    public void ZoomOut()
+    {
+        this.ZoomOutExtension();
+    }
+
+    /// <summary>
+    /// Sets the representation for a specified character string.
+    /// </summary>
+    /// <param name="encodedString">The encoded string. I.e. the Ohm character: Ω = \u2126.</param>
+    /// <param name="representationString">The representation string for the <paramref name="encodedString"/>. I.e. "OHM".</param>
+    /// <remarks>The <see cref="ViewWhitespace"/> must be set to <see cref="WhitespaceMode.VisibleAlways"/> for this to work.</remarks>
+    public void SetRepresentation(string encodedString, string representationString)
+    {
+        this.SetRepresentationExtension(encodedString, representationString);
+    }
+
+    /// <summary>
+    /// Sets the representation for a specified character string.
+    /// </summary>
+    /// <param name="encodedString">The encoded string. I.e. the Ohm character: Ω = \u2126.</param>
+    /// <returns>The representation string for the <paramref name="encodedString"/>. I.e. "OHM".</returns>
+    public string GetRepresentation(string encodedString)
+    {
+        return this.GetRepresentationExtension(encodedString);
+    }
+
+    /// <summary>
+    /// Clears the representation from a specified character string.
+    /// </summary>
+    /// <param name="encodedString">The encoded string. I.e. the Ohm character: Ω = \u2126.</param>
+    public void ClearRepresentation(string encodedString)
+    {
+        this.ClearRepresentationExtension(encodedString);
+    }
+
+    /// <inheritdoc />
+    public int TextLength { get; }
     #endregion
 
     #region Events
@@ -1091,7 +1733,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <inheritdoc />
     public event EventHandler<NeedShownEventArgs>? NeedShown;
 
-    /// <inheritdoc />
+    /// <inheritdoc cref="IScintillaNotificationEvent{TEventArgs}.SCNotification" />
     public event EventHandler<SCNotificationEventArgs>? SCNotification;
 
     /// <inheritdoc />
@@ -1113,8 +1755,8 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     public event EventHandler<EventArgs>? ZoomChanged;
     #endregion
 
-    #region Properties
-    /// <inheritdoc />
+    #region CollectionProperties
+    /// <inheritdoc cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}." />
     public MarkerCollection Markers { get; }
 
     /// <inheritdoc />
@@ -1131,7 +1773,9 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
 
     /// <inheritdoc />
     public SelectionCollection Selections { get; }
+    #endregion
 
+    #region Properties
     /// <inheritdoc />
     public BiDirectionalDisplayType BiDirectionality { get; set; }
 
@@ -1437,6 +2081,9 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
 
     /// <inheritdoc />
     public bool VScrollBar { get; set; }
+
+    /// <inheritdoc />
+    public int VisibleLineCount { get; }
 
     /// <inheritdoc />
     public int WhitespaceSize { get; set; }

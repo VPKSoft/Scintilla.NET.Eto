@@ -95,8 +95,24 @@ public interface ILineCollection
     void MoveStep(int line);
 
     /// <summary>
+    /// Rebuilds the line data.
+    /// </summary>
+    void RebuildLineData();
+
+    /// <summary>
     /// Gets the number of lines.
     /// </summary>
     /// <returns>The number of lines in the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
     int Count { get; }
+
+    /// <summary>
+    /// Gets the number of CHARACTERS in the document.
+    /// </summary>
+    int TextLength { get; }
+
+    /// <summary>
+    /// Gets a value indicating whether all the document lines are visible (not hidden).
+    /// </summary>
+    /// <returns>true if all the lines are visible; otherwise, false.</returns>
+    bool AllLinesVisible { get; }
 }

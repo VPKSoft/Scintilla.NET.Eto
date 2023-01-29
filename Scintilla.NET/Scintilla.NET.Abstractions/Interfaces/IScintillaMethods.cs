@@ -478,7 +478,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// Any embedded property name macros as described in <see cref="SetProperty" /> will not be replaced (expanded).
     /// </returns>
     /// <seealso cref="GetPropertyExpanded" />
-    string GetProperty(string name);
+    string GetScintillaProperty(string name);
 
     /// <summary>
     /// Lookup a property value for the current <see cref="Lexer" /> and expand any embedded property macros.
@@ -488,7 +488,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// A String representing the property value if found; otherwise, String.Empty.
     /// Any embedded property name macros as described in <see cref="SetProperty" /> will be replaced (expanded).
     /// </returns>
-    /// <seealso cref="GetProperty" />
+    /// <seealso cref="GetScintillaProperty" />
     string GetPropertyExpanded(string name);
 
     /// <summary>

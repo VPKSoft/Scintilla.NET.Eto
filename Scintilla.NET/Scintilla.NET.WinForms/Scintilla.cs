@@ -33,8 +33,6 @@ public class Scintilla : Control,
     IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>,
     IScintillaProperties<Color>,
-    IScintillaCollectionProperties<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>,
     IScintillaMethods<Color, Keys, Bitmap>,
     IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color, Keys, 
@@ -724,6 +722,9 @@ public class Scintilla : Control,
     {
         return DirectFunction(scintillaPointer, message, wParam, lParam);
     }
+
+    [DllImport("Scintilla.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, EntryPoint = "Scintilla_DirectFunction")]
+    private static extern IntPtr DirectFunction(IntPtr sciPtr, int msg, IntPtr wParam, IntPtr lParam);
     
     /// <summary>
     /// Releases the unmanaged resources used by the Control and its child controls and optionally releases the managed resources.
@@ -891,7 +892,7 @@ public class Scintilla : Control,
     /// Any embedded property name macros as described in <see cref="SetProperty" /> will not be replaced (expanded).
     /// </returns>
     /// <seealso cref="GetPropertyExpanded" />
-    public string GetProperty(string name)
+    public string GetScintillaProperty(string name)
     {
         return this.GetPropertyExtension(name);
     }
@@ -904,7 +905,7 @@ public class Scintilla : Control,
     /// A String representing the property value if found; otherwise, String.Empty.
     /// Any embedded property name macros as described in <see cref="SetProperty" /> will be replaced (expanded).
     /// </returns>
-    /// <seealso cref="GetProperty" />
+    /// <seealso cref="GetScintillaProperty" />
     public string GetPropertyExpanded(string name)
     {
         return this.GetPropertyExpandedExtension(name);
@@ -1077,7 +1078,15 @@ public class Scintilla : Control,
         this.IndicatorFillRangeExtension(position, length, Lines);
     }
 
-    private void InitDocument(Eol eolMode = Eol.CrLf, bool useTabs = false, int tabWidth = 4, int indentWidth = 0)
+
+    /// <summary>
+    /// Initializes the Scintilla document.
+    /// </summary>
+    /// <param name="eolMode">The eol mode.</param>
+    /// <param name="useTabs">if set to <c>true</c> use tabs instead of spaces.</param>
+    /// <param name="tabWidth">Width of the tab.</param>
+    /// <param name="indentWidth">Width of the indent.</param>
+    public void InitDocument(Eol eolMode = Eol.CrLf, bool useTabs = false, int tabWidth = 4, int indentWidth = 0)
     {
         this.InitDocumentExtension(eolMode, useTabs, tabWidth, indentWidth);
     }
@@ -2936,68 +2945,6 @@ public class Scintilla : Control,
         }
     }
 
-    [DllImport("Scintilla.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, EntryPoint = "Scintilla_DirectFunction")]
-    private static extern IntPtr DirectFunction(IntPtr sciPtr, int msg, IntPtr wParam, IntPtr lParam);
-
-    /// <summary>
-    /// Gets the required creation parameters when the control handle is created.
-    /// </summary>
-    /// <returns>A CreateParams that contains the required creation parameters when the handle to the control is created.</returns>
-    protected override CreateParams CreateParams
-    {
-        get
-        {
-            if (moduleHandle == IntPtr.Zero)
-            {
-                // Load the native Scintilla library
-                moduleHandle = NativeMethods.LoadLibrary(modulePathScintilla);
-                NativeMethods.LoadLibrary(modulePathLexilla);
-
-                if (moduleHandle == IntPtr.Zero)
-                {
-                    var message = string.Format(CultureInfo.InvariantCulture, "Could not load the Scintilla module at the path '{0}'.", modulePathScintilla);
-                    throw new Win32Exception(message, new Win32Exception()); // Calls GetLastError
-                }
-
-                // For some reason the 32-bit DLL has weird export names.
-
-                // Self-compiled DLLs required this:
-                //var exportName = is32Bit
-                //    ? "_Scintilla_DirectFunction@16"
-                //    : nameof(Scintilla_DirectFunction);
-                    
-                // Native DLL:
-                var exportName = nameof(NativeMethods.Scintilla_DirectFunction);
-
-                // Get the native Scintilla direct function -- the only function the library exports
-                var directFunctionPointer = NativeMethods.GetProcAddress(new HandleRef(this, moduleHandle), exportName);
-                if (directFunctionPointer == IntPtr.Zero)
-                {
-                    var message = "The Scintilla module has no export for the 'Scintilla_DirectFunction' procedure.";
-                    throw new Win32Exception(message, new Win32Exception()); // Calls GetLastError
-                }
-            }
-
-            var cp = base.CreateParams;
-            cp.ClassName = "Scintilla";
-
-            // The border effect is achieved through a native Windows style
-            cp.ExStyle &= ~WS_EX_CLIENTEDGE;
-            cp.Style &= ~WS_BORDER;
-            switch (borderStyle)
-            {
-                case BorderStyle.Fixed3D:
-                    cp.ExStyle |= WS_EX_CLIENTEDGE;
-                    break;
-                case BorderStyle.FixedSingle:
-                    cp.Style |= WS_BORDER;
-                    break;
-            }
-
-            return cp;
-        }
-    }
-
     /// <summary>
     /// Gets the current line index.
     /// </summary>
@@ -3039,35 +2986,6 @@ public class Scintilla : Control,
             DirectMessage(SCI_SETCURRENTPOS, new IntPtr(bytePos));
         }
     }
-
-    /// <summary>
-    /// Not supported.
-    /// </summary>
-    [Browsable(false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public override Cursor Cursor
-    {
-        get => base.Cursor;
-        set => base.Cursor = value;
-    }
-
-    /// <summary>
-    /// Gets or sets the default cursor for the control.
-    /// </summary>
-    /// <returns>An object of type Cursor representing the current default cursor.</returns>
-    protected override Cursor DefaultCursor => Cursors.IBeam;
-
-    /// <summary>
-    /// Gets the default size of the control.
-    /// </summary>
-    /// <returns>The default Size of the control.</returns>
-    protected override Size DefaultSize =>
-        // I've discovered that using a DefaultSize property other than 'empty' triggers a flaw (IMO)
-        // in Windows Forms that will cause CreateParams to be called in the base constructor.
-        // That's too early. It makes it impossible to use the Site or DesignMode properties during
-        // handle creation because they haven't been set yet. Since we don't currently depend on those
-        // properties it's okay, but if we need them this is the place to start fixing things.
-        new(200, 100);
 
     /// <summary>
     /// Gets a value indicating the start index of the secondary styles.
@@ -3269,50 +3187,6 @@ public class Scintilla : Control,
     }
 
     /// <summary>
-    /// Gets or sets the font of the text displayed by the control.
-    /// </summary>
-    /// <returns>The <see cref="T:System.Drawing.Font" /> to apply to the text displayed by the control. The default is the value of the <see cref="P:System.Windows.Forms.Control.DefaultFont" /> property.</returns>
-    [Category("Appearance")]
-    [Description("The font of the text displayed by the control.")]
-    public override Font Font
-    {
-        get
-        {
-            if (!IsHandleCreated)
-            {
-                return base.Font;
-            }
-
-            var defaultFontStyle = Styles[Style.Default];
-
-            var fontStyle = defaultFontStyle.Bold ? FontStyle.Bold : FontStyle.Regular;
-
-            if (defaultFontStyle.Italic)
-            {
-                fontStyle |= FontStyle.Italic;
-            }
-
-            if (defaultFontStyle.Underline)
-            {
-                fontStyle |= FontStyle.Underline;
-            }
-
-            return new Font(defaultFontStyle.Font, defaultFontStyle.SizeF, fontStyle);
-        }
-
-        set
-        {
-            var defaultFontStyle = Styles[Style.Default];
-            defaultFontStyle.Font = value.Name;
-            defaultFontStyle.SizeF = value.Size;
-            defaultFontStyle.Bold = value.Bold;
-            defaultFontStyle.Italic = value.Italic;
-            defaultFontStyle.Underline = value.Underline;
-            base.Font = value;
-        }
-    }
-
-    /// <summary>
     /// Gets or sets font quality (anti-aliasing method) used to render fonts.
     /// </summary>
     /// <returns>
@@ -3330,17 +3204,6 @@ public class Scintilla : Control,
             var fontQuality = (int)value;
             DirectMessage(SCI_SETFONTQUALITY, new IntPtr(fontQuality));
         }
-    }
-
-    /// <summary>
-    /// Not supported.
-    /// </summary>
-    [Browsable(false)]
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public override Color ForeColor
-    {
-        get => base.ForeColor;
-        set => base.ForeColor = value;
     }
 
     /// <summary>
@@ -4506,7 +4369,14 @@ public class Scintilla : Control,
         }
     }
 
-    private int VisibleLineCount
+
+    /// <summary>
+    /// Gets the visible line count of the Scintilla control.
+    /// </summary>
+    /// <value>The visible line count.</value>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int VisibleLineCount
     {
         get
         {
@@ -5639,6 +5509,151 @@ public class Scintilla : Control,
     }
 
     #endregion Constructors
+
+    #region WinForms
+    /// <summary>
+    /// Gets the required creation parameters when the control handle is created.
+    /// </summary>
+    /// <returns>A CreateParams that contains the required creation parameters when the handle to the control is created.</returns>
+    protected override CreateParams CreateParams
+    {
+        get
+        {
+            if (moduleHandle == IntPtr.Zero)
+            {
+                // Load the native Scintilla library
+                moduleHandle = NativeMethods.LoadLibrary(modulePathScintilla);
+                NativeMethods.LoadLibrary(modulePathLexilla);
+
+                if (moduleHandle == IntPtr.Zero)
+                {
+                    var message = string.Format(CultureInfo.InvariantCulture, "Could not load the Scintilla module at the path '{0}'.", modulePathScintilla);
+                    throw new Win32Exception(message, new Win32Exception()); // Calls GetLastError
+                }
+
+                // For some reason the 32-bit DLL has weird export names.
+
+                // Self-compiled DLLs required this:
+                //var exportName = is32Bit
+                //    ? "_Scintilla_DirectFunction@16"
+                //    : nameof(Scintilla_DirectFunction);
+                    
+                // Native DLL:
+                var exportName = nameof(NativeMethods.Scintilla_DirectFunction);
+
+                // Get the native Scintilla direct function -- the only function the library exports
+                var directFunctionPointer = NativeMethods.GetProcAddress(new HandleRef(this, moduleHandle), exportName);
+                if (directFunctionPointer == IntPtr.Zero)
+                {
+                    var message = "The Scintilla module has no export for the 'Scintilla_DirectFunction' procedure.";
+                    throw new Win32Exception(message, new Win32Exception()); // Calls GetLastError
+                }
+            }
+
+            var cp = base.CreateParams;
+            cp.ClassName = "Scintilla";
+
+            // The border effect is achieved through a native Windows style
+            cp.ExStyle &= ~WS_EX_CLIENTEDGE;
+            cp.Style &= ~WS_BORDER;
+            switch (borderStyle)
+            {
+                case BorderStyle.Fixed3D:
+                    cp.ExStyle |= WS_EX_CLIENTEDGE;
+                    break;
+                case BorderStyle.FixedSingle:
+                    cp.Style |= WS_BORDER;
+                    break;
+            }
+
+            return cp;
+        }
+    }
+
+    /// <summary>
+    /// Not supported.
+    /// </summary>
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override Cursor Cursor
+    {
+        get => base.Cursor;
+        set => base.Cursor = value;
+    }
+
+    /// <summary>
+    /// Gets or sets the default cursor for the control.
+    /// </summary>
+    /// <returns>An object of type Cursor representing the current default cursor.</returns>
+    protected override Cursor DefaultCursor => Cursors.IBeam;
+
+    /// <summary>
+    /// Gets the default size of the control.
+    /// </summary>
+    /// <returns>The default Size of the control.</returns>
+    protected override Size DefaultSize =>
+        // I've discovered that using a DefaultSize property other than 'empty' triggers a flaw (IMO)
+        // in Windows Forms that will cause CreateParams to be called in the base constructor.
+        // That's too early. It makes it impossible to use the Site or DesignMode properties during
+        // handle creation because they haven't been set yet. Since we don't currently depend on those
+        // properties it's okay, but if we need them this is the place to start fixing things.
+        new(200, 100);
+
+    /// <summary>
+    /// Gets or sets the font of the text displayed by the control.
+    /// </summary>
+    /// <returns>The <see cref="T:System.Drawing.Font" /> to apply to the text displayed by the control. The default is the value of the <see cref="P:System.Windows.Forms.Control.DefaultFont" /> property.</returns>
+    [Category("Appearance")]
+    [Description("The font of the text displayed by the control.")]
+    public override Font Font
+    {
+        get
+        {
+            if (!IsHandleCreated)
+            {
+                return base.Font;
+            }
+
+            var defaultFontStyle = Styles[Style.Default];
+
+            var fontStyle = defaultFontStyle.Bold ? FontStyle.Bold : FontStyle.Regular;
+
+            if (defaultFontStyle.Italic)
+            {
+                fontStyle |= FontStyle.Italic;
+            }
+
+            if (defaultFontStyle.Underline)
+            {
+                fontStyle |= FontStyle.Underline;
+            }
+
+            return new Font(defaultFontStyle.Font, defaultFontStyle.SizeF, fontStyle);
+        }
+
+        set
+        {
+            var defaultFontStyle = Styles[Style.Default];
+            defaultFontStyle.Font = value.Name;
+            defaultFontStyle.SizeF = value.Size;
+            defaultFontStyle.Bold = value.Bold;
+            defaultFontStyle.Italic = value.Italic;
+            defaultFontStyle.Underline = value.Underline;
+            base.Font = value;
+        }
+    }
+
+    /// <summary>
+    /// Not supported.
+    /// </summary>
+    [Browsable(false)]
+    [EditorBrowsable(EditorBrowsableState.Never)]
+    public override Color ForeColor
+    {
+        get => base.ForeColor;
+        set => base.ForeColor = value;
+    }
+    #endregion
 
     /// <summary>
     /// Gets or sets a value indicating whether control's elements are aligned to support locales using right-to-left fonts.

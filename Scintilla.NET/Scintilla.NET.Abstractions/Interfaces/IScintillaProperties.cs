@@ -789,6 +789,12 @@ public interface IScintillaProperties<TColor>
     bool VScrollBar { get; set; }
 
     /// <summary>
+    /// Gets the visible line count of the Scintilla control.
+    /// </summary>
+    /// <value>The visible line count.</value>
+    int VisibleLineCount { get; }
+
+    /// <summary>
     /// Gets or sets the size of the dots used to mark whitespace.
     /// </summary>
     /// <returns>The size of the dots used to mark whitespace. The default is 1.</returns>
