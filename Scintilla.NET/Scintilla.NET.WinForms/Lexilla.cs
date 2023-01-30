@@ -1,102 +1,56 @@
-﻿using System;
+#region License
+/*
+MIT License
+
+Copyright(c) 2023 Petteri Kautonen
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+*/
+#endregion
+
+using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Runtime.InteropServices;
+using Scintilla.NET.Abstractions;
 
 namespace Scintilla.NET.WinForms;
 
 /// <summary>
-/// A class containing methods for interacting with the Lexilla library.
+/// Linux handler for the Scintilla's Lexilla library.
+/// Implements the <see cref="ILexilla" />
 /// </summary>
-public class Lexilla
+/// <seealso cref="ILexilla" />
+public class Lexilla: ILexilla
 {
-    /// <summary>
-    /// Initializes the Lexilla.dll library.
-    /// </summary>
-    /// <param name="lexillaHandle">The handle to the Lexilla.dll file.</param>
-    internal Lexilla(IntPtr lexillaHandle)
-    {
-        const string win32Error = "The Scintilla module has no export for the '{0}' procedure.";
-
-        var lpProcName = nameof(NativeMethods.CreateLexer);
-
-        // Get the Lexilla functions needed to define lexers and create managed callbacks...
-
-        var functionPointer = NativeMethods.GetProcAddress(new HandleRef(this, lexillaHandle), lpProcName);
-        if (functionPointer == IntPtr.Zero)
-        {
-            throw new Win32Exception(string.Format(win32Error, lpProcName),
-                new Win32Exception()); // Calls GetLastError
-        }
-
-        createLexer = (NativeMethods.CreateLexer) Marshal.GetDelegateForFunctionPointer(
-            functionPointer, typeof(NativeMethods.CreateLexer));
-
-        lpProcName = nameof(NativeMethods.GetLexerName);
-
-        functionPointer = NativeMethods.GetProcAddress(new HandleRef(this, lexillaHandle), lpProcName);
-        if (functionPointer == IntPtr.Zero)
-        {
-            throw new Win32Exception(string.Format(win32Error, lpProcName),
-                new Win32Exception()); // Calls GetLastError
-        }
-
-        getLexerName = (NativeMethods.GetLexerName) Marshal.GetDelegateForFunctionPointer(
-            functionPointer, typeof(NativeMethods.GetLexerName));
-
-        lpProcName = nameof(NativeMethods.GetLexerCount);
-
-        functionPointer = NativeMethods.GetProcAddress(new HandleRef(this, lexillaHandle), lpProcName);
-        if (functionPointer == IntPtr.Zero)
-        {
-            throw new Win32Exception(string.Format(win32Error, lpProcName),
-                new Win32Exception()); // Calls GetLastError
-        }
-
-        getLexerCount = (NativeMethods.GetLexerCount) Marshal.GetDelegateForFunctionPointer(
-            functionPointer, typeof(NativeMethods.GetLexerCount));
-
-
-        lpProcName = nameof(NativeMethods.LexerNameFromID);
-
-        functionPointer = NativeMethods.GetProcAddress(new HandleRef(this, lexillaHandle), lpProcName);
-        if (functionPointer == IntPtr.Zero)
-        {
-            throw new Win32Exception(string.Format(win32Error, lpProcName),
-                new Win32Exception()); // Calls GetLastError
-        }
-
-        lexerNameFromId = (NativeMethods.LexerNameFromID) Marshal.GetDelegateForFunctionPointer(
-            functionPointer, typeof(NativeMethods.LexerNameFromID));
-
-        initialized = true;
-    }
-
-    #region Fields
-
-    private static bool initialized;
-        
-    #endregion
-
-    #region DllCalls
-    private static NativeMethods.GetLexerCount getLexerCount;
-
-    private static NativeMethods.GetLexerName getLexerName;
-
-    private static NativeMethods.CreateLexer createLexer;
-
-    private static NativeMethods.LexerNameFromID lexerNameFromId;
-    #endregion
-
-    #region DllWrapping
+    /// <inheritdoc cref="ILexilla.LexerCount"/>
+    public int LexerCount => GetLexerCount();
 
     /// <summary>
-    /// Gets the lexer count in the Lexilla library.
+    /// Gets the name of the lexer.
     /// </summary>
-    /// <returns>Amount of lexers defined in the Lexilla library.</returns>
-    public static int GetLexerCount()
+    /// <param name="index">The index.</param>
+    /// <returns>System.String.</returns>
+    public string GetLexerName(uint index)
     {
-        return (int) getLexerCount();
+        var pointer = Marshal.AllocHGlobal(1024);
+        GetLexerName(index, pointer, new IntPtr(1024));
+        return Marshal.PtrToStringAnsi(pointer) ?? string.Empty;
     }
 
     /// <summary>
@@ -104,39 +58,23 @@ public class Lexilla
     /// </summary>
     /// <param name="lexerName">The name of the lexer to create.</param>
     /// <returns>A <see cref="IntPtr"/> containing the lexer interface pointer.</returns>
-    public static IntPtr CreateLexer(string lexerName)
+    public IntPtr CreateLexer(string lexerName)
     {
-        return createLexer(lexerName);
+        return CreateLexerDll(lexerName);
     }
 
-    /// <summary>
-    /// Gets the name of the lexer specified by an index number.
-    /// </summary>
-    /// <param name="index">The index.</param>
-    /// <returns>The name of the lexer if one was found with the specified index; <c>null</c> otherwise.</returns>
-    public static string GetLexerName(int index)
-    {
-        var pointer = Marshal.AllocHGlobal(1024);
-        try
-        {
-            getLexerName((nuint) index, pointer, new IntPtr(1024));
-            return Marshal.PtrToStringAnsi(pointer);
-        }
-        finally
-        {
-            Marshal.FreeHGlobal(pointer);
-        }
-    }
+    [DllImport("Lexilla.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, EntryPoint = "CreateLexer")]
+    private static extern IntPtr CreateLexerDll(string lexerName);
 
-    /// <summary>
-    /// Returns a lexer name with the specified identifier.
-    /// </summary>
-    /// <param name="identifier">The lexer identifier.</param>
-    /// <returns>The name of the lexer if one was found with the specified identifier; <c>null</c> otherwise.</returns>
-    public static string LexerNameFromId(int identifier)
-    {
-        return lexerNameFromId(new IntPtr(identifier));
-    }
+
+    [DllImport("Lexilla.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+    private static extern int GetLexerCount();
+
+    [DllImport("Lexilla.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+    private static extern void GetLexerName(nuint index, IntPtr name, IntPtr bufferLength);
+
+    [DllImport("Lexilla.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+    public static extern string LexerNameFromId(IntPtr identifier);
 
     /// <summary>
     /// Gets the lexer names contained in the Lexilla library.
@@ -150,5 +88,23 @@ public class Lexilla
             yield return GetLexerName(i);
         }
     }
-    #endregion
+
+    /// <summary>
+    /// Gets the name of the lexer specified by an index number.
+    /// </summary>
+    /// <param name="index">The index.</param>
+    /// <returns>The name of the lexer if one was found with the specified index; <c>null</c> otherwise.</returns>
+    public static string GetLexerName(int index)
+    {
+        var pointer = Marshal.AllocHGlobal(1024);
+        try
+        {
+            GetLexerName((uint) index, pointer, new IntPtr(1024));
+            return Marshal.PtrToStringAnsi(pointer);
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(pointer);
+        }
+    }
 }

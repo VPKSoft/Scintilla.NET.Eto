@@ -1165,7 +1165,7 @@ public static class PropertyHelpers
     /// <param name="scintilla">The Scintilla instance.</param>
     /// <param name="lexerName">The private lexer name field value.</param>
     /// <returns><see cref="string" />.</returns>
-    public static string LexerNameGet(this IScintillaApi scintilla, string lexerName) => lexerName;
+    public static string? LexerNameGet(this IScintillaApi scintilla, string? lexerName) => lexerName;
 
     /// <summary>
     /// A set method for the <see cref="IScintillaProperties{TColor}.LexerName"/> property.
@@ -1174,7 +1174,7 @@ public static class PropertyHelpers
     /// <param name="lexilla">The Lexilla instance.</param>
     /// <param name="value">The property value.</param>
     /// <param name="lexerName">The private lexer name field reference value.</param>
-    public static void LexerNameSet(this IScintillaApi scintilla, ILexilla lexilla, string value, ref string lexerName)
+    public static void LexerNameSet(this IScintillaApi scintilla, ILexilla lexilla, string? value, ref string? lexerName)
     {
         if (string.IsNullOrWhiteSpace(value))
         {
@@ -1199,8 +1199,13 @@ public static class PropertyHelpers
     /// <param name="name">Name of the lexer.</param>
     /// <returns><c>true</c> if the lexer was successfully set, <c>false</c> otherwise.</returns>
     // ReSharper disable once MemberCanBePrivate.Global, Part of a helper class
-    public static bool SetLexerByName(IScintillaApi scintilla, ILexilla lexilla, string name)
+    public static bool SetLexerByName(IScintillaApi scintilla, ILexilla lexilla, string? name)
     {
+        if (name == null)
+        {
+            return false;
+        }
+
         var ptr = lexilla.CreateLexer(name);
 
         if (ptr == IntPtr.Zero)
@@ -1219,7 +1224,7 @@ public static class PropertyHelpers
     /// <param name="scintilla">The Scintilla instance.</param>
     /// <param name="lexerName">The private lexer name field value.</param>
     /// <returns><see cref="Lexer" />.</returns>
-    public static Lexer LexerGet(this IScintillaApi scintilla, string lexerName)
+    public static Lexer LexerGet(this IScintillaApi scintilla, string? lexerName)
     {
         if (string.IsNullOrWhiteSpace(lexerName))
         {
@@ -1227,7 +1232,7 @@ public static class PropertyHelpers
         }
 
 
-        if (NameConstantMap.ContainsValue(lexerName))
+        if (NameConstantMap.ContainsValue(lexerName!))
         {
             return (Lexer) NameConstantMap.First(f => f.Value == lexerName).Key;
         }
@@ -1242,7 +1247,7 @@ public static class PropertyHelpers
     /// <param name="lexilla">The Lexilla instance.</param>
     /// <param name="value">The property value.</param>
     /// <param name="lexerName">The private lexer name field reference value.</param>
-    public static void LexerSet(this IScintillaApi scintilla, ILexilla lexilla, Lexer value, ref string lexerName)
+    public static void LexerSet(this IScintillaApi scintilla, ILexilla lexilla, Lexer value, ref string? lexerName)
     {
         if (value == Lexer.NotFound)
         {

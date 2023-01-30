@@ -29,7 +29,7 @@ namespace Scintilla.NET.WinForms;
 /// Represents a Scintilla editor control.
 /// </summary>
 [Docking(DockingBehavior.Ask)]
-public class Scintilla : Control,
+public partial class Scintilla : Control,
     IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>,
     IScintillaProperties<Color>,
@@ -154,7 +154,7 @@ public class Scintilla : Control,
     /// <returns><c>true</c> if the lexer was successfully set, <c>false</c> otherwise.</returns>
     private bool SetLexerByName(string name)
     {
-        var ptr = Lexilla.CreateLexer(name);
+        var ptr = LexillaSingleton.CreateLexer(name);
 
         if (ptr == IntPtr.Zero)
         {
@@ -2159,7 +2159,7 @@ public class Scintilla : Control,
     }
     #endregion Methods
 
-    #region Properties
+    #region Propeties
     /// <summary>
     /// Gets or sets the bi-directionality of the Scintilla control.
     /// </summary>
@@ -2168,20 +2168,1634 @@ public class Scintilla : Control,
     [Description("The bi-directionality of the Scintilla control.")]
     public BiDirectionalDisplayType BiDirectionality
     {
-        get => (BiDirectionalDisplayType) DirectMessage(SCI_GETBIDIRECTIONAL).ToInt32();
+        get => this.BiDirectionalityGet();
 
-        set
+        set => this.BiDirectionalitySet(value);
+    }
+
+ /// <summary>
+    /// Gets or sets the caret foreground color for additional selections.
+    /// </summary>
+    /// <returns>The caret foreground color in additional selections. The default is (127, 127, 127).</returns>
+    [Category("Multiple Selection")]
+    [Description("The additional caret foreground color.")]
+    public Color AdditionalCaretForeColor
+    {
+        get => this.AdditionalCaretForeColorGet(ColorTranslator.FromWin32);
+
+        set => this.AdditionalCaretForeColorSet(value, ColorTranslator.ToWin32);
+    }
+
+    /// <summary>
+    /// Gets or sets whether the carets in additional selections will blink.
+    /// </summary>
+    /// <returns>true if additional selection carets should blink; otherwise, false. The default is true.</returns>
+    [DefaultValue(true)]
+    [Category("Multiple Selection")]
+    [Description("Whether the carets in additional selections should blink.")]
+    public bool AdditionalCaretsBlink
+    {
+        get => this.AdditionalCaretsBlinkGet();
+
+        set => this.AdditionalCaretsBlinkSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether the carets in additional selections are visible.
+    /// </summary>
+    /// <returns>true if additional selection carets are visible; otherwise, false. The default is true.</returns>
+    [DefaultValue(true)]
+    [Category("Multiple Selection")]
+    [Description("Whether the carets in additional selections are visible.")]
+    public bool AdditionalCaretsVisible
+    {
+        get => this.AdditionalCaretsVisibleGet();
+
+        set => this.AdditionalCaretsVisibleSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the alpha transparency of additional multiple selections.
+    /// </summary>
+    /// <returns>
+    /// The alpha transparency ranging from 0 (completely transparent) to 255 (completely opaque).
+    /// The value 256 will disable alpha transparency. The default is 256.
+    /// </returns>
+    [DefaultValue(256)]
+    [Category("Multiple Selection")]
+    [Description("The transparency of additional selections.")]
+    public int AdditionalSelAlpha
+    {
+        get => this.AdditionalSelAlphaGet();
+
+        set => this.AdditionalSelAlphaSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether additional typing affects multiple selections.
+    /// </summary>
+    /// <returns>true if typing will affect multiple selections instead of just the main selection; otherwise, false. The default is false.</returns>
+    [DefaultValue(false)]
+    [Category("Multiple Selection")]
+    [Description("Whether typing, backspace, or delete works with multiple selection simultaneously.")]
+    public bool AdditionalSelectionTyping
+    {
+        get => this.AdditionalSelectionTypingGet();
+
+        set => this.AdditionalSelectionTypingSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the current anchor position.
+    /// </summary>
+    /// <returns>The zero-based character position of the anchor.</returns>
+    /// <remarks>
+    /// Setting the current anchor position will create a selection between it and the <see cref="CurrentPosition" />.
+    /// The caret is not scrolled into view.
+    /// </remarks>
+    /// <seealso cref="ScrollCaret" />
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int AnchorPosition
+    {
+        get => this.AnchorPositionGet(Lines);
+
+        set => this.AnchorPositionSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets or sets the display of annotations.
+    /// </summary>
+    /// <returns>One of the <see cref="Annotation" /> enumeration values. The default is <see cref="Annotation.Hidden" />.</returns>
+    [DefaultValue(Annotation.Hidden)]
+    [Category("Appearance")]
+    [Description("Display and location of annotations.")]
+    public Annotation AnnotationVisible
+    {
+        get => this.AnnotationVisibleGet();
+        
+        set => this.AnnotationVisibleSet(value);
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether there is an auto-completion list displayed.
+    /// </summary>
+    /// <returns>true if there is an active auto-completion list; otherwise, false.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool AutoCActive => this.AutoCActiveGet();
+
+    /// <summary>
+    /// Gets or sets whether to automatically cancel auto-completion when there are no viable matches.
+    /// </summary>
+    /// <returns>
+    /// true to automatically cancel auto-completion when there is no possible match; otherwise, false.
+    /// The default is true.
+    /// </returns>
+    [DefaultValue(true)]
+    [Category("Autocompletion")]
+    [Description("Whether to automatically cancel auto-completion when no match is possible.")]
+    public bool AutoCAutoHide
+    {
+        get => this.AutoCAutoHideGet();
+        
+        set => this.AutoCAutoHideSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether to cancel an auto-completion if the caret moves from its initial location,
+    /// or is allowed to move to the word start.
+    /// </summary>
+    /// <returns>
+    /// true to cancel auto-completion when the caret moves.
+    /// false to allow the caret to move to the beginning of the word without cancelling auto-completion.
+    /// </returns>
+    [DefaultValue(true)]
+    [Category("Autocompletion")]
+    [Description("Whether to cancel an auto-completion if the caret moves from its initial location, or is allowed to move to the word start.")]
+    public bool AutoCCancelAtStart
+    {
+        get => this.AutoCCancelAtStartGet();
+
+        set => this.AutoCCancelAtStartSet(value);
+    }
+
+    /// <summary>
+    /// Gets the index of the current auto-completion list selection.
+    /// </summary>
+    /// <returns>The zero-based index of the current auto-completion selection.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int AutoCCurrent => this.AutoCCurrentGet();
+
+    /// <summary>
+    /// Gets or sets whether to automatically select an item when it is the only one in an auto-completion list.
+    /// </summary>
+    /// <returns>
+    /// true to automatically choose the only auto-completion item and not display the list; otherwise, false.
+    /// The default is false.
+    /// </returns>
+    [DefaultValue(false)]
+    [Category("Autocompletion")]
+    [Description("Whether to automatically choose an auto-completion item when it is the only one in the list.")]
+    public bool AutoCChooseSingle
+    {
+        get => this.AutoCChooseSingleGet();
+
+        set => this.AutoCChooseSingleSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether to delete any word characters following the caret after an auto-completion.
+    /// </summary>
+    /// <returns>
+    /// true to delete any word characters following the caret after auto-completion; otherwise, false.
+    /// The default is false.</returns>
+    [DefaultValue(false)]
+    [Category("Autocompletion")]
+    [Description("Whether to delete any existing word characters following the caret after auto-completion.")]
+    public bool AutoCDropRestOfWord
+    {
+        get => this.AutoCDropRestOfWordGet();
+
+        set => this.AutoCDropRestOfWordSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether matching characters to an auto-completion list is case-insensitive.
+    /// </summary>
+    /// <returns>true to use case-insensitive matching; otherwise, false. The default is false.</returns>
+    [DefaultValue(false)]
+    [Category("Autocompletion")]
+    [Description("Whether auto-completion word matching can ignore case.")]
+    public bool AutoCIgnoreCase
+    {
+        get => this.AutoCIgnoreCaseGet();
+
+        set => this.AutoCIgnoreCaseSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the maximum height of the auto-completion list measured in rows.
+    /// </summary>
+    /// <returns>The max number of rows to display in an auto-completion window. The default is 5.</returns>
+    /// <remarks>If there are more items in the list than max rows, a vertical scrollbar is shown.</remarks>
+    [DefaultValue(5)]
+    [Category("Autocompletion")]
+    [Description("The maximum number of rows to display in an auto-completion list.")]
+    public int AutoCMaxHeight
+    {
+        get => this.AutoCMaxHeightGet();
+
+        set => this.AutoCMaxHeightSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the width in characters of the auto-completion list.
+    /// </summary>
+    /// <returns>
+    /// The width of the auto-completion list expressed in characters, or 0 to automatically set the width
+    /// to the longest item. The default is 0.
+    /// </returns>
+    /// <remarks>Any items that cannot be fully displayed will be indicated with ellipsis.</remarks>
+    [DefaultValue(0)]
+    [Category("Autocompletion")]
+    [Description("The width of the auto-completion list measured in characters.")]
+    public int AutoCMaxWidth
+    {
+        get => this.AutoCMaxWidthGet();
+        
+        set => this.AutoCMaxWidthSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the auto-completion list sort order to expect when calling <see cref="AutoCShow" />.
+    /// </summary>
+    /// <returns>One of the <see cref="Order" /> enumeration values. The default is <see cref="Order.Presorted" />.</returns>
+    [DefaultValue(Order.Presorted)]
+    [Category("Autocompletion")]
+    [Description("The order of words in an auto-completion list.")]
+    public Order AutoCOrder
+    {
+        get => this.AutoCOrderGet();
+
+        set => this.AutoCOrderSet(value);
+    }
+
+    /// <summary>
+    /// Gets the document position at the time <see cref="AutoCShow" /> was called.
+    /// </summary>
+    /// <returns>The zero-based document position at the time <see cref="AutoCShow" /> was called.</returns>
+    /// <seealso cref="AutoCShow" />
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int AutoCPosStart => this.AutoCPosStartGet(Lines);
+
+    /// <summary>
+    /// Gets or sets the delimiter character used to separate words in an auto-completion list.
+    /// </summary>
+    /// <returns>The separator character used when calling <see cref="AutoCShow" />. The default is the space character.</returns>
+    /// <remarks>The <paramref name="value" /> specified should be limited to printable ASCII characters.</remarks>
+    [DefaultValue(' ')]
+    [Category("Autocompletion")]
+    [Description("The auto-completion list word delimiter. The default is a space character.")]
+    public char AutoCSeparator
+    {
+        get => this.AutoCSeparatorGet();
+
+        set => this.AutoCSeparatorSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the delimiter character used to separate words and image type identifiers in an auto-completion list.
+    /// </summary>
+    /// <returns>The separator character used to reference an image registered with <see cref="RegisterRgbaImage" />. The default is '?'.</returns>
+    /// <remarks>The <paramref name="value" /> specified should be limited to printable ASCII characters.</remarks>
+    [DefaultValue('?')]
+    [Category("Autocompletion")]
+    [Description("The auto-completion list image type delimiter.")]
+    public char AutoCTypeSeparator
+    {
+        get => this.AutoCTypeSeparatorGet();
+
+        set => this.AutoCTypeSeparatorSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the automatic folding flags.
+    /// </summary>
+    /// <returns>
+    /// A bitwise combination of the <see cref="Abstractions.Enumerations.AutomaticFold" /> enumeration.
+    /// The default is <see cref="Abstractions.Enumerations.AutomaticFold.None" />.
+    /// </returns>
+    [DefaultValue(AutomaticFold.None)]
+    [Category("Behavior")]
+    [Description("Options for allowing the control to automatically handle folding.")]
+    [TypeConverter(typeof(FlagsEnumConverter))]
+    public AutomaticFold AutomaticFold
+    {
+        get => this.AutomaticFoldGet();
+        
+        set => this.AutomaticFoldSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether backspace deletes a character, or un-indents.
+    /// </summary>
+    /// <returns>Whether backspace deletes a character, (false) or un-indents (true).</returns>
+    [DefaultValue(false)]
+    [Category("Indentation")]
+    [Description("Determines whether backspace deletes a character, or unindents.")]
+    public bool BackspaceUnIndents
+    {
+        get => this.BackspaceUnIndentsGet();
+
+        set => this.BackspaceUnIndentsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether drawing is double-buffered.
+    /// </summary>
+    /// <returns>
+    /// true to draw each line into an offscreen bitmap first before copying it to the screen; otherwise, false.
+    /// The default is true.
+    /// </returns>
+    /// <remarks>Disabling buffer can improve performance but will cause flickering.</remarks>
+    [DefaultValue(true)]
+    [Category("Misc")]
+    [Description("Determines whether drawing is double-buffered.")]
+    public bool BufferedDraw
+    {
+        get => this.BufferedDrawGet();
+
+        set => this.BufferedDrawSet(value);
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether there is a call tip window displayed.
+    /// </summary>
+    /// <returns>true if there is an active call tip window; otherwise, false.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool CallTipActive => this.CallTipActiveGet();
+
+    /// <summary>
+    /// Gets a value indicating whether there is text on the clipboard that can be pasted into the document.
+    /// </summary>
+    /// <returns>true when there is text on the clipboard to paste; otherwise, false.</returns>
+    /// <remarks>The document cannot be <see cref="ReadOnly" />  and the selection cannot contain protected text.</remarks>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool CanPaste => this.CanPasteGet();
+
+    /// <summary>
+    /// Gets a value indicating whether there is an undo action to redo.
+    /// </summary>
+    /// <returns>true when there is something to redo; otherwise, false.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool CanRedo => this.CanRedoGet();
+
+    /// <summary>
+    /// Gets a value indicating whether there is an action to undo.
+    /// </summary>
+    /// <returns>true when there is something to undo; otherwise, false.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool CanUndo => this.CanUndoGet();
+
+    /// <summary>
+    /// Gets or sets the caret foreground color.
+    /// </summary>
+    /// <returns>The caret foreground color. The default is black.</returns>
+    [DefaultValue(typeof(Color), "Black")]
+    [Category("Caret")]
+    [Description("The caret foreground color.")]
+    public Color CaretForeColor
+    {
+        get => this.CaretForeColorGet(ColorTranslator.FromWin32);
+
+        set => this.CaretForeColorSet(value, ColorTranslator.ToWin32);
+    }
+
+    /// <summary>
+    /// Gets or sets the caret line background color.
+    /// </summary>
+    /// <returns>The caret line background color. The default is yellow.</returns>
+    [DefaultValue(typeof(Color), "Yellow")]
+    [Category("Caret")]
+    [Description("The background color of the current line.")]
+    public Color CaretLineBackColor
+    {
+        get => this.CaretLineBackColorGet(ColorTranslator.FromWin32);
+
+        set => this.CaretLineBackColorSet(value, ColorTranslator.ToWin32);
+    }
+
+    /// <summary>
+    /// Gets or sets the alpha transparency of the <see cref="CaretLineBackColor" />.
+    /// </summary>
+    /// <returns>
+    /// The alpha transparency ranging from 0 (completely transparent) to 255 (completely opaque).
+    /// The value 256 will disable alpha transparency. The default is 256.
+    /// </returns>
+    [DefaultValue(256)]
+    [Category("Caret")]
+    [Description("The transparency of the current line background color.")]
+    public int CaretLineBackColorAlpha
+    {
+        get => this.CaretLineBackColorAlphaGet();
+
+        set => this.CaretLineBackColorAlphaSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the width of the caret line frame.
+    /// </summary>
+    /// <returns><see cref="CaretLineVisible" /> must be set to true. A value of 0 disables the frame. The default is 0.</returns>
+    [DefaultValue(0)]
+    [Category("Caret")]
+    [Description("The Width of the current line frame.")]
+    public int CaretLineFrame
+    {
+        get => this.CaretLineFrameGet();
+
+        set => this.CaretLineFrameSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether the caret line is visible (highlighted).
+    /// </summary>
+    /// <returns>true if the caret line is visible; otherwise, false. The default is false.</returns>
+    [DefaultValue(false)]
+    [Category("Caret")]
+    [Description("Determines whether to highlight the current caret line.")]
+    public bool CaretLineVisible
+    {
+        get => this.CaretLineVisibleGet();
+
+        set => this.CaretLineVisibleSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether the caret line is always visible even when the window is not in focus.
+    /// </summary>
+    /// <returns>true if the caret line is always visible; otherwise, false. The default is false.</returns>
+    [DefaultValue(false)]
+    [Category("Caret")]
+    [Description("Determines whether the caret line always visible even when the window is not in focus..")]
+    public bool CaretLineVisibleAlways
+    {
+        get => this.CaretLineVisibleAlwaysGet();
+
+        set => this.CaretLineVisibleAlwaysSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the layer where the line caret will be painted. Default value is <see cref="Layer.Base"/>
+    /// </summary>
+    [DefaultValue(Layer.Base)]
+    [Category("Caret")]
+    [Description("The layer where the line caret will be painted.")]
+    public Layer CaretLineLayer
+    {
+        get => this.CaretLineLayerGet();
+
+        set => this.CaretLineLayerSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the caret blink rate in milliseconds.
+    /// </summary>
+    /// <returns>The caret blink rate measured in milliseconds. The default is 530.</returns>
+    /// <remarks>A value of 0 will stop the caret blinking.</remarks>
+    [DefaultValue(530)]
+    [Category("Caret")]
+    [Description("The caret blink rate in milliseconds.")]
+    public int CaretPeriod
+    {
+        get => this.CaretPeriodGet();
+
+        set => this.CaretPeriodSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the caret display style.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Abstractions.Enumerations.CaretStyle" /> enumeration values.
+    /// The default is <see cref="Line" />.
+    /// </returns>
+    [DefaultValue(CaretStyle.Line)]
+    [Category("Caret")]
+    [Description("The caret display style.")]
+    public CaretStyle CaretStyle
+    {
+        get => this.CaretStyleGet();
+
+        set => this.CaretStyleSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the width in pixels of the caret.
+    /// </summary>
+    /// <returns>The width of the caret in pixels. The default is 1 pixel.</returns>
+    /// <remarks>
+    /// The caret width can only be set to a value of 0, 1, 2 or 3 pixels and is only effective
+    /// when the <see cref="CaretStyle" /> property is set to <see cref="Line" />.
+    /// </remarks>
+    [DefaultValue(1)]
+    [Category("Caret")]
+    [Description("The width of the caret line measured in pixels (between 0 and 3).")]
+    public int CaretWidth
+    {
+        get => this.CaretWidthGet();
+
+        set => this.CaretWidthSet(value);
+    }
+
+    /// <summary>
+    /// Gets the current line index.
+    /// </summary>
+    /// <returns>The zero-based line index containing the <see cref="CurrentPosition" />.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int CurrentLine => this.CurrentLineGet();
+
+    /// <summary>
+    /// Gets or sets the current caret position.
+    /// </summary>
+    /// <returns>The zero-based character position of the caret.</returns>
+    /// <remarks>
+    /// Setting the current caret position will create a selection between it and the current <see cref="AnchorPosition" />.
+    /// The caret is not scrolled into view.
+    /// </remarks>
+    /// <seealso cref="ScrollCaret" />
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int CurrentPosition
+    {
+        get => this.CurrentPositionGet(Lines);
+
+        set => this.CurrentPositionSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets a value indicating the start index of the secondary styles.
+    /// </summary>
+    /// <returns>Returns the distance between a primary style and its corresponding secondary style.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int DistanceToSecondaryStyles => this.DistanceToSecondaryStylesGet();
+
+    /// <summary>
+    /// Gets or sets the current document used by the control.
+    /// </summary>
+    /// <returns>The current <see cref="Document" />.</returns>
+    /// <remarks>
+    /// Setting this property is equivalent to calling <see cref="ReleaseDocument" /> on the current document, and
+    /// calling <see cref="CreateDocument" /> if the new <paramref name="value" /> is <see cref="Abstractions.Structs.Document.Empty" /> or
+    /// <see cref="AddRefDocument" /> if the new <paramref name="value" /> is not <see cref="Abstractions.Structs.Document.Empty" />.
+    /// </remarks>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public Document Document
+    {
+        get => this.DocumentGet();
+
+        set => this.DocumentSet(value, Lines, EolMode, UseTabs, TabWidth, IndentWidth);
+    }
+
+    /// <summary>
+    /// Gets or sets the background color to use when indicating long lines with
+    /// <see cref="VisualStyleElement.TrayNotify.Background" />.
+    /// </summary>
+    /// <returns>The background Color. The default is Silver.</returns>
+    [DefaultValue(typeof(Color), "Silver")]
+    [Category("Long Lines")]
+    [Description("The background color to use when indicating long lines.")]
+    public Color EdgeColor
+    {
+        get => this.EdgeColorGet(ColorTranslator.FromWin32);
+
+        set => this.EdgeColorSet(value, ColorTranslator.ToWin32);
+    }
+
+    /// <summary>
+    /// Gets or sets the column number at which to begin indicating long lines.
+    /// </summary>
+    /// <returns>The number of columns in a long line. The default is 0.</returns>
+    /// <remarks>
+    /// When using <see cref="Line"/>, a column is defined as the width of a space character in the <see cref="Style.Default" /> style.
+    /// When using <see cref="VisualStyleElement.TrayNotify.Background" /> a column is equal to a character (including tabs).
+    /// </remarks>
+    [DefaultValue(0)]
+    [Category("Long Lines")]
+    [Description("The number of columns at which to display long line indicators.")]
+    public int EdgeColumn
+    {
+        get => this.EdgeColumnGet();
+
+        set => this.EdgeColumnSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the mode for indicating long lines.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Abstractions.Enumerations.EdgeMode" /> enumeration values.
+    /// The default is <see cref="Abstractions.Enumerations.EdgeMode.None" />.
+    /// </returns>
+    [DefaultValue(EdgeMode.None)]
+    [Category("Long Lines")]
+    [Description("Determines how long lines are indicated.")]
+    public EdgeMode EdgeMode
+    {
+        get => this.EdgeModeGet();
+
+        set => this.EdgeModeSet(value);
+    }
+
+    /// <summary>
+    /// Gets the encoding of the <see cref="T:Scintilla.NET.Abstractions.IScintillaApi" /> control interface.
+    /// </summary>
+    /// <value>The encoding of the control.</value>
+    public Encoding Encoding => this.EncodingGet();
+
+    /// <summary>
+    /// Gets or sets whether vertical scrolling ends at the last line or can scroll past.
+    /// </summary>
+    /// <returns>true if the maximum vertical scroll position ends at the last line; otherwise, false. The default is true.</returns>
+    [DefaultValue(true)]
+    [Category("Scrolling")]
+    [Description("Determines whether the maximum vertical scroll position ends at the last line or can scroll past.")]
+    public bool EndAtLastLine
+    {
+        get => this.EndAtLastLineGet();
+
+        set => this.EndAtLastLineSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the end-of-line mode, or rather, the characters added into
+    /// the document when the user presses the Enter key.
+    /// </summary>
+    /// <returns>One of the <see cref="Eol" /> enumeration values. The default is <see cref="Eol.CrLf" />.</returns>
+    [DefaultValue(Eol.CrLf)]
+    [Category("Line Endings")]
+    [Description("Determines the characters added into the document when the user presses the Enter key.")]
+    public Eol EolMode
+    {
+        get => this.EolModeGet();
+        
+        set => this.EolModeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the amount of whitespace added to the ascent (top) of each line.
+    /// </summary>
+    /// <returns>The extra line ascent. The default is zero.</returns>
+    [DefaultValue(0)]
+    [Category("Whitespace")]
+    [Description("Extra whitespace added to the ascent (top) of each line.")]
+    public int ExtraAscent
+    {
+        get => this.ExtraAscentGet();
+
+        set => this.ExtraAscentSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the amount of whitespace added to the descent (bottom) of each line.
+    /// </summary>
+    /// <returns>The extra line descent. The default is zero.</returns>
+    [DefaultValue(0)]
+    [Category("Whitespace")]
+    [Description("Extra whitespace added to the descent (bottom) of each line.")]
+    public int ExtraDescent
+    {
+        get => this.ExtraDescentGet();
+
+        set => this.ExtraDescentSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the first visible line on screen.
+    /// </summary>
+    /// <returns>The zero-based index of the first visible screen line.</returns>
+    /// <remarks>The value is a visible line, not a document line.</remarks>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int FirstVisibleLine
+    {
+        get => this.FirstVisibleLineGet();
+
+        set => this.FirstVisibleLineSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets font quality (anti-aliasing method) used to render fonts.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Abstractions.Enumerations.FontQuality" /> enumeration values.
+    /// The default is <see cref="Abstractions.Enumerations.FontQuality.Default" />.
+    /// </returns>
+    [DefaultValue(FontQuality.Default)]
+    [Category("Misc")]
+    [Description("Specifies the anti-aliasing method to use when rendering fonts.")]
+    public FontQuality FontQuality
+    {
+        get => this.FontQualityGet();
+
+        set => this.FontQualitySet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the column number of the indentation guide to highlight.
+    /// </summary>
+    /// <returns>The column number of the indentation guide to highlight or 0 if disabled.</returns>
+    /// <remarks>Guides are highlighted in the <see cref="Style.BraceLight" /> style. Column numbers can be determined by calling <see cref="GetColumn" />.</remarks>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int HighlightGuide
+    {
+        get => this.HighlightGuideGet();
+
+        set => this.HighlightGuideSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether to display the horizontal scroll bar.
+    /// </summary>
+    /// <returns>true to display the horizontal scroll bar when needed; otherwise, false. The default is true.</returns>
+    [DefaultValue(true)]
+    [Category("Scrolling")]
+    [Description("Determines whether to show the horizontal scroll bar if needed.")]
+    public bool HScrollBar
+    {
+        get => this.HScrollBarGet();
+
+        set => this.HScrollBarSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the strategy used to perform styling using application idle time.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Abstractions.Enumerations.IdleStyling" /> enumeration values.
+    /// The default is <see cref="Abstractions.Enumerations.IdleStyling.None" />.
+    /// </returns>
+    [DefaultValue(IdleStyling.None)]
+    [Category("Misc")]
+    [Description("Specifies how to use application idle time for styling.")]
+    public IdleStyling IdleStyling
+    {
+        get => this.IdleStylingGet();
+
+        set => this.IdleStylingSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the size of indentation in terms of space characters.
+    /// </summary>
+    /// <returns>The indentation size measured in characters. The default is 0.</returns>
+    /// <remarks> A value of 0 will make the indent width the same as the tab width.</remarks>
+    [DefaultValue(0)]
+    [Category("Indentation")]
+    [Description("The indentation size in characters or 0 to make it the same as the tab width.")]
+    public int IndentWidth
+    {
+        get => this.IndentWidthGet();
+
+        set => this.IndentWidthSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether to display indentation guides.
+    /// </summary>
+    /// <returns>One of the <see cref="IndentView" /> enumeration values. The default is <see cref="IndentView.None" />.</returns>
+    /// <remarks>The <see cref="Style.IndentGuide" /> style can be used to specify the foreground and background color of indentation guides.</remarks>
+    [DefaultValue(IndentView.None)]
+    [Category("Indentation")]
+    [Description("Indicates whether indentation guides are displayed.")]
+    public IndentView IndentationGuides
+    {
+        get => this.IndentationGuidesGet();
+        
+        set => this.IndentationGuidesSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the indicator used in a subsequent call to <see cref="IndicatorFillRange" /> or <see cref="IndicatorClearRange" />.
+    /// </summary>
+    /// <returns>The zero-based indicator index to apply when calling <see cref="IndicatorFillRange" /> or remove when calling <see cref="IndicatorClearRange" />.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int IndicatorCurrent
+    {
+        get => this.IndicatorCurrentGet();
+
+        set => this.IndicatorCurrentSet(value, Indicators);
+    }
+
+    /// <summary>
+    /// Gets or sets the user-defined value used in a subsequent call to <see cref="IndicatorFillRange" />.
+    /// </summary>
+    /// <returns>The indicator value to apply when calling <see cref="IndicatorFillRange" />.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int IndicatorValue
+    {
+        get => this.IndicatorValueGet();
+
+        set => this.IndicatorValueSet(value);
+    }
+
+    /// <summary>
+    /// This is used by clients that have complex focus requirements such as having their own window
+    /// that gets the real focus but with the need to indicate that Scintilla has the logical focus.
+    /// </summary>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool InternalFocusFlag
+    {
+        get => this.InternalFocusFlagGet();
+        
+        set => this.InternalFocusFlagSet(value);
+    }
+
+    private string lexerName;
+
+    /// <summary>
+    /// Gets or sets the name of the lexer.
+    /// </summary>
+    /// <value>The name of the lexer.</value>
+    /// <exception cref="InvalidOperationException">Lexer with the name of 'Value' was not found.</exception>
+    [Category("Lexing")]
+    public string LexerName
+    {
+        get => this.LexerNameGet(lexerName);
+
+        set => this.LexerNameSet(LexillaSingleton, value, ref lexerName);
+    }
+
+    /// <summary>
+    /// Gets or sets the current lexer.
+    /// </summary>
+    /// <returns>One of the <see cref="Lexer" /> enumeration values. The default is <see cref="Container" />.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// No lexer name was found with the specified value.
+    /// </exception>
+    /// <remarks>This property will get more obsolete as time passes as the Scintilla v.5+ now uses strings to define lexers. The Lexer enumeration is not maintained.</remarks>
+    [DefaultValue(Lexer.NotFound)]
+    [Category("Lexing")]
+    [Description("The current lexer.")]
+    [Obsolete("This property will get more obsolete as time passes as the Scintilla v.5+ now uses strings to define lexers. Please use the LexerName property instead.")]
+    public Lexer Lexer
+    {
+        get => this.LexerGet(lexerName);
+
+        set => this.LexerSet(LexillaSingleton, value, ref lexerName);
+    }
+
+    /// <summary>
+    /// Gets or sets the current lexer by name.
+    /// </summary>
+    /// <returns>A String representing the current lexer.</returns>
+    /// <remarks>Lexer names are case-sensitive.</remarks>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public string LexerLanguage
+    {
+        get => this.LexerLanguageGet();
+
+        set => this.LexerLanguageSet(value);
+    }
+
+    /// <summary>
+    /// Gets the combined result of the <see cref="LineEndTypesSupported" /> and <see cref="LineEndTypesAllowed" />
+    /// properties to report the line end types actively being interpreted.
+    /// </summary>
+    /// <returns>A bitwise combination of the <see cref="LineEndType" /> enumeration.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public LineEndType LineEndTypesActive => this.LineEndTypesActiveGet();
+
+    /// <summary>
+    /// Gets or sets the line ending types interpreted by the <see cref="Scintilla" /> control.
+    /// </summary>
+    /// <returns>
+    /// A bitwise combination of the <see cref="LineEndType" /> enumeration.
+    /// The default is <see cref="LineEndType.Default" />.
+    /// </returns>
+    /// <remarks>The line ending types allowed must also be supported by the current lexer to be effective.</remarks>
+    [DefaultValue(LineEndType.Default)]
+    [Category("Line Endings")]
+    [Description("Line endings types interpreted by the control.")]
+    [TypeConverter(typeof(FlagsEnumConverter))]
+    public LineEndType LineEndTypesAllowed
+    {
+        get => this.LineEndTypesAllowedGet();
+
+        set => this.LineEndTypesAllowedSet(value);
+    }
+
+    /// <summary>
+    /// Gets the different types of line ends supported by the current lexer.
+    /// </summary>
+    /// <returns>A bitwise combination of the <see cref="LineEndType" /> enumeration.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public LineEndType LineEndTypesSupported => this.LineEndTypesSupportedGet();
+
+    /// <summary>
+    /// Gets the number of lines that can be shown on screen given a constant
+    /// line height and the space available.
+    /// </summary>
+    /// <returns>
+    /// The number of screen lines which could be displayed (including any partial lines).
+    /// </returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int LinesOnScreen => this.LinesOnScreenGet();
+
+    /// <summary>
+    /// Gets or sets the main selection when their are multiple selections.
+    /// </summary>
+    /// <returns>The zero-based main selection index.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int MainSelection
+    {
+        get => this.MainSelectionGet();
+        
+        set => this.MainSelectionSet(value);
+    }
+
+    /// <summary>
+    /// Gets a value indicating whether the document has been modified (is dirty)
+    /// since the last call to <see cref="SetSavePoint" />.
+    /// </summary>
+    /// <returns>true if the document has been modified; otherwise, false.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public bool Modified => this.ModifiedGet();
+
+    /// <summary>
+    /// Gets or sets the time in milliseconds the mouse must linger to generate a <see cref="DwellStart" /> event.
+    /// </summary>
+    /// <returns>
+    /// The time in milliseconds the mouse must linger to generate a <see cref="DwellStart" /> event
+    /// or <see cref="ApiConstants.TimeForever" /> if dwell events are disabled.
+    /// </returns>
+    [DefaultValue(ApiConstants.TimeForever)]
+    [Category("Behavior")]
+    [Description("The time in milliseconds the mouse must linger to generate a dwell start event. A value of 10000000 disables dwell events.")]
+    public int MouseDwellTime
+    {
+        get => this.MouseDwellTimeGet();
+        
+        set => this.MouseDwellTimeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the ability to switch to rectangular selection mode while making a selection with the mouse.
+    /// </summary>
+    /// <returns>
+    /// true if the current mouse selection can be switched to a rectangular selection by pressing the ALT key; otherwise, false.
+    /// The default is false.
+    /// </returns>
+    [DefaultValue(false)]
+    [Category("Multiple Selection")]
+    [Description(
+        "Enable or disable the ability to switch to rectangular selection mode while making a selection with the mouse.")]
+    public bool MouseSelectionRectangularSwitch
+    {
+        get => this.MouseSelectionRectangularSwitchGet();
+
+        set => this.MouseSelectionRectangularSwitchSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether multiple selection is enabled.
+    /// </summary>
+    /// <returns>
+    /// true if multiple selections can be made by holding the CTRL key and dragging the mouse; otherwise, false.
+    /// The default is false.
+    /// </returns>
+    [DefaultValue(false)]
+    [Category("Multiple Selection")]
+    [Description("Enable or disable multiple selection with the CTRL key.")]
+    public bool MultipleSelection
+    {
+        get => this.MultipleSelectionGet();
+
+        set => this.MultipleSelectionSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the behavior when pasting text into multiple selections.
+    /// </summary>
+    /// <returns>One of the <see cref="MultiPaste" /> enumeration values. The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.MultiPaste.Once" />.</returns>
+    [DefaultValue(MultiPaste.Once)]
+    [Category("Multiple Selection")]
+    [Description("Determines how pasted text is applied to multiple selections.")]
+    public MultiPaste MultiPaste
+    {
+        get => this.MultiPasteGet();
+        
+        set => this.MultiPasteSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether to write over text rather than insert it.
+    /// </summary>
+    /// <return>true to write over text; otherwise, false. The default is false.</return>
+    [DefaultValue(false)]
+    [Category("Behavior")]
+    [Description("Puts the caret into overtype mode.")]
+    public bool OverType
+    {
+        get => this.OverTypeGet();
+
+        set => this.OverTypeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether line endings in pasted text are converted to the document <see cref="EolMode" />.
+    /// </summary>
+    /// <returns>true to convert line endings in pasted text; otherwise, false. The default is true.</returns>
+    [DefaultValue(true)]
+    [Category("Line Endings")]
+    [Description("Whether line endings in pasted text are converted to match the document end-of-line mode.")]
+    public bool PasteConvertEndings
+    {
+        get => this.PasteConvertEndingsGet();
+
+        set => this.PasteConvertEndingsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the number of phases used when drawing.
+    /// </summary>
+    /// <returns>One of the <see cref="Phases" /> enumeration values. The default is <see cref="Phases.Two" />.</returns>
+    [DefaultValue(Phases.Two)]
+    [Category("Misc")]
+    [Description("Adjusts the number of phases used when drawing.")]
+    public Phases PhasesDraw
+    {
+        get => this.PhasesDrawGet();
+        
+        set => this.PhasesDrawSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether the document is read-only.
+    /// </summary>
+    /// <returns>true if the document is read-only; otherwise, false. The default is false.</returns>
+    /// <seealso cref="ModifyAttempt" />
+    [DefaultValue(false)]
+    [Category("Behavior")]
+    [Description("Controls whether the document text can be modified.")]
+    public bool ReadOnly
+    {
+        get => this.ReadOnlyGet();
+        
+        set => this.ReadOnlySet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the anchor position of the rectangular selection.
+    /// </summary>
+    /// <returns>The zero-based document position of the rectangular selection anchor.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int RectangularSelectionAnchor
+    {
+        get => this.RectangularSelectionAnchorGet(Lines);
+
+        set => this.RectangularSelectionAnchorSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets or sets the amount of anchor virtual space in a rectangular selection.
+    /// </summary>
+    /// <returns>The amount of virtual space past the end of the line offsetting the rectangular selection anchor.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int RectangularSelectionAnchorVirtualSpace
+    {
+        get => this.RectangularSelectionAnchorVirtualSpaceGet();
+
+        set => this.RectangularSelectionAnchorVirtualSpaceSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the caret position of the rectangular selection.
+    /// </summary>
+    /// <returns>The zero-based document position of the rectangular selection caret.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int RectangularSelectionCaret
+    {
+        get => this.RectangularSelectionCaretGet(Lines);
+
+        set => this.RectangularSelectionCaretSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets or sets the amount of caret virtual space in a rectangular selection.
+    /// </summary>
+    /// <returns>The amount of virtual space past the end of the line offsetting the rectangular selection caret.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int RectangularSelectionCaretVirtualSpace
+    {
+        get => this.RectangularSelectionCaretVirtualSpaceGet();
+
+        set => this.RectangularSelectionCaretVirtualSpaceSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the layer where the text selection will be painted. Default value is <see cref="Layer.Base"/>
+    /// </summary>
+    [DefaultValue(Layer.Base)]
+    [Category("Selection")]
+    [Description("The layer where the text selection will be painted.")]
+    public Layer SelectionLayer
+    {
+        get => this.SelectionLayerGet();
+        
+        set => this.SelectionLayerSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the range of the horizontal scroll bar.
+    /// </summary>
+    /// <returns>The range in pixels of the horizontal scroll bar. The default is 2000.</returns>
+    /// <remarks>The width will automatically increase as needed when <see cref="ScrollWidthTracking" /> is enabled.</remarks>
+    [DefaultValue(2000)]
+    [Category("Scrolling")]
+    [Description("The range in pixels of the horizontal scroll bar.")]
+    public int ScrollWidth
+    {
+        get => this.ScrollWidthGet();
+
+        set => this.ScrollWidthSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether the <see cref="ScrollWidth" /> is automatically increased as needed.
+    /// </summary>
+    /// <returns>
+    /// true to automatically increase the horizontal scroll width as needed; otherwise, false.
+    /// The default is true.
+    /// </returns>
+    [DefaultValue(true)]
+    [Category("Scrolling")]
+    [Description("Determines whether to increase the horizontal scroll width as needed.")]
+    public bool ScrollWidthTracking
+    {
+        get => this.ScrollWidthTrackingGet();
+
+        set => this.ScrollWidthTrackingSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the search flags used when searching text.
+    /// </summary>
+    /// <returns>A bitwise combination of <see cref="global::Scintilla.NET.Abstractions.Enumerations.SearchFlags" /> values. The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.SearchFlags.None" />.</returns>
+    /// <seealso cref="SearchInTarget" />
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public SearchFlags SearchFlags
+    {
+        get => this.SearchFlagsGet();
+
+        set => this.SearchFlagsSet(value);
+    }
+
+    /// <summary>
+    /// Gets the selected text.
+    /// </summary>
+    /// <returns>The selected text if there is any; otherwise, an empty string.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public string SelectedText => this.SelectedTextGet();
+
+    /// <summary>
+    /// Gets or sets the end position of the selection.
+    /// </summary>
+    /// <returns>The zero-based document position where the selection ends.</returns>
+    /// <remarks>
+    /// When getting this property, the return value is <code>Math.Max(<see cref="AnchorPosition" />, <see cref="CurrentPosition" />)</code>.
+    /// When setting this property, <see cref="CurrentPosition" /> is set to the value specified and <see cref="AnchorPosition" /> set to <code>Math.Min(<see cref="AnchorPosition" />, <paramref name="value" />)</code>.
+    /// The caret is not scrolled into view.
+    /// </remarks>
+    /// <seealso cref="SelectionStart" />
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int SelectionEnd
+    {
+        get => this.SelectionEndGet(Lines);
+
+        set => this.SelectionEndSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets or sets whether to fill past the end of a line with the selection background color.
+    /// </summary>
+    /// <returns>true to fill past the end of the line; otherwise, false. The default is false.</returns>
+    [DefaultValue(false)]
+    [Category("Selection")]
+    [Description("Determines whether a selection should fill past the end of the line.")]
+    public bool SelectionEolFilled
+    {
+        get => this.SelectionEolFilledGet();
+
+        set => this.SelectionEolFilledSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the start position of the selection.
+    /// </summary>
+    /// <returns>The zero-based document position where the selection starts.</returns>
+    /// <remarks>
+    /// When getting this property, the return value is <code>Math.Min(<see cref="AnchorPosition" />, <see cref="CurrentPosition" />)</code>.
+    /// When setting this property, <see cref="AnchorPosition" /> is set to the value specified and <see cref="CurrentPosition" /> set to <code>Math.Max(<see cref="CurrentPosition" />, <paramref name="value" />)</code>.
+    /// The caret is not scrolled into view.
+    /// </remarks>
+    /// <seealso cref="SelectionEnd" />
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int SelectionStart
+    {
+        get => this.SelectionStartGet(Lines);
+
+        set => this.SelectionStartSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets or sets the last internal error code used by Scintilla.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Status" /> enumeration values.
+    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.
+    /// </returns>
+    /// <remarks>The status can be reset by setting the property to <see cref="global::Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.</remarks>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public Status Status
+    {
+        get => this.StatusGet();
+
+        set => this.StatusSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets how tab characters are represented when whitespace is visible.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="global::Scintilla.NET.Abstractions.Enumerations.TabDrawMode" /> enumeration values.
+    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.TabDrawMode.LongArrow" />.
+    /// </returns>
+    /// <seealso cref="ViewWhitespace" />
+    [DefaultValue(TabDrawMode.LongArrow)]
+    [Category("Whitespace")]
+    [Description("Style of visible tab characters.")]
+    public TabDrawMode TabDrawMode
+    {
+        get => this.TabDrawModeGet();
+
+        set => this.TabDrawModeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether tab inserts a tab character, or indents.
+    /// </summary>
+    /// <returns>Whether tab inserts a tab character (false), or indents (true).</returns>
+    [DefaultValue(false)]
+    [Category("Indentation")]
+    [Description("Determines whether tab inserts a tab character, or indents.")]
+    public bool TabIndents
+    {
+        get => this.TabIndentsGet();
+
+        set => this.TabIndentsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the width of a tab as a multiple of a space character.
+    /// </summary>
+    /// <returns>The width of a tab measured in characters. The default is 4.</returns>
+    [DefaultValue(4)]
+    [Category("Indentation")]
+    [Description("The tab size in characters.")]
+    public int TabWidth
+    {
+        get => this.TabWidthGet();
+
+        set => this.TabWidthSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the end position used when performing a search or replace.
+    /// </summary>
+    /// <returns>The zero-based character position within the document to end a search or replace operation.</returns>
+    /// <seealso cref="TargetStart"/>
+    /// <seealso cref="SearchInTarget" />
+    /// <seealso cref="ReplaceTarget" />
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int TargetEnd
+    {
+        get => this.TargetEndGet(Lines);
+
+        set => this.TargetEndSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets or sets the start position used when performing a search or replace.
+    /// </summary>
+    /// <returns>The zero-based character position within the document to start a search or replace operation.</returns>
+    /// <seealso cref="TargetEnd"/>
+    /// <seealso cref="SearchInTarget" />
+    /// <seealso cref="ReplaceTarget" />
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int TargetStart
+    {
+        get => this.TargetStartGet(Lines);
+
+        set => this.TargetStartSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets the current target text.
+    /// </summary>
+    /// <returns>A String representing the text between <see cref="TargetStart" /> and <see cref="TargetEnd" />.</returns>
+    /// <remarks>Targets which have a start position equal or greater to the end position will return an empty String.</remarks>
+    /// <seealso cref="TargetStart" />
+    /// <seealso cref="TargetEnd" />
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public string TargetText => this.TargetTextGet();
+
+    /// <summary>
+    /// Gets or sets the rendering technology used.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Technology" /> enumeration values.
+    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.Technology.Default" />.
+    /// </returns>
+    [DefaultValue(Technology.Default)]
+    [Category("Misc")]
+    [Description("The rendering technology used to draw text.")]
+    public Technology Technology
+    {
+        get => this.TechnologyGet();
+        
+        set => this.TechnologySet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the current document text in the <see cref="Scintilla" /> control.
+    /// </summary>
+    /// <returns>The text displayed in the control.</returns>
+    /// <remarks>Depending on the length of text get or set, this operation can be expensive.</remarks>
+    [Editor("System.ComponentModel.Design.MultilineStringEditor, System.Design", typeof(UITypeEditor))]
+    [Description("The text associated with this control.")]
+    [Category("Appearance")]
+    public override string Text
+    {
+        get => this.TextGet();
+
+        set => this.TextSet(value, DesignMode, ReadOnly, AppendText);
+    }
+
+    /// <summary>
+    /// Gets the length of the text in the control.
+    /// </summary>
+    /// <returns>The number of characters in the document.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int TextLength => this.TextLengthGet(Lines);
+
+    /// <summary>
+    /// Gets or sets whether to use a mixture of tabs and spaces for indentation or purely spaces.
+    /// </summary>
+    /// <returns>true to use tab characters; otherwise, false. The default is true.</returns>
+    [DefaultValue(false)]
+    [Category("Indentation")]
+    [Description("Determines whether indentation allows tab characters or purely space characters.")]
+    public bool UseTabs
+    {
+        get => this.UseTabsGet();
+
+        set => this.UseTabsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the visibility of end-of-line characters.
+    /// </summary>
+    /// <returns>true to display end-of-line characters; otherwise, false. The default is false.</returns>
+    [DefaultValue(false)]
+    [Category("Line Endings")]
+    [Description("Display end-of-line characters.")]
+    public bool ViewEol
+    {
+        get => this.ViewEolGet();
+
+        set => this.ViewEolSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets how to display whitespace characters.
+    /// </summary>
+    /// <returns>One of the <see cref="WhitespaceMode" /> enumeration values. The default is <see cref="WhitespaceMode.Invisible" />.</returns>
+    /// <seealso cref="SetWhitespaceForeColor" />
+    /// <seealso cref="SetWhitespaceBackColor" />
+    [DefaultValue(WhitespaceMode.Invisible)]
+    [Category("Whitespace")]
+    [Description("Options for displaying whitespace characters.")]
+    public WhitespaceMode ViewWhitespace
+    {
+        get => this.ViewWhitespaceGet();
+
+        set => this.ViewWhitespaceSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the ability for the caret to move into an area beyond the end of each line, otherwise known as virtual space.
+    /// </summary>
+    /// <returns>
+    /// A bitwise combination of the <see cref="VirtualSpace" /> enumeration.
+    /// The default is <see cref="VirtualSpace.None" />.
+    /// </returns>
+    [DefaultValue(VirtualSpace.None)]
+    [Category("Behavior")]
+    [Description("Options for allowing the caret to move beyond the end of each line.")]
+    [TypeConverter(typeof(FlagsEnumConverter))]
+    public VirtualSpace VirtualSpaceOptions
+    {
+        get => this.VirtualSpaceOptionsGet();
+
+        set => this.VirtualSpaceOptionsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether to display the vertical scroll bar.
+    /// </summary>
+    /// <returns>true to display the vertical scroll bar when needed; otherwise, false. The default is true.</returns>
+    [DefaultValue(true)]
+    [Category("Scrolling")]
+    [Description("Determines whether to show the vertical scroll bar when needed.")]
+    public bool VScrollBar
+    {
+        get => this.VScrollBarGet();
+        
+        set => this.VScrollBarSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the size of the dots used to mark whitespace.
+    /// </summary>
+    /// <returns>The size of the dots used to mark whitespace. The default is 1.</returns>
+    /// <seealso cref="ViewWhitespace" />
+    [DefaultValue(1)]
+    [Category("Whitespace")]
+    [Description("The size of whitespace dots.")]
+    public int WhitespaceSize
+    {
+        get => this.WhitespaceSizeGet();
+
+        set => this.WhitespaceSizeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the characters considered 'word' characters when using any word-based logic.
+    /// </summary>
+    /// <returns>A string of word characters.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public string WordChars
+    {
+        get => this.WordCharsGet();
+        
+        set => this.WordCharsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the line wrapping indent mode.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapIndentMode" /> enumeration values.
+    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapIndentMode.Fixed" />.
+    /// </returns>
+    [DefaultValue(WrapIndentMode.Fixed)]
+    [Category("Line Wrapping")]
+    [Description("Determines how wrapped sublines are indented.")]
+    public WrapIndentMode WrapIndentMode
+    {
+        get => this.WrapIndentModeGet();
+
+        set => this.WrapIndentModeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the line wrapping mode.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="WrapMode" /> enumeration values.
+    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapMode.Word" />.
+    /// </returns>
+    [DefaultValue(WrapMode.Word)]
+    [Category("Line Wrapping")]
+    [Description("The line wrapping strategy.")]
+    public WrapMode WrapMode
+    {
+        get => this.WrapModeGet();
+
+        set => this.WrapModeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the indented size in pixels of wrapped sub-lines.
+    /// </summary>
+    /// <returns>The indented size of wrapped sub-lines measured in pixels. The default is 0.</returns>
+    /// <remarks>
+    /// Setting <see cref="WrapVisualFlags" /> to <see cref="Abstractions.Enumerations.WrapVisualFlags.Start" /> will add an
+    /// additional 1 pixel to the value specified.
+    /// </remarks>
+    [DefaultValue(0)]
+    [Category("Line Wrapping")]
+    [Description("The amount of pixels to indent wrapped sublines.")]
+    public int WrapStartIndent
+    {
+        get => this.WrapStartIndentGet();
+
+        set => this.WrapStartIndentSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the wrap visual flags.
+    /// </summary>
+    /// <returns>
+    /// A bitwise combination of the <see cref="Abstractions.Enumerations.WrapVisualFlags" /> enumeration.
+    /// The default is <see cref="Abstractions.Enumerations.WrapVisualFlags.None" />.
+    /// </returns>
+    [DefaultValue(WrapVisualFlags.None)]
+    [Category("Line Wrapping")]
+    [Description("The visual indicator displayed on a wrapped line.")]
+    [TypeConverter(typeof(FlagsEnumConverter))]
+    public WrapVisualFlags WrapVisualFlags
+    {
+        get => this.WrapVisualFlagsGet();
+
+        set => this.WrapVisualFlagsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets additional location options when displaying wrap visual flags.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Abstractions.Enumerations.WrapVisualFlagLocation" /> enumeration values.
+    /// The default is <see cref="Abstractions.Enumerations.WrapVisualFlagLocation.Default" />.
+    /// </returns>
+    [DefaultValue(WrapVisualFlagLocation.Default)]
+    [Category("Line Wrapping")]
+    [Description("The location of wrap visual flags in relation to the line text.")]
+    public WrapVisualFlagLocation WrapVisualFlagLocation
+    {
+        get => this.WrapVisualFlagLocationGet();
+
+        set => this.WrapVisualFlagLocationSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the horizontal scroll offset.
+    /// </summary>
+    /// <returns>The horizontal scroll offset in pixels.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public int XOffset
+    {
+        get => this.XOffsetGet();
+
+        set => this.XOffsetSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the zoom factor.
+    /// </summary>
+    /// <returns>The zoom factor measured in points.</returns>
+    /// <remarks>For best results, values should range from -10 to 20 points.</remarks>
+    /// <seealso cref="ZoomIn" />
+    /// <seealso cref="ZoomOut" />
+    [DefaultValue(0)]
+    [Category("Appearance")]
+    [Description("Zoom factor in points applied to the displayed text.")]
+    public int Zoom
+    {
+        get => this.ZoomGet();
+
+        set => this.ZoomSet(value);
+    }
+    #endregion
+
+    #region PropertiesCustom
+    private static ILexilla lexillaInstance;
+
+    /// <summary>
+    /// Gets the singleton instance of the <see cref="Lexilla"/> class.
+    /// </summary>
+    /// <value>The singleton instance of the <see cref="Lexilla"/> class.</value>
+    private static ILexilla LexillaSingleton
+    {
+        get
         {
-            if (value != BiDirectionalDisplayType.Disabled)
-            {
-                var technology = DirectMessage(SCI_GETTECHNOLOGY).ToInt32();
-                if (technology == SC_TECHNOLOGY_DEFAULT)
-                {
-                    DirectMessage(SCI_SETTECHNOLOGY, new IntPtr(SC_TECHNOLOGY_DIRECTWRITE));
-                }
-            }
-
-            DirectMessage(SCI_SETBIDIRECTIONAL, new IntPtr((int)value));
+            lexillaInstance ??= new Lexilla();
+            return lexillaInstance;
         }
     }
 
@@ -2233,400 +3847,6 @@ public class Scintilla : Control,
     }
 
     /// <summary>
-    /// Gets or sets the caret foreground color for additional selections.
-    /// </summary>
-    /// <returns>The caret foreground color in additional selections. The default is (127, 127, 127).</returns>
-    [Category("Multiple Selection")]
-    [Description("The additional caret foreground color.")]
-    public Color AdditionalCaretForeColor
-    {
-        get
-        {
-            var color = DirectMessage(SCI_GETADDITIONALCARETFORE).ToInt32();
-            return ColorTranslator.FromWin32(color);
-        }
-        set
-        {
-            var color = ColorTranslator.ToWin32(value);
-            DirectMessage(SCI_SETADDITIONALCARETFORE, new IntPtr(color));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether the carets in additional selections will blink.
-    /// </summary>
-    /// <returns>true if additional selection carets should blink; otherwise, false. The default is true.</returns>
-    [DefaultValue(true)]
-    [Category("Multiple Selection")]
-    [Description("Whether the carets in additional selections should blink.")]
-    public bool AdditionalCaretsBlink
-    {
-        get => DirectMessage(SCI_GETADDITIONALCARETSBLINK) != IntPtr.Zero;
-        set
-        {
-            var additionalCaretsBlink = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETADDITIONALCARETSBLINK, additionalCaretsBlink);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether the carets in additional selections are visible.
-    /// </summary>
-    /// <returns>true if additional selection carets are visible; otherwise, false. The default is true.</returns>
-    [DefaultValue(true)]
-    [Category("Multiple Selection")]
-    [Description("Whether the carets in additional selections are visible.")]
-    public bool AdditionalCaretsVisible
-    {
-        get => DirectMessage(SCI_GETADDITIONALCARETSVISIBLE) != IntPtr.Zero;
-        set
-        {
-            var additionalCaretsBlink = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETADDITIONALCARETSVISIBLE, additionalCaretsBlink);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the alpha transparency of additional multiple selections.
-    /// </summary>
-    /// <returns>
-    /// The alpha transparency ranging from 0 (completely transparent) to 255 (completely opaque).
-    /// The value 256 will disable alpha transparency. The default is 256.
-    /// </returns>
-    [DefaultValue(256)]
-    [Category("Multiple Selection")]
-    [Description("The transparency of additional selections.")]
-    public int AdditionalSelAlpha
-    {
-        get => DirectMessage(SCI_GETADDITIONALSELALPHA).ToInt32();
-        set
-        {
-            value = Helpers.Clamp(value, 0, SC_ALPHA_NOALPHA);
-            DirectMessage(SCI_SETADDITIONALSELALPHA, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether additional typing affects multiple selections.
-    /// </summary>
-    /// <returns>true if typing will affect multiple selections instead of just the main selection; otherwise, false. The default is false.</returns>
-    [DefaultValue(false)]
-    [Category("Multiple Selection")]
-    [Description("Whether typing, backspace, or delete works with multiple selection simultaneously.")]
-    public bool AdditionalSelectionTyping
-    {
-        get => DirectMessage(SCI_GETADDITIONALSELECTIONTYPING) != IntPtr.Zero;
-        set
-        {
-            var additionalSelectionTyping = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETADDITIONALSELECTIONTYPING, additionalSelectionTyping);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the current anchor position.
-    /// </summary>
-    /// <returns>The zero-based character position of the anchor.</returns>
-    /// <remarks>
-    /// Setting the current anchor position will create a selection between it and the <see cref="CurrentPosition" />.
-    /// The caret is not scrolled into view.
-    /// </remarks>
-    /// <seealso cref="ScrollCaret" />
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int AnchorPosition
-    {
-        get
-        {
-            var bytePos = DirectMessage(SCI_GETANCHOR).ToInt32();
-            return Lines.ByteToCharPosition(bytePos);
-        }
-        set
-        {
-            value = Helpers.Clamp(value, 0, TextLength);
-            var bytePos = Lines.CharToBytePosition(value);
-            DirectMessage(SCI_SETANCHOR, new IntPtr(bytePos));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the display of annotations.
-    /// </summary>
-    /// <returns>One of the <see cref="Annotation" /> enumeration values. The default is <see cref="Annotation.Hidden" />.</returns>
-    [DefaultValue(Annotation.Hidden)]
-    [Category("Appearance")]
-    [Description("Display and location of annotations.")]
-    public Annotation AnnotationVisible
-    {
-        get => (Annotation)DirectMessage(SCI_ANNOTATIONGETVISIBLE).ToInt32();
-        set
-        {
-            var visible = (int)value;
-            DirectMessage(SCI_ANNOTATIONSETVISIBLE, new IntPtr(visible));
-        }
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether there is an auto-completion list displayed.
-    /// </summary>
-    /// <returns>true if there is an active auto-completion list; otherwise, false.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public bool AutoCActive => DirectMessage(SCI_AUTOCACTIVE) != IntPtr.Zero;
-
-    /// <summary>
-    /// Gets or sets whether to automatically cancel auto-completion when there are no viable matches.
-    /// </summary>
-    /// <returns>
-    /// true to automatically cancel auto-completion when there is no possible match; otherwise, false.
-    /// The default is true.
-    /// </returns>
-    [DefaultValue(true)]
-    [Category("Autocompletion")]
-    [Description("Whether to automatically cancel auto-completion when no match is possible.")]
-    public bool AutoCAutoHide
-    {
-        get => DirectMessage(SCI_AUTOCGETAUTOHIDE) != IntPtr.Zero;
-        set
-        {
-            var autoHide = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_AUTOCSETAUTOHIDE, autoHide);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether to cancel an auto-completion if the caret moves from its initial location,
-    /// or is allowed to move to the word start.
-    /// </summary>
-    /// <returns>
-    /// true to cancel auto-completion when the caret moves.
-    /// false to allow the caret to move to the beginning of the word without cancelling auto-completion.
-    /// </returns>
-    [DefaultValue(true)]
-    [Category("Autocompletion")]
-    [Description("Whether to cancel an auto-completion if the caret moves from its initial location, or is allowed to move to the word start.")]
-    public bool AutoCCancelAtStart
-    {
-        get => DirectMessage(SCI_AUTOCGETCANCELATSTART) != IntPtr.Zero;
-        set
-        {
-            var cancel = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_AUTOCSETCANCELATSTART, cancel);
-        }
-    }
-
-    /// <summary>
-    /// Gets the index of the current auto-completion list selection.
-    /// </summary>
-    /// <returns>The zero-based index of the current auto-completion selection.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int AutoCCurrent => DirectMessage(SCI_AUTOCGETCURRENT).ToInt32();
-
-    /// <summary>
-    /// Gets or sets whether to automatically select an item when it is the only one in an auto-completion list.
-    /// </summary>
-    /// <returns>
-    /// true to automatically choose the only auto-completion item and not display the list; otherwise, false.
-    /// The default is false.
-    /// </returns>
-    [DefaultValue(false)]
-    [Category("Autocompletion")]
-    [Description("Whether to automatically choose an auto-completion item when it is the only one in the list.")]
-    public bool AutoCChooseSingle
-    {
-        get => DirectMessage(SCI_AUTOCGETCHOOSESINGLE) != IntPtr.Zero;
-        set
-        {
-            var chooseSingle = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_AUTOCSETCHOOSESINGLE, chooseSingle);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether to delete any word characters following the caret after an auto-completion.
-    /// </summary>
-    /// <returns>
-    /// true to delete any word characters following the caret after auto-completion; otherwise, false.
-    /// The default is false.</returns>
-    [DefaultValue(false)]
-    [Category("Autocompletion")]
-    [Description("Whether to delete any existing word characters following the caret after auto-completion.")]
-    public bool AutoCDropRestOfWord
-    {
-        get => DirectMessage(SCI_AUTOCGETDROPRESTOFWORD) != IntPtr.Zero;
-        set
-        {
-            var dropRestOfWord = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_AUTOCSETDROPRESTOFWORD, dropRestOfWord);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether matching characters to an auto-completion list is case-insensitive.
-    /// </summary>
-    /// <returns>true to use case-insensitive matching; otherwise, false. The default is false.</returns>
-    [DefaultValue(false)]
-    [Category("Autocompletion")]
-    [Description("Whether auto-completion word matching can ignore case.")]
-    public bool AutoCIgnoreCase
-    {
-        get => DirectMessage(SCI_AUTOCGETIGNORECASE) != IntPtr.Zero;
-        set
-        {
-            var ignoreCase = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_AUTOCSETIGNORECASE, ignoreCase);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the maximum height of the auto-completion list measured in rows.
-    /// </summary>
-    /// <returns>The max number of rows to display in an auto-completion window. The default is 5.</returns>
-    /// <remarks>If there are more items in the list than max rows, a vertical scrollbar is shown.</remarks>
-    [DefaultValue(5)]
-    [Category("Autocompletion")]
-    [Description("The maximum number of rows to display in an auto-completion list.")]
-    public int AutoCMaxHeight
-    {
-        get => DirectMessage(SCI_AUTOCGETMAXHEIGHT).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_AUTOCSETMAXHEIGHT, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the width in characters of the auto-completion list.
-    /// </summary>
-    /// <returns>
-    /// The width of the auto-completion list expressed in characters, or 0 to automatically set the width
-    /// to the longest item. The default is 0.
-    /// </returns>
-    /// <remarks>Any items that cannot be fully displayed will be indicated with ellipsis.</remarks>
-    [DefaultValue(0)]
-    [Category("Autocompletion")]
-    [Description("The width of the auto-completion list measured in characters.")]
-    public int AutoCMaxWidth
-    {
-        get => DirectMessage(SCI_AUTOCGETMAXWIDTH).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_AUTOCSETMAXWIDTH, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the auto-completion list sort order to expect when calling <see cref="AutoCShow" />.
-    /// </summary>
-    /// <returns>One of the <see cref="Order" /> enumeration values. The default is <see cref="Order.Presorted" />.</returns>
-    [DefaultValue(Order.Presorted)]
-    [Category("Autocompletion")]
-    [Description("The order of words in an auto-completion list.")]
-    public Order AutoCOrder
-    {
-        get => (Order)DirectMessage(SCI_AUTOCGETORDER).ToInt32();
-        set
-        {
-            var order = (int)value;
-            DirectMessage(SCI_AUTOCSETORDER, new IntPtr(order));
-        }
-    }
-
-    /// <summary>
-    /// Gets the document position at the time <see cref="AutoCShow" /> was called.
-    /// </summary>
-    /// <returns>The zero-based document position at the time <see cref="AutoCShow" /> was called.</returns>
-    /// <seealso cref="AutoCShow" />
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int AutoCPosStart
-    {
-        get
-        {
-            var pos = DirectMessage(SCI_AUTOCPOSSTART).ToInt32();
-            pos = Lines.ByteToCharPosition(pos);
-
-            return pos;
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the delimiter character used to separate words in an auto-completion list.
-    /// </summary>
-    /// <returns>The separator character used when calling <see cref="AutoCShow" />. The default is the space character.</returns>
-    /// <remarks>The <paramref name="value" /> specified should be limited to printable ASCII characters.</remarks>
-    [DefaultValue(' ')]
-    [Category("Autocompletion")]
-    [Description("The auto-completion list word delimiter. The default is a space character.")]
-    public char AutoCSeparator
-    {
-        get
-        {
-            var separator = DirectMessage(SCI_AUTOCGETSEPARATOR).ToInt32();
-            return (char)separator;
-        }
-        set
-        {
-            // The auto-completion separator character is stored as a byte within Scintilla,
-            // not a character. Thus it's possible for a user to supply a character that does
-            // not fit within a single byte. The likelyhood of this, however, seems so remote that
-            // I'm willing to risk a possible conversion error to provide a better user experience.
-            var separator = (byte)value;
-            DirectMessage(SCI_AUTOCSETSEPARATOR, new IntPtr(separator));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the delimiter character used to separate words and image type identifiers in an auto-completion list.
-    /// </summary>
-    /// <returns>The separator character used to reference an image registered with <see cref="RegisterRgbaImage" />. The default is '?'.</returns>
-    /// <remarks>The <paramref name="value" /> specified should be limited to printable ASCII characters.</remarks>
-    [DefaultValue('?')]
-    [Category("Autocompletion")]
-    [Description("The auto-completion list image type delimiter.")]
-    public char AutoCTypeSeparator
-    {
-        get
-        {
-            var separatorCharacter = DirectMessage(SCI_AUTOCGETTYPESEPARATOR).ToInt32();
-            return (char)separatorCharacter;
-        }
-        set
-        {
-            // The auto-completion type separator character is stored as a byte within Scintilla,
-            // not a character. Thus it's possible for a user to supply a character that does
-            // not fit within a single byte. The likelyhood of this, however, seems so remote that
-            // I'm willing to risk a possible conversion error to provide a better user experience.
-            var separatorCharacter = (byte)value;
-            DirectMessage(SCI_AUTOCSETTYPESEPARATOR, new IntPtr(separatorCharacter));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the automatic folding flags.
-    /// </summary>
-    /// <returns>
-    /// A bitwise combination of the <see cref="Abstractions.Enumerations.AutomaticFold" /> enumeration.
-    /// The default is <see cref="Abstractions.Enumerations.AutomaticFold.None" />.
-    /// </returns>
-    [DefaultValue(AutomaticFold.None)]
-    [Category("Behavior")]
-    [Description("Options for allowing the control to automatically handle folding.")]
-    [TypeConverter(typeof(FlagsEnumConverter))]
-    public AutomaticFold AutomaticFold
-    {
-        get => (AutomaticFold)DirectMessage(SCI_GETAUTOMATICFOLD);
-        set
-        {
-            var automaticFold = (int)value;
-            DirectMessage(SCI_SETAUTOMATICFOLD, new IntPtr(automaticFold));
-        }
-    }
-
-    /// <summary>
     /// Not supported.
     /// </summary>
     [Browsable(false)]
@@ -2660,23 +3880,6 @@ public class Scintilla : Control,
     }
 
     /// <summary>
-    /// Gets or sets whether backspace deletes a character, or un-indents.
-    /// </summary>
-    /// <returns>Whether backspace deletes a character, (false) or un-indents (true).</returns>
-    [DefaultValue(false)]
-    [Category("Indentation")]
-    [Description("Determines whether backspace deletes a character, or unindents.")]
-    public bool BackspaceUnIndents
-    {
-        get => DirectMessage(SCI_GETBACKSPACEUNINDENTS) != IntPtr.Zero;
-        set
-        {
-            var ptr = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETBACKSPACEUNINDENTS, ptr);
-        }
-    }
-
-    /// <summary>
     /// Gets or sets the border type of the <see cref="Scintilla" /> control.
     /// </summary>
     /// <returns>A BorderStyle enumeration value that represents the border type of the control. The default is Fixed3D.</returns>
@@ -2704,1572 +3907,6 @@ public class Scintilla : Control,
     }
 
     /// <summary>
-    /// Gets or sets whether drawing is double-buffered.
-    /// </summary>
-    /// <returns>
-    /// true to draw each line into an offscreen bitmap first before copying it to the screen; otherwise, false.
-    /// The default is true.
-    /// </returns>
-    /// <remarks>Disabling buffer can improve performance but will cause flickering.</remarks>
-    [DefaultValue(true)]
-    [Category("Misc")]
-    [Description("Determines whether drawing is double-buffered.")]
-    public bool BufferedDraw
-    {
-        get => DirectMessage(SCI_GETBUFFEREDDRAW) != IntPtr.Zero;
-        set
-        {
-            var isBuffered = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETBUFFEREDDRAW, isBuffered);
-        }
-    }
-
-    /// <summary>
-    /// Gets a value indicating whether there is a call tip window displayed.
-    /// </summary>
-    /// <returns>true if there is an active call tip window; otherwise, false.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public bool CallTipActive => DirectMessage(SCI_CALLTIPACTIVE) != IntPtr.Zero;
-
-    /// <summary>
-    /// Gets a value indicating whether there is text on the clipboard that can be pasted into the document.
-    /// </summary>
-    /// <returns>true when there is text on the clipboard to paste; otherwise, false.</returns>
-    /// <remarks>The document cannot be <see cref="ReadOnly" />  and the selection cannot contain protected text.</remarks>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public bool CanPaste => DirectMessage(SCI_CANPASTE) != IntPtr.Zero;
-
-    /// <summary>
-    /// Gets a value indicating whether there is an undo action to redo.
-    /// </summary>
-    /// <returns>true when there is something to redo; otherwise, false.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public bool CanRedo => DirectMessage(SCI_CANREDO) != IntPtr.Zero;
-
-    /// <summary>
-    /// Gets a value indicating whether there is an action to undo.
-    /// </summary>
-    /// <returns>true when there is something to undo; otherwise, false.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public bool CanUndo => DirectMessage(SCI_CANUNDO) != IntPtr.Zero;
-
-    /// <summary>
-    /// Gets or sets the caret foreground color.
-    /// </summary>
-    /// <returns>The caret foreground color. The default is black.</returns>
-    [DefaultValue(typeof(Color), "Black")]
-    [Category("Caret")]
-    [Description("The caret foreground color.")]
-    public Color CaretForeColor
-    {
-        get
-        {
-            var color = DirectMessage(SCI_GETCARETFORE).ToInt32();
-            return ColorTranslator.FromWin32(color);
-        }
-        set
-        {
-            var color = ColorTranslator.ToWin32(value);
-            DirectMessage(SCI_SETCARETFORE, new IntPtr(color));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the caret line background color.
-    /// </summary>
-    /// <returns>The caret line background color. The default is yellow.</returns>
-    [DefaultValue(typeof(Color), "Yellow")]
-    [Category("Caret")]
-    [Description("The background color of the current line.")]
-    public Color CaretLineBackColor
-    {
-        get
-        {
-            var color = DirectMessage(SCI_GETCARETLINEBACK).ToInt32();
-            return ColorTranslator.FromWin32(color);
-        }
-        set
-        {
-            var color = ColorTranslator.ToWin32(value);
-            DirectMessage(SCI_SETCARETLINEBACK, new IntPtr(color));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the alpha transparency of the <see cref="CaretLineBackColor" />.
-    /// </summary>
-    /// <returns>
-    /// The alpha transparency ranging from 0 (completely transparent) to 255 (completely opaque).
-    /// The value 256 will disable alpha transparency. The default is 256.
-    /// </returns>
-    [DefaultValue(256)]
-    [Category("Caret")]
-    [Description("The transparency of the current line background color.")]
-    public int CaretLineBackColorAlpha
-    {
-        get => DirectMessage(SCI_GETCARETLINEBACKALPHA).ToInt32();
-        set
-        {
-            value = Helpers.Clamp(value, 0, SC_ALPHA_NOALPHA);
-            DirectMessage(SCI_SETCARETLINEBACKALPHA, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the width of the caret line frame.
-    /// </summary>
-    /// <returns><see cref="CaretLineVisible" /> must be set to true. A value of 0 disables the frame. The default is 0.</returns>
-    [DefaultValue(0)]
-    [Category("Caret")]
-    [Description("The Width of the current line frame.")]
-    public int CaretLineFrame
-    {
-        get => DirectMessage(SCI_GETCARETLINEFRAME).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETCARETLINEFRAME, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether the caret line is visible (highlighted).
-    /// </summary>
-    /// <returns>true if the caret line is visible; otherwise, false. The default is false.</returns>
-    [DefaultValue(false)]
-    [Category("Caret")]
-    [Description("Determines whether to highlight the current caret line.")]
-    public bool CaretLineVisible
-    {
-        get => DirectMessage(SCI_GETCARETLINEVISIBLE) != IntPtr.Zero;
-        set
-        {
-            var visible = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETCARETLINEVISIBLE, visible);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether the caret line is always visible even when the window is not in focus.
-    /// </summary>
-    /// <returns>true if the caret line is always visible; otherwise, false. The default is false.</returns>
-    [DefaultValue(false)]
-    [Category("Caret")]
-    [Description("Determines whether the caret line always visible even when the window is not in focus..")]
-    public bool CaretLineVisibleAlways
-    {
-        get => DirectMessage(SCI_GETCARETLINEVISIBLEALWAYS) != IntPtr.Zero;
-        set
-        {
-            var visibleAlways = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETCARETLINEVISIBLEALWAYS, visibleAlways);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the layer where the line caret will be painted. Default value is <see cref="Layer.Base"/>
-    /// </summary>
-    [DefaultValue(Layer.Base)]
-    [Category("Caret")]
-    [Description("The layer where the line caret will be painted.")]
-    public Layer CaretLineLayer
-    {
-        get => (Layer)DirectMessage(SCI_GETCARETLINELAYER).ToInt32();
-        set
-        {
-            var layer = (int)value;
-            DirectMessage(SCI_SETCARETLINELAYER, new IntPtr(layer));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the caret blink rate in milliseconds.
-    /// </summary>
-    /// <returns>The caret blink rate measured in milliseconds. The default is 530.</returns>
-    /// <remarks>A value of 0 will stop the caret blinking.</remarks>
-    [DefaultValue(530)]
-    [Category("Caret")]
-    [Description("The caret blink rate in milliseconds.")]
-    public int CaretPeriod
-    {
-        get => DirectMessage(SCI_GETCARETPERIOD).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETCARETPERIOD, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the caret display style.
-    /// </summary>
-    /// <returns>
-    /// One of the <see cref="Abstractions.Enumerations.CaretStyle" /> enumeration values.
-    /// The default is <see cref="Line" />.
-    /// </returns>
-    [DefaultValue(CaretStyle.Line)]
-    [Category("Caret")]
-    [Description("The caret display style.")]
-    public CaretStyle CaretStyle
-    {
-        get => (CaretStyle)DirectMessage(SCI_GETCARETSTYLE).ToInt32();
-        set
-        {
-            var style = (int)value;
-            DirectMessage(SCI_SETCARETSTYLE, new IntPtr(style));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the width in pixels of the caret.
-    /// </summary>
-    /// <returns>The width of the caret in pixels. The default is 1 pixel.</returns>
-    /// <remarks>
-    /// The caret width can only be set to a value of 0, 1, 2 or 3 pixels and is only effective
-    /// when the <see cref="CaretStyle" /> property is set to <see cref="Line" />.
-    /// </remarks>
-    [DefaultValue(1)]
-    [Category("Caret")]
-    [Description("The width of the caret line measured in pixels (between 0 and 3).")]
-    public int CaretWidth
-    {
-        get => DirectMessage(SCI_GETCARETWIDTH).ToInt32();
-        set
-        {
-            value = Helpers.Clamp(value, 0, 3);
-            DirectMessage(SCI_SETCARETWIDTH, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets the current line index.
-    /// </summary>
-    /// <returns>The zero-based line index containing the <see cref="CurrentPosition" />.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int CurrentLine
-    {
-        get
-        {
-            var currentPos = DirectMessage(SCI_GETCURRENTPOS).ToInt32();
-            var line = DirectMessage(SCI_LINEFROMPOSITION, new IntPtr(currentPos)).ToInt32();
-            return line;
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the current caret position.
-    /// </summary>
-    /// <returns>The zero-based character position of the caret.</returns>
-    /// <remarks>
-    /// Setting the current caret position will create a selection between it and the current <see cref="AnchorPosition" />.
-    /// The caret is not scrolled into view.
-    /// </remarks>
-    /// <seealso cref="ScrollCaret" />
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int CurrentPosition
-    {
-        get
-        {
-            var bytePos = DirectMessage(SCI_GETCURRENTPOS).ToInt32();
-            return Lines.ByteToCharPosition(bytePos);
-        }
-        set
-        {
-            value = Helpers.Clamp(value, 0, TextLength);
-            var bytePos = Lines.CharToBytePosition(value);
-            DirectMessage(SCI_SETCURRENTPOS, new IntPtr(bytePos));
-        }
-    }
-
-    /// <summary>
-    /// Gets a value indicating the start index of the secondary styles.
-    /// </summary>
-    /// <returns>Returns the distance between a primary style and its corresponding secondary style.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int DistanceToSecondaryStyles => DirectMessage(SCI_DISTANCETOSECONDARYSTYLES).ToInt32();
-
-    /// <summary>
-    /// Gets or sets the current document used by the control.
-    /// </summary>
-    /// <returns>The current <see cref="Document" />.</returns>
-    /// <remarks>
-    /// Setting this property is equivalent to calling <see cref="ReleaseDocument" /> on the current document, and
-    /// calling <see cref="CreateDocument" /> if the new <paramref name="value" /> is <see cref="Abstractions.Structs.Document.Empty" /> or
-    /// <see cref="AddRefDocument" /> if the new <paramref name="value" /> is not <see cref="Abstractions.Structs.Document.Empty" />.
-    /// </remarks>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public Document Document
-    {
-        get
-        {
-            var ptr = DirectMessage(SCI_GETDOCPOINTER);
-            return new Document { Value = ptr };
-        }
-        set
-        {
-            var eolMode = EolMode;
-            var useTabs = UseTabs;
-            var tabWidth = TabWidth;
-            var indentWidth = IndentWidth;
-
-            var ptr = value.Value;
-            DirectMessage(SCI_SETDOCPOINTER, IntPtr.Zero, ptr);
-
-            // Carry over properties to new document
-            InitDocument(eolMode, useTabs, tabWidth, indentWidth);
-
-            // Rebuild the line cache
-            Lines.RebuildLineData();
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the background color to use when indicating long lines with
-    /// <see cref="VisualStyleElement.TrayNotify.Background" />.
-    /// </summary>
-    /// <returns>The background Color. The default is Silver.</returns>
-    [DefaultValue(typeof(Color), "Silver")]
-    [Category("Long Lines")]
-    [Description("The background color to use when indicating long lines.")]
-    public Color EdgeColor
-    {
-        get
-        {
-            var color = DirectMessage(SCI_GETEDGECOLOUR).ToInt32();
-            return ColorTranslator.FromWin32(color);
-        }
-        set
-        {
-            var color = ColorTranslator.ToWin32(value);
-            DirectMessage(SCI_SETEDGECOLOUR, new IntPtr(color));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the column number at which to begin indicating long lines.
-    /// </summary>
-    /// <returns>The number of columns in a long line. The default is 0.</returns>
-    /// <remarks>
-    /// When using <see cref="Line"/>, a column is defined as the width of a space character in the <see cref="Style.Default" /> style.
-    /// When using <see cref="VisualStyleElement.TrayNotify.Background" /> a column is equal to a character (including tabs).
-    /// </remarks>
-    [DefaultValue(0)]
-    [Category("Long Lines")]
-    [Description("The number of columns at which to display long line indicators.")]
-    public int EdgeColumn
-    {
-        get => DirectMessage(SCI_GETEDGECOLUMN).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETEDGECOLUMN, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the mode for indicating long lines.
-    /// </summary>
-    /// <returns>
-    /// One of the <see cref="Abstractions.Enumerations.EdgeMode" /> enumeration values.
-    /// The default is <see cref="Abstractions.Enumerations.EdgeMode.None" />.
-    /// </returns>
-    [DefaultValue(EdgeMode.None)]
-    [Category("Long Lines")]
-    [Description("Determines how long lines are indicated.")]
-    public EdgeMode EdgeMode
-    {
-        get => (EdgeMode)DirectMessage(SCI_GETEDGEMODE);
-        set
-        {
-            var edgeMode = (int)value;
-            DirectMessage(SCI_SETEDGEMODE, new IntPtr(edgeMode));
-        }
-    }
-
-    /// <summary>
-    /// Gets the encoding of the <see cref="T:Scintilla.NET.Abstractions.IScintillaApi" /> control interface.
-    /// </summary>
-    /// <value>The encoding of the control.</value>
-    public Encoding Encoding
-    {
-        get
-        {
-            // Should always be UTF-8 unless someone has done an end run around us
-            var codePage = (int)DirectMessage(SCI_GETCODEPAGE);
-            return codePage == 0 ? Encoding.Default : Encoding.GetEncoding(codePage);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether vertical scrolling ends at the last line or can scroll past.
-    /// </summary>
-    /// <returns>true if the maximum vertical scroll position ends at the last line; otherwise, false. The default is true.</returns>
-    [DefaultValue(true)]
-    [Category("Scrolling")]
-    [Description("Determines whether the maximum vertical scroll position ends at the last line or can scroll past.")]
-    public bool EndAtLastLine
-    {
-        get => DirectMessage(SCI_GETENDATLASTLINE) != IntPtr.Zero;
-        set
-        {
-            var endAtLastLine = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETENDATLASTLINE, endAtLastLine);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the end-of-line mode, or rather, the characters added into
-    /// the document when the user presses the Enter key.
-    /// </summary>
-    /// <returns>One of the <see cref="Eol" /> enumeration values. The default is <see cref="Eol.CrLf" />.</returns>
-    [DefaultValue(Eol.CrLf)]
-    [Category("Line Endings")]
-    [Description("Determines the characters added into the document when the user presses the Enter key.")]
-    public Eol EolMode
-    {
-        get => (Eol)DirectMessage(SCI_GETEOLMODE);
-        set
-        {
-            var eolMode = (int)value;
-            DirectMessage(SCI_SETEOLMODE, new IntPtr(eolMode));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the amount of whitespace added to the ascent (top) of each line.
-    /// </summary>
-    /// <returns>The extra line ascent. The default is zero.</returns>
-    [DefaultValue(0)]
-    [Category("Whitespace")]
-    [Description("Extra whitespace added to the ascent (top) of each line.")]
-    public int ExtraAscent
-    {
-        get => DirectMessage(SCI_GETEXTRAASCENT).ToInt32();
-        set => DirectMessage(SCI_SETEXTRAASCENT, new IntPtr(value));
-    }
-
-    /// <summary>
-    /// Gets or sets the amount of whitespace added to the descent (bottom) of each line.
-    /// </summary>
-    /// <returns>The extra line descent. The default is zero.</returns>
-    [DefaultValue(0)]
-    [Category("Whitespace")]
-    [Description("Extra whitespace added to the descent (bottom) of each line.")]
-    public int ExtraDescent
-    {
-        get => DirectMessage(SCI_GETEXTRADESCENT).ToInt32();
-        set => DirectMessage(SCI_SETEXTRADESCENT, new IntPtr(value));
-    }
-
-    /// <summary>
-    /// Gets or sets the first visible line on screen.
-    /// </summary>
-    /// <returns>The zero-based index of the first visible screen line.</returns>
-    /// <remarks>The value is a visible line, not a document line.</remarks>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int FirstVisibleLine
-    {
-        get => DirectMessage(SCI_GETFIRSTVISIBLELINE).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETFIRSTVISIBLELINE, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets font quality (anti-aliasing method) used to render fonts.
-    /// </summary>
-    /// <returns>
-    /// One of the <see cref="Abstractions.Enumerations.FontQuality" /> enumeration values.
-    /// The default is <see cref="Abstractions.Enumerations.FontQuality.Default" />.
-    /// </returns>
-    [DefaultValue(FontQuality.Default)]
-    [Category("Misc")]
-    [Description("Specifies the anti-aliasing method to use when rendering fonts.")]
-    public FontQuality FontQuality
-    {
-        get => (FontQuality)DirectMessage(SCI_GETFONTQUALITY);
-        set
-        {
-            var fontQuality = (int)value;
-            DirectMessage(SCI_SETFONTQUALITY, new IntPtr(fontQuality));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the column number of the indentation guide to highlight.
-    /// </summary>
-    /// <returns>The column number of the indentation guide to highlight or 0 if disabled.</returns>
-    /// <remarks>Guides are highlighted in the <see cref="Style.BraceLight" /> style. Column numbers can be determined by calling <see cref="GetColumn" />.</remarks>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int HighlightGuide
-    {
-        get => DirectMessage(SCI_GETHIGHLIGHTGUIDE).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETHIGHLIGHTGUIDE, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether to display the horizontal scroll bar.
-    /// </summary>
-    /// <returns>true to display the horizontal scroll bar when needed; otherwise, false. The default is true.</returns>
-    [DefaultValue(true)]
-    [Category("Scrolling")]
-    [Description("Determines whether to show the horizontal scroll bar if needed.")]
-    public bool HScrollBar
-    {
-        get => DirectMessage(SCI_GETHSCROLLBAR) != IntPtr.Zero;
-        set
-        {
-            var visible = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETHSCROLLBAR, visible);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the strategy used to perform styling using application idle time.
-    /// </summary>
-    /// <returns>
-    /// One of the <see cref="Abstractions.Enumerations.IdleStyling" /> enumeration values.
-    /// The default is <see cref="Abstractions.Enumerations.IdleStyling.None" />.
-    /// </returns>
-    [DefaultValue(IdleStyling.None)]
-    [Category("Misc")]
-    [Description("Specifies how to use application idle time for styling.")]
-    public IdleStyling IdleStyling
-    {
-        get => (IdleStyling)DirectMessage(SCI_GETIDLESTYLING);
-        set
-        {
-            var idleStyling = (int)value;
-            DirectMessage(SCI_SETIDLESTYLING, new IntPtr(idleStyling));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the size of indentation in terms of space characters.
-    /// </summary>
-    /// <returns>The indentation size measured in characters. The default is 0.</returns>
-    /// <remarks> A value of 0 will make the indent width the same as the tab width.</remarks>
-    [DefaultValue(0)]
-    [Category("Indentation")]
-    [Description("The indentation size in characters or 0 to make it the same as the tab width.")]
-    public int IndentWidth
-    {
-        get => DirectMessage(SCI_GETINDENT).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETINDENT, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether to display indentation guides.
-    /// </summary>
-    /// <returns>One of the <see cref="IndentView" /> enumeration values. The default is <see cref="IndentView.None" />.</returns>
-    /// <remarks>The <see cref="Style.IndentGuide" /> style can be used to specify the foreground and background color of indentation guides.</remarks>
-    [DefaultValue(IndentView.None)]
-    [Category("Indentation")]
-    [Description("Indicates whether indentation guides are displayed.")]
-    public IndentView IndentationGuides
-    {
-        get => (IndentView)DirectMessage(SCI_GETINDENTATIONGUIDES);
-        set
-        {
-            var indentView = (int)value;
-            DirectMessage(SCI_SETINDENTATIONGUIDES, new IntPtr(indentView));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the indicator used in a subsequent call to <see cref="IndicatorFillRange" /> or <see cref="IndicatorClearRange" />.
-    /// </summary>
-    /// <returns>The zero-based indicator index to apply when calling <see cref="IndicatorFillRange" /> or remove when calling <see cref="IndicatorClearRange" />.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int IndicatorCurrent
-    {
-        get => DirectMessage(SCI_GETINDICATORCURRENT).ToInt32();
-        set
-        {
-            value = Helpers.Clamp(value, 0, Indicators.Count - 1);
-            DirectMessage(SCI_SETINDICATORCURRENT, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets a collection of objects for working with indicators.
-    /// </summary>
-    /// <returns>A collection of <see cref="Indicator" /> objects.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public IndicatorCollection Indicators { get; }
-
-    /// <summary>
-    /// Gets or sets the user-defined value used in a subsequent call to <see cref="IndicatorFillRange" />.
-    /// </summary>
-    /// <returns>The indicator value to apply when calling <see cref="IndicatorFillRange" />.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int IndicatorValue
-    {
-        get => DirectMessage(SCI_GETINDICATORVALUE).ToInt32();
-        set => DirectMessage(SCI_SETINDICATORVALUE, new IntPtr(value));
-    }
-
-    /// <summary>
-    /// This is used by clients that have complex focus requirements such as having their own window
-    /// that gets the real focus but with the need to indicate that Scintilla has the logical focus.
-    /// </summary>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public bool InternalFocusFlag
-    {
-        get => DirectMessage(SCI_GETFOCUS) != IntPtr.Zero;
-        set
-        {
-            var focus = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETFOCUS, focus);
-        }
-    }
-
-    private string lexerName;
-
-    /// <summary>
-    /// Gets or sets the name of the lexer.
-    /// </summary>
-    /// <value>The name of the lexer.</value>
-    /// <exception cref="InvalidOperationException">Lexer with the name of 'Value' was not found.</exception>
-    [Category("Lexing")]
-    public string LexerName
-    {
-        get => lexerName;
-
-        set
-        {
-            if (string.IsNullOrWhiteSpace(value))
-            {
-                lexerName = value;
-
-                return;
-            }
-
-            if (!SetLexerByName(value))
-            {
-                throw new InvalidOperationException(@$"Lexer with the name of '{value}' was not found.");
-            }
-
-            lexerName = value;
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the current lexer.
-    /// </summary>
-    /// <returns>One of the <see cref="Lexer" /> enumeration values. The default is <see cref="Container" />.</returns>
-    /// <exception cref="InvalidOperationException">
-    /// No lexer name was found with the specified value.
-    /// </exception>
-    /// <remarks>This property will get more obsolete as time passes as the Scintilla v.5+ now uses strings to define lexers. The Lexer enumeration is not maintained.</remarks>
-    [DefaultValue(Lexer.NotFound)]
-    [Category("Lexing")]
-    [Description("The current lexer.")]
-    [Obsolete("This property will get more obsolete as time passes as the Scintilla v.5+ now uses strings to define lexers. Please use the LexerName property instead.")]
-    public Lexer Lexer
-    {
-        get
-        {
-            if (string.IsNullOrWhiteSpace(lexerName))
-            {
-                return Lexer.NotFound;
-            }
-
-
-            if (NameConstantMap.ContainsValue(lexerName))
-            {
-                return (Lexer) NameConstantMap.First(f => f.Value == lexerName).Key;
-            }
-
-            return Lexer.NotFound;
-        }
-        set
-        {
-            if (value == Lexer.NotFound)
-            {
-                return;
-            }
-
-            var lexer = (int)value;
-
-            if (NameConstantMap.ContainsKey(lexer))
-            {
-                lexerName = NameConstantMap.First(f => f.Key == lexer).Value;
-
-                if (string.IsNullOrEmpty(lexerName))
-                {
-                    throw new InvalidOperationException(@"No lexer name was found with the specified value.");
-                }
-            }
-            else
-            {
-                throw new InvalidOperationException(@"No lexer name was found with the specified value.");
-            }
-
-
-            SetLexerByName(lexerName);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the current lexer by name.
-    /// </summary>
-    /// <returns>A String representing the current lexer.</returns>
-    /// <remarks>Lexer names are case-sensitive.</remarks>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public unsafe string LexerLanguage
-    {
-        get
-        {
-            var length = DirectMessage(SCI_GETLEXERLANGUAGE).ToInt32();
-            if (length == 0)
-            {
-                return string.Empty;
-            }
-
-            var bytes = new byte[length + 1];
-            fixed (byte* bp = bytes)
-            {
-                DirectMessage(SCI_GETLEXERLANGUAGE, IntPtr.Zero, new IntPtr(bp));
-                return Helpers.GetString(new IntPtr(bp), length, Encoding.ASCII);
-            }
-        }
-        set
-        {
-            if (string.IsNullOrEmpty(value))
-            {
-                DirectMessage(SCI_SETLEXERLANGUAGE, IntPtr.Zero, IntPtr.Zero);
-            }
-            else
-            {
-                var bytes = Helpers.GetBytes(value, Encoding.ASCII, zeroTerminated: true);
-                fixed (byte* bp = bytes)
-                {
-                    DirectMessage(SCI_SETLEXERLANGUAGE, IntPtr.Zero, new IntPtr(bp));
-                }
-            }
-        }
-    }
-
-    /// <summary>
-    /// Gets the combined result of the <see cref="LineEndTypesSupported" /> and <see cref="LineEndTypesAllowed" />
-    /// properties to report the line end types actively being interpreted.
-    /// </summary>
-    /// <returns>A bitwise combination of the <see cref="LineEndType" /> enumeration.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public LineEndType LineEndTypesActive => (LineEndType)DirectMessage(SCI_GETLINEENDTYPESACTIVE);
-
-    /// <summary>
-    /// Gets or sets the line ending types interpreted by the <see cref="Scintilla" /> control.
-    /// </summary>
-    /// <returns>
-    /// A bitwise combination of the <see cref="LineEndType" /> enumeration.
-    /// The default is <see cref="LineEndType.Default" />.
-    /// </returns>
-    /// <remarks>The line ending types allowed must also be supported by the current lexer to be effective.</remarks>
-    [DefaultValue(LineEndType.Default)]
-    [Category("Line Endings")]
-    [Description("Line endings types interpreted by the control.")]
-    [TypeConverter(typeof(FlagsEnumConverter))]
-    public LineEndType LineEndTypesAllowed
-    {
-        get => (LineEndType)DirectMessage(SCI_GETLINEENDTYPESALLOWED);
-        set
-        {
-            var lineEndBitsSet = (int)value;
-            DirectMessage(SCI_SETLINEENDTYPESALLOWED, new IntPtr(lineEndBitsSet));
-        }
-    }
-
-    /// <summary>
-    /// Gets the different types of line ends supported by the current lexer.
-    /// </summary>
-    /// <returns>A bitwise combination of the <see cref="LineEndType" /> enumeration.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public LineEndType LineEndTypesSupported => (LineEndType)DirectMessage(SCI_GETLINEENDTYPESSUPPORTED);
-
-    /// <summary>
-    /// Gets a collection representing lines of text in the <see cref="Scintilla" /> control.
-    /// </summary>
-    /// <returns>A collection of text lines.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public LineCollection Lines { get; }
-
-    /// <summary>
-    /// Gets the number of lines that can be shown on screen given a constant
-    /// line height and the space available.
-    /// </summary>
-    /// <returns>
-    /// The number of screen lines which could be displayed (including any partial lines).
-    /// </returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int LinesOnScreen => DirectMessage(SCI_LINESONSCREEN).ToInt32();
-
-    /// <summary>
-    /// Gets or sets the main selection when their are multiple selections.
-    /// </summary>
-    /// <returns>The zero-based main selection index.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int MainSelection
-    {
-        get => DirectMessage(SCI_GETMAINSELECTION).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETMAINSELECTION, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets a collection representing margins in a <see cref="Scintilla" /> control.
-    /// </summary>
-    /// <returns>A collection of margins.</returns>
-    [Category("Collections")]
-    [Description("The margins collection.")]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
-    [TypeConverter(typeof(ExpandableObjectConverter))]
-    public MarginCollection Margins { get; }
-
-    /// <summary>
-    /// Gets a collection representing markers in a <see cref="Scintilla" /> control.
-    /// </summary>
-    /// <returns>A collection of markers.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public MarkerCollection Markers { get; }
-
-    /// <summary>
-    /// Gets a value indicating whether the document has been modified (is dirty)
-    /// since the last call to <see cref="SetSavePoint" />.
-    /// </summary>
-    /// <returns>true if the document has been modified; otherwise, false.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public bool Modified => DirectMessage(SCI_GETMODIFY) != IntPtr.Zero;
-
-    /// <summary>
-    /// Gets or sets the time in milliseconds the mouse must linger to generate a <see cref="DwellStart" /> event.
-    /// </summary>
-    /// <returns>
-    /// The time in milliseconds the mouse must linger to generate a <see cref="DwellStart" /> event
-    /// or <see cref="ApiConstants.TimeForever" /> if dwell events are disabled.
-    /// </returns>
-    [DefaultValue(ApiConstants.TimeForever)]
-    [Category("Behavior")]
-    [Description("The time in milliseconds the mouse must linger to generate a dwell start event. A value of 10000000 disables dwell events.")]
-    public int MouseDwellTime
-    {
-        get => DirectMessage(SCI_GETMOUSEDWELLTIME).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETMOUSEDWELLTIME, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the ability to switch to rectangular selection mode while making a selection with the mouse.
-    /// </summary>
-    /// <returns>
-    /// true if the current mouse selection can be switched to a rectangular selection by pressing the ALT key; otherwise, false.
-    /// The default is false.
-    /// </returns>
-    [DefaultValue(false)]
-    [Category("Multiple Selection")]
-    [Description(
-        "Enable or disable the ability to switch to rectangular selection mode while making a selection with the mouse.")]
-    public bool MouseSelectionRectangularSwitch
-    {
-        get => DirectMessage(SCI_GETMOUSESELECTIONRECTANGULARSWITCH) != IntPtr.Zero;
-        set
-        {
-            var mouseSelectionRectangularSwitch = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETMOUSESELECTIONRECTANGULARSWITCH, mouseSelectionRectangularSwitch);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether multiple selection is enabled.
-    /// </summary>
-    /// <returns>
-    /// true if multiple selections can be made by holding the CTRL key and dragging the mouse; otherwise, false.
-    /// The default is false.
-    /// </returns>
-    [DefaultValue(false)]
-    [Category("Multiple Selection")]
-    [Description("Enable or disable multiple selection with the CTRL key.")]
-    public bool MultipleSelection
-    {
-        get => DirectMessage(SCI_GETMULTIPLESELECTION) != IntPtr.Zero;
-        set
-        {
-            var multipleSelection = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETMULTIPLESELECTION, multipleSelection);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the behavior when pasting text into multiple selections.
-    /// </summary>
-    /// <returns>One of the <see cref="MultiPaste" /> enumeration values. The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.MultiPaste.Once" />.</returns>
-    [DefaultValue(MultiPaste.Once)]
-    [Category("Multiple Selection")]
-    [Description("Determines how pasted text is applied to multiple selections.")]
-    public MultiPaste MultiPaste
-    {
-        get => (MultiPaste)DirectMessage(SCI_GETMULTIPASTE);
-        set
-        {
-            var multiPaste = (int)value;
-            DirectMessage(SCI_SETMULTIPASTE, new IntPtr(multiPaste));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether to write over text rather than insert it.
-    /// </summary>
-    /// <return>true to write over text; otherwise, false. The default is false.</return>
-    [DefaultValue(false)]
-    [Category("Behavior")]
-    [Description("Puts the caret into overtype mode.")]
-    public bool OverType
-    {
-        get => DirectMessage(SCI_GETOVERTYPE) != IntPtr.Zero;
-        set
-        {
-            var overType = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETOVERTYPE, overType);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether line endings in pasted text are converted to the document <see cref="EolMode" />.
-    /// </summary>
-    /// <returns>true to convert line endings in pasted text; otherwise, false. The default is true.</returns>
-    [DefaultValue(true)]
-    [Category("Line Endings")]
-    [Description("Whether line endings in pasted text are converted to match the document end-of-line mode.")]
-    public bool PasteConvertEndings
-    {
-        get => DirectMessage(SCI_GETPASTECONVERTENDINGS) != IntPtr.Zero;
-        set
-        {
-            var convert = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETPASTECONVERTENDINGS, convert);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the number of phases used when drawing.
-    /// </summary>
-    /// <returns>One of the <see cref="Phases" /> enumeration values. The default is <see cref="Phases.Two" />.</returns>
-    [DefaultValue(Phases.Two)]
-    [Category("Misc")]
-    [Description("Adjusts the number of phases used when drawing.")]
-    public Phases PhasesDraw
-    {
-        get => (Phases)DirectMessage(SCI_GETPHASESDRAW);
-        set
-        {
-            var phases = (int)value;
-            DirectMessage(SCI_SETPHASESDRAW, new IntPtr(phases));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether the document is read-only.
-    /// </summary>
-    /// <returns>true if the document is read-only; otherwise, false. The default is false.</returns>
-    /// <seealso cref="ModifyAttempt" />
-    [DefaultValue(false)]
-    [Category("Behavior")]
-    [Description("Controls whether the document text can be modified.")]
-    public bool ReadOnly
-    {
-        get => DirectMessage(SCI_GETREADONLY) != IntPtr.Zero;
-        set
-        {
-            var readOnly = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETREADONLY, readOnly);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the anchor position of the rectangular selection.
-    /// </summary>
-    /// <returns>The zero-based document position of the rectangular selection anchor.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int RectangularSelectionAnchor
-    {
-        get
-        {
-            var pos = DirectMessage(SCI_GETRECTANGULARSELECTIONANCHOR).ToInt32();
-            if (pos <= 0)
-            {
-                return pos;
-            }
-
-            return Lines.ByteToCharPosition(pos);
-        }
-        set
-        {
-            value = Helpers.Clamp(value, 0, TextLength);
-            value = Lines.CharToBytePosition(value);
-            DirectMessage(SCI_SETRECTANGULARSELECTIONANCHOR, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the amount of anchor virtual space in a rectangular selection.
-    /// </summary>
-    /// <returns>The amount of virtual space past the end of the line offsetting the rectangular selection anchor.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int RectangularSelectionAnchorVirtualSpace
-    {
-        get => DirectMessage(SCI_GETRECTANGULARSELECTIONANCHORVIRTUALSPACE).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETRECTANGULARSELECTIONANCHORVIRTUALSPACE, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the caret position of the rectangular selection.
-    /// </summary>
-    /// <returns>The zero-based document position of the rectangular selection caret.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int RectangularSelectionCaret
-    {
-        get
-        {
-            var pos = DirectMessage(SCI_GETRECTANGULARSELECTIONCARET).ToInt32();
-            if (pos <= 0)
-            {
-                return 0;
-            }
-
-            return Lines.ByteToCharPosition(pos);
-        }
-        set
-        {
-            value = Helpers.Clamp(value, 0, TextLength);
-            value = Lines.CharToBytePosition(value);
-            DirectMessage(SCI_SETRECTANGULARSELECTIONCARET, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the amount of caret virtual space in a rectangular selection.
-    /// </summary>
-    /// <returns>The amount of virtual space past the end of the line offsetting the rectangular selection caret.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int RectangularSelectionCaretVirtualSpace
-    {
-        get => DirectMessage(SCI_GETRECTANGULARSELECTIONCARETVIRTUALSPACE).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETRECTANGULARSELECTIONCARETVIRTUALSPACE, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets the Scintilla pointer.
-    /// </summary>
-    /// <value>The Scintilla pointer.</value>
-    /// <exception cref="System.InvalidOperationException">Control Scintilla accessed from a thread other than the thread it was created on.</exception>
-    public IntPtr SciPointer
-    {
-        get
-        {
-            // Enforce illegal cross-thread calls the way the Handle property does
-            if (CheckForIllegalCrossThreadCalls && InvokeRequired)
-            {
-                var message = string.Format(CultureInfo.InvariantCulture, "Control '{0}' accessed from a thread other than the thread it was created on.", Name);
-                throw new InvalidOperationException(message);
-            }
-
-            if (sciPtr == IntPtr.Zero)
-            {
-                // Get a pointer to the native Scintilla object (i.e. C++ 'this') to use with the
-                // direct function. This will happen for each Scintilla control instance.
-                sciPtr = NativeMethods.SendMessage(new HandleRef(this, Handle), SCI_GETDIRECTPOINTER, IntPtr.Zero, IntPtr.Zero);
-            }
-
-            return sciPtr;
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the layer where the text selection will be painted. Default value is <see cref="Layer.Base"/>
-    /// </summary>
-    [DefaultValue(Layer.Base)]
-    [Category("Selection")]
-    [Description("The layer where the text selection will be painted.")]
-    public Layer SelectionLayer
-    {
-        get => (Layer)DirectMessage(SCI_GETSELECTIONLAYER).ToInt32();
-        set
-        {
-            var layer = (int)value;
-            DirectMessage(SCI_SETSELECTIONLAYER, new IntPtr(layer), IntPtr.Zero);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the range of the horizontal scroll bar.
-    /// </summary>
-    /// <returns>The range in pixels of the horizontal scroll bar. The default is 2000.</returns>
-    /// <remarks>The width will automatically increase as needed when <see cref="ScrollWidthTracking" /> is enabled.</remarks>
-    [DefaultValue(2000)]
-    [Category("Scrolling")]
-    [Description("The range in pixels of the horizontal scroll bar.")]
-    public int ScrollWidth
-    {
-        get => DirectMessage(SCI_GETSCROLLWIDTH).ToInt32();
-        set => DirectMessage(SCI_SETSCROLLWIDTH, new IntPtr(value));
-    }
-
-    /// <summary>
-    /// Gets or sets whether the <see cref="ScrollWidth" /> is automatically increased as needed.
-    /// </summary>
-    /// <returns>
-    /// true to automatically increase the horizontal scroll width as needed; otherwise, false.
-    /// The default is true.
-    /// </returns>
-    [DefaultValue(true)]
-    [Category("Scrolling")]
-    [Description("Determines whether to increase the horizontal scroll width as needed.")]
-    public bool ScrollWidthTracking
-    {
-        get => DirectMessage(SCI_GETSCROLLWIDTHTRACKING) != IntPtr.Zero;
-        set
-        {
-            var tracking = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETSCROLLWIDTHTRACKING, tracking);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the search flags used when searching text.
-    /// </summary>
-    /// <returns>A bitwise combination of <see cref="global::Scintilla.NET.Abstractions.Enumerations.SearchFlags" /> values. The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.SearchFlags.None" />.</returns>
-    /// <seealso cref="SearchInTarget" />
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public SearchFlags SearchFlags
-    {
-        get => (SearchFlags)DirectMessage(SCI_GETSEARCHFLAGS).ToInt32();
-        set
-        {
-            var searchFlags = (int)value;
-            DirectMessage(SCI_SETSEARCHFLAGS, new IntPtr(searchFlags));
-        }
-    }
-
-    /// <summary>
-    /// Gets the selected text.
-    /// </summary>
-    /// <returns>The selected text if there is any; otherwise, an empty string.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public unsafe string SelectedText
-    {
-        get
-        {
-            // NOTE: For some reason the length returned by this API includes the terminating NULL
-            var length = DirectMessage(SCI_GETSELTEXT).ToInt32();
-
-            if (length <= 0)
-            {
-                return string.Empty;
-            }
-
-            var bytes = new byte[length + 1];
-            fixed (byte* bp = bytes)
-            {
-                DirectMessage(SCI_GETSELTEXT, IntPtr.Zero, new IntPtr(bp));
-                return Helpers.GetString(new IntPtr(bp), length, Encoding);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the end position of the selection.
-    /// </summary>
-    /// <returns>The zero-based document position where the selection ends.</returns>
-    /// <remarks>
-    /// When getting this property, the return value is <code>Math.Max(<see cref="AnchorPosition" />, <see cref="CurrentPosition" />)</code>.
-    /// When setting this property, <see cref="CurrentPosition" /> is set to the value specified and <see cref="AnchorPosition" /> set to <code>Math.Min(<see cref="AnchorPosition" />, <paramref name="value" />)</code>.
-    /// The caret is not scrolled into view.
-    /// </remarks>
-    /// <seealso cref="SelectionStart" />
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int SelectionEnd
-    {
-        get
-        {
-            var pos = DirectMessage(SCI_GETSELECTIONEND).ToInt32();
-            return Lines.ByteToCharPosition(pos);
-        }
-        set
-        {
-            value = Helpers.Clamp(value, 0, TextLength);
-            value = Lines.CharToBytePosition(value);
-            DirectMessage(SCI_SETSELECTIONEND, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether to fill past the end of a line with the selection background color.
-    /// </summary>
-    /// <returns>true to fill past the end of the line; otherwise, false. The default is false.</returns>
-    [DefaultValue(false)]
-    [Category("Selection")]
-    [Description("Determines whether a selection should fill past the end of the line.")]
-    public bool SelectionEolFilled
-    {
-        get => DirectMessage(SCI_GETSELEOLFILLED) != IntPtr.Zero;
-        set
-        {
-            var eolFilled = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETSELEOLFILLED, eolFilled);
-        }
-    }
-
-    /// <summary>
-    /// Gets a collection representing multiple selections in a <see cref="Scintilla" /> control.
-    /// </summary>
-    /// <returns>A collection of selections.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public SelectionCollection Selections { get; }
-
-    /// <summary>
-    /// Gets or sets the start position of the selection.
-    /// </summary>
-    /// <returns>The zero-based document position where the selection starts.</returns>
-    /// <remarks>
-    /// When getting this property, the return value is <code>Math.Min(<see cref="AnchorPosition" />, <see cref="CurrentPosition" />)</code>.
-    /// When setting this property, <see cref="AnchorPosition" /> is set to the value specified and <see cref="CurrentPosition" /> set to <code>Math.Max(<see cref="CurrentPosition" />, <paramref name="value" />)</code>.
-    /// The caret is not scrolled into view.
-    /// </remarks>
-    /// <seealso cref="SelectionEnd" />
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int SelectionStart
-    {
-        get
-        {
-            var pos = DirectMessage(SCI_GETSELECTIONSTART).ToInt32();
-            return Lines.ByteToCharPosition(pos);
-        }
-        set
-        {
-            value = Helpers.Clamp(value, 0, TextLength);
-            value = Lines.CharToBytePosition(value);
-            DirectMessage(SCI_SETSELECTIONSTART, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the last internal error code used by Scintilla.
-    /// </summary>
-    /// <returns>
-    /// One of the <see cref="Status" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.
-    /// </returns>
-    /// <remarks>The status can be reset by setting the property to <see cref="global::Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.</remarks>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public Status Status
-    {
-        get => (Status)DirectMessage(SCI_GETSTATUS);
-        set
-        {
-            var status = (int)value;
-            DirectMessage(SCI_SETSTATUS, new IntPtr(status));
-        }
-    }
-
-    /// <summary>
-    /// Gets a collection representing style definitions in a <see cref="Scintilla" /> control.
-    /// </summary>
-    /// <returns>A collection of style definitions.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public StyleCollection Styles { get; }
-
-    /// <summary>
-    /// Gets or sets how tab characters are represented when whitespace is visible.
-    /// </summary>
-    /// <returns>
-    /// One of the <see cref="global::Scintilla.NET.Abstractions.Enumerations.TabDrawMode" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.TabDrawMode.LongArrow" />.
-    /// </returns>
-    /// <seealso cref="ViewWhitespace" />
-    [DefaultValue(TabDrawMode.LongArrow)]
-    [Category("Whitespace")]
-    [Description("Style of visible tab characters.")]
-    public TabDrawMode TabDrawMode
-    {
-        get => (TabDrawMode)DirectMessage(SCI_GETTABDRAWMODE);
-        set
-        {
-            var tabDrawMode = (int)value;
-            DirectMessage(SCI_SETTABDRAWMODE, new IntPtr(tabDrawMode));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether tab inserts a tab character, or indents.
-    /// </summary>
-    /// <returns>Whether tab inserts a tab character (false), or indents (true).</returns>
-    [DefaultValue(false)]
-    [Category("Indentation")]
-    [Description("Determines whether tab inserts a tab character, or indents.")]
-    public bool TabIndents
-    {
-        get => DirectMessage(SCI_GETTABINDENTS) != IntPtr.Zero;
-        set
-        {
-            var ptr = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETTABINDENTS, ptr);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the width of a tab as a multiple of a space character.
-    /// </summary>
-    /// <returns>The width of a tab measured in characters. The default is 4.</returns>
-    [DefaultValue(4)]
-    [Category("Indentation")]
-    [Description("The tab size in characters.")]
-    public int TabWidth
-    {
-        get => DirectMessage(SCI_GETTABWIDTH).ToInt32();
-        set => DirectMessage(SCI_SETTABWIDTH, new IntPtr(value));
-    }
-
-    /// <summary>
-    /// Gets or sets the end position used when performing a search or replace.
-    /// </summary>
-    /// <returns>The zero-based character position within the document to end a search or replace operation.</returns>
-    /// <seealso cref="TargetStart"/>
-    /// <seealso cref="SearchInTarget" />
-    /// <seealso cref="ReplaceTarget" />
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int TargetEnd
-    {
-        get
-        {
-            // The position can become stale and point to a place outside of the document so we must clamp it
-            var bytePos = Helpers.Clamp(DirectMessage(SCI_GETTARGETEND).ToInt32(), 0, DirectMessage(SCI_GETTEXTLENGTH).ToInt32());
-            return Lines.ByteToCharPosition(bytePos);
-        }
-        set
-        {
-            value = Helpers.Clamp(value, 0, TextLength);
-            value = Lines.CharToBytePosition(value);
-            DirectMessage(SCI_SETTARGETEND, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the start position used when performing a search or replace.
-    /// </summary>
-    /// <returns>The zero-based character position within the document to start a search or replace operation.</returns>
-    /// <seealso cref="TargetEnd"/>
-    /// <seealso cref="SearchInTarget" />
-    /// <seealso cref="ReplaceTarget" />
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int TargetStart
-    {
-        get
-        {
-            // The position can become stale and point to a place outside of the document so we must clamp it
-            var bytePos = Helpers.Clamp(DirectMessage(SCI_GETTARGETSTART).ToInt32(), 0, DirectMessage(SCI_GETTEXTLENGTH).ToInt32());
-            return Lines.ByteToCharPosition(bytePos);
-        }
-        set
-        {
-            value = Helpers.Clamp(value, 0, TextLength);
-            value = Lines.CharToBytePosition(value);
-            DirectMessage(SCI_SETTARGETSTART, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets the current target text.
-    /// </summary>
-    /// <returns>A String representing the text between <see cref="TargetStart" /> and <see cref="TargetEnd" />.</returns>
-    /// <remarks>Targets which have a start position equal or greater to the end position will return an empty String.</remarks>
-    /// <seealso cref="TargetStart" />
-    /// <seealso cref="TargetEnd" />
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public unsafe string TargetText
-    {
-        get
-        {
-            var length = DirectMessage(SCI_GETTARGETTEXT).ToInt32();
-            if (length == 0)
-            {
-                return string.Empty;
-            }
-
-            var bytes = new byte[length + 1];
-            fixed (byte* bp = bytes)
-            {
-                DirectMessage(SCI_GETTARGETTEXT, IntPtr.Zero, new IntPtr(bp));
-                return Helpers.GetString(new IntPtr(bp), length, Encoding);
-            }
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the rendering technology used.
-    /// </summary>
-    /// <returns>
-    /// One of the <see cref="Technology" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.Technology.Default" />.
-    /// </returns>
-    [DefaultValue(Technology.Default)]
-    [Category("Misc")]
-    [Description("The rendering technology used to draw text.")]
-    public Technology Technology
-    {
-        get => (Technology)DirectMessage(SCI_GETTECHNOLOGY);
-        set
-        {
-            var technology = (int)value;
-            DirectMessage(SCI_SETTECHNOLOGY, new IntPtr(technology));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the current document text in the <see cref="Scintilla" /> control.
-    /// </summary>
-    /// <returns>The text displayed in the control.</returns>
-    /// <remarks>Depending on the length of text get or set, this operation can be expensive.</remarks>
-    [Editor("System.ComponentModel.Design.MultilineStringEditor, System.Design", typeof(UITypeEditor))]
-    [Description("The text associated with this control.")]
-    [Category("Appearance")]
-    public override unsafe string Text
-    {
-        get
-        {
-            var length = DirectMessage(SCI_GETTEXTLENGTH).ToInt32();
-            var ptr = DirectMessage(SCI_GETRANGEPOINTER, new IntPtr(0), new IntPtr(length));
-            if (ptr == IntPtr.Zero)
-            {
-                return string.Empty;
-            }
-
-            // Assumption is that moving the gap will always be equal to or less expensive
-            // than using one of the APIs which requires an intermediate buffer.
-            var text = new string((sbyte*)ptr, 0, length, Encoding);
-            return text;
-        }
-        set
-        {
-            var previousReadOnly = DesignMode && ReadOnly;
-
-            // Allow Text property change in read-only mode when the designer is active.
-            if (previousReadOnly && DesignMode)
-            {
-                DirectMessage(SCI_SETREADONLY, IntPtr.Zero);
-            }
-
-            if (string.IsNullOrEmpty(value))
-            {
-                DirectMessage(SCI_CLEARALL);
-            }
-            else if (value.Contains("\0"))
-            {
-                DirectMessage(SCI_CLEARALL);
-                AppendText(value);
-            }
-            else
-            {
-                fixed (byte* bp = Helpers.GetBytes(value, Encoding, zeroTerminated: true))
-                {
-                    DirectMessage(SCI_SETTEXT, IntPtr.Zero, new IntPtr(bp));
-                }
-            }
-
-            // Allow Text property change in read-only mode when the designer is active.
-            if (previousReadOnly && DesignMode)
-            {
-                DirectMessage(SCI_SETREADONLY, new IntPtr(1));
-            }
-        }
-    }
-
-    /// <summary>
-    /// Gets the length of the text in the control.
-    /// </summary>
-    /// <returns>The number of characters in the document.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int TextLength => Lines.TextLength;
-
-    /// <summary>
-    /// Gets or sets whether to use a mixture of tabs and spaces for indentation or purely spaces.
-    /// </summary>
-    /// <returns>true to use tab characters; otherwise, false. The default is true.</returns>
-    [DefaultValue(false)]
-    [Category("Indentation")]
-    [Description("Determines whether indentation allows tab characters or purely space characters.")]
-    public bool UseTabs
-    {
-        get => DirectMessage(SCI_GETUSETABS) != IntPtr.Zero;
-        set
-        {
-            var useTabs = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETUSETABS, useTabs);
-        }
-    }
-
-    /// <summary>
     /// Gets or sets a value indicating whether to use the wait cursor for the current control.
     /// </summary>
     /// <returns>true to use the wait cursor for the current control; otherwise, false. The default is false.</returns>
@@ -4283,81 +3920,6 @@ public class Scintilla : Control,
             DirectMessage(SCI_SETCURSOR, new IntPtr(cursor));
         }
     }
-
-    /// <summary>
-    /// Gets or sets the visibility of end-of-line characters.
-    /// </summary>
-    /// <returns>true to display end-of-line characters; otherwise, false. The default is false.</returns>
-    [DefaultValue(false)]
-    [Category("Line Endings")]
-    [Description("Display end-of-line characters.")]
-    public bool ViewEol
-    {
-        get => DirectMessage(SCI_GETVIEWEOL) != IntPtr.Zero;
-        set
-        {
-            var visible = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETVIEWEOL, visible);
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets how to display whitespace characters.
-    /// </summary>
-    /// <returns>One of the <see cref="WhitespaceMode" /> enumeration values. The default is <see cref="WhitespaceMode.Invisible" />.</returns>
-    /// <seealso cref="SetWhitespaceForeColor" />
-    /// <seealso cref="SetWhitespaceBackColor" />
-    [DefaultValue(WhitespaceMode.Invisible)]
-    [Category("Whitespace")]
-    [Description("Options for displaying whitespace characters.")]
-    public WhitespaceMode ViewWhitespace
-    {
-        get => (WhitespaceMode)DirectMessage(SCI_GETVIEWWS);
-        set
-        {
-            var wsMode = (int)value;
-            DirectMessage(SCI_SETVIEWWS, new IntPtr(wsMode));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the ability for the caret to move into an area beyond the end of each line, otherwise known as virtual space.
-    /// </summary>
-    /// <returns>
-    /// A bitwise combination of the <see cref="VirtualSpace" /> enumeration.
-    /// The default is <see cref="VirtualSpace.None" />.
-    /// </returns>
-    [DefaultValue(VirtualSpace.None)]
-    [Category("Behavior")]
-    [Description("Options for allowing the caret to move beyond the end of each line.")]
-    [TypeConverter(typeof(FlagsEnumConverter))]
-    public VirtualSpace VirtualSpaceOptions
-    {
-        get => (VirtualSpace)DirectMessage(SCI_GETVIRTUALSPACEOPTIONS);
-        set
-        {
-            var virtualSpace = (int)value;
-            DirectMessage(SCI_SETVIRTUALSPACEOPTIONS, new IntPtr(virtualSpace));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets whether to display the vertical scroll bar.
-    /// </summary>
-    /// <returns>true to display the vertical scroll bar when needed; otherwise, false. The default is true.</returns>
-    [DefaultValue(true)]
-    [Category("Scrolling")]
-    [Description("Determines whether to show the vertical scroll bar when needed.")]
-    public bool VScrollBar
-    {
-        get => DirectMessage(SCI_GETVSCROLLBAR) != IntPtr.Zero;
-        set
-        {
-            var visible = value ? new IntPtr(1) : IntPtr.Zero;
-            DirectMessage(SCI_SETVSCROLLBAR, visible);
-        }
-    }
-
 
     /// <summary>
     /// Gets the visible line count of the Scintilla control.
@@ -4389,193 +3951,86 @@ public class Scintilla : Control,
             return count;
         }
     }
+    #endregion
 
+    #region CollectionProperties
     /// <summary>
-    /// Gets or sets the size of the dots used to mark whitespace.
+    /// Gets a collection of objects for working with indicators.
     /// </summary>
-    /// <returns>The size of the dots used to mark whitespace. The default is 1.</returns>
-    /// <seealso cref="ViewWhitespace" />
-    [DefaultValue(1)]
-    [Category("Whitespace")]
-    [Description("The size of whitespace dots.")]
-    public int WhitespaceSize
-    {
-        get => DirectMessage(SCI_GETWHITESPACESIZE).ToInt32();
-        set => DirectMessage(SCI_SETWHITESPACESIZE, new IntPtr(value));
-    }
-
-    /// <summary>
-    /// Gets or sets the characters considered 'word' characters when using any word-based logic.
-    /// </summary>
-    /// <returns>A string of word characters.</returns>
+    /// <returns>A collection of <see cref="Indicator" /> objects.</returns>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public unsafe string WordChars
+    public IndicatorCollection Indicators { get; }
+
+    /// <summary>
+    /// Gets a collection representing lines of text in the <see cref="Scintilla" /> control.
+    /// </summary>
+    /// <returns>A collection of text lines.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public LineCollection Lines { get; }
+
+    /// <summary>
+    /// Gets a collection representing margins in a <see cref="Scintilla" /> control.
+    /// </summary>
+    /// <returns>A collection of margins.</returns>
+    [Category("Collections")]
+    [Description("The margins collection.")]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+    [TypeConverter(typeof(ExpandableObjectConverter))]
+    public MarginCollection Margins { get; }
+
+    /// <summary>
+    /// Gets a collection representing markers in a <see cref="Scintilla" /> control.
+    /// </summary>
+    /// <returns>A collection of markers.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public MarkerCollection Markers { get; }
+
+    /// <summary>
+    /// Gets a collection representing multiple selections in a <see cref="Scintilla" /> control.
+    /// </summary>
+    /// <returns>A collection of selections.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public SelectionCollection Selections { get; }
+
+    /// <summary>
+    /// Gets a collection representing style definitions in a <see cref="Scintilla" /> control.
+    /// </summary>
+    /// <returns>A collection of style definitions.</returns>
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    public StyleCollection Styles { get; }
+    #endregion
+
+    /// <summary>
+    /// Gets the Scintilla pointer.
+    /// </summary>
+    /// <value>The Scintilla pointer.</value>
+    /// <exception cref="System.InvalidOperationException">Control Scintilla accessed from a thread other than the thread it was created on.</exception>
+    public IntPtr SciPointer
     {
         get
         {
-            var length = DirectMessage(SCI_GETWORDCHARS, IntPtr.Zero, IntPtr.Zero).ToInt32();
-            var bytes = new byte[length + 1];
-            fixed (byte* bp = bytes)
+            // Enforce illegal cross-thread calls the way the Handle property does
+            if (CheckForIllegalCrossThreadCalls && InvokeRequired)
             {
-                DirectMessage(SCI_GETWORDCHARS, IntPtr.Zero, new IntPtr(bp));
-                return Helpers.GetString(new IntPtr(bp), length, Encoding.ASCII);
-            }
-        }
-        set
-        {
-            if (value == null)
-            {
-                DirectMessage(SCI_SETWORDCHARS, IntPtr.Zero, IntPtr.Zero);
-                return;
+                var message = string.Format(CultureInfo.InvariantCulture, "Control '{0}' accessed from a thread other than the thread it was created on.", Name);
+                throw new InvalidOperationException(message);
             }
 
-            // Scintilla stores each of the characters specified in a char array which it then
-            // uses as a lookup for word matching logic. Thus, any multi-byte chars wouldn't work.
-            var bytes = Helpers.GetBytes(value, Encoding.ASCII, zeroTerminated: true);
-            fixed (byte* bp = bytes)
+            if (sciPtr == IntPtr.Zero)
             {
-                DirectMessage(SCI_SETWORDCHARS, IntPtr.Zero, new IntPtr(bp));
+                // Get a pointer to the native Scintilla object (i.e. C++ 'this') to use with the
+                // direct function. This will happen for each Scintilla control instance.
+                sciPtr = NativeMethods.SendMessage(new HandleRef(this, Handle), SCI_GETDIRECTPOINTER, IntPtr.Zero, IntPtr.Zero);
             }
+
+            return sciPtr;
         }
     }
-
-    /// <summary>
-    /// Gets or sets the line wrapping indent mode.
-    /// </summary>
-    /// <returns>
-    /// One of the <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapIndentMode" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapIndentMode.Fixed" />.
-    /// </returns>
-    [DefaultValue(WrapIndentMode.Fixed)]
-    [Category("Line Wrapping")]
-    [Description("Determines how wrapped sublines are indented.")]
-    public WrapIndentMode WrapIndentMode
-    {
-        get => (WrapIndentMode)DirectMessage(SCI_GETWRAPINDENTMODE);
-        set
-        {
-            var wrapIndentMode = (int)value;
-            DirectMessage(SCI_SETWRAPINDENTMODE, new IntPtr(wrapIndentMode));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the line wrapping mode.
-    /// </summary>
-    /// <returns>
-    /// One of the <see cref="WrapMode" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapMode.Word" />.
-    /// </returns>
-    [DefaultValue(WrapMode.Word)]
-    [Category("Line Wrapping")]
-    [Description("The line wrapping strategy.")]
-    public WrapMode WrapMode
-    {
-        get => (WrapMode)DirectMessage(SCI_GETWRAPMODE);
-        set
-        {
-            var wrapMode = (int)value;
-            DirectMessage(SCI_SETWRAPMODE, new IntPtr(wrapMode));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the indented size in pixels of wrapped sub-lines.
-    /// </summary>
-    /// <returns>The indented size of wrapped sub-lines measured in pixels. The default is 0.</returns>
-    /// <remarks>
-    /// Setting <see cref="WrapVisualFlags" /> to <see cref="Abstractions.Enumerations.WrapVisualFlags.Start" /> will add an
-    /// additional 1 pixel to the value specified.
-    /// </remarks>
-    [DefaultValue(0)]
-    [Category("Line Wrapping")]
-    [Description("The amount of pixels to indent wrapped sublines.")]
-    public int WrapStartIndent
-    {
-        get => DirectMessage(SCI_GETWRAPSTARTINDENT).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETWRAPSTARTINDENT, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the wrap visual flags.
-    /// </summary>
-    /// <returns>
-    /// A bitwise combination of the <see cref="Abstractions.Enumerations.WrapVisualFlags" /> enumeration.
-    /// The default is <see cref="Abstractions.Enumerations.WrapVisualFlags.None" />.
-    /// </returns>
-    [DefaultValue(WrapVisualFlags.None)]
-    [Category("Line Wrapping")]
-    [Description("The visual indicator displayed on a wrapped line.")]
-    [TypeConverter(typeof(FlagsEnumConverter))]
-    public WrapVisualFlags WrapVisualFlags
-    {
-        get => (WrapVisualFlags)DirectMessage(SCI_GETWRAPVISUALFLAGS);
-        set
-        {
-            var wrapVisualFlags = (int)value;
-            DirectMessage(SCI_SETWRAPVISUALFLAGS, new IntPtr(wrapVisualFlags));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets additional location options when displaying wrap visual flags.
-    /// </summary>
-    /// <returns>
-    /// One of the <see cref="Abstractions.Enumerations.WrapVisualFlagLocation" /> enumeration values.
-    /// The default is <see cref="Abstractions.Enumerations.WrapVisualFlagLocation.Default" />.
-    /// </returns>
-    [DefaultValue(WrapVisualFlagLocation.Default)]
-    [Category("Line Wrapping")]
-    [Description("The location of wrap visual flags in relation to the line text.")]
-    public WrapVisualFlagLocation WrapVisualFlagLocation
-    {
-        get => (WrapVisualFlagLocation)DirectMessage(SCI_GETWRAPVISUALFLAGSLOCATION);
-        set
-        {
-            var location = (int)value;
-            DirectMessage(SCI_SETWRAPVISUALFLAGSLOCATION, new IntPtr(location));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the horizontal scroll offset.
-    /// </summary>
-    /// <returns>The horizontal scroll offset in pixels.</returns>
-    [Browsable(false)]
-    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public int XOffset
-    {
-        get => DirectMessage(SCI_GETXOFFSET).ToInt32();
-        set
-        {
-            value = Helpers.ClampMin(value, 0);
-            DirectMessage(SCI_SETXOFFSET, new IntPtr(value));
-        }
-    }
-
-    /// <summary>
-    /// Gets or sets the zoom factor.
-    /// </summary>
-    /// <returns>The zoom factor measured in points.</returns>
-    /// <remarks>For best results, values should range from -10 to 20 points.</remarks>
-    /// <seealso cref="ZoomIn" />
-    /// <seealso cref="ZoomOut" />
-    [DefaultValue(0)]
-    [Category("Appearance")]
-    [Description("Zoom factor in points applied to the displayed text.")]
-    public int Zoom
-    {
-        get => DirectMessage(SCI_GETZOOM).ToInt32();
-        set => DirectMessage(SCI_SETZOOM, new IntPtr(value));
-    }
-
-    #endregion Properties
-
     #region Events
 
     /// <summary>

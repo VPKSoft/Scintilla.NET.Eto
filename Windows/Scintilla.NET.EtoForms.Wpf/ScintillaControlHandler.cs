@@ -36,8 +36,6 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
     IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>,
     IScintillaProperties<Color>,
-    IScintillaCollectionProperties<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>,
     IScintillaMethods<Color, Keys, Bitmap>,
     IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color, Keys, 
@@ -512,6 +510,10 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
     public void FoldAll(FoldAction action) => nativeControl.FoldAll(action);
 
     /// <inheritdoc />
+    public void InitDocument(Eol eolMode = Eol.CrLf, bool useTabs = false, int tabWidth = 4, int indentWidth = 0) =>
+        nativeControl.InitDocument(eolMode, useTabs, tabWidth, indentWidth);
+
+    /// <inheritdoc />
     public void FoldDisplayTextSetStyle(FoldDisplayText style) => nativeControl.FoldDisplayTextSetStyle(style);
 
     /// <inheritdoc />
@@ -530,7 +532,7 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
     public int GetPrimaryStyleFromStyle(int style) => nativeControl.GetPrimaryStyleFromStyle(style);
 
     /// <inheritdoc />
-    public string GetProperty(string name) => nativeControl.GetProperty(name);
+    public string GetScintillaProperty(string name) => nativeControl.GetScintillaProperty(name);
 
     /// <inheritdoc />
     public string GetPropertyExpanded(string name) => nativeControl.GetPropertyExpanded(name);
@@ -1120,6 +1122,9 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
 
     /// <inheritdoc />
     public bool VScrollBar { get => nativeControl.VScrollBar; set => nativeControl.VScrollBar = value; }
+
+    /// <inheritdoc />
+    public int VisibleLineCount => nativeControl.VisibleLineCount;
 
     /// <inheritdoc />
     public int WhitespaceSize { get => nativeControl.WhitespaceSize; set => nativeControl.WhitespaceSize = value; }

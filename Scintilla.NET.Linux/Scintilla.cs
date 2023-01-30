@@ -25,7 +25,6 @@ SOFTWARE.
 #endregion
 
 using System;
-using System.Runtime.InteropServices;
 using System.Text;
 using Gtk;
 using Scintilla.NET.Abstractions;
@@ -45,6 +44,9 @@ using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
 namespace Scintilla.NET.Linux;
 
+/// <summary>
+/// Represents a Scintilla editor control.
+/// </summary>
 public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
     IScintillaProperties<Color>,
@@ -63,7 +65,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <summary>
     /// Initializes a new instance of the <see cref="Scintilla" /> class.
     /// </summary>
-    public Scintilla() : base(scintilla_new())
+    protected Scintilla() : base(scintilla_new())
     {
         editor = base.Raw;
         Lines = new LineCollection(this);
@@ -91,7 +93,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// Create a new Scintilla widget. The returned pointer can be added to a container and displayed in the same way as other widgets.
     /// </summary>
     /// <returns>IntPtr.</returns>
-    [DllImport("scintilla", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
+    
     private static extern IntPtr scintilla_new();
 
     /// <summary>
@@ -103,17 +105,11 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <param name="lParam">The message <c>lParam</c> field.</param>
     /// <returns>IntPtr.</returns>
     // ReSharper disable once StringLiteralTypo
-    [DllImport("libscintilla", CallingConvention = CallingConvention.Cdecl)]
+    
     private static extern IntPtr scintilla_send_message(IntPtr ptr, int iMessage, IntPtr wParam, IntPtr lParam);
 
-    // ReSharper disable once StringLiteralTypo
-    [DllImport("libscintilla", CallingConvention = CallingConvention.Cdecl)]
-    private static extern void scintilla_release_resources();
 
     readonly IntPtr editor;
-
-    /// <inheritdoc />
-    public Encoding Encoding { get; }
 
 
     private static ILexilla? lexillaInstance;
@@ -332,7 +328,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
 
     /// <summary>
     /// Finds a corresponding matching brace starting at the position specified.
-    /// The brace characters handled are '(', ')', '[', ']', '{', '}', '&lt;', and '&gt;'.
+    /// The brace characters handled are '(', ')', '', '{', '}', '&lt;', and '&gt;'.
     /// </summary>
     /// <param name="position">The zero-based document position of a brace character to start the search from for a matching brace character.</param>
     /// <returns>The zero-based document position of the corresponding matching brace or <see cref="ApiConstants.InvalidPosition" /> it no matching brace could be found.</returns>
@@ -540,7 +536,6 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         throw new NotImplementedException();
     }
 
-
     /// <summary>
     /// Copies the selected text from the document and places it on the clipboard.
     /// If the selection is empty the current line is copied.
@@ -639,6 +634,35 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     public int DocLineFromVisible(int displayLine)
     {
         return this.DocLineFromVisibleExtension(displayLine, VisibleLineCount);
+    }
+
+    /// <summary>
+    /// Gets the visible line count of the Scintilla control.
+    /// </summary>
+    /// <value>The visible line count.</value>
+    public int VisibleLineCount
+    {
+        get
+        {
+            var wordWrapDisabled = WrapMode == WrapMode.None;
+            var allLinesVisible = Lines.AllLinesVisible;
+
+            if (wordWrapDisabled && allLinesVisible)
+            {
+                return Lines.Count;
+            }
+
+            var count = 0;
+            foreach (var line in Lines)
+            {
+                if (allLinesVisible || line.Visible)
+                {
+                    count += wordWrapDisabled ? 1 : line.WrapCount;
+                }
+            }
+
+            return count;
+        }
     }
 
     /// <summary>
@@ -1655,9 +1679,6 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     {
         this.ClearRepresentationExtension(encodedString);
     }
-
-    /// <inheritdoc />
-    public int TextLength { get; }
     #endregion
 
     #region Events
@@ -1756,7 +1777,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     #endregion
 
     #region CollectionProperties
-    /// <inheritdoc cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}." />
+    /// <inheritdoc cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Markers" />
     public MarkerCollection Markers { get; }
 
     /// <inheritdoc />
@@ -1776,340 +1797,1334 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     #endregion
 
     #region Properties
-    /// <inheritdoc />
-    public BiDirectionalDisplayType BiDirectionality { get; set; }
+    /// <summary>
+    /// Gets or sets the bi-directionality of the Scintilla control.
+    /// </summary>
+    /// <value>The bi-directionality of the Scintilla control.</value>
+    public BiDirectionalDisplayType BiDirectionality
+    {
+        get => this.BiDirectionalityGet();
 
-    /// <inheritdoc />
-    public Color AdditionalCaretForeColor { get; set; }
+        set => this.BiDirectionalitySet(value);
+    }
 
-    /// <inheritdoc />
-    public bool AdditionalCaretsBlink { get; set; }
+    /// <summary>
+    /// Gets or sets the caret foreground color for additional selections.
+    /// </summary>
+    /// <returns>The caret foreground color in additional selections. The default is (127, 127, 127).</returns>
+    public Color AdditionalCaretForeColor
+    {
+        get => this.AdditionalCaretForeColorGet(ColorTranslator.ToColor);
 
-    /// <inheritdoc />
-    public bool AdditionalCaretsVisible { get; set; }
+        set => this.AdditionalCaretForeColorSet(value, ColorTranslator.ToInt);
+    }
 
-    /// <inheritdoc />
-    public int AnchorPosition { get; set; }
+    /// <summary>
+    /// Gets or sets whether the carets in additional selections will blink.
+    /// </summary>
+    /// <returns>true if additional selection carets should blink; otherwise, false. The default is true.</returns>
+    public bool AdditionalCaretsBlink
+    {
+        get => this.AdditionalCaretsBlinkGet();
 
-    /// <inheritdoc />
-    public int AdditionalSelAlpha { get; set; }
+        set => this.AdditionalCaretsBlinkSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool AdditionalSelectionTyping { get; set; }
+    /// <summary>
+    /// Gets or sets whether the carets in additional selections are visible.
+    /// </summary>
+    /// <returns>true if additional selection carets are visible; otherwise, false. The default is true.</returns>
+    public bool AdditionalCaretsVisible
+    {
+        get => this.AdditionalCaretsVisibleGet();
 
-    /// <inheritdoc />
-    public Annotation AnnotationVisible { get; set; }
+        set => this.AdditionalCaretsVisibleSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool AutoCActive { get; }
+    /// <summary>
+    /// Gets or sets the alpha transparency of additional multiple selections.
+    /// </summary>
+    /// <returns>
+    /// The alpha transparency ranging from 0 (completely transparent) to 255 (completely opaque).
+    /// The value 256 will disable alpha transparency. The default is 256.
+    /// </returns>
+    public int AdditionalSelAlpha
+    {
+        get => this.AdditionalSelAlphaGet();
 
-    /// <inheritdoc />
-    public bool AutoCAutoHide { get; set; }
+        set => this.AdditionalSelAlphaSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool AutoCCancelAtStart { get; set; }
+    /// <summary>
+    /// Gets or sets whether additional typing affects multiple selections.
+    /// </summary>
+    /// <returns>true if typing will affect multiple selections instead of just the main selection; otherwise, false. The default is false.</returns>
+    public bool AdditionalSelectionTyping
+    {
+        get => this.AdditionalSelectionTypingGet();
 
-    /// <inheritdoc />
-    public int AutoCCurrent { get; }
+        set => this.AdditionalSelectionTypingSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool AutoCChooseSingle { get; set; }
+    /// <summary>
+    /// Gets or sets the current anchor position.
+    /// </summary>
+    /// <returns>The zero-based character position of the anchor.</returns>
+    /// <remarks>
+    /// Setting the current anchor position will create a selection between it and the <see cref="CurrentPosition" />.
+    /// The caret is not scrolled into view.
+    /// </remarks>
+    /// <seealso cref="ScrollCaret" />
+    public int AnchorPosition
+    {
+        get => this.AnchorPositionGet(Lines);
 
-    /// <inheritdoc />
-    public bool AutoCDropRestOfWord { get; set; }
+        set => this.AnchorPositionSet(value, Lines);
+    }
 
-    /// <inheritdoc />
-    public bool AutoCIgnoreCase { get; set; }
+    /// <summary>
+    /// Gets or sets the display of annotations.
+    /// </summary>
+    /// <returns>One of the <see cref="Annotation" /> enumeration values. The default is <see cref="Annotation.Hidden" />.</returns>
+    public Annotation AnnotationVisible
+    {
+        get => this.AnnotationVisibleGet();
+        
+        set => this.AnnotationVisibleSet(value);
+    }
 
-    /// <inheritdoc />
-    public int AutoCMaxHeight { get; set; }
+    /// <summary>
+    /// Gets a value indicating whether there is an auto-completion list displayed.
+    /// </summary>
+    /// <returns>true if there is an active auto-completion list; otherwise, false.</returns>
+    public bool AutoCActive => this.AutoCActiveGet();
 
-    /// <inheritdoc />
-    public int AutoCMaxWidth { get; set; }
+    /// <summary>
+    /// Gets or sets whether to automatically cancel auto-completion when there are no viable matches.
+    /// </summary>
+    /// <returns>
+    /// true to automatically cancel auto-completion when there is no possible match; otherwise, false.
+    /// The default is true.
+    /// </returns>
+    public bool AutoCAutoHide
+    {
+        get => this.AutoCAutoHideGet();
+        
+        set => this.AutoCAutoHideSet(value);
+    }
 
-    /// <inheritdoc />
-    public Order AutoCOrder { get; set; }
+    /// <summary>
+    /// Gets or sets whether to cancel an auto-completion if the caret moves from its initial location,
+    /// or is allowed to move to the word start.
+    /// </summary>
+    /// <returns>
+    /// true to cancel auto-completion when the caret moves.
+    /// false to allow the caret to move to the beginning of the word without cancelling auto-completion.
+    /// </returns>
+    public bool AutoCCancelAtStart
+    {
+        get => this.AutoCCancelAtStartGet();
 
-    /// <inheritdoc />
-    public int AutoCPosStart { get; }
+        set => this.AutoCCancelAtStartSet(value);
+    }
 
-    /// <inheritdoc />
-    public Document Document { get; set; }
+    /// <summary>
+    /// Gets the index of the current auto-completion list selection.
+    /// </summary>
+    /// <returns>The zero-based index of the current auto-completion selection.</returns>
+    public int AutoCCurrent => this.AutoCCurrentGet();
 
-    /// <inheritdoc />
-    public int RectangularSelectionAnchor { get; set; }
+    /// <summary>
+    /// Gets or sets whether to automatically select an item when it is the only one in an auto-completion list.
+    /// </summary>
+    /// <returns>
+    /// true to automatically choose the only auto-completion item and not display the list; otherwise, false.
+    /// The default is false.
+    /// </returns>
+    public bool AutoCChooseSingle
+    {
+        get => this.AutoCChooseSingleGet();
 
-    /// <inheritdoc />
-    public int RectangularSelectionCaret { get; set; }
+        set => this.AutoCChooseSingleSet(value);
+    }
 
-    /// <inheritdoc />
-    public char AutoCSeparator { get; set; }
+    /// <summary>
+    /// Gets or sets whether to delete any word characters following the caret after an auto-completion.
+    /// </summary>
+    /// <returns>
+    /// true to delete any word characters following the caret after auto-completion; otherwise, false.
+    /// The default is false.</returns>
+    public bool AutoCDropRestOfWord
+    {
+        get => this.AutoCDropRestOfWordGet();
 
-    /// <inheritdoc />
-    public char AutoCTypeSeparator { get; set; }
+        set => this.AutoCDropRestOfWordSet(value);
+    }
 
-    /// <inheritdoc />
-    public AutomaticFold AutomaticFold { get; set; }
+    /// <summary>
+    /// Gets or sets whether matching characters to an auto-completion list is case-insensitive.
+    /// </summary>
+    /// <returns>true to use case-insensitive matching; otherwise, false. The default is false.</returns>
+    public bool AutoCIgnoreCase
+    {
+        get => this.AutoCIgnoreCaseGet();
 
-    /// <inheritdoc />
-    public bool BackspaceUnIndents { get; set; }
+        set => this.AutoCIgnoreCaseSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool BufferedDraw { get; set; }
+    /// <summary>
+    /// Gets or sets the maximum height of the auto-completion list measured in rows.
+    /// </summary>
+    /// <returns>The max number of rows to display in an auto-completion window. The default is 5.</returns>
+    /// <remarks>If there are more items in the list than max rows, a vertical scrollbar is shown.</remarks>
+    public int AutoCMaxHeight
+    {
+        get => this.AutoCMaxHeightGet();
 
-    /// <inheritdoc />
-    public bool CallTipActive { get; }
+        set => this.AutoCMaxHeightSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool CanPaste { get; }
+    /// <summary>
+    /// Gets or sets the width in characters of the auto-completion list.
+    /// </summary>
+    /// <returns>
+    /// The width of the auto-completion list expressed in characters, or 0 to automatically set the width
+    /// to the longest item. The default is 0.
+    /// </returns>
+    /// <remarks>Any items that cannot be fully displayed will be indicated with ellipsis.</remarks>
+    public int AutoCMaxWidth
+    {
+        get => this.AutoCMaxWidthGet();
+        
+        set => this.AutoCMaxWidthSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool CanRedo { get; }
+    /// <summary>
+    /// Gets or sets the auto-completion list sort order to expect when calling <see cref="AutoCShow" />.
+    /// </summary>
+    /// <returns>One of the <see cref="Order" /> enumeration values. The default is <see cref="Order.Presorted" />.</returns>
+    public Order AutoCOrder
+    {
+        get => this.AutoCOrderGet();
 
-    /// <inheritdoc />
-    public bool CanUndo { get; }
+        set => this.AutoCOrderSet(value);
+    }
 
-    /// <inheritdoc />
-    public Color CaretForeColor { get; set; }
+    /// <summary>
+    /// Gets the document position at the time <see cref="AutoCShow" /> was called.
+    /// </summary>
+    /// <returns>The zero-based document position at the time <see cref="AutoCShow" /> was called.</returns>
+    /// <seealso cref="AutoCShow" />
+    public int AutoCPosStart => this.AutoCPosStartGet(Lines);
 
-    /// <inheritdoc />
-    public Color CaretLineBackColor { get; set; }
+    /// <summary>
+    /// Gets or sets the delimiter character used to separate words in an auto-completion list.
+    /// </summary>
+    /// <returns>The separator character used when calling <see cref="AutoCShow" />. The default is the space character.</returns>
+    /// <remarks>The <paramref name="value" /> specified should be limited to printable ASCII characters.</remarks>
+    public char AutoCSeparator
+    {
+        get => this.AutoCSeparatorGet();
 
-    /// <inheritdoc />
-    public int CaretLineBackColorAlpha { get; set; }
+        set => this.AutoCSeparatorSet(value);
+    }
 
-    /// <inheritdoc />
-    public int CaretLineFrame { get; set; }
+    /// <summary>
+    /// Gets or sets the delimiter character used to separate words and image type identifiers in an auto-completion list.
+    /// </summary>
+    /// <returns>The separator character used to reference an image registered with <see cref="RegisterRgbaImage" />. The default is '?'.</returns>
+    /// <remarks>The <paramref name="value" /> specified should be limited to printable ASCII characters.</remarks>
+    public char AutoCTypeSeparator
+    {
+        get => this.AutoCTypeSeparatorGet();
 
-    /// <inheritdoc />
-    public bool CaretLineVisible { get; set; }
+        set => this.AutoCTypeSeparatorSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool CaretLineVisibleAlways { get; set; }
+    /// <summary>
+    /// Gets or sets the automatic folding flags.
+    /// </summary>
+    /// <returns>
+    /// A bitwise combination of the <see cref="Abstractions.Enumerations.AutomaticFold" /> enumeration.
+    /// The default is <see cref="Abstractions.Enumerations.AutomaticFold.None" />.
+    /// </returns>
+    public AutomaticFold AutomaticFold
+    {
+        get => this.AutomaticFoldGet();
+        
+        set => this.AutomaticFoldSet(value);
+    }
 
-    /// <inheritdoc />
-    public Layer CaretLineLayer { get; set; }
+    /// <summary>
+    /// Gets or sets whether backspace deletes a character, or un-indents.
+    /// </summary>
+    /// <returns>Whether backspace deletes a character, (false) or un-indents (true).</returns>
+    public bool BackspaceUnIndents
+    {
+        get => this.BackspaceUnIndentsGet();
 
-    /// <inheritdoc />
-    public int CaretPeriod { get; set; }
+        set => this.BackspaceUnIndentsSet(value);
+    }
 
-    /// <inheritdoc />
-    public CaretStyle CaretStyle { get; set; }
+    /// <summary>
+    /// Gets or sets whether drawing is double-buffered.
+    /// </summary>
+    /// <returns>
+    /// true to draw each line into an offscreen bitmap first before copying it to the screen; otherwise, false.
+    /// The default is true.
+    /// </returns>
+    /// <remarks>Disabling buffer can improve performance but will cause flickering.</remarks>
+    public bool BufferedDraw
+    {
+        get => this.BufferedDrawGet();
 
-    /// <inheritdoc />
-    public int CaretWidth { get; set; }
+        set => this.BufferedDrawSet(value);
+    }
 
-    /// <inheritdoc />
-    public int CurrentLine { get; }
+    /// <summary>
+    /// Gets a value indicating whether there is a call tip window displayed.
+    /// </summary>
+    /// <returns>true if there is an active call tip window; otherwise, false.</returns>
+    public bool CallTipActive => this.CallTipActiveGet();
 
-    /// <inheritdoc />
-    public int CurrentPosition { get; set; }
+    /// <summary>
+    /// Gets a value indicating whether there is text on the clipboard that can be pasted into the document.
+    /// </summary>
+    /// <returns>true when there is text on the clipboard to paste; otherwise, false.</returns>
+    /// <remarks>The document cannot be <see cref="ReadOnly" />  and the selection cannot contain protected text.</remarks>
+    public bool CanPaste => this.CanPasteGet();
 
-    /// <inheritdoc />
-    public int DistanceToSecondaryStyles { get; }
+    /// <summary>
+    /// Gets a value indicating whether there is an undo action to redo.
+    /// </summary>
+    /// <returns>true when there is something to redo; otherwise, false.</returns>
+    public bool CanRedo => this.CanRedoGet();
 
-    /// <inheritdoc />
-    public Color EdgeColor { get; set; }
+    /// <summary>
+    /// Gets a value indicating whether there is an action to undo.
+    /// </summary>
+    /// <returns>true when there is something to undo; otherwise, false.</returns>
+    public bool CanUndo => this.CanUndoGet();
 
-    /// <inheritdoc />
-    public int EdgeColumn { get; set; }
+    /// <summary>
+    /// Gets or sets the caret foreground color.
+    /// </summary>
+    /// <returns>The caret foreground color. The default is black.</returns>
+    public Color CaretForeColor
+    {
+        get => this.CaretForeColorGet(ColorTranslator.ToColor);
 
-    /// <inheritdoc />
-    public EdgeMode EdgeMode { get; set; }
+        set => this.CaretForeColorSet(value, ColorTranslator.ToInt);
+    }
 
-    /// <inheritdoc />
-    public bool EndAtLastLine { get; set; }
+    /// <summary>
+    /// Gets or sets the caret line background color.
+    /// </summary>
+    /// <returns>The caret line background color. The default is yellow.</returns>
+    public Color CaretLineBackColor
+    {
+        get => this.CaretLineBackColorGet(ColorTranslator.ToColor);
 
-    /// <inheritdoc />
-    public Eol EolMode { get; set; }
+        set => this.CaretLineBackColorSet(value, ColorTranslator.ToInt);
+    }
 
-    /// <inheritdoc />
-    public int ExtraAscent { get; set; }
+    /// <summary>
+    /// Gets or sets the caret line background color
+    /// </summary>
+    /// <returns>The caret line background color. The default is yellow.</returns>
 
-    /// <inheritdoc />
-    public int ExtraDescent { get; set; }
+    public Color CaretLineBackColo
 
-    /// <inheritdoc />
-    public int FirstVisibleLine { get; set; }
+    {
+        get => this.CaretLineBackColorGet(ColorTranslator.ToColor);
 
-    /// <inheritdoc />
-    public FontQuality FontQuality { get; set; }
+        set => this.CaretLineBackColorSet(value, ColorTranslator.ToInt);
+    }
 
-    /// <inheritdoc />
-    public int HighlightGuide { get; set; }
+    /// <summary>
+    /// Gets or sets the alpha transparency of the <see cref="CaretLineBackColor" />.
+    /// </summary>
+    /// <returns>
+    /// The alpha transparency ranging from 0 (completely transparent) to 255 (completely opaque).
+    /// The value 256 will disable alpha transparency. The default is 256.
+    /// </returns>
+    public int CaretLineBackColorAlpha
+    {
+        get => this.CaretLineBackColorAlphaGet();
 
-    /// <inheritdoc />
-    public bool HScrollBar { get; set; }
+        set => this.CaretLineBackColorAlphaSet(value);
+    }
 
-    /// <inheritdoc />
-    public IdleStyling IdleStyling { get; set; }
+    /// <summary>
+    /// Gets or sets the width of the caret line frame.
+    /// </summary>
+    /// <returns><see cref="CaretLineVisible" /> must be set to true. A value of 0 disables the frame. The default is 0.</returns>
+    public int CaretLineFrame
+    {
+        get => this.CaretLineFrameGet();
 
-    /// <inheritdoc />
-    public int IndentWidth { get; set; }
+        set => this.CaretLineFrameSet(value);
+    }
 
-    /// <inheritdoc />
-    public IndentView IndentationGuides { get; set; }
+    /// <summary>
+    /// Gets or sets whether the caret line is visible (highlighted).
+    /// </summary>
+    /// <returns>true if the caret line is visible; otherwise, false. The default is false.</returns>
+    public bool CaretLineVisible
+    {
+        get => this.CaretLineVisibleGet();
 
-    /// <inheritdoc />
-    public int IndicatorCurrent { get; set; }
+        set => this.CaretLineVisibleSet(value);
+    }
 
-    /// <inheritdoc />
-    public int IndicatorValue { get; set; }
+    /// <summary>
+    /// Gets or sets whether the caret line is always visible even when the window is not in focus.
+    /// </summary>
+    /// <returns>true if the caret line is always visible; otherwise, false. The default is false.</returns>
+    public bool CaretLineVisibleAlways
+    {
+        get => this.CaretLineVisibleAlwaysGet();
 
-    /// <inheritdoc />
-    public bool InternalFocusFlag { get; set; }
+        set => this.CaretLineVisibleAlwaysSet(value);
+    }
 
-    /// <inheritdoc />
-    public string LexerName { get; set; }
+    /// <summary>
+    /// Gets or sets the layer where the line caret will be painted. Default value is <see cref="Layer.Base"/>
+    /// </summary>
+    public Layer CaretLineLayer
+    {
+        get => this.CaretLineLayerGet();
 
-    /// <inheritdoc />
-    public Layer SelectionLayer { get; set; }
+        set => this.CaretLineLayerSet(value);
+    }
 
-    /// <inheritdoc />
-    public int SelectionEnd { get; set; }
+    /// <summary>
+    /// Gets or sets the caret blink rate in milliseconds.
+    /// </summary>
+    /// <returns>The caret blink rate measured in milliseconds. The default is 530.</returns>
+    /// <remarks>A value of 0 will stop the caret blinking.</remarks>
+    public int CaretPeriod
+    {
+        get => this.CaretPeriodGet();
+
+        set => this.CaretPeriodSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the caret display style.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Abstractions.Enumerations.CaretStyle" /> enumeration values.
+    /// The default is <see cref="Line" />.
+    /// </returns>
+    public CaretStyle CaretStyle
+    {
+        get => this.CaretStyleGet();
+
+        set => this.CaretStyleSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the width in pixels of the caret.
+    /// </summary>
+    /// <returns>The width of the caret in pixels. The default is 1 pixel.</returns>
+    /// <remarks>
+    /// The caret width can only be set to a value of 0, 1, 2 or 3 pixels and is only effective
+    /// when the <see cref="CaretStyle" /> property is set to <see cref="Line" />.
+    /// </remarks>
+    public int CaretWidth
+    {
+        get => this.CaretWidthGet();
+
+        set => this.CaretWidthSet(value);
+    }
+
+    /// <summary>
+    /// Gets the current line index.
+    /// </summary>
+    /// <returns>The zero-based line index containing the <see cref="CurrentPosition" />.</returns>
+    public int CurrentLine => this.CurrentLineGet();
+
+    /// <summary>
+    /// Gets or sets the current caret position.
+    /// </summary>
+    /// <returns>The zero-based character position of the caret.</returns>
+    /// <remarks>
+    /// Setting the current caret position will create a selection between it and the current <see cref="AnchorPosition" />.
+    /// The caret is not scrolled into view.
+    /// </remarks>
+    /// <seealso cref="ScrollCaret" />
+    public int CurrentPosition
+    {
+        get => this.CurrentPositionGet(Lines);
+
+        set => this.CurrentPositionSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets a value indicating the start index of the secondary styles.
+    /// </summary>
+    /// <returns>Returns the distance between a primary style and its corresponding secondary style.</returns>
+    public int DistanceToSecondaryStyles => this.DistanceToSecondaryStylesGet();
+
+    /// <summary>
+    /// Gets or sets the current document used by the control.
+    /// </summary>
+    /// <returns>The current <see cref="Document" />.</returns>
+    /// <remarks>
+    /// Setting this property is equivalent to calling <see cref="ReleaseDocument" /> on the current document, and
+    /// calling <see cref="CreateDocument" /> if the new <paramref name="value" /> is <see cref="Abstractions.Structs.Document.Empty" /> or
+    /// <see cref="AddRefDocument" /> if the new <paramref name="value" /> is not <see cref="Abstractions.Structs.Document.Empty" />.
+    /// </remarks>
+    public Document Document
+    {
+        get => this.DocumentGet();
+
+        set => this.DocumentSet(value, Lines, EolMode, UseTabs, TabWidth, IndentWidth);
+    }
+
+    /// <summary>
+    /// Gets or sets the background color to use when indicating long lines.
+    /// </summary>
+    /// <returns>The background color to use when indicating long lines.</returns>
+    public Color EdgeColor
+    {
+        get => this.EdgeColorGet(ColorTranslator.ToColor);
+        
+        set => this.EdgeColorSet(value, ColorTranslator.ToInt);
+    }
+
+    /// <summary>
+    /// Gets or sets the column number at which to begin indicating long lines.
+    /// </summary>
+    /// <returns>The number of columns in a long line. The default is 0.</returns>
+    /// <remarks>
+    /// When using <see cref="Line"/>, a column is defined as the width of a space character in the <see cref="Style.Default" /> style.
+    /// </remarks>
+    public int EdgeColumn
+    {
+        get => this.EdgeColumnGet();
+
+        set => this.EdgeColumnSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the mode for indicating long lines.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Abstractions.Enumerations.EdgeMode" /> enumeration values.
+    /// The default is <see cref="Abstractions.Enumerations.EdgeMode.None" />.
+    /// </returns>
+    public EdgeMode EdgeMode
+    {
+        get => this.EdgeModeGet();
+
+        set => this.EdgeModeSet(value);
+    }
+
+    /// <summary>
+    /// Gets the encoding of the <see cref="T:Scintilla.NET.Abstractions.IScintillaApi" /> control interface.
+    /// </summary>
+    /// <value>The encoding of the control.</value>
+    public Encoding Encoding => this.EncodingGet();
+
+    /// <summary>
+    /// Gets or sets whether vertical scrolling ends at the last line or can scroll past.
+    /// </summary>
+    /// <returns>true if the maximum vertical scroll position ends at the last line; otherwise, false. The default is true.</returns>
+    public bool EndAtLastLine
+    {
+        get => this.EndAtLastLineGet();
+
+        set => this.EndAtLastLineSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the end-of-line mode, or rather, the characters added into
+    /// the document when the user presses the Enter key.
+    /// </summary>
+    /// <returns>One of the <see cref="Eol" /> enumeration values. The default is <see cref="Eol.CrLf" />.</returns>
+    public Eol EolMode
+    {
+        get => this.EolModeGet();
+        
+        set => this.EolModeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the amount of whitespace added to the ascent (top) of each line.
+    /// </summary>
+    /// <returns>The extra line ascent. The default is zero.</returns>
+    public int ExtraAscent
+    {
+        get => this.ExtraAscentGet();
+
+        set => this.ExtraAscentSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the amount of whitespace added to the descent (bottom) of each line.
+    /// </summary>
+    /// <returns>The extra line descent. The default is zero.</returns>
+    public int ExtraDescent
+    {
+        get => this.ExtraDescentGet();
+
+        set => this.ExtraDescentSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the first visible line on screen.
+    /// </summary>
+    /// <returns>The zero-based index of the first visible screen line.</returns>
+    /// <remarks>The value is a visible line, not a document line.</remarks>
+    public int FirstVisibleLine
+    {
+        get => this.FirstVisibleLineGet();
+
+        set => this.FirstVisibleLineSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets font quality (anti-aliasing method) used to render fonts.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Abstractions.Enumerations.FontQuality" /> enumeration values.
+    /// The default is <see cref="Abstractions.Enumerations.FontQuality.Default" />.
+    /// </returns>
+    public FontQuality FontQuality
+    {
+        get => this.FontQualityGet();
+
+        set => this.FontQualitySet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the column number of the indentation guide to highlight.
+    /// </summary>
+    /// <returns>The column number of the indentation guide to highlight or 0 if disabled.</returns>
+    /// <remarks>Guides are highlighted in the <see cref="Style.BraceLight" /> style. Column numbers can be determined by calling <see cref="GetColumn" />.</remarks>
+    public int HighlightGuide
+    {
+        get => this.HighlightGuideGet();
+
+        set => this.HighlightGuideSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether to display the horizontal scroll bar.
+    /// </summary>
+    /// <returns>true to display the horizontal scroll bar when needed; otherwise, false. The default is true.</returns>
+    public bool HScrollBar
+    {
+        get => this.HScrollBarGet();
+
+        set => this.HScrollBarSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the strategy used to perform styling using application idle time.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Abstractions.Enumerations.IdleStyling" /> enumeration values.
+    /// The default is <see cref="Abstractions.Enumerations.IdleStyling.None" />.
+    /// </returns>
+    public IdleStyling IdleStyling
+    {
+        get => this.IdleStylingGet();
+
+        set => this.IdleStylingSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the size of indentation in terms of space characters.
+    /// </summary>
+    /// <returns>The indentation size measured in characters. The default is 0.</returns>
+    /// <remarks> A value of 0 will make the indent width the same as the tab width.</remarks>
+    public int IndentWidth
+    {
+        get => this.IndentWidthGet();
+
+        set => this.IndentWidthSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether to display indentation guides.
+    /// </summary>
+    /// <returns>One of the <see cref="IndentView" /> enumeration values. The default is <see cref="IndentView.None" />.</returns>
+    /// <remarks>The <see cref="Style.IndentGuide" /> style can be used to specify the foreground and background color of indentation guides.</remarks>
+    public IndentView IndentationGuides
+    {
+        get => this.IndentationGuidesGet();
+        
+        set => this.IndentationGuidesSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the indicator used in a subsequent call to <see cref="IndicatorFillRange" /> or <see cref="IndicatorClearRange" />.
+    /// </summary>
+    /// <returns>The zero-based indicator index to apply when calling <see cref="IndicatorFillRange" /> or remove when calling <see cref="IndicatorClearRange" />.</returns>
+    public int IndicatorCurrent
+    {
+        get => this.IndicatorCurrentGet();
+
+        set => this.IndicatorCurrentSet(value, Indicators);
+    }
+
+    /// <summary>
+    /// Gets or sets the user-defined value used in a subsequent call to <see cref="IndicatorFillRange" />.
+    /// </summary>
+    /// <returns>The indicator value to apply when calling <see cref="IndicatorFillRange" />.</returns>
+    public int IndicatorValue
+    {
+        get => this.IndicatorValueGet();
+
+        set => this.IndicatorValueSet(value);
+    }
+
+    /// <summary>
+    /// This is used by clients that have complex focus requirements such as having their own window
+    /// that gets the real focus but with the need to indicate that Scintilla has the logical focus.
+    /// </summary>
+    public bool InternalFocusFlag
+    {
+        get => this.InternalFocusFlagGet();
+        
+        set => this.InternalFocusFlagSet(value);
+    }
+
+    private string? lexerName;
+
+    /// <summary>
+    /// Gets or sets the name of the lexer.
+    /// </summary>
+    /// <value>The name of the lexer.</value>
+    /// <exception cref="InvalidOperationException">Lexer with the name of 'Value' was not found.</exception>
+    public string? LexerName
+    {
+        get => this.LexerNameGet(lexerName);
+
+        set => this.LexerNameSet(LexillaSingleton, value, ref lexerName);
+    }
 
     /// <inheritdoc />
     public int SelectionStart { get; set; }
 
-    /// <inheritdoc />
-    public Lexer Lexer { get; set; }
+    /// <summary>
+    /// Gets or sets the current lexer.
+    /// </summary>
+    /// <returns>One of the <see cref="Lexer" /> enumeration values. The default is <see cref="Container" />.</returns>
+    /// <exception cref="InvalidOperationException">
+    /// No lexer name was found with the specified value.
+    /// </exception>
+    /// <remarks>This property will get more obsolete as time passes as the Scintilla v.5+ now uses strings to define lexers. The Lexer enumeration is not maintained.</remarks>
+    public Lexer Lexer
+    {
+        get => this.LexerGet(lexerName);
 
-    /// <inheritdoc />
-    public string LexerLanguage { get; set; }
+        set => this.LexerSet(LexillaSingleton, value, ref lexerName);
+    }
 
-    /// <inheritdoc />
-    public LineEndType LineEndTypesActive { get; }
+    /// <summary>
+    /// Gets or sets the current lexer by name.
+    /// </summary>
+    /// <returns>A String representing the current lexer.</returns>
+    /// <remarks>Lexer names are case-sensitive.</remarks>
+    public string LexerLanguage
+    {
+        get => this.LexerLanguageGet();
 
-    /// <inheritdoc />
-    public LineEndType LineEndTypesAllowed { get; set; }
+        set => this.LexerLanguageSet(value);
+    }
 
-    /// <inheritdoc />
-    public LineEndType LineEndTypesSupported { get; }
+    /// <summary>
+    /// Gets the combined result of the <see cref="LineEndTypesSupported" /> and <see cref="LineEndTypesAllowed" />
+    /// properties to report the line end types actively being interpreted.
+    /// </summary>
+    /// <returns>A bitwise combination of the <see cref="LineEndType" /> enumeration.</returns>
+    public LineEndType LineEndTypesActive => this.LineEndTypesActiveGet();
 
-    /// <inheritdoc />
-    public int LinesOnScreen { get; }
+    /// <summary>
+    /// Gets or sets the line ending types interpreted by the <see cref="Scintilla" /> control.
+    /// </summary>
+    /// <returns>
+    /// A bitwise combination of the <see cref="LineEndType" /> enumeration.
+    /// The default is <see cref="LineEndType.Default" />.
+    /// </returns>
+    /// <remarks>The line ending types allowed must also be supported by the current lexer to be effective.</remarks>
+    public LineEndType LineEndTypesAllowed
+    {
+        get => this.LineEndTypesAllowedGet();
 
-    /// <inheritdoc />
-    public int MainSelection { get; set; }
+        set => this.LineEndTypesAllowedSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool Modified { get; }
+    /// <summary>
+    /// Gets the different types of line ends supported by the current lexer.
+    /// </summary>
+    /// <returns>A bitwise combination of the <see cref="LineEndType" /> enumeration.</returns>
+    public LineEndType LineEndTypesSupported => this.LineEndTypesSupportedGet();
 
-    /// <inheritdoc />
-    public int MouseDwellTime { get; set; }
+    /// <summary>
+    /// Gets the number of lines that can be shown on screen given a constant
+    /// line height and the space available.
+    /// </summary>
+    /// <returns>
+    /// The number of screen lines which could be displayed (including any partial lines).
+    /// </returns>
+    public int LinesOnScreen => this.LinesOnScreenGet();
 
-    /// <inheritdoc />
-    public bool MouseSelectionRectangularSwitch { get; set; }
+    /// <summary>
+    /// Gets or sets the main selection when their are multiple selections.
+    /// </summary>
+    /// <returns>The zero-based main selection index.</returns>
+    public int MainSelection
+    {
+        get => this.MainSelectionGet();
+        
+        set => this.MainSelectionSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool MultipleSelection { get; set; }
+    /// <summary>
+    /// Gets a value indicating whether the document has been modified (is dirty)
+    /// since the last call to <see cref="SetSavePoint" />.
+    /// </summary>
+    /// <returns>true if the document has been modified; otherwise, false.</returns>
+    public bool Modified => this.ModifiedGet();
 
-    /// <inheritdoc />
-    public MultiPaste MultiPaste { get; set; }
+    /// <summary>
+    /// Gets or sets the time in milliseconds the mouse must linger to generate a <see cref="DwellStart" /> event.
+    /// </summary>
+    /// <returns>
+    /// The time in milliseconds the mouse must linger to generate a <see cref="DwellStart" /> event
+    /// or <see cref="ApiConstants.TimeForever" /> if dwell events are disabled.
+    /// </returns>
+    public int MouseDwellTime
+    {
+        get => this.MouseDwellTimeGet();
+        
+        set => this.MouseDwellTimeSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool OverType { get; set; }
+    /// <summary>
+    /// Gets or sets the ability to switch to rectangular selection mode while making a selection with the mouse.
+    /// </summary>
+    /// <returns>
+    /// true if the current mouse selection can be switched to a rectangular selection by pressing the ALT key; otherwise, false.
+    /// The default is false.
+    /// </returns>
+    public bool MouseSelectionRectangularSwitch
+    {
+        get => this.MouseSelectionRectangularSwitchGet();
 
-    /// <inheritdoc />
-    public bool PasteConvertEndings { get; set; }
+        set => this.MouseSelectionRectangularSwitchSet(value);
+    }
 
-    /// <inheritdoc />
-    public Phases PhasesDraw { get; set; }
+    /// <summary>
+    /// Gets or sets whether multiple selection is enabled.
+    /// </summary>
+    /// <returns>
+    /// true if multiple selections can be made by holding the CTRL key and dragging the mouse; otherwise, false.
+    /// The default is false.
+    /// </returns>
+    public bool MultipleSelection
+    {
+        get => this.MultipleSelectionGet();
 
-    /// <inheritdoc />
-    public bool ReadOnly { get; set; }
+        set => this.MultipleSelectionSet(value);
+    }
 
-    /// <inheritdoc />
-    public int RectangularSelectionAnchorVirtualSpace { get; set; }
+    /// <summary>
+    /// Gets or sets the behavior when pasting text into multiple selections.
+    /// </summary>
+    /// <returns>One of the <see cref="MultiPaste" /> enumeration values. The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.MultiPaste.Once" />.</returns>
+    public MultiPaste MultiPaste
+    {
+        get => this.MultiPasteGet();
+        
+        set => this.MultiPasteSet(value);
+    }
 
-    /// <inheritdoc />
-    public int RectangularSelectionCaretVirtualSpace { get; set; }
+    /// <summary>
+    /// Gets or sets whether to write over text rather than insert it.
+    /// </summary>
+    /// <return>true to write over text; otherwise, false. The default is false.</return>
+    public bool OverType
+    {
+        get => this.OverTypeGet();
 
-    /// <inheritdoc />
-    public int ScrollWidth { get; set; }
+        set => this.OverTypeSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool ScrollWidthTracking { get; set; }
+    /// <summary>
+    /// Gets or sets whether line endings in pasted text are converted to the document <see cref="EolMode" />.
+    /// </summary>
+    /// <returns>true to convert line endings in pasted text; otherwise, false. The default is true.</returns>
+    public bool PasteConvertEndings
+    {
+        get => this.PasteConvertEndingsGet();
 
-    /// <inheritdoc />
-    public SearchFlags SearchFlags { get; set; }
+        set => this.PasteConvertEndingsSet(value);
+    }
 
-    /// <inheritdoc />
-    public string SelectedText { get; }
+    /// <summary>
+    /// Gets or sets the number of phases used when drawing.
+    /// </summary>
+    /// <returns>One of the <see cref="Phases" /> enumeration values. The default is <see cref="Phases.Two" />.</returns>
+    public Phases PhasesDraw
+    {
+        get => this.PhasesDrawGet();
+        
+        set => this.PhasesDrawSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool SelectionEolFilled { get; set; }
+    /// <summary>
+    /// Gets or sets whether the document is read-only.
+    /// </summary>
+    /// <returns>true if the document is read-only; otherwise, false. The default is false.</returns>
+    /// <seealso cref="ModifyAttempt" />
+    public bool ReadOnly
+    {
+        get => this.ReadOnlyGet();
+        
+        set => this.ReadOnlySet(value);
+    }
 
-    /// <inheritdoc />
-    public Status Status { get; set; }
+    /// <summary>
+    /// Gets or sets the anchor position of the rectangular selection.
+    /// </summary>
+    /// <returns>The zero-based document position of the rectangular selection anchor.</returns>
+    public int RectangularSelectionAnchor
+    {
+        get => this.RectangularSelectionAnchorGet(Lines);
 
-    /// <inheritdoc />
-    public TabDrawMode TabDrawMode { get; set; }
+        set => this.RectangularSelectionAnchorSet(value, Lines);
+    }
 
-    /// <inheritdoc />
-    public bool TabIndents { get; set; }
+    /// <summary>
+    /// Gets or sets the amount of anchor virtual space in a rectangular selection.
+    /// </summary>
+    /// <returns>The amount of virtual space past the end of the line offsetting the rectangular selection anchor.</returns>
+    public int RectangularSelectionAnchorVirtualSpace
+    {
+        get => this.RectangularSelectionAnchorVirtualSpaceGet();
 
-    /// <inheritdoc />
-    public int TabWidth { get; set; }
+        set => this.RectangularSelectionAnchorVirtualSpaceSet(value);
+    }
 
-    /// <inheritdoc />
-    public int TargetEnd { get; set; }
+    /// <summary>
+    /// Gets or sets the caret position of the rectangular selection.
+    /// </summary>
+    /// <returns>The zero-based document position of the rectangular selection caret.</returns>
+    public int RectangularSelectionCaret
+    {
+        get => this.RectangularSelectionCaretGet(Lines);
 
-    /// <inheritdoc />
-    public int TargetStart { get; set; }
+        set => this.RectangularSelectionCaretSet(value, Lines);
+    }
 
-    /// <inheritdoc />
-    public string TargetText { get; }
+    /// <summary>
+    /// Gets or sets the amount of caret virtual space in a rectangular selection.
+    /// </summary>
+    /// <returns>The amount of virtual space past the end of the line offsetting the rectangular selection caret.</returns>
+    public int RectangularSelectionCaretVirtualSpace
+    {
+        get => this.RectangularSelectionCaretVirtualSpaceGet();
 
-    /// <inheritdoc />
-    public Technology Technology { get; set; }
+        set => this.RectangularSelectionCaretVirtualSpaceSet(value);
+    }
 
-    /// <inheritdoc />
-    public string Text { get; set; }
+    /// <summary>
+    /// Gets or sets the layer where the text selection will be painted. Default value is <see cref="Layer.Base"/>
+    /// </summary>
+    public Layer SelectionLayer
+    {
+        get => this.SelectionLayerGet();
+        
+        set => this.SelectionLayerSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool UseTabs { get; set; }
+    /// <summary>
+    /// Gets or sets the range of the horizontal scroll bar.
+    /// </summary>
+    /// <returns>The range in pixels of the horizontal scroll bar. The default is 2000.</returns>
+    /// <remarks>The width will automatically increase as needed when <see cref="ScrollWidthTracking" /> is enabled.</remarks>
+    public int ScrollWidth
+    {
+        get => this.ScrollWidthGet();
 
-    /// <inheritdoc />
-    public bool ViewEol { get; set; }
+        set => this.ScrollWidthSet(value);
+    }
 
-    /// <inheritdoc />
-    public WhitespaceMode ViewWhitespace { get; set; }
+    /// <summary>
+    /// Gets or sets whether the <see cref="ScrollWidth" /> is automatically increased as needed.
+    /// </summary>
+    /// <returns>
+    /// true to automatically increase the horizontal scroll width as needed; otherwise, false.
+    /// The default is true.
+    /// </returns>
+    public bool ScrollWidthTracking
+    {
+        get => this.ScrollWidthTrackingGet();
 
-    /// <inheritdoc />
-    public VirtualSpace VirtualSpaceOptions { get; set; }
+        set => this.ScrollWidthTrackingSet(value);
+    }
 
-    /// <inheritdoc />
-    public bool VScrollBar { get; set; }
+    /// <summary>
+    /// Gets or sets the search flags used when searching text.
+    /// </summary>
+    /// <returns>A bitwise combination of <see cref="global::Scintilla.NET.Abstractions.Enumerations.SearchFlags" /> values. The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.SearchFlags.None" />.</returns>
+    /// <seealso cref="SearchInTarget" />
+    public SearchFlags SearchFlags
+    {
+        get => this.SearchFlagsGet();
 
-    /// <inheritdoc />
-    public int VisibleLineCount { get; }
+        set => this.SearchFlagsSet(value);
+    }
 
-    /// <inheritdoc />
-    public int WhitespaceSize { get; set; }
+    /// <summary>
+    /// Gets the selected text.
+    /// </summary>
+    /// <returns>The selected text if there is any; otherwise, an empty string.</returns>
+    public string SelectedText => this.SelectedTextGet();
 
-    /// <inheritdoc />
-    public string WordChars { get; set; }
+    /// <summary>
+    /// Gets or sets the end position of the selection.
+    /// </summary>
+    /// <returns>The zero-based document position where the selection ends.</returns>
+    /// <remarks>
+    /// When getting this property, the return value is <code>Math.Max(<see cref="AnchorPosition" />, <see cref="CurrentPosition" />)</code>.
+    /// When setting this property, <see cref="CurrentPosition" /> is set to the value specified and <see cref="AnchorPosition" /> set to <code>Math.Min(<see cref="AnchorPosition" />, <paramref name="value" />)</code>.
+    /// The caret is not scrolled into view.
+    /// </remarks>
+    /// <seealso cref="SelectionStart" />
+    public int SelectionEnd
+    {
+        get => this.SelectionEndGet(Lines);
 
-    /// <inheritdoc />
-    public WrapIndentMode WrapIndentMode { get; set; }
+        set => this.SelectionEndSet(value, Lines);
+    }
 
-    /// <inheritdoc />
-    public WrapMode WrapMode { get; set; }
+    /// <summary>
+    /// Gets or sets whether to fill past the end of a line with the selection background color.
+    /// </summary>
+    /// <returns>true to fill past the end of the line; otherwise, false. The default is false.</returns>
+    public bool SelectionEolFilled
+    {
+        get => this.SelectionEolFilledGet();
 
-    /// <inheritdoc />
-    public int WrapStartIndent { get; set; }
+        set => this.SelectionEolFilledSet(value);
+    }
 
-    /// <inheritdoc />
-    public WrapVisualFlags WrapVisualFlags { get; set; }
+    /// <summary>
+    /// Gets or sets the start position of the selection.
+    /// </summary>
+    /// <returns>The zero-based document position where the selection starts.</returns>
+    /// <remarks>
+    /// When getting this property, the return value is <code>Math.Min(<see cref="AnchorPosition" />, <see cref="CurrentPosition" />)</code>.
+    /// When setting this property, <see cref="AnchorPosition" /> is set to the value specified and <see cref="CurrentPosition" /> set to <code>Math.Max(<see cref="CurrentPosition" />, <paramref name="value" />)</code>.
+    /// The caret is not scrolled into view.
+    /// </remarks>
+    /// <seealso cref="SelectionEnd" />
 
-    /// <inheritdoc />
-    public WrapVisualFlagLocation WrapVisualFlagLocation { get; set; }
+    /// <summary>
+    /// Gets or sets the last internal error code used by Scintilla.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Status" /> enumeration values.
+    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.
+    /// </returns>
+    /// <remarks>The status can be reset by setting the property to <see cref="global::Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.</remarks>
+    public Status Status
+    {
+        get => this.StatusGet();
 
-    /// <inheritdoc />
-    public int XOffset { get; set; }
+        set => this.StatusSet(value);
+    }
 
-    /// <inheritdoc />
-    public int Zoom { get; set; }
+    /// <summary>
+    /// Gets or sets how tab characters are represented when whitespace is visible.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="global::Scintilla.NET.Abstractions.Enumerations.TabDrawMode" /> enumeration values.
+    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.TabDrawMode.LongArrow" />.
+    /// </returns>
+    /// <seealso cref="ViewWhitespace" />
+    public TabDrawMode TabDrawMode
+    {
+        get => this.TabDrawModeGet();
+
+        set => this.TabDrawModeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether tab inserts a tab character, or indents.
+    /// </summary>
+    /// <returns>Whether tab inserts a tab character (false), or indents (true).</returns>
+    public bool TabIndents
+    {
+        get => this.TabIndentsGet();
+
+        set => this.TabIndentsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the width of a tab as a multiple of a space character.
+    /// </summary>
+    /// <returns>The width of a tab measured in characters. The default is 4.</returns>
+    public int TabWidth
+    {
+        get => this.TabWidthGet();
+
+        set => this.TabWidthSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the end position used when performing a search or replace.
+    /// </summary>
+    /// <returns>The zero-based character position within the document to end a search or replace operation.</returns>
+    /// <seealso cref="TargetStart"/>
+    /// <seealso cref="SearchInTarget" />
+    /// <seealso cref="ReplaceTarget" />
+    public int TargetEnd
+    {
+        get => this.TargetEndGet(Lines);
+
+        set => this.TargetEndSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets or sets the start position used when performing a search or replace.
+    /// </summary>
+    /// <returns>The zero-based character position within the document to start a search or replace operation.</returns>
+    /// <seealso cref="TargetEnd"/>
+    /// <seealso cref="SearchInTarget" />
+    /// <seealso cref="ReplaceTarget" />
+    public int TargetStart
+    {
+        get => this.TargetStartGet(Lines);
+
+        set => this.TargetStartSet(value, Lines);
+    }
+
+    /// <summary>
+    /// Gets the current target text.
+    /// </summary>
+    /// <returns>A String representing the text between <see cref="TargetStart" /> and <see cref="TargetEnd" />.</returns>
+    /// <remarks>Targets which have a start position equal or greater to the end position will return an empty String.</remarks>
+    /// <seealso cref="TargetStart" />
+    /// <seealso cref="TargetEnd" />
+    public string TargetText => this.TargetTextGet();
+
+    /// <summary>
+    /// Gets or sets the rendering technology used.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Technology" /> enumeration values.
+    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.Technology.Default" />.
+    /// </returns>
+    public Technology Technology
+    {
+        get => this.TechnologyGet();
+        
+        set => this.TechnologySet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the current document text in the <see cref="Scintilla" /> control.
+    /// </summary>
+    /// <returns>The text displayed in the control.</returns>
+    /// <remarks>Depending on the length of text get or set, this operation can be expensive.</remarks>
+    public string Text
+    {
+        get => this.TextGet();
+
+        set => this.TextSet(value, false, ReadOnly, AppendText);
+    }
+
+    /// <summary>
+    /// Gets the length of the text in the control.
+    /// </summary>
+    /// <returns>The number of characters in the document.</returns>
+    public int TextLength => this.TextLengthGet(Lines);
+
+    /// <summary>
+    /// Gets or sets whether to use a mixture of tabs and spaces for indentation or purely spaces.
+    /// </summary>
+    /// <returns>true to use tab characters; otherwise, false. The default is true.</returns>
+    public bool UseTabs
+    {
+        get => this.UseTabsGet();
+
+        set => this.UseTabsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the visibility of end-of-line characters.
+    /// </summary>
+    /// <returns>true to display end-of-line characters; otherwise, false. The default is false.</returns>
+    public bool ViewEol
+    {
+        get => this.ViewEolGet();
+
+        set => this.ViewEolSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets how to display whitespace characters.
+    /// </summary>
+    /// <returns>One of the <see cref="WhitespaceMode" /> enumeration values. The default is <see cref="WhitespaceMode.Invisible" />.</returns>
+    /// <seealso cref="SetWhitespaceForeColor" />
+    /// <seealso cref="SetWhitespaceBackColor" />
+    public WhitespaceMode ViewWhitespace
+    {
+        get => this.ViewWhitespaceGet();
+
+        set => this.ViewWhitespaceSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the ability for the caret to move into an area beyond the end of each line, otherwise known as virtual space.
+    /// </summary>
+    /// <returns>
+    /// A bitwise combination of the <see cref="VirtualSpace" /> enumeration.
+    /// The default is <see cref="VirtualSpace.None" />.
+    /// </returns>
+    public VirtualSpace VirtualSpaceOptions
+    {
+        get => this.VirtualSpaceOptionsGet();
+
+        set => this.VirtualSpaceOptionsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets whether to display the vertical scroll bar.
+    /// </summary>
+    /// <returns>true to display the vertical scroll bar when needed; otherwise, false. The default is true.</returns>
+    public bool VScrollBar
+    {
+        get => this.VScrollBarGet();
+        
+        set => this.VScrollBarSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the size of the dots used to mark whitespace.
+    /// </summary>
+    /// <returns>The size of the dots used to mark whitespace. The default is 1.</returns>
+    /// <seealso cref="ViewWhitespace" />
+    public int WhitespaceSize
+    {
+        get => this.WhitespaceSizeGet();
+
+        set => this.WhitespaceSizeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the characters considered 'word' characters when using any word-based logic.
+    /// </summary>
+    /// <returns>A string of word characters.</returns>
+    public string WordChars
+    {
+        get => this.WordCharsGet();
+        
+        set => this.WordCharsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the line wrapping indent mode.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapIndentMode" /> enumeration values.
+    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapIndentMode.Fixed" />.
+    /// </returns>
+    public WrapIndentMode WrapIndentMode
+    {
+        get => this.WrapIndentModeGet();
+
+        set => this.WrapIndentModeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the line wrapping mode.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="WrapMode" /> enumeration values.
+    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapMode.Word" />.
+    /// </returns>
+    public WrapMode WrapMode
+    {
+        get => this.WrapModeGet();
+
+        set => this.WrapModeSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the indented size in pixels of wrapped sub-lines.
+    /// </summary>
+    /// <returns>The indented size of wrapped sub-lines measured in pixels. The default is 0.</returns>
+    /// <remarks>
+    /// Setting <see cref="WrapVisualFlags" /> to <see cref="Abstractions.Enumerations.WrapVisualFlags.Start" /> will add an
+    /// additional 1 pixel to the value specified.
+    /// </remarks>
+    public int WrapStartIndent
+    {
+        get => this.WrapStartIndentGet();
+
+        set => this.WrapStartIndentSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the wrap visual flags.
+    /// </summary>
+    /// <returns>
+    /// A bitwise combination of the <see cref="Abstractions.Enumerations.WrapVisualFlags" /> enumeration.
+    /// The default is <see cref="Abstractions.Enumerations.WrapVisualFlags.None" />.
+    /// </returns>
+    public WrapVisualFlags WrapVisualFlags
+    {
+        get => this.WrapVisualFlagsGet();
+
+        set => this.WrapVisualFlagsSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets additional location options when displaying wrap visual flags.
+    /// </summary>
+    /// <returns>
+    /// One of the <see cref="Abstractions.Enumerations.WrapVisualFlagLocation" /> enumeration values.
+    /// The default is <see cref="Abstractions.Enumerations.WrapVisualFlagLocation.Default" />.
+    /// </returns>
+    public WrapVisualFlagLocation WrapVisualFlagLocation
+    {
+        get => this.WrapVisualFlagLocationGet();
+
+        set => this.WrapVisualFlagLocationSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the horizontal scroll offset.
+    /// </summary>
+    /// <returns>The horizontal scroll offset in pixels.</returns>
+    public int XOffset
+    {
+        get => this.XOffsetGet();
+
+        set => this.XOffsetSet(value);
+    }
+
+    /// <summary>
+    /// Gets or sets the zoom factor.
+    /// </summary>
+    /// <returns>The zoom factor measured in points.</returns>
+    /// <remarks>For best results, values should range from -10 to 20 points.</remarks>
+    /// <seealso cref="ZoomIn" />
+    /// <seealso cref="ZoomOut" />
+    public int Zoom
+    {
+        get => this.ZoomGet();
+
+        set => this.ZoomSet(value);
+    }
     #endregion
 }

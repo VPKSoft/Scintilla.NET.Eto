@@ -58,9 +58,7 @@
 		<EmbeddedResource Include="..\Shared\x86\Scintilla.zip" Link="x86\Scintilla.zip" />
 	</ItemGroup>
 	<ItemGroup>
-		<Compile Update="Scintilla.cs">
-			<SubType>Component</SubType>
-		</Compile>
+		<Compile Update="Scintilla.cs" />
 	</ItemGroup>
 	<ItemGroup>
 		<!-- Native dlls and nuget support -->

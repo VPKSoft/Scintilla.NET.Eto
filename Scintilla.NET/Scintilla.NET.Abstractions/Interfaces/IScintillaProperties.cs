@@ -479,7 +479,7 @@ public interface IScintillaProperties<TColor>
     /// </summary>
     /// <value>The name of the lexer.</value>
     /// <exception cref="InvalidOperationException">Lexer with the name of 'Value' was not found.</exception>
-    string LexerName { get; set; }
+    string? LexerName { get; set; }
 
     /// <summary>
     /// Gets or sets the layer where the text selection will be painted. Default value is <see cref="Layer.Base"/>
