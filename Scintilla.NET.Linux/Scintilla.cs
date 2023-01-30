@@ -27,8 +27,10 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using GLib;
 using Gtk;
 using Scintilla.NET.Abstractions;
+using Scintilla.NET.Abstractions.Classes;
 using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Linux.Collections;
 using Scintilla.NET.Linux.EventArguments;
@@ -75,8 +77,18 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         Margins = new MarginCollection(this);
         Markers = new MarkerCollection(this);
         Selections = new SelectionCollection(this);
+        
+        AddSignalHandler ("sci-notify", OnSciNotified, new SciNotifyDelegate(OnSciNotified));
     }
 
+    private void OnSciNotified(IntPtr widget, IntPtr _, IntPtr notification, IntPtr userdata)
+    {
+        var scn = (ScintillaApiStructs.SCNotification)Marshal.PtrToStructure(notification, typeof(ScintillaApiStructs.SCNotification))!;
+    }
+    
+    [UnmanagedFunctionPointer (CallingConvention.Cdecl)]
+    public delegate void SciNotifyDelegate(IntPtr widget, IntPtr something, IntPtr notification, IntPtr userData);
+    
     #region Fields
     // Pinned dataDwellStart
     private IntPtr fillUpChars;
