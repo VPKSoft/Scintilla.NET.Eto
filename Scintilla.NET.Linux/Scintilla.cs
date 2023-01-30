@@ -25,6 +25,7 @@ SOFTWARE.
 #endregion
 
 using System;
+using System.Runtime.InteropServices;
 using System.Text;
 using Gtk;
 using Scintilla.NET.Abstractions;
@@ -93,7 +94,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// Create a new Scintilla widget. The returned pointer can be added to a container and displayed in the same way as other widgets.
     /// </summary>
     /// <returns>IntPtr.</returns>
-    
+    [DllImport("libscintilla", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
     private static extern IntPtr scintilla_new();
 
     /// <summary>
@@ -105,7 +106,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <param name="lParam">The message <c>lParam</c> field.</param>
     /// <returns>IntPtr.</returns>
     // ReSharper disable once StringLiteralTypo
-    
+    [DllImport("libscintilla", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
     private static extern IntPtr scintilla_send_message(IntPtr ptr, int iMessage, IntPtr wParam, IntPtr lParam);
 
 

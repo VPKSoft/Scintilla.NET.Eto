@@ -29,6 +29,7 @@ using Eto.Forms;
 using Eto.GtkSharp.Forms;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Extensions;
 using Scintilla.NET.EtoForms.Shared;
 
 namespace Scintilla.NET.EtoForms.GTK;
@@ -113,6 +114,12 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public void FoldAll(FoldAction action)
     {
         throw new NotImplementedException();
+    }
+
+    /// <inheritdoc />
+    public void InitDocument(Eol eolMode = Eol.CrLf, bool useTabs = false, int tabWidth = 4, int indentWidth = 0)
+    {
+        this.InitDocumentExtension(eolMode, useTabs, tabWidth, indentWidth);
     }
 
     /// <inheritdoc />
