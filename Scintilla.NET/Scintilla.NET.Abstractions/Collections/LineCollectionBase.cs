@@ -33,7 +33,6 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     /// A reference to the Scintilla control interface.
     /// </summary>
     protected readonly IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla;
-    protected readonly IScintillaNotificationEvent notifyApi;
     protected GapBuffer<PerLine> perLineData;
 
     // The 'step' is a break in the continuity of our line starts. It allows us

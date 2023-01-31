@@ -52,8 +52,6 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
     /// <param name="notifyApi">A class implementing the <see cref="IScintillaNotificationEvent{TEventArgs}"/> interface.</param>
     public LineCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
     {
-        notifyApi.SCNotification += scintilla_SCNotification;
-
         perLineData = new GapBuffer<PerLine>
         {
             new() { Start = 0 },
