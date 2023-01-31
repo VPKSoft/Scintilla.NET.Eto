@@ -114,5 +114,6 @@ public class ScintillaApiStructs
         public IntPtr annotationLinesAdded;
         public int updated;
         public int listCompletionMethod;
+        public int characterSource;
     }
 }

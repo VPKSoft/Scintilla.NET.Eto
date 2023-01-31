@@ -45,6 +45,7 @@ using Selection = Scintilla.NET.Linux.Collections.Selection;
 using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
 namespace Scintilla.NET.Linux;
+using static global::Scintilla.NET.Abstractions.ScintillaConstants;
 
 /// <summary>
 /// Represents a Scintilla editor control.
@@ -75,6 +76,8 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         Markers = new MarkerCollection(this);
         Selections = new SelectionCollection(this);
         
+        this.SCNotification += Lines.scintilla_SCNotification;
+        
         AddSignalHandler ("sci-notify", OnSciNotified, new SciNotifyDelegate(OnSciNotified));
     }
 
@@ -88,6 +91,24 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     private void OnSciNotified(IntPtr widget, IntPtr _, IntPtr notification, IntPtr userdata)
     {
         var scn = (ScintillaApiStructs.SCNotification)Marshal.PtrToStructure(notification, typeof(ScintillaApiStructs.SCNotification))!;
+        if (scn.nmhdr.code is >= SCN_STYLENEEDED and <= SCN_AUTOCCOMPLETED)
+        {
+            this.SCNotification?.Invoke(this, new SCNotificationEventArgs(scn));
+            switch (scn.nmhdr.code)
+            {
+                case SCN_PAINTED:
+                    this.Painted?.Invoke(this, EventArgs.Empty);
+                    break;
+                case SCI_ADDTEXT:
+                case SCN_KEY:
+                case SCN_MODIFIED:
+                    if (scn.ch != 0)
+                    {
+                        this.CharAdded?.Invoke(this, new CharAddedEventArgs(scn.ch));
+                    }
+                    break;
+            }
+        }
     }
     
     [UnmanagedFunctionPointer (CallingConvention.Cdecl)]
