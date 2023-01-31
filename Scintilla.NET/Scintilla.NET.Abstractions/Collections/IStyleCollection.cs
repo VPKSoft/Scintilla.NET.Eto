@@ -34,6 +34,6 @@ public interface IStyleCollection
     /// <summary>
     /// Gets the number of styles.
     /// </summary>
-    /// <returns>The number of styles in the <see cref="StyleCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
+    /// <returns>The number of styles in the <see cref="StyleCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
     public int Count { get; }
 }

@@ -12,7 +12,7 @@ namespace Scintilla.NET.Linux.EventArguments;
 /// <summary>
 /// Provides data for the <see cref="Scintilla.Insert" /> and <see cref="Scintilla.Delete" /> events.
 /// </summary>
-public class ModificationEventArgs : BeforeModificationEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class ModificationEventArgs : ModificationEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
 {
     /// <summary>
     /// Gets the number of lines added or removed.
@@ -30,7 +30,7 @@ public class ModificationEventArgs : BeforeModificationEventArgsBase<MarkerColle
     /// <param name="byteLength">The length in bytes of the inserted or deleted text.</param>
     /// <param name="text">>A pointer to the text inserted or deleted.</param>
     /// <param name="linesAdded">The number of lines added or removed (delta).</param>
-    public ModificationEventArgs(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, ModificationSource source, int bytePosition, int byteLength, nint text, int linesAdded) : base(scintilla, source, bytePosition, byteLength, text)
+    public ModificationEventArgs(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, ModificationSource source, int bytePosition, int byteLength, nint text, int linesAdded) : base(scintilla, source, bytePosition, byteLength, text)
     {
         LinesAdded = linesAdded;
     }

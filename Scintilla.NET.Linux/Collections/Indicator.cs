@@ -12,7 +12,7 @@ namespace Scintilla.NET.Linux.Collections;
 /// <summary>
 /// Represents an indicator in a <see cref="Scintilla" /> control.
 /// </summary>
-public class Indicator : IndicatorBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class Indicator : IndicatorBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
 {
     #region Properties
 
@@ -69,7 +69,7 @@ public class Indicator : IndicatorBase<MarkerCollection, StyleCollection, Indica
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this indicator.</param>
     /// <param name="index">The index of this style within the <see cref="IndicatorCollection" /> that created it.</param>
-    public Indicator(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, int index) : base(scintilla, index)
+    public Indicator(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, int index) : base(scintilla, index)
     {
     }
 

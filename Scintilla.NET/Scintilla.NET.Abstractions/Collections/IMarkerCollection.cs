@@ -32,7 +32,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 public interface IMarkerCollection
 {
     /// <summary>
-    /// Gets the number of markers in the <see cref="MarkerCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.
+    /// Gets the number of markers in the <see cref="MarkerCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.
     /// </summary>
     /// <returns>This property always returns 32.</returns>
     public int Count { get; }

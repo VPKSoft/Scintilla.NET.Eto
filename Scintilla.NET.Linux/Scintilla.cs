@@ -51,18 +51,17 @@ namespace Scintilla.NET.Linux;
 /// Represents a Scintilla editor control.
 /// </summary>
 public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
+        SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
     IScintillaProperties<Color>,
     IScintillaMethods<Color, Key, Image>,
-    IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color,
-        Key,
-        AutoCSelectionEventArgs, BeforeModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs,
-        DoubleClickEventArgs,
-        DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, IndicatorReleaseEventArgs
-        ,
-        InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs,
-        SCNotificationEventArgs>
+    IScintillaNotificationEvent<SCNotificationEventArgs>,
+    IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, 
+        Marker, Style, Indicator, Line, Margin, Selection, 
+        Image, Color, Key,
+        AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs,
+        DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, 
+        IndicatorReleaseEventArgs, InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, 
+        UpdateUIEventArgs, SCNotificationEventArgs>
 {
     
     /// <summary>
@@ -79,6 +78,13 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         Selections = new SelectionCollection(this);
         
         AddSignalHandler ("sci-notify", OnSciNotified, new SciNotifyDelegate(OnSciNotified));
+    }
+
+    /// <inheritdoc />
+    protected override void Dispose(bool disposing)
+    {
+        base.Dispose(disposing);
+        RemoveSignalHandler("sci-notify", OnSciNotified);
     }
 
     private void OnSciNotified(IntPtr widget, IntPtr _, IntPtr notification, IntPtr userdata)
@@ -1720,7 +1726,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     public event EventHandler<CharAddedEventArgs>? CharAdded;
 
     /// <inheritdoc />
-    public event EventHandler<BeforeModificationEventArgs>? Delete;
+    public event EventHandler<ModificationEventArgs>? Delete;
 
     /// <inheritdoc />
     public event EventHandler<DoubleClickEventArgs>? DoubleClick;
@@ -1750,7 +1756,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     public event EventHandler<IndicatorReleaseEventArgs>? IndicatorRelease;
 
     /// <inheritdoc />
-    public event EventHandler<BeforeModificationEventArgs>? Insert;
+    public event EventHandler<ModificationEventArgs>? Insert;
 
     /// <inheritdoc />
     public event EventHandler<InsertCheckEventArgs>? InsertCheck;
@@ -1790,7 +1796,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     #endregion
 
     #region CollectionProperties
-    /// <inheritdoc cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Markers" />
+    /// <inheritdoc cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Markers" />
     public MarkerCollection Markers { get; }
 
     /// <inheritdoc />

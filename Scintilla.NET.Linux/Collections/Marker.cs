@@ -13,7 +13,7 @@ namespace Scintilla.NET.Linux.Collections;
 /// <summary>
 /// Represents a margin marker in a <see cref="Scintilla" /> control.
 /// </summary>
-public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
 {
     /// <summary>
     /// Sets the marker symbol to a custom image.
@@ -69,7 +69,7 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this marker.</param>
     /// <param name="index">The index of this style within the <see cref="MarkerCollection" /> that created it.</param>
-    public Marker(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, int index) : base(scintilla, index)
+    public Marker(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, int index) : base(scintilla, index)
     {
     }
 }

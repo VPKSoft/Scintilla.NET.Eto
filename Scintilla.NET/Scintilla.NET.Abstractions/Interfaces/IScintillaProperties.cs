@@ -365,7 +365,7 @@ public interface IScintillaProperties<TColor>
     /// </summary>
     /// <returns>The number of columns in a long line. The default is 0.</returns>
     /// <remarks>
-    /// When using <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.Line"/>, a column is defined as the width of a space character in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.
+    /// When using <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.Line"/>, a column is defined as the width of a space character in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.
     /// When using <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.Background" /> a column is equal to a character (including tabs).
     /// </remarks>
     int EdgeColumn { get; set; }
@@ -424,7 +424,7 @@ public interface IScintillaProperties<TColor>
     /// Gets or sets the column number of the indentation guide to highlight.
     /// </summary>
     /// <returns>The column number of the indentation guide to highlight or 0 if disabled.</returns>
-    /// <remarks>Guides are highlighted in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.BraceLight" /> style. Column numbers can be determined by calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.GetColumn" />.</remarks>
+    /// <remarks>Guides are highlighted in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.BraceLight" /> style. Column numbers can be determined by calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.GetColumn" />.</remarks>
     int HighlightGuide { get; set; }
 
     /// <summary>
@@ -453,7 +453,7 @@ public interface IScintillaProperties<TColor>
     /// Gets or sets whether to display indentation guides.
     /// </summary>
     /// <returns>One of the <see cref="IndentView" /> enumeration values. The default is <see cref="IndentView.None" />.</returns>
-    /// <remarks>The <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.IndentGuide" /> style can be used to specify the foreground and background color of indentation guides.</remarks>
+    /// <remarks>The <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.IndentGuide" /> style can be used to specify the foreground and background color of indentation guides.</remarks>
     IndentView IndentationGuides { get; set; }
 
     /// <summary>
@@ -574,10 +574,10 @@ public interface IScintillaProperties<TColor>
     bool Modified { get; }
 
     /// <summary>
-    /// Gets or sets the time in milliseconds the mouse must linger to generate a <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.DwellStart" /> event.
+    /// Gets or sets the time in milliseconds the mouse must linger to generate a <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.DwellStart" /> event.
     /// </summary>
     /// <returns>
-    /// The time in milliseconds the mouse must linger to generate a <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.DwellStart" /> event
+    /// The time in milliseconds the mouse must linger to generate a <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.DwellStart" /> event
     /// or <see cref="ApiConstants.TimeForever" /> if dwell events are disabled.
     /// </returns>
     int MouseDwellTime { get; set; }
@@ -628,7 +628,7 @@ public interface IScintillaProperties<TColor>
     /// Gets or sets whether the document is read-only.
     /// </summary>
     /// <returns>true if the document is read-only; otherwise, false. The default is false.</returns>
-    /// <seealso cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.ModifyAttempt" />
+    /// <seealso cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.ModifyAttempt" />
     bool ReadOnly { get; set; }
 
     /// <summary>

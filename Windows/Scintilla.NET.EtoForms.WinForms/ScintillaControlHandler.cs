@@ -28,25 +28,27 @@ namespace Scintilla.NET.EtoForms.WinForms;
 /// Scintilla control handler for WinForms.
 /// Implements the <see cref="Eto.WinForms.Forms.WindowsControl{TControl,TWidget,TCallback}" />
 /// Implements the <see cref="IScintillaControl" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
+/// Implements the <see cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
+/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaMethods{TColor, TKeys, TBitmap}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaEvents{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs, TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs, TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs, TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs}" />
+/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaEvents{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs, TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs, TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs, TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs}" />
 /// </summary>
-/// <seealso cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
+/// <seealso cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
+/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaMethods{TColor, TKeys, TBitmap}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaEvents{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs, TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs, TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs, TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs}" />
-public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, ScintillaControl, Control.ICallback>, IScintillaControl,
+/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaEvents{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs, TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs, TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs, TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs}" />
+public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, ScintillaControl, Control.ICallback>,
+    IScintillaControl,
     IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>,
+        SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>,
     IScintillaProperties<Color>,
     IScintillaMethods<Color, Keys, Bitmap>,
-    IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color, Keys, 
-        AutoCSelectionEventArgs, BeforeModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs,
+    IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection,
+        Marker, Style, Indicator, Line, Margin, Selection, 
+        Bitmap, Color, Keys,
+        AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs,
         DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, IndicatorReleaseEventArgs,
         InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
 {
@@ -625,7 +627,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     }
 
     /// <inheritdoc />
-    public event EventHandler<BeforeModificationEventArgs>? Delete
+    public event EventHandler<ModificationEventArgs>? Delete
     {
         add => nativeControl.Delete += value;
         remove => nativeControl.Delete -= value;
@@ -695,7 +697,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     }
 
     /// <inheritdoc />
-    public event EventHandler<BeforeModificationEventArgs>? Insert
+    public event EventHandler<ModificationEventArgs>? Insert
     {
         add => nativeControl.Insert += value;
         remove => nativeControl.Insert -= value;
@@ -785,12 +787,6 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
         remove => nativeControl.ZoomChanged -= value;
     }
 
-    /// <inheritdoc />
-    event EventHandler<SCNotificationEventArgs>? IScintillaNotificationEvent<SCNotificationEventArgs>.SCNotification
-    {
-        add => nativeControl.SCNotification += value;
-        remove => nativeControl.SCNotification -= value;
-    }
 
     /// <inheritdoc cref="global::Scintilla.NET.WinForms.Scintilla.Markers" />
     public MarkerCollection Markers => nativeControl.Markers;

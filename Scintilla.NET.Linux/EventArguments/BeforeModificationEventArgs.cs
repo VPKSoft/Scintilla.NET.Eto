@@ -12,7 +12,7 @@ namespace Scintilla.NET.Linux.EventArguments;
 /// <summary>
 /// Provides data for the <see cref="Scintilla.BeforeInsert" /> and <see cref="Scintilla.BeforeDelete" /> events.
 /// </summary>
-public class BeforeModificationEventArgs : BeforeModificationEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class BeforeModificationEventArgs : BeforeModificationEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BeforeModificationEventArgs" /> class.

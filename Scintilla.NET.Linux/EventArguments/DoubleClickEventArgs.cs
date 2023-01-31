@@ -12,7 +12,7 @@ namespace Scintilla.NET.Linux.EventArguments;
 /// <summary>
 /// Provides data for the <see cref="Scintilla.DoubleClick" /> event.
 /// </summary>
-public class DoubleClickEventArgs : DoubleClickEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color, Key>
+public class DoubleClickEventArgs : DoubleClickEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color, Key>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DoubleClickEventArgs" /> class.

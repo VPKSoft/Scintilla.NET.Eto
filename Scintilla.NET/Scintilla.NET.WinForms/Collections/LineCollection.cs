@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
+using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.UtilityClasses;
-using Scintilla.NET.WinForms.EventArguments;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.WinForms.Collections;
@@ -10,11 +10,11 @@ namespace Scintilla.NET.WinForms.Collections;
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
 {
     #region Methods
     
-    public override void scintilla_SCNotification(object sender, SCNotificationEventArgs e)
+    public override void scintilla_SCNotification(object sender, ISCNotificationEventArgs e)
     {
         var scn = e.SCNotification;
         switch (scn.nmhdr.code)
@@ -27,7 +27,6 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
     #endregion Methods
 
     #region Properties
-    
     /// <summary>
     /// Gets the <see cref="Line" /> at the specified zero-based index.
     /// </summary>
@@ -50,9 +49,10 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
     /// Initializes a new instance of the <see cref="LineCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public LineCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
+    /// <param name="notifyApi">A class implementing the <see cref="IScintillaNotificationEvent{TEventArgs}"/> interface.</param>
+    public LineCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
     {
-        this.scintilla.SCNotification += scintilla_SCNotification;
+        notifyApi.SCNotification += scintilla_SCNotification;
 
         perLineData = new GapBuffer<PerLine>
         {

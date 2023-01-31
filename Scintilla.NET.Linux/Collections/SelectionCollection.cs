@@ -11,7 +11,7 @@ namespace Scintilla.NET.Linux.Collections;
 /// <summary>
 /// A multiple selection collection.
 /// </summary>
-public class SelectionCollection : SelectionCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>, IEnumerable<Selection>
+public class SelectionCollection : SelectionCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>, IEnumerable<Selection>
 {
     IEnumerator IEnumerable.GetEnumerator()
     {
@@ -36,7 +36,7 @@ public class SelectionCollection : SelectionCollectionBase<MarkerCollection, Sty
     /// Initializes a new instance of the <see cref="SelectionCollection" /> class.
     /// </summary>
     /// <param name="scintilla"></param>
-    public SelectionCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
+    public SelectionCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
     {
     }
 }

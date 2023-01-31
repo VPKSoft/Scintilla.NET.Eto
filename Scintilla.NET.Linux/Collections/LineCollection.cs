@@ -11,7 +11,7 @@ namespace Scintilla.NET.Linux.Collections;
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
 {
     #region Methods
     
@@ -51,7 +51,7 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
     /// Initializes a new instance of the <see cref="LineCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public LineCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
+    public LineCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
     {
         this.scintilla.SCNotification += scintilla_SCNotification;
 

@@ -1,4 +1,5 @@
-﻿using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
+﻿using Scintilla.NET.Abstractions.Interfaces;
+using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
 
@@ -9,7 +10,7 @@ namespace Scintilla.NET.Abstractions.EventArguments;
 /// </summary>
 /// <seealso cref="System.EventArgs" />
 // ReSharper disable twice InconsistentNaming, part of the API
-public abstract class SCNotificationEventArgsBase : EventArgs
+public abstract class SCNotificationEventArgsBase : EventArgs, ISCNotificationEventArgs
 {
     /// <summary>
     /// Gets the Scintilla notification data structure.

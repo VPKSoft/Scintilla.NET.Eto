@@ -8,7 +8,7 @@ namespace Scintilla.NET.WinForms.EventArguments;
 /// <summary>
 /// Provides data for the <see cref="Scintilla.DwellStart" /> and <see cref="Scintilla.DwellEnd" /> events.
 /// </summary>
-public class DwellEventArgs : DwellEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class DwellEventArgs : DwellEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DwellEventArgs" /> class.
@@ -18,9 +18,7 @@ public class DwellEventArgs : DwellEventArgsBase<MarkerCollection, StyleCollecti
     /// <param name="x">The x-coordinate of the mouse pointer relative to the <see cref="Scintilla" /> control.</param>
     /// <param name="y">The y-coordinate of the mouse pointer relative to the <see cref="Scintilla" /> control.</param>
     public DwellEventArgs(
-        IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap,
-            Color> scintilla, int bytePosition, int x, int y) : base(scintilla, bytePosition, x, y)
+        IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla, int bytePosition, int x, int y) : base(scintilla, bytePosition, x, y)
     {
     }
 }

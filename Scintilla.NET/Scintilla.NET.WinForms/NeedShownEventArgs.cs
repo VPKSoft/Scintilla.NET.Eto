@@ -2,14 +2,13 @@
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.EventArguments;
 using Scintilla.NET.WinForms.Collections;
-using Scintilla.NET.WinForms.EventArguments;
 
 namespace Scintilla.NET.WinForms;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.NeedShown" /> event.
 /// </summary>
-public class NeedShownEventArgs : NeedShownEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class NeedShownEventArgs : NeedShownEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="NeedShownEventArgs" /> class.
@@ -19,7 +18,7 @@ public class NeedShownEventArgs : NeedShownEventArgsBase<MarkerCollection, Style
     /// <param name="byteLength">The length in bytes of the text that needs to be shown.</param>
     public NeedShownEventArgs(
         IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap,
+            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap,
             Color> scintilla, int bytePosition, int byteLength) : base(scintilla, bytePosition, byteLength)
     {
     }

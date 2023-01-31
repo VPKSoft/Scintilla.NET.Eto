@@ -12,7 +12,7 @@ namespace Scintilla.NET.Linux.Collections;
 /// <summary>
 /// An immutable collection of indicators in a <see cref="Scintilla" /> control.
 /// </summary>
-public class IndicatorCollection: IndicatorCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>, IEnumerable<Indicator>
+public class IndicatorCollection: IndicatorCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>, IEnumerable<Indicator>
 {
     IEnumerator IEnumerable.GetEnumerator()
     {
@@ -43,7 +43,7 @@ public class IndicatorCollection: IndicatorCollectionBase<MarkerCollection, Styl
     /// Initializes a new instance of the <see cref="IndicatorCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public IndicatorCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
+    public IndicatorCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
     {
     }
 }

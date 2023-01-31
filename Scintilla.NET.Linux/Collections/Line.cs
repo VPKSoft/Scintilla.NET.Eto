@@ -9,7 +9,7 @@ namespace Scintilla.NET.Linux.Collections;
 /// <summary>
 /// Represents a line of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public class Line : LineBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class Line : LineBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
 {
     #region Constructors
 
@@ -18,7 +18,7 @@ public class Line : LineBase<MarkerCollection, StyleCollection, IndicatorCollect
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this line.</param>
     /// <param name="index">The index of this line within the <see cref="LineCollection" /> that created it.</param>
-    public Line(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, int index) : base(scintilla, index)
+    public Line(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, int index) : base(scintilla, index)
     {
     }
 

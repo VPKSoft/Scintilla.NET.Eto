@@ -32,8 +32,8 @@ namespace Scintilla.NET.Abstractions.Collections;
 public interface IIndicatorCollection
 {
     /// <summary>
-    /// Gets the number of indicators in the <see cref="IndicatorCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.
+    /// Gets the number of indicators in the <see cref="IndicatorCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.
     /// </summary>
-    /// <returns>The number of indicators in the <see cref="IndicatorCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
+    /// <returns>The number of indicators in the <see cref="IndicatorCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
     public int Count { get; }
 }

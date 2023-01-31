@@ -3,14 +3,13 @@ using System.Collections.Generic;
 using System.Drawing;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.WinForms.EventArguments;
 
 namespace Scintilla.NET.WinForms.Collections;
 
 /// <summary>
 /// A multiple selection collection.
 /// </summary>
-public class SelectionCollection : SelectionCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>, IEnumerable<Selection>
+public class SelectionCollection : SelectionCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>, IEnumerable<Selection>
 {
     IEnumerator IEnumerable.GetEnumerator()
     {
@@ -35,7 +34,7 @@ public class SelectionCollection : SelectionCollectionBase<MarkerCollection, Sty
     /// Initializes a new instance of the <see cref="SelectionCollection" /> class.
     /// </summary>
     /// <param name="scintilla"></param>
-    public SelectionCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
+    public SelectionCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
     {
     }
 }

@@ -10,7 +10,7 @@ namespace Scintilla.NET.Linux.Collections;
 /// <summary>
 /// An immutable collection of margins in a <see cref="Scintilla" /> control.
 /// </summary>
-public class MarginCollection : MarginCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class MarginCollection : MarginCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
 {
     /// <summary>
     /// Gets a <see cref="Margin" /> object at the specified index.
@@ -33,7 +33,7 @@ public class MarginCollection : MarginCollectionBase<MarkerCollection, StyleColl
     /// Initializes a new instance of the <see cref="MarginCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public MarginCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
+    public MarginCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
     {
     }
 }

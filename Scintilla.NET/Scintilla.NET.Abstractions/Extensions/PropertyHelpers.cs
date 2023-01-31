@@ -34,7 +34,7 @@ using static Scintilla.NET.Abstractions.ScintillaConstants;
 namespace Scintilla.NET.Abstractions.Extensions;
 
 /// <summary>
-/// Helper and extension methods for the <see cref="IScintillaApi{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}"/> property value implementation.
+/// Helper and extension methods for the <see cref="IScintillaApi{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}"/> property value implementation.
 /// </summary>
 public static class PropertyHelpers
 {

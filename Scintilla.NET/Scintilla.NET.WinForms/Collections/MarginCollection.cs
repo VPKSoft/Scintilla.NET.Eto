@@ -2,7 +2,6 @@
 using System.Drawing;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.WinForms.EventArguments;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.WinForms.Collections;
@@ -10,7 +9,7 @@ namespace Scintilla.NET.WinForms.Collections;
 /// <summary>
 /// An immutable collection of margins in a <see cref="Scintilla" /> control.
 /// </summary>
-public class MarginCollection : MarginCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class MarginCollection : MarginCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
 {
     /// <summary>
     /// Gets or sets the number of margins in the <see cref="MarginCollection" />.
@@ -98,7 +97,7 @@ public class MarginCollection : MarginCollectionBase<MarkerCollection, StyleColl
     /// Initializes a new instance of the <see cref="MarginCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public MarginCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
+    public MarginCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
     {
     }
 }

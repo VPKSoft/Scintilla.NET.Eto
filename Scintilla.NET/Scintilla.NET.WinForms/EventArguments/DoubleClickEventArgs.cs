@@ -9,7 +9,7 @@ namespace Scintilla.NET.WinForms.EventArguments;
 /// <summary>
 /// Provides data for the <see cref="Scintilla.DoubleClick" /> event.
 /// </summary>
-public class DoubleClickEventArgs : DoubleClickEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color, Keys>
+public class DoubleClickEventArgs : DoubleClickEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color, Keys>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DoubleClickEventArgs" /> class.
@@ -20,7 +20,7 @@ public class DoubleClickEventArgs : DoubleClickEventArgsBase<MarkerCollection, S
     /// <param name="line">The zero-based line index of the double clicked text.</param>
     public DoubleClickEventArgs(
         IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap,
+            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap,
             Color> scintilla, Keys modifiers, int bytePosition, int line) : base(scintilla, modifiers, bytePosition,
         line)
     {

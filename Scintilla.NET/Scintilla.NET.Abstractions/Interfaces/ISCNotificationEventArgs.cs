@@ -2,7 +2,7 @@
 /*
 MIT License
 
-Copyright(c) 2022 Petteri Kautonen
+Copyright(c) 2023 Petteri Kautonen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +24,20 @@ SOFTWARE.
 */
 #endregion
 
+using Scintilla.NET.Abstractions.Classes;
+
 namespace Scintilla.NET.Abstractions.Interfaces;
 
 /// <summary>
-/// An interface for the Scintilla native event notifications.
+/// An interface for the SCNotificationEventArgs event argument classes.
 /// </summary>
-/// <typeparam name="TEventArgs">The type of the event arguments.</typeparam>
-public interface IScintillaNotificationEvent
+// ReSharper disable once InconsistentNaming
+public interface ISCNotificationEventArgs
 {
     /// <summary>
-    /// The Scintilla native notification.
+    /// Gets the Scintilla notification data structure.
     /// </summary>
+    /// <value>The Scintilla notification data structure.</value>
     // ReSharper disable once InconsistentNaming
-    event EventHandler<ISCNotificationEventArgs> SCNotification;
+    ScintillaApiStructs.SCNotification SCNotification { get; }
 }

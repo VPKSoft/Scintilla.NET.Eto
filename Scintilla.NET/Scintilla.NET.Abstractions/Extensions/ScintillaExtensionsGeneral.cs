@@ -99,7 +99,7 @@ public static class ScintillaExtensionsGeneral
     }
 
     /// <summary>
-    /// Removes the annotation text for every <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> in the document.
+    /// Removes the annotation text for every <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> in the document.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     public static void AnnotationClearAllExtension(this IScintillaApi scintilla)
@@ -272,7 +272,7 @@ public static class ScintillaExtensionsGeneral
     }
 
     /// <summary>
-    /// Styles the specified character position with the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.BraceBad" /> style when there is an unmatched brace.
+    /// Styles the specified character position with the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.BraceBad" /> style when there is an unmatched brace.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     /// <param name="position">The zero-based document position of the unmatched brace character or <seealso cref="ApiConstants.InvalidPosition"/> to remove the highlight.</param>
@@ -289,7 +289,7 @@ public static class ScintillaExtensionsGeneral
     }
 
     /// <summary>
-    /// Styles the specified character positions with the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.BraceLight" /> style.
+    /// Styles the specified character positions with the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.BraceLight" /> style.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     /// <param name="position1">The zero-based document position of the open brace character.</param>
@@ -752,7 +752,7 @@ public static class ScintillaExtensionsGeneral
     /// <param name="displayLine">The zero-based display line index.</param>
     /// <param name="visibleLineCount">The count of visible lines in the Scintilla control.</param>
     /// <returns>The zero-based document line index.</returns>
-    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.DisplayIndex" />
+    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.DisplayIndex" />
     public static int DocLineFromVisibleExtension(this IScintillaApi scintilla, int displayLine, int visibleLineCount)
     {
         displayLine = HelpersGeneral.Clamp(displayLine, 0, visibleLineCount);
@@ -764,7 +764,7 @@ public static class ScintillaExtensionsGeneral
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     /// <param name="selection">The zero-based selection index.</param>
-    /// <seealso cref="SelectionBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
+    /// <seealso cref="SelectionBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
     public static void DropSelectionExtension(this IScintillaApi scintilla, int selection)
     {
         selection = HelpersGeneral.ClampMin(selection, 0);
@@ -775,7 +775,7 @@ public static class ScintillaExtensionsGeneral
     /// Clears any undo or redo history.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
-    /// <remarks>This will also cause <see cref="SetSavePointExtension" /> to be called but will not raise the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.SavePointReached" /> event.</remarks>
+    /// <remarks>This will also cause <see cref="SetSavePointExtension" /> to be called but will not raise the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.SavePointReached" /> event.</remarks>
     public static void EmptyUndoBufferExtension(this IScintillaApi scintilla)
     {
         scintilla.DirectMessage(SCI_EMPTYUNDOBUFFER);
@@ -818,8 +818,8 @@ public static class ScintillaExtensionsGeneral
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     /// <param name="style">One of the <see cref="FoldDisplayText" /> enumeration values.</param>
-    /// <remarks>The text tag to display on a folded line can be set using <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.ToggleFoldShowText" />.</remarks>
-    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.ToggleFoldShowText" />.
+    /// <remarks>The text tag to display on a folded line can be set using <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.ToggleFoldShowText" />.</remarks>
+    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.ToggleFoldShowText" />.
     public static void FoldDisplayTextSetStyleExtension(this IScintillaApi scintilla, FoldDisplayText style)
     {
         scintilla.DirectMessage(SCI_FOLDDISPLAYTEXTSETSTYLE, new IntPtr((int)style));
@@ -1007,7 +1007,7 @@ public static class ScintillaExtensionsGeneral
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     /// <param name="position">The zero-based document position of the character to get the style for.</param>
     /// <param name="lines">The line collection of the Scintilla control.</param>
-    /// <returns>The zero-based <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> index used at the specified <paramref name="position" />.</returns>
+    /// <returns>The zero-based <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> index used at the specified <paramref name="position" />.</returns>
     public static int GetStyleAtExtension(this IScintillaApi scintilla, int position, ILineCollection lines)
     {
         position = HelpersGeneral.Clamp(position, 0, scintilla.TextLength);
@@ -1136,7 +1136,7 @@ public static class ScintillaExtensionsGeneral
     /// <param name="lineEnd">The zero-based index of the line range to end hiding.</param>
     /// <param name="lines">The line collection of the Scintilla control.</param>
     /// <seealso cref="ShowLinesExtension" />
-    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
+    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
     public static void HideLinesExtension(this IScintillaApi scintilla, int lineStart, int lineEnd, ILineCollection lines)
     {
         lineStart = HelpersGeneral.Clamp(lineStart, 0, lines.Count);
@@ -1310,7 +1310,7 @@ public static class ScintillaExtensionsGeneral
     /// <param name="columns">The number of columns to scroll.</param>
     /// <remarks>
     /// Negative values scroll in the opposite direction.
-    /// A column is the width in pixels of a space character in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.
+    /// A column is the width in pixels of a space character in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.
     /// </remarks>
     public static void LineScrollExtension(this IScintillaApi scintilla, int lines, int columns)
     {
@@ -1340,7 +1340,7 @@ public static class ScintillaExtensionsGeneral
     /// Removes the specified marker from all lines.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
-    /// <param name="marker">The zero-based <see cref="MarkerBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> index to remove from all lines, or -1 to remove all markers from all lines.</param>
+    /// <param name="marker">The zero-based <see cref="MarkerBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> index to remove from all lines, or -1 to remove all markers from all lines.</param>
     /// <param name="markers">The Scintilla.Markers collection property value.</param>
     public static void MarkerDeleteAllExtension(this IScintillaApi scintilla, int marker, IMarkerCollection markers)
     {
@@ -1352,7 +1352,7 @@ public static class ScintillaExtensionsGeneral
     /// Searches the document for the marker handle and deletes the marker if found.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
-    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.MarkerAdd" /> of the marker to delete.</param>
+    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.MarkerAdd" /> of the marker to delete.</param>
     public static void MarkerDeleteHandleExtension(this IScintillaApi scintilla, MarkerHandle markerHandle)
     {
         scintilla.DirectMessage(SCI_MARKERDELETEHANDLE, markerHandle.Value);
@@ -1373,7 +1373,7 @@ public static class ScintillaExtensionsGeneral
     /// Searches the document for the marker handle and returns the line number containing the marker if found.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
-    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.MarkerAdd" /> of the marker to search for.</param>
+    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.MarkerAdd" /> of the marker to search for.</param>
     /// <returns>If found, the zero-based line index containing the marker; otherwise, -1.</returns>
     public static int MarkerLineFromHandleExtension(this IScintillaApi scintilla, MarkerHandle markerHandle)
     {
@@ -1387,7 +1387,7 @@ public static class ScintillaExtensionsGeneral
     /// <param name="column">The zero-based column number to indicate.</param>
     /// <param name="edgeColor">The color of the vertical long line indicator.</param>
     /// <param name="colorToIntFunc">A delegate to a function to translate the platform-depended color into ARGB integer value.</param>
-    /// <remarks>A column is defined as the width of a space character in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.</remarks>
+    /// <remarks>A column is defined as the width of a space character in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.</remarks>
     /// <seealso cref="MultiEdgeClearAllExtension" />
     public static void MultiEdgeAddLineExtension<TColor>(this IScintillaApi scintilla, int column, TColor edgeColor, Func<TColor, int> colorToIntFunc)
         where TColor : struct
@@ -1948,7 +1948,7 @@ public static class ScintillaExtensionsGeneral
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     /// <param name="length">The number of characters to style.</param>
-    /// <param name="style">The <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> definition index to assign each character.</param>
+    /// <param name="style">The <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> definition index to assign each character.</param>
     /// <param name="textLength">The total length of the text in the Scintilla control.</param>
     /// <param name="stylingPosition">Private state of the Scintilla wrapper related to styling.</param>
     /// <param name="stylingBytePosition">Private state of the Scintilla wrapper related to styling.</param>
@@ -2059,7 +2059,7 @@ public static class ScintillaExtensionsGeneral
     /// <param name="lineEnd">The zero-based index of the line range to end showing.</param>
     /// <param name="lines">The line collection of the Scintilla control.</param>
     /// <seealso cref="HideLinesExtension" />
-    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
+    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
     public static void ShowLinesExtension(this IScintillaApi scintilla, int lineStart, int lineEnd, ILineCollection lines)
     {
         lineStart = HelpersGeneral.Clamp(lineStart, 0, lines.Count);
@@ -2095,7 +2095,7 @@ public static class ScintillaExtensionsGeneral
     }
 
     /// <summary>
-    /// Resets all style properties to those currently configured for the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.
+    /// Resets all style properties to those currently configured for the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     /// <seealso cref="StyleResetDefaultExtension" />
@@ -2105,7 +2105,7 @@ public static class ScintillaExtensionsGeneral
     }
 
     /// <summary>
-    /// Resets the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style to its initial state.
+    /// Resets the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style to its initial state.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     /// <seealso cref="StyleClearAllExtension" />
@@ -2147,7 +2147,7 @@ public static class ScintillaExtensionsGeneral
     /// Measures the width in pixels of the specified string when rendered in the specified style.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
-    /// <param name="style">The index of the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TEventArgs,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> to use when rendering the text to measure.</param>
+    /// <param name="style">The index of the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> to use when rendering the text to measure.</param>
     /// <param name="text">The text to measure.</param>
     /// <param name="styles">The style collection of the Scintilla control.</param>
     /// <returns>The width in pixels.</returns>

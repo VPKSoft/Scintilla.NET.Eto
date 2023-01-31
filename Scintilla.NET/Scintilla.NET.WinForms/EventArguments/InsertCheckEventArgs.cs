@@ -8,7 +8,7 @@ namespace Scintilla.NET.WinForms.EventArguments;
 /// <summary>
 /// Provides data for the <see cref="Scintilla.InsertCheck" /> event.
 /// </summary>
-public class InsertCheckEventArgs : InsertCheckEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class InsertCheckEventArgs : InsertCheckEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="InsertCheckEventArgs" /> class.
@@ -18,9 +18,7 @@ public class InsertCheckEventArgs : InsertCheckEventArgsBase<MarkerCollection, S
     /// <param name="byteLength">The length in bytes of the inserted text.</param>
     /// <param name="text">A pointer to the text being inserted.</param>
     public InsertCheckEventArgs(
-        IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap,
-            Color> scintilla, int bytePosition, int byteLength, nint text) : base(scintilla, bytePosition, byteLength,
+        IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla, int bytePosition, int byteLength, nint text) : base(scintilla, bytePosition, byteLength,
         text)
     {
     }
