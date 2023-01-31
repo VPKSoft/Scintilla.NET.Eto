@@ -47,7 +47,7 @@ using Status = Scintilla.NET.Abstractions.Enumerations.Status;
 using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
 namespace Scintilla.NET.Linux;
-using static global::Scintilla.NET.Abstractions.ScintillaConstants;
+using static ScintillaConstants;
 
 /// <summary>
 /// Represents a Scintilla editor control.
