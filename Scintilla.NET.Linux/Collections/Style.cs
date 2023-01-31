@@ -1,7 +1,6 @@
 using System;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Linux.EventArguments;
 using Color = Gdk.Color;
 using ColorTranslator = Scintilla.NET.Linux.GdkUtils.ColorTranslator;
 using Image = Gtk.Image;

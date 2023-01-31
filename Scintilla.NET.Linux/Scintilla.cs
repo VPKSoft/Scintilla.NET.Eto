@@ -27,7 +27,6 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using GLib;
 using Gtk;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Classes;
@@ -54,7 +53,6 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
     IScintillaProperties<Color>,
     IScintillaMethods<Color, Key, Image>,
-    IScintillaNotificationEvent<SCNotificationEventArgs>,
     IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, 
         Marker, Style, Indicator, Line, Margin, Selection, 
         Image, Color, Key,

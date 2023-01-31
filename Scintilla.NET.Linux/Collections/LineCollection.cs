@@ -1,7 +1,7 @@
 ﻿using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
+using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.UtilityClasses;
-using Scintilla.NET.Linux.EventArguments;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 using Color = Gdk.Color;
 using Image = Gtk.Image;
@@ -15,7 +15,7 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
 {
     #region Methods
     
-    public override void scintilla_SCNotification(object sender, SCNotificationEventArgs e)
+    public override void scintilla_SCNotification(object sender, ISCNotificationEventArgs e)
     {
         var scn = e.SCNotification;
         switch (scn.nmhdr.code)
@@ -28,7 +28,6 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
     #endregion Methods
 
     #region Properties
-    
     /// <summary>
     /// Gets the <see cref="Line" /> at the specified zero-based index.
     /// </summary>
@@ -53,8 +52,6 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
     public LineCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
     {
-        this.scintilla.SCNotification += scintilla_SCNotification;
-
         perLineData = new GapBuffer<PerLine>
         {
             new() { Start = 0 },

@@ -22,7 +22,7 @@ public class DwellEventArgs : DwellEventArgsBase<MarkerCollection, StyleCollecti
     /// <param name="y">The y-coordinate of the mouse pointer relative to the <see cref="Scintilla" /> control.</param>
     public DwellEventArgs(
         IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image,
+            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image,
             Color> scintilla, int bytePosition, int x, int y) : base(scintilla, bytePosition, x, y)
     {
     }

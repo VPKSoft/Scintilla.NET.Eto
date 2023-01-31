@@ -22,7 +22,7 @@ public class InsertCheckEventArgs : InsertCheckEventArgsBase<MarkerCollection, S
     /// <param name="text">A pointer to the text being inserted.</param>
     public InsertCheckEventArgs(
         IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image,
+            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image,
             Color> scintilla, int bytePosition, int byteLength, nint text) : base(scintilla, bytePosition, byteLength,
         text)
     {

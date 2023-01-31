@@ -20,7 +20,7 @@ public class IndicatorReleaseEventArgs : IndicatorReleaseEventArgsBase<MarkerCol
     /// <param name="bytePosition">The zero-based byte position of the clicked text.</param>
     public IndicatorReleaseEventArgs(
         IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image,
+            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image,
             Color> scintilla, int bytePosition) : base(scintilla, bytePosition)
     {
     }

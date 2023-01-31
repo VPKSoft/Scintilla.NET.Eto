@@ -1,7 +1,6 @@
 ﻿using System.ComponentModel;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Linux.EventArguments;
 using Color = Gdk.Color;
 using Image = Gtk.Image;
 

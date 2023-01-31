@@ -23,7 +23,7 @@ public class DoubleClickEventArgs : DoubleClickEventArgsBase<MarkerCollection, S
     /// <param name="line">The zero-based line index of the double clicked text.</param>
     public DoubleClickEventArgs(
         IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image,
+            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image,
             Color> scintilla, Key modifiers, int bytePosition, int line) : base(scintilla, modifiers, bytePosition,
         line)
     {

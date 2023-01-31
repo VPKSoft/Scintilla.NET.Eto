@@ -21,7 +21,7 @@ public class NeedShownEventArgs : NeedShownEventArgsBase<MarkerCollection, Style
     /// <param name="byteLength">The length in bytes of the text that needs to be shown.</param>
     public NeedShownEventArgs(
         IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image,
+            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image,
             Color> scintilla, int bytePosition, int byteLength) : base(scintilla, bytePosition, byteLength)
     {
     }

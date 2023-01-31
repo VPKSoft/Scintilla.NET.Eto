@@ -24,7 +24,7 @@ public class BeforeModificationEventArgs : BeforeModificationEventArgsBase<Marke
     /// <param name="text">A pointer to the text being inserted.</param>
     public BeforeModificationEventArgs(
         IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image,
+            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image,
             Color> scintilla, ModificationSource source, int bytePosition, int byteLength, nint text) : base(
         scintilla, source, bytePosition, byteLength, text)
     {

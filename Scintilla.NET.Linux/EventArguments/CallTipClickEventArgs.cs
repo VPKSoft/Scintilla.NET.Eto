@@ -21,7 +21,7 @@ public class CallTipClickEventArgs: CallTipClickEventArgsBase<MarkerCollection, 
     /// /// <param name="callTipClickType">Type of the call tip click.</param>
     public CallTipClickEventArgs(
         IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image,
+            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image,
             Color> scintilla, CallTipClickType callTipClickType) : base(scintilla, callTipClickType)
     {
     }

@@ -20,7 +20,7 @@ public class StyleNeededEventArgs : StyleNeededEventArgsBase<MarkerCollection, S
     /// <param name="bytePosition">The zero-based byte position within the document to stop styling.</param>
     public StyleNeededEventArgs(
         IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, SCNotificationEventArgs, Marker, Style, Indicator, Line, Margin, Selection, Image,
+            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image,
             Color> scintilla, int bytePosition) : base(scintilla, bytePosition)
     {
     }
