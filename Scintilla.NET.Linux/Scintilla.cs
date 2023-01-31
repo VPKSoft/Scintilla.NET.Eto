@@ -90,7 +90,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         RemoveSignalHandler("sci-notify", OnSciNotified);
     }
 
-    private void OnSciNotified(IntPtr widget, IntPtr _, IntPtr notification, IntPtr userdata)
+    private void OnSciNotified(IntPtr widget, IntPtr _, IntPtr notification, IntPtr userData)
     {
         var scn = (ScintillaApiStructs.SCNotification)Marshal.PtrToStructure(notification, typeof(ScintillaApiStructs.SCNotification))!;
         if (scn.nmhdr.code is >= SCN_STYLENEEDED and <= SCN_AUTOCCOMPLETED)

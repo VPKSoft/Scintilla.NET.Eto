@@ -37,12 +37,7 @@ public partial class Scintilla : Control,
         SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color, Keys, 
         AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs,
         DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, IndicatorReleaseEventArgs,
-        InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>,
-    IScintillaEventRaising<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, EventArgs, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color, Keys, 
-        AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs,
-        DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, IndicatorReleaseEventArgs,
-        InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs>
+        InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
 {
     static Scintilla()
     {
@@ -4483,7 +4478,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="AutoCCancelled" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    public void OnAutoCCancelled(EventArgs e)
+    protected virtual void OnAutoCCancelled(EventArgs e)
     {
         if (Events[autoCCancelledEventKey] is EventHandler<EventArgs> handler)
         {
@@ -4495,7 +4490,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="AutoCCharDeleted" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    public void OnAutoCCharDeleted(EventArgs e)
+    protected virtual void OnAutoCCharDeleted(EventArgs e)
     {
         if (Events[autoCCharDeletedEventKey] is EventHandler<EventArgs> handler)
         {
@@ -4507,7 +4502,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="AutoCCompleted" /> event.
     /// </summary>
     /// <param name="e">An <see cref="AutoCSelectionEventArgs" /> that contains the event data.</param>
-    public void OnAutoCCompleted(AutoCSelectionEventArgs e)
+    protected virtual void OnAutoCCompleted(AutoCSelectionEventArgs e)
     {
         if (Events[autoCCompletedEventKey] is EventHandler<AutoCSelectionEventArgs> handler)
         {
@@ -4519,7 +4514,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="AutoCSelection" /> event.
     /// </summary>
     /// <param name="e">An <see cref="AutoCSelectionEventArgs" /> that contains the event data.</param>
-    public void OnAutoCSelection(AutoCSelectionEventArgs e)
+    protected virtual void OnAutoCSelection(AutoCSelectionEventArgs e)
     {
         if (Events[autoCSelectionEventKey] is EventHandler<AutoCSelectionEventArgs> handler)
         {
@@ -4531,7 +4526,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="BeforeDelete" /> event.
     /// </summary>
     /// <param name="e">A <see cref="BeforeModificationEventArgs" /> that contains the event data.</param>
-    public void OnBeforeDelete(BeforeModificationEventArgs e)
+    protected virtual void OnBeforeDelete(BeforeModificationEventArgs e)
     {
         if (Events[beforeDeleteEventKey] is EventHandler<BeforeModificationEventArgs> handler)
         {
@@ -4543,7 +4538,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="BeforeInsert" /> event.
     /// </summary>
     /// <param name="e">A <see cref="BeforeModificationEventArgs" /> that contains the event data.</param>
-    public void OnBeforeInsert(BeforeModificationEventArgs e)
+    protected virtual void OnBeforeInsert(BeforeModificationEventArgs e)
     {
         if (Events[beforeInsertEventKey] is EventHandler<BeforeModificationEventArgs> handler)
         {
@@ -4567,7 +4562,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="ChangeAnnotation" /> event.
     /// </summary>
     /// <param name="e">A <see cref="ChangeAnnotationEventArgs" /> that contains the event data.</param>
-    public void OnChangeAnnotation(ChangeAnnotationEventArgs e)
+    protected virtual void OnChangeAnnotation(ChangeAnnotationEventArgs e)
     {
         if (Events[changeAnnotationEventKey] is EventHandler<ChangeAnnotationEventArgs> handler)
         {
@@ -4579,7 +4574,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="CharAdded" /> event.
     /// </summary>
     /// <param name="e">A <see cref="CharAddedEventArgs" /> that contains the event data.</param>
-    public void OnCharAdded(CharAddedEventArgs e)
+    protected virtual void OnCharAdded(CharAddedEventArgs e)
     {
         if (Events[charAddedEventKey] is EventHandler<CharAddedEventArgs> handler)
         {
@@ -4591,7 +4586,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="Delete" /> event.
     /// </summary>
     /// <param name="e">A <see cref="ModificationEventArgs" /> that contains the event data.</param>
-    public void OnDelete(ModificationEventArgs e)
+    protected virtual void OnDelete(ModificationEventArgs e)
     {
         if (Events[deleteEventKey] is EventHandler<ModificationEventArgs> handler)
         {
@@ -4603,7 +4598,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="DoubleClick" /> event.
     /// </summary>
     /// <param name="e">A <see cref="DoubleClickEventArgs" /> that contains the event data.</param>
-    public void OnDoubleClick(DoubleClickEventArgs e)
+    protected virtual void OnDoubleClick(DoubleClickEventArgs e)
     {
         if (Events[doubleClickEventKey] is EventHandler<DoubleClickEventArgs> handler)
         {
@@ -4615,7 +4610,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="DwellEnd" /> event.
     /// </summary>
     /// <param name="e">A <see cref="DwellEventArgs" /> that contains the event data.</param>
-    public void OnDwellEnd(DwellEventArgs e)
+    protected virtual void OnDwellEnd(DwellEventArgs e)
     {
         if (Events[dwellEndEventKey] is EventHandler<DwellEventArgs> handler)
         {
@@ -4627,7 +4622,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="DwellStart" /> event.
     /// </summary>
     /// <param name="e">A <see cref="DwellEventArgs" /> that contains the event data.</param>
-    public void OnDwellStart(DwellEventArgs e)
+    protected virtual void OnDwellStart(DwellEventArgs e)
     {
         if (Events[dwellStartEventKey] is EventHandler<DwellEventArgs> handler)
         {
@@ -4639,7 +4634,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="CallTipClick" /> event.
     /// </summary>
     /// <param name="e">A <see cref="CallTipClickEventArgs" /> that contains the event data.</param>
-    public void OnCallTipClick(CallTipClickEventArgs e)
+    protected virtual void OnCallTipClick(CallTipClickEventArgs e)
     {
         if (Events[callTipClickEventKey] is EventHandler<CallTipClickEventArgs> handler)
         {
@@ -4690,7 +4685,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="HotspotClick" /> event.
     /// </summary>
     /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
-    public void OnHotspotClick(HotspotClickEventArgs e)
+    protected virtual void OnHotspotClick(HotspotClickEventArgs e)
     {
         if (Events[hotspotClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
         {
@@ -4702,7 +4697,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="HotspotDoubleClick" /> event.
     /// </summary>
     /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
-    public void OnHotspotDoubleClick(HotspotClickEventArgs e)
+    protected virtual void OnHotspotDoubleClick(HotspotClickEventArgs e)
     {
         if (Events[hotspotDoubleClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
         {
@@ -4714,7 +4709,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="HotspotReleaseClick" /> event.
     /// </summary>
     /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
-    public void OnHotspotReleaseClick(HotspotClickEventArgs e)
+    protected virtual void OnHotspotReleaseClick(HotspotClickEventArgs e)
     {
         if (Events[hotspotReleaseClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
         {
@@ -4726,7 +4721,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="IndicatorClick" /> event.
     /// </summary>
     /// <param name="e">An <see cref="IndicatorClickEventArgs" /> that contains the event data.</param>
-    public void OnIndicatorClick(IndicatorClickEventArgs e)
+    protected virtual void OnIndicatorClick(IndicatorClickEventArgs e)
     {
         if (Events[indicatorClickEventKey] is EventHandler<IndicatorClickEventArgs> handler)
         {
@@ -4738,7 +4733,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="IndicatorRelease" /> event.
     /// </summary>
     /// <param name="e">An <see cref="IndicatorReleaseEventArgs" /> that contains the event data.</param>
-    public void OnIndicatorRelease(IndicatorReleaseEventArgs e)
+    protected virtual void OnIndicatorRelease(IndicatorReleaseEventArgs e)
     {
         if (Events[indicatorReleaseEventKey] is EventHandler<IndicatorReleaseEventArgs> handler)
         {
@@ -4750,7 +4745,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="Insert" /> event.
     /// </summary>
     /// <param name="e">A <see cref="ModificationEventArgs" /> that contains the event data.</param>
-    public void OnInsert(ModificationEventArgs e)
+    protected virtual void OnInsert(ModificationEventArgs e)
     {
         if (Events[insertEventKey] is EventHandler<ModificationEventArgs> handler)
         {
@@ -4762,7 +4757,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="InsertCheck" /> event.
     /// </summary>
     /// <param name="e">An <see cref="InsertCheckEventArgs" /> that contains the event data.</param>
-    public void OnInsertCheck(InsertCheckEventArgs e)
+    protected virtual void OnInsertCheck(InsertCheckEventArgs e)
     {
         if (Events[insertCheckEventKey] is EventHandler<InsertCheckEventArgs> handler)
         {
@@ -4774,7 +4769,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="MarginClick" /> event.
     /// </summary>
     /// <param name="e">A <see cref="MarginClickEventArgs" /> that contains the event data.</param>
-    public void OnMarginClick(MarginClickEventArgs e)
+    protected virtual void OnMarginClick(MarginClickEventArgs e)
     {
         if (Events[marginClickEventKey] is EventHandler<MarginClickEventArgs> handler)
         {
@@ -4786,7 +4781,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="MarginRightClick" /> event.
     /// </summary>
     /// <param name="e">A <see cref="MarginClickEventArgs" /> that contains the event data.</param>
-    public void OnMarginRightClick(MarginClickEventArgs e)
+    protected virtual void OnMarginRightClick(MarginClickEventArgs e)
     {
         if (Events[marginRightClickEventKey] is EventHandler<MarginClickEventArgs> handler)
         {
@@ -4798,7 +4793,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="ModifyAttempt" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    public void OnModifyAttempt(EventArgs e)
+    protected virtual void OnModifyAttempt(EventArgs e)
     {
         if (Events[modifyAttemptEventKey] is EventHandler<EventArgs> handler)
         {
@@ -4833,7 +4828,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="NeedShown" /> event.
     /// </summary>
     /// <param name="e">A <see cref="NeedShownEventArgs" /> that contains the event data.</param>
-    public void OnNeedShown(NeedShownEventArgs e)
+    protected virtual void OnNeedShown(NeedShownEventArgs e)
     {
         if (Events[needShownEventKey] is EventHandler<NeedShownEventArgs> handler)
         {
@@ -4845,7 +4840,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="Painted" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    public void OnPainted(EventArgs e)
+    protected virtual void OnPainted(EventArgs e)
     {
         if (Events[paintedEventKey] is EventHandler<EventArgs> handler)
         {
@@ -4857,7 +4852,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="SavePointLeft" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    public void OnSavePointLeft(EventArgs e)
+    protected virtual void OnSavePointLeft(EventArgs e)
     {
         if (Events[savePointLeftEventKey] is EventHandler<EventArgs> handler)
         {
@@ -4869,7 +4864,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="SavePointReached" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    public void OnSavePointReached(EventArgs e)
+    protected virtual void OnSavePointReached(EventArgs e)
     {
         if (Events[savePointReachedEventKey] is EventHandler<EventArgs> handler)
         {
@@ -4881,7 +4876,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="StyleNeeded" /> event.
     /// </summary>
     /// <param name="e">A <see cref="StyleNeededEventArgs" /> that contains the event data.</param>
-    public void OnStyleNeeded(StyleNeededEventArgs e)
+    protected virtual void OnStyleNeeded(StyleNeededEventArgs e)
     {
         if (Events[styleNeededEventKey] is EventHandler<StyleNeededEventArgs> handler)
         {
@@ -4893,7 +4888,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="UpdateUi" /> event.
     /// </summary>
     /// <param name="e">An <see cref="UpdateUIEventArgs" /> that contains the event data.</param>
-    public void OnUpdateUI(UpdateUIEventArgs e)
+    protected virtual void OnUpdateUI(UpdateUIEventArgs e)
     {
         if (Events[updateUiEventKey] is EventHandler<UpdateUIEventArgs> handler)
         {
@@ -4905,7 +4900,7 @@ public partial class Scintilla : Control,
     /// Raises the <see cref="ZoomChanged" /> event.
     /// </summary>
     /// <param name="e">An EventArgs that contains the event data.</param>
-    public void OnZoomChanged(EventArgs e)
+    protected virtual void OnZoomChanged(EventArgs e)
     {
         if (Events[zoomChangedEventKey] is EventHandler<EventArgs> handler)
         {
