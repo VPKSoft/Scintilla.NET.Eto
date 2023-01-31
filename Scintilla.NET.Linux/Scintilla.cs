@@ -27,6 +27,7 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
+using Gdk;
 using Gtk;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Classes;
@@ -42,6 +43,7 @@ using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.Linux.GdkUtils;
 using Style = Scintilla.NET.Linux.Collections.Style;
 using Selection = Scintilla.NET.Linux.Collections.Selection;
+using Status = Scintilla.NET.Abstractions.Enumerations.Status;
 using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
 namespace Scintilla.NET.Linux;
@@ -99,14 +101,82 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
                 case SCN_PAINTED:
                     this.Painted?.Invoke(this, EventArgs.Empty);
                     break;
-                case SCI_ADDTEXT:
-                case SCN_KEY:
                 case SCN_MODIFIED:
-                    if (scn.ch != 0)
+                    this.ScnModified(ref scn, InsertCheck, BeforeInsert, BeforeDelete, Insert, Delete, ChangeAnnotation,
+                        ref cachedPosition, ref cachedText);
+                    break;
+                case SCN_MODIFYATTEMPTRO:
+                    ModifyAttempt?.Invoke(this, EventArgs.Empty);
+                    break;
+                case SCN_STYLENEEDED:
+                    StyleNeeded?.Invoke(this, new StyleNeededEventArgs(this, scn.position.ToInt32()));
+                    break;
+                case SCN_SAVEPOINTLEFT:
+                    SavePointLeft?.Invoke(this, EventArgs.Empty);
+                    break;                
+                case SCN_SAVEPOINTREACHED:
+                    SavePointReached?.Invoke(this, EventArgs.Empty);
+                    break;   
+                case SCN_MARGINCLICK:
+                case SCN_MARGINRIGHTCLICK:
+                    this.ScnMarginClick(ref scn, MarginClick, MarginRightClick);
+                    break;
+                case SCN_UPDATEUI:
+                    UpdateUi?.Invoke(this, new UpdateUIEventArgs((UpdateChange)scn.updated));
+                    break;
+                case SCN_KEY:
+                case SCI_ADDTEXT: // This is not in the documentation, but seems to be called when a "char is added"?
+                    // The non-character keys seem to start from: Key.Key_3270_Duplicate == 64769 so assume 60000
+                    if (scn.ch != 0 && scn.ch < 60000) 
                     {
                         this.CharAdded?.Invoke(this, new CharAddedEventArgs(scn.ch));
                     }
                     break;
+                case SCN_AUTOCSELECTION:
+                    AutoCSelection?.Invoke(this,
+                        new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch,
+                            (ListCompletionMethod) scn.listCompletionMethod));
+                    break;                
+                case SCN_AUTOCCOMPLETED:
+                    AutoCCompleted?.Invoke(this,
+                        new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch,
+                            (ListCompletionMethod) scn.listCompletionMethod));
+                    break;
+                case SCN_AUTOCCANCELLED:
+                    AutoCCancelled?.Invoke(this, EventArgs.Empty);
+                    break;
+                
+                case SCN_AUTOCCHARDELETED:
+                    AutoCCharDeleted?.Invoke(this, EventArgs.Empty);
+                    break;                
+                case SCN_DWELLSTART:
+                    DwellStart?.Invoke(this, new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
+                    break;
+                case SCN_DWELLEND:
+                    DwellEnd?.Invoke(this, new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
+                    break;
+                case SCN_DOUBLECLICK:
+                    this.ScnDoubleClick(ref scn, DoubleClick);
+                    break;
+                case SCN_NEEDSHOWN:
+                    NeedShown?.Invoke(this, new NeedShownEventArgs(this, scn.position.ToInt32(), scn.length.ToInt32()));
+                    break;
+                case SCN_HOTSPOTCLICK:
+                case SCN_HOTSPOTDOUBLECLICK:
+                case SCN_HOTSPOTRELEASECLICK:
+                    this.ScnHotspotClick(ref scn, HotspotClick, HotspotDoubleClick);
+                    break;
+                case SCN_INDICATORCLICK:
+                case SCN_INDICATORRELEASE:
+                    this.ScnIndicatorClick(ref scn, IndicatorClick, IndicatorRelease);
+                    break;
+                case SCN_ZOOM:
+                    ZoomChanged?.Invoke(this, EventArgs.Empty);
+                    break;
+                case SCN_CALLTIPCLICK:
+                    // scn.position: 1 = Up Arrow, 2 = DownArrow: 0 = Elsewhere
+                    CallTipClick?.Invoke(this, new CallTipClickEventArgs(this, (CallTipClickType)scn.position.ToInt32()));
+                    break;                
             }
         }
     }
@@ -124,6 +194,10 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     // Set style
     private int stylingPosition;
     private int stylingBytePosition;
+    
+    // Modified event optimization
+    private int? cachedPosition;
+    private string? cachedText;    
     #endregion
 
     #region Native
