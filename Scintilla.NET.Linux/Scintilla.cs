@@ -68,7 +68,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <summary>
     /// Initializes a new instance of the <see cref="Scintilla" /> class.
     /// </summary>
-    protected Scintilla() : base(scintilla_new())
+    public Scintilla() : base(scintilla_new())
     {
         editor = base.Raw;
         Lines = new LineCollection(this);
@@ -82,6 +82,12 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         
         AddSignalHandler ("sci-notify", OnSciNotified, new SciNotifyDelegate(OnSciNotified));
     }
+
+    /// <summary>
+    /// Gets the Scintilla pointer.
+    /// </summary>
+    /// <value>The Scintilla pointer.</value>
+    public IntPtr SciPointer => editor;
 
     /// <inheritdoc />
     protected override void Dispose(bool disposing)

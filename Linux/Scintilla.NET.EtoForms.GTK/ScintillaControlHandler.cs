@@ -43,12 +43,17 @@ namespace Scintilla.NET.EtoForms.GTK;
 /// <seealso cref="IScintillaControl" />
 public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl, Control.ICallback>, IScintillaControl
 {
+    readonly IntPtr editor;
+    private readonly ScintillaGtk nativeControl;
+
+
     /// <summary>
     /// Initializes a new instance of the <see cref="ScintillaControlHandler"/> class.
     /// </summary>
     public ScintillaControlHandler()
     {
-        var nativeControl = new ScintillaGtk();
+        nativeControl = new ScintillaGtk();
+        editor = nativeControl.SciPointer;
         Control = nativeControl;
     }
     
@@ -99,38 +104,21 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     }
 
     /// <inheritdoc />
-    public void MarkerDeleteAll(int marker)
-    {
-        throw new NotImplementedException();
-    }
+    public void MarkerDeleteAll(int marker) => nativeControl.MarkerDeleteAll(marker);
 
     /// <inheritdoc />
-    public string GetTextRange(int position, int length)
-    {
-        throw new NotImplementedException();
-    }
+    public string GetTextRange(int position, int length) => nativeControl.GetTextRange(position, length);
 
     /// <inheritdoc />
-    public void FoldAll(FoldAction action)
-    {
-        throw new NotImplementedException();
-    }
+    public void FoldAll(FoldAction action) => nativeControl.FoldAll(action);
 
     /// <inheritdoc />
-    public void InitDocument(Eol eolMode = Eol.CrLf, bool useTabs = false, int tabWidth = 4, int indentWidth = 0)
-    {
-        this.InitDocumentExtension(eolMode, useTabs, tabWidth, indentWidth);
-    }
+    public void InitDocument(Eol eolMode = Eol.CrLf, bool useTabs = false, int tabWidth = 4, int indentWidth = 0) =>
+        nativeControl.InitDocument(eolMode, useTabs, tabWidth, indentWidth);
 
     /// <inheritdoc />
-    public int TextLength { get; }
-
-    /// <inheritdoc cref="IScintillaControl.ReleaseUnmanagedResources" />
-    public void ReleaseUnmanagedResources()
-    {
-        throw new NotImplementedException();
-    }
-
+    public int TextLength => nativeControl.TextLength;
+    
     /// <summary>
     /// Gets the Lexilla library access.
     /// </summary>
@@ -138,5 +126,5 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public ILexilla Lexilla => LexillaSingleton;
 
     /// <inheritdoc />
-    public Encoding Encoding => Control.Encoding;
+    public Encoding Encoding => nativeControl.Encoding;
 }

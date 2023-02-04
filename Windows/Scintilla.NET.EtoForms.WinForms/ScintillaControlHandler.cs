@@ -117,10 +117,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     /// Removes the specified marker from all lines.
     /// </summary>
     /// <param name="marker">The zero-based index to remove from all lines, or -1 to remove all markers from all lines.</param>
-    public void MarkerDeleteAll(int marker)
-    {
-        Control.MarkerDeleteAll(marker);
-    }
+    public void MarkerDeleteAll(int marker) => Control.MarkerDeleteAll(marker);
 
     /// <inheritdoc />
     public void MarkerDeleteHandle(MarkerHandle markerHandle) => nativeControl.MarkerDeleteHandle(markerHandle);
