@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Collections;
@@ -6,7 +7,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// A multiple selection collection.
 /// </summary>
-public abstract class SelectionCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IEnumerable<TSelection>, IStyleCollection
+public abstract class SelectionCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaSelectionCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -23,11 +24,6 @@ public abstract class SelectionCollectionBase<TMarkers, TStyles, TIndicators, TL
     where TColor: struct
 {
     /// <summary>
-    /// A reference to the Scintilla control interface.
-    /// </summary>
-    protected readonly IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla;
-
-    /// <summary>
     /// Provides an enumerator that iterates through the collection.
     /// </summary>
     /// <returns>An object that contains all <see cref="SelectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> objects within the <see cref="SelectionCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
@@ -43,6 +39,12 @@ public abstract class SelectionCollectionBase<TMarkers, TStyles, TIndicators, TL
         return GetEnumerator();
     }
 
+    /// <inheritdoc />
+    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
+    {
+        get;
+    }
+
     /// <summary>
     /// Gets the number of active selections.
     /// </summary>
@@ -51,7 +53,7 @@ public abstract class SelectionCollectionBase<TMarkers, TStyles, TIndicators, TL
     {
         get
         {
-            return scintilla.DirectMessage(SCI_GETSELECTIONS).ToInt32();
+            return ScintillaApi.DirectMessage(SCI_GETSELECTIONS).ToInt32();
         }
     }
 
@@ -63,7 +65,7 @@ public abstract class SelectionCollectionBase<TMarkers, TStyles, TIndicators, TL
     {
         get
         {
-            return scintilla.DirectMessage(SCI_GETSELECTIONEMPTY) != IntPtr.Zero;
+            return ScintillaApi.DirectMessage(SCI_GETSELECTIONEMPTY) != IntPtr.Zero;
         }
     }
 
@@ -80,6 +82,6 @@ public abstract class SelectionCollectionBase<TMarkers, TStyles, TIndicators, TL
     /// <param name="scintilla"></param>
     public SelectionCollectionBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla)
     {
-        this.scintilla = scintilla;
+        this.ScintillaApi = scintilla;
     }
 }

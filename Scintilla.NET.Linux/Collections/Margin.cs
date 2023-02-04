@@ -25,13 +25,13 @@ public class Margin : MarginBase<MarkerCollection, StyleCollection, IndicatorCol
     {
         get
         {
-            var color = scintilla.DirectMessage(SCI_GETMARGINBACKN, new IntPtr(Index)).ToInt32();
+            var color = ScintillaApi.DirectMessage(SCI_GETMARGINBACKN, new IntPtr(Index)).ToInt32();
             return ColorTranslator.ToColor(color);
         }
         set
         {
             var color = ColorTranslator.ToInt(value);
-            scintilla.DirectMessage(SCI_SETMARGINBACKN, new IntPtr(Index), new IntPtr(color));
+            ScintillaApi.DirectMessage(SCI_SETMARGINBACKN, new IntPtr(Index), new IntPtr(color));
         }
     }
     

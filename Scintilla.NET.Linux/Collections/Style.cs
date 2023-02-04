@@ -23,13 +23,13 @@ public class Style : StyleBase<MarkerCollection, StyleCollection, IndicatorColle
     {
         get
         {
-            var color = scintilla.DirectMessage(ScintillaConstants.SCI_STYLEGETBACK, new IntPtr(Index), IntPtr.Zero).ToInt32();
+            var color = ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETBACK, new IntPtr(Index), IntPtr.Zero).ToInt32();
             return ColorTranslator.ToColor(color);
         }
         set
         {
             var color = ColorTranslator.ToInt(value);
-            scintilla.DirectMessage(ScintillaConstants.SCI_STYLESETBACK, new IntPtr(Index), new IntPtr(color));
+            ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLESETBACK, new IntPtr(Index), new IntPtr(color));
         }
     }
 
@@ -42,13 +42,13 @@ public class Style : StyleBase<MarkerCollection, StyleCollection, IndicatorColle
     {
         get
         {
-            var color = scintilla.DirectMessage(ScintillaConstants.SCI_STYLEGETFORE, new IntPtr(Index), IntPtr.Zero).ToInt32();
+            var color = ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETFORE, new IntPtr(Index), IntPtr.Zero).ToInt32();
             return ColorTranslator.ToColor(color);
         }
         set
         {
             var color = ColorTranslator.ToInt(value);
-            scintilla.DirectMessage(ScintillaConstants.SCI_STYLESETFORE, new IntPtr(Index), new IntPtr(color));
+            ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLESETFORE, new IntPtr(Index), new IntPtr(color));
         }
     }
     #endregion Properties

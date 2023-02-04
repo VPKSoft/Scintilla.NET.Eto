@@ -27,7 +27,7 @@ public class SelectionCollection : SelectionCollectionBase<MarkerCollection, Sty
         get
         {
             index = HelpersGeneral.Clamp(index, 0, Count - 1);
-            return new Selection(scintilla, index);
+            return new Selection(ScintillaApi, index);
         }
     }
 

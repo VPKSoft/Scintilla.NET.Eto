@@ -89,7 +89,7 @@ public class MarginCollection : MarginCollectionBase<MarkerCollection, StyleColl
         get
         {
             index = Helpers.Clamp(index, 0, Count - 1);
-            return new Margin(scintilla, index);
+            return new Margin(ScintillaApi, index);
         }
     }
 

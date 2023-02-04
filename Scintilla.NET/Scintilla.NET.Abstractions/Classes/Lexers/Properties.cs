@@ -24,16 +24,43 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Collections;
+using Scintilla.NET.Abstractions.Enumerations;
+using static Scintilla.NET.Abstractions.ScintillaConstants;
+
+namespace Scintilla.NET.Abstractions.Classes.Lexers;
 
 /// <summary>
-/// Common members for the Scintilla marker collection.
+/// Style constants for use with the <see cref="Lexer.Properties" /> lexer.
 /// </summary>
-public interface IMarkerCollection
+public static class Properties
 {
     /// <summary>
-    /// Gets the number of markers in the <see cref="MarkerCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.
+    /// Default (whitespace) style index.
     /// </summary>
-    /// <returns>This property always returns 32.</returns>
-    public int Count { get; }
+    public const int Default = SCE_PROPS_DEFAULT;
+
+    /// <summary>
+    /// Comment style index.
+    /// </summary>
+    public const int Comment = SCE_PROPS_COMMENT;
+
+    /// <summary>
+    /// Section style index.
+    /// </summary>
+    public const int Section = SCE_PROPS_SECTION;
+
+    /// <summary>
+    /// Assignment operator index.
+    /// </summary>
+    public const int Assignment = SCE_PROPS_ASSIGNMENT;
+
+    /// <summary>
+    /// Default (registry-only) value index.
+    /// </summary>
+    public const int DefVal = SCE_PROPS_DEFVAL;
+
+    /// <summary>
+    /// Key style index.
+    /// </summary>
+    public const int Key = SCE_PROPS_KEY;
 }

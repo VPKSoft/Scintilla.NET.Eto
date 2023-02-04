@@ -15,12 +15,12 @@ public class MarkerCollection : MarkerCollectionBase<MarkerCollection, StyleColl
     /// <param name="index">The marker index.</param>
     /// <returns>An object representing the marker at the specified <paramref name="index" />.</returns>
     /// <remarks>Markers 25 through 31 are used by Scintilla for folding.</remarks>
-    protected override Marker this[int index]
+    public override Marker this[int index]
     {
         get
         {
             index = Helpers.Clamp(index, 0, Count - 1);
-            return new Marker(scintilla, index);
+            return new Marker(ScintillaApi, index);
         }
     }
 

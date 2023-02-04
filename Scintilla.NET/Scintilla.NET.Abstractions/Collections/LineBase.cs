@@ -1,5 +1,6 @@
 ﻿using Scintilla.NET.Abstractions.Enumerations;
 using System.Collections;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Structs;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
@@ -8,7 +9,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// Represents a line of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
+public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaLine<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -24,15 +25,6 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     where TBitmap: class
     where TColor: struct
 {
-    #region Fields
-
-    /// <summary>
-    /// A reference to the Scintilla control interface.
-    /// </summary>
-    protected readonly IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla;
-
-    #endregion Fields
-
     #region Methods
 
     /// <summary>
@@ -40,7 +32,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// </summary>
     public virtual void EnsureVisible()
     {
-        scintilla.DirectMessage(SCI_ENSUREVISIBLE, new IntPtr(Index));
+        ScintillaApi.DirectMessage(SCI_ENSUREVISIBLE, new IntPtr(Index));
     }
 
     /// <summary>
@@ -49,7 +41,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <param name="action">One of the <see cref="FoldAction" /> enumeration values.</param>
     public virtual void FoldChildren(FoldAction action)
     {
-        scintilla.DirectMessage(SCI_FOLDCHILDREN, new IntPtr(Index), new IntPtr((int)action));
+        ScintillaApi.DirectMessage(SCI_FOLDCHILDREN, new IntPtr(Index), new IntPtr((int)action));
     }
 
     /// <summary>
@@ -58,7 +50,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <param name="action">One of the <see cref="FoldAction" /> enumeration values.</param>
     public virtual void FoldLine(FoldAction action)
     {
-        scintilla.DirectMessage(SCI_FOLDLINE, new IntPtr(Index), new IntPtr((int)action));
+        ScintillaApi.DirectMessage(SCI_FOLDLINE, new IntPtr(Index), new IntPtr((int)action));
     }
 
     /// <summary>
@@ -73,7 +65,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// </returns>
     public virtual int GetLastChild(int level)
     {
-        return scintilla.DirectMessage(SCI_GETLASTCHILD, new IntPtr(Index), new IntPtr(level)).ToInt32();
+        return ScintillaApi.DirectMessage(SCI_GETLASTCHILD, new IntPtr(Index), new IntPtr(level)).ToInt32();
     }
 
     /// <summary>
@@ -82,7 +74,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <remarks>Any selection is discarded.</remarks>
     public virtual void Goto()
     {
-        scintilla.DirectMessage(SCI_GOTOLINE, new IntPtr(Index));
+        ScintillaApi.DirectMessage(SCI_GOTOLINE, new IntPtr(Index));
     }
 
     /// <summary>
@@ -93,8 +85,8 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <remarks>This method does not check if the line already contains the <paramref name="marker" />.</remarks>
     public virtual MarkerHandle MarkerAdd(int marker)
     {
-        marker = HelpersGeneral.Clamp(marker, 0, scintilla.Markers.Count - 1);
-        var handle = scintilla.DirectMessage(SCI_MARKERADD, new IntPtr(Index), new IntPtr(marker));
+        marker = HelpersGeneral.Clamp(marker, 0, ScintillaApi.Markers.Count - 1);
+        var handle = ScintillaApi.DirectMessage(SCI_MARKERADD, new IntPtr(Index), new IntPtr(marker));
         return new MarkerHandle { Value = handle };
     }
 
@@ -105,7 +97,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     public virtual void MarkerAddSet(uint markerMask)
     {
         var mask = unchecked((int)markerMask);
-        scintilla.DirectMessage(SCI_MARKERADDSET, new IntPtr(Index), new IntPtr(mask));
+        ScintillaApi.DirectMessage(SCI_MARKERADDSET, new IntPtr(Index), new IntPtr(mask));
     }
 
     /// <summary>
@@ -115,42 +107,42 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <remarks>If the same marker has been added to the line more than once, this will delete one copy each time it is used.</remarks>
     public virtual void MarkerDelete(int marker)
     {
-        marker = HelpersGeneral.Clamp(marker, -1, scintilla.Markers.Count - 1);
-        scintilla.DirectMessage(SCI_MARKERDELETE, new IntPtr(Index), new IntPtr(marker));
+        marker = HelpersGeneral.Clamp(marker, -1, ScintillaApi.Markers.Count - 1);
+        ScintillaApi.DirectMessage(SCI_MARKERDELETE, new IntPtr(Index), new IntPtr(marker));
     }
 
     /// <summary>
     /// Returns a bit mask indicating which markers are present on the line.
     /// </summary>
-    /// <returns>An unsigned 32-bit value with each bit cooresponding to one of the 32 zero-based <see cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes.</returns>
+    /// <returns>An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes.</returns>
     public virtual uint MarkerGet()
     {
-        var mask = scintilla.DirectMessage(SCI_MARKERGET, new IntPtr(Index)).ToInt32();
+        var mask = ScintillaApi.DirectMessage(SCI_MARKERGET, new IntPtr(Index)).ToInt32();
         return unchecked((uint)mask);
     }
 
     /// <summary>
     /// Efficiently searches from the current line forward to the end of the document for the specified markers.
     /// </summary>
-    /// <param name="markerMask">An unsigned 32-bit value with each bit cooresponding to one of the 32 zero-based <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes.</param>
+    /// <param name="markerMask">An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes.</param>
     /// <returns>If found, the zero-based line index containing one of the markers in <paramref name="markerMask" />; otherwise, -1.</returns>
     /// <remarks>For example, the mask for marker index 10 is 1 shifted left 10 times (1 &lt;&lt; 10).</remarks>
     public virtual int MarkerNext(uint markerMask)
     {
         var mask = unchecked((int)markerMask);
-        return scintilla.DirectMessage(SCI_MARKERNEXT, new IntPtr(Index), new IntPtr(mask)).ToInt32();
+        return ScintillaApi.DirectMessage(SCI_MARKERNEXT, new IntPtr(Index), new IntPtr(mask)).ToInt32();
     }
 
     /// <summary>
     /// Efficiently searches from the current line backward to the start of the document for the specified markers.
     /// </summary>
-    /// <param name="markerMask">An unsigned 32-bit value with each bit cooresponding to one of the 32 zero-based <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes.</param>
+    /// <param name="markerMask">An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes.</param>
     /// <returns>If found, the zero-based line index containing one of the markers in <paramref name="markerMask" />; otherwise, -1.</returns>
     /// <remarks>For example, the mask for marker index 10 is 1 shifted left 10 times (1 &lt;&lt; 10).</remarks>
     public virtual int MarkerPrevious(uint markerMask)
     {
         var mask = unchecked((int)markerMask);
-        return scintilla.DirectMessage(SCI_MARKERPREVIOUS, new IntPtr(Index), new IntPtr(mask)).ToInt32();
+        return ScintillaApi.DirectMessage(SCI_MARKERPREVIOUS, new IntPtr(Index), new IntPtr(mask)).ToInt32();
     }
 
     /// <summary>
@@ -160,7 +152,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <seealso cref="ToggleFoldShowText"/>
     public virtual void ToggleFold()
     {
-        scintilla.DirectMessage(SCI_TOGGLEFOLD, new IntPtr(Index));
+        ScintillaApi.DirectMessage(SCI_TOGGLEFOLD, new IntPtr(Index));
     }
 
     /// <summary>
@@ -173,16 +165,22 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         if (string.IsNullOrEmpty(text))
         {
-            scintilla.DirectMessage(SCI_TOGGLEFOLDSHOWTEXT, new IntPtr(Index), IntPtr.Zero);
+            ScintillaApi.DirectMessage(SCI_TOGGLEFOLDSHOWTEXT, new IntPtr(Index), IntPtr.Zero);
         }
         else
         {
-            var bytes = HelpersGeneral.GetBytes(text, scintilla.Encoding, zeroTerminated: true);
+            var bytes = HelpersGeneral.GetBytes(text, ScintillaApi.Encoding, zeroTerminated: true);
             fixed (byte* bp = bytes)
             {
-                scintilla.DirectMessage(SCI_TOGGLEFOLDSHOWTEXT, new IntPtr(Index), new IntPtr(bp));
+                ScintillaApi.DirectMessage(SCI_TOGGLEFOLDSHOWTEXT, new IntPtr(Index), new IntPtr(bp));
             }
         }
+    }
+
+    /// <inheritdoc />
+    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
+    {
+        get;
     }
 
     #endregion Methods
@@ -193,7 +191,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// Gets the number of annotation lines of text.
     /// </summary>
     /// <returns>The number of annotation lines.</returns>
-    public virtual int AnnotationLines => scintilla.DirectMessage(SCI_ANNOTATIONGETLINES, new IntPtr(Index)).ToInt32();
+    public virtual int AnnotationLines => ScintillaApi.DirectMessage(SCI_ANNOTATIONGETLINES, new IntPtr(Index)).ToInt32();
 
     /// <summary>
     /// Gets or sets the style of the annotation text.
@@ -207,17 +205,17 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         get
         {
-            return scintilla.DirectMessage(SCI_ANNOTATIONGETSTYLE, new IntPtr(Index)).ToInt32();
+            return ScintillaApi.DirectMessage(SCI_ANNOTATIONGETSTYLE, new IntPtr(Index)).ToInt32();
         }
         set
         {
-            value = HelpersGeneral.Clamp(value, 0, scintilla.Styles.Count - 1);
-            scintilla.DirectMessage(SCI_ANNOTATIONSETSTYLE, new IntPtr(Index), new IntPtr(value));
+            value = HelpersGeneral.Clamp(value, 0, ScintillaApi.Styles.Count - 1);
+            ScintillaApi.DirectMessage(SCI_ANNOTATIONSETSTYLE, new IntPtr(Index), new IntPtr(value));
         }
     }
 
     /// <summary>
-    /// Gets or sets an array of style indexes corresponding to each charcter in the <see cref="AnnotationText" />
+    /// Gets or sets an array of style indexes corresponding to each character in the <see cref="AnnotationText" />
     /// so that each character may be individually styled.
     /// </summary>
     /// <returns>
@@ -233,7 +231,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         get
         {
-            var length = scintilla.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index)).ToInt32();
+            var length = ScintillaApi.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
             {
                 return new byte[0];
@@ -246,16 +244,16 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             {
                 fixed (byte* stylePtr = styles)
                 {
-                    scintilla.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index), new IntPtr(textPtr));
-                    scintilla.DirectMessage(SCI_ANNOTATIONGETSTYLES, new IntPtr(Index), new IntPtr(stylePtr));
+                    ScintillaApi.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index), new IntPtr(textPtr));
+                    ScintillaApi.DirectMessage(SCI_ANNOTATIONGETSTYLES, new IntPtr(Index), new IntPtr(stylePtr));
 
-                    return HelpersGeneral.ByteToCharStyles(stylePtr, textPtr, length, scintilla.Encoding);
+                    return HelpersGeneral.ByteToCharStyles(stylePtr, textPtr, length, ScintillaApi.Encoding);
                 }
             }
         }
         set
         {
-            var length = scintilla.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index)).ToInt32();
+            var length = ScintillaApi.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
             {
                 return;
@@ -264,12 +262,12 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             var text = new byte[length + 1];
             fixed (byte* textPtr = text)
             {
-                scintilla.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index), new IntPtr(textPtr));
+                ScintillaApi.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index), new IntPtr(textPtr));
 
-                var styles = HelpersGeneral.CharToByteStyles(value ?? Array.Empty<byte>(), textPtr, length, scintilla.Encoding);
+                var styles = HelpersGeneral.CharToByteStyles(value ?? Array.Empty<byte>(), textPtr, length, ScintillaApi.Encoding);
                 fixed (byte* stylePtr = styles)
                 {
-                    scintilla.DirectMessage(SCI_ANNOTATIONSETSTYLES, new IntPtr(Index), new IntPtr(stylePtr));
+                    ScintillaApi.DirectMessage(SCI_ANNOTATIONSETSTYLES, new IntPtr(Index), new IntPtr(stylePtr));
                 }
             }
         }
@@ -283,7 +281,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         get
         {
-            var length = scintilla.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index)).ToInt32();
+            var length = ScintillaApi.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
             {
                 return string.Empty;
@@ -292,8 +290,8 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             var bytes = new byte[length + 1];
             fixed (byte* bp = bytes)
             {
-                scintilla.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index), new IntPtr(bp));
-                return HelpersGeneral.GetString(new IntPtr(bp), length, scintilla.Encoding);
+                ScintillaApi.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index), new IntPtr(bp));
+                return HelpersGeneral.GetString(new IntPtr(bp), length, ScintillaApi.Encoding);
             }
         }
         set
@@ -302,14 +300,14 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             if (value == null)
             {
                 // Scintilla docs suggest that setting to NULL rather than an empty string will free memory
-                scintilla.DirectMessage(SCI_ANNOTATIONSETTEXT, new IntPtr(Index), IntPtr.Zero);
+                ScintillaApi.DirectMessage(SCI_ANNOTATIONSETTEXT, new IntPtr(Index), IntPtr.Zero);
             }
             else
             {
-                var bytes = HelpersGeneral.GetBytes(value, scintilla.Encoding, zeroTerminated: true);
+                var bytes = HelpersGeneral.GetBytes(value, ScintillaApi.Encoding, zeroTerminated: true);
                 fixed (byte* bp = bytes)
                 {
-                    scintilla.DirectMessage(SCI_ANNOTATIONSETTEXT, new IntPtr(Index), new IntPtr(bp));
+                    ScintillaApi.DirectMessage(SCI_ANNOTATIONSETTEXT, new IntPtr(Index), new IntPtr(bp));
                 }
             }
         }
@@ -320,7 +318,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// </summary>
     /// <returns>The zero-based line index of the next contracted folder header.</returns>
     /// <remarks>If the current line is contracted the current line index is returned.</remarks>
-    public virtual int ContractedFoldNext => scintilla.DirectMessage(SCI_CONTRACTEDFOLDNEXT, new IntPtr(Index)).ToInt32();
+    public virtual int ContractedFoldNext => ScintillaApi.DirectMessage(SCI_CONTRACTEDFOLDNEXT, new IntPtr(Index)).ToInt32();
 
     /// <summary>
     /// Gets the zero-based index of the line as displayed in a <see cref="Scintilla" /> control
@@ -328,7 +326,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// </summary>
     /// <returns>The zero-based display line index.</returns>
     /// <seealso cref="Scintilla.DocLineFromVisible" />
-    public virtual int DisplayIndex => scintilla.DirectMessage(SCI_VISIBLEFROMDOCLINE, new IntPtr(Index)).ToInt32();
+    public virtual int DisplayIndex => ScintillaApi.DirectMessage(SCI_VISIBLEFROMDOCLINE, new IntPtr(Index)).ToInt32();
 
     /// <summary>
     /// Gets the zero-based character position in the document where the line ends (exclusive).
@@ -348,12 +346,12 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         get
         {
-            return scintilla.DirectMessage(SCI_GETFOLDEXPANDED, new IntPtr(Index)) != IntPtr.Zero;
+            return ScintillaApi.DirectMessage(SCI_GETFOLDEXPANDED, new IntPtr(Index)) != IntPtr.Zero;
         }
         set
         {
             var expanded = value ? new IntPtr(1) : IntPtr.Zero;
-            scintilla.DirectMessage(SCI_SETFOLDEXPANDED, new IntPtr(Index), expanded);
+            ScintillaApi.DirectMessage(SCI_SETFOLDEXPANDED, new IntPtr(Index), expanded);
         }
     }
 
@@ -365,7 +363,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         get
         {
-            var level = scintilla.DirectMessage(SCI_GETFOLDLEVEL, new IntPtr(Index)).ToInt32();
+            var level = ScintillaApi.DirectMessage(SCI_GETFOLDLEVEL, new IntPtr(Index)).ToInt32();
             return level & SC_FOLDLEVELNUMBERMASK;
         }
         set
@@ -373,7 +371,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             var bits = (int)FoldLevelFlags;
             bits |= value;
 
-            scintilla.DirectMessage(SCI_SETFOLDLEVEL, new IntPtr(Index), new IntPtr(bits));
+            ScintillaApi.DirectMessage(SCI_SETFOLDLEVEL, new IntPtr(Index), new IntPtr(bits));
         }
     }
 
@@ -385,7 +383,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         get
         {
-            var flags = scintilla.DirectMessage(SCI_GETFOLDLEVEL, new IntPtr(Index)).ToInt32();
+            var flags = ScintillaApi.DirectMessage(SCI_GETFOLDLEVEL, new IntPtr(Index)).ToInt32();
             return (FoldLevelFlags)(flags & ~SC_FOLDLEVELNUMBERMASK);
         }
         set
@@ -393,7 +391,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             var bits = FoldLevel;
             bits |= (int)value;
 
-            scintilla.DirectMessage(SCI_SETFOLDLEVEL, new IntPtr(Index), new IntPtr(bits));
+            ScintillaApi.DirectMessage(SCI_SETFOLDLEVEL, new IntPtr(Index), new IntPtr(bits));
         }
     }
 
@@ -402,14 +400,14 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <see cref="Scintilla.NET.Abstractions.Enumerations.FoldLevelFlags.Header" /> and has a <see cref="FoldLevel" /> less than the current line.
     /// </summary>
     /// <returns>The zero-based line index of the fold parent if present; otherwise, -1.</returns>
-    public virtual int FoldParent => scintilla.DirectMessage(SCI_GETFOLDPARENT, new IntPtr(Index)).ToInt32();
+    public virtual int FoldParent => ScintillaApi.DirectMessage(SCI_GETFOLDPARENT, new IntPtr(Index)).ToInt32();
 
     /// <summary>
     /// Gets the height of the line in pixels.
     /// </summary>
     /// <returns>The height in pixels of the line.</returns>
     /// <remarks>Currently all lines are the same height.</remarks>
-    public virtual int Height => scintilla.DirectMessage(SCI_TEXTHEIGHT, new IntPtr(Index)).ToInt32();
+    public virtual int Height => ScintillaApi.DirectMessage(SCI_TEXTHEIGHT, new IntPtr(Index)).ToInt32();
 
     /// <summary>
     /// Gets the line index.
@@ -421,7 +419,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// Gets the length of the line.
     /// </summary>
     /// <returns>The number of characters in the line including any end of line characters.</returns>
-    public virtual int Length => scintilla.Lines.CharLineLength(Index);
+    public virtual int Length => ScintillaApi.Lines.CharLineLength(Index);
 
     /// <summary>
     /// Gets or sets the style of the margin text in a <see cref="MarginType.Text" /> or <see cref="MarginType.RightText" /> margin.
@@ -435,17 +433,17 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         get
         {
-            return scintilla.DirectMessage(SCI_MARGINGETSTYLE, new IntPtr(Index)).ToInt32();
+            return ScintillaApi.DirectMessage(SCI_MARGINGETSTYLE, new IntPtr(Index)).ToInt32();
         }
         set
         {
-            value = HelpersGeneral.Clamp(value, 0, scintilla.Styles.Count - 1);
-            scintilla.DirectMessage(SCI_MARGINSETSTYLE, new IntPtr(Index), new IntPtr(value));
+            value = HelpersGeneral.Clamp(value, 0, ScintillaApi.Styles.Count - 1);
+            ScintillaApi.DirectMessage(SCI_MARGINSETSTYLE, new IntPtr(Index), new IntPtr(value));
         }
     }
 
     /// <summary>
-    /// Gets or sets an array of style indexes corresponding to each charcter in the <see cref="MarginText" />
+    /// Gets or sets an array of style indexes corresponding to each character in the <see cref="MarginText" />
     /// so that each character may be individually styled.
     /// </summary>
     /// <returns>
@@ -461,7 +459,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         get
         {
-            var length = scintilla.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index)).ToInt32();
+            var length = ScintillaApi.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
             {
                 return Array.Empty<byte>();
@@ -474,16 +472,16 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             {
                 fixed (byte* stylePtr = styles)
                 {
-                    scintilla.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index), new IntPtr(textPtr));
-                    scintilla.DirectMessage(SCI_MARGINGETSTYLES, new IntPtr(Index), new IntPtr(stylePtr));
+                    ScintillaApi.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index), new IntPtr(textPtr));
+                    ScintillaApi.DirectMessage(SCI_MARGINGETSTYLES, new IntPtr(Index), new IntPtr(stylePtr));
 
-                    return HelpersGeneral.ByteToCharStyles(stylePtr, textPtr, length, scintilla.Encoding);
+                    return HelpersGeneral.ByteToCharStyles(stylePtr, textPtr, length, ScintillaApi.Encoding);
                 }
             }
         }
         set
         {
-            var length = scintilla.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index)).ToInt32();
+            var length = ScintillaApi.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
             {
                 return;
@@ -492,12 +490,12 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             var text = new byte[length + 1];
             fixed (byte* textPtr = text)
             {
-                scintilla.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index), new IntPtr(textPtr));
+                ScintillaApi.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index), new IntPtr(textPtr));
 
-                var styles = HelpersGeneral.CharToByteStyles(value ?? Array.Empty<byte>(), textPtr, length, scintilla.Encoding);
+                var styles = HelpersGeneral.CharToByteStyles(value ?? Array.Empty<byte>(), textPtr, length, ScintillaApi.Encoding);
                 fixed (byte* stylePtr = styles)
                 {
-                    scintilla.DirectMessage(SCI_MARGINSETSTYLES, new IntPtr(Index), new IntPtr(stylePtr));
+                    ScintillaApi.DirectMessage(SCI_MARGINSETSTYLES, new IntPtr(Index), new IntPtr(stylePtr));
                 }
             }
         }
@@ -512,7 +510,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         get
         {
-            var length = scintilla.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index)).ToInt32();
+            var length = ScintillaApi.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
             {
                 return string.Empty;
@@ -521,8 +519,8 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             var bytes = new byte[length + 1];
             fixed (byte* bp = bytes)
             {
-                scintilla.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index), new IntPtr(bp));
-                return HelpersGeneral.GetString(new IntPtr(bp), length, scintilla.Encoding);
+                ScintillaApi.DirectMessage(SCI_MARGINGETTEXT, new IntPtr(Index), new IntPtr(bp));
+                return HelpersGeneral.GetString(new IntPtr(bp), length, ScintillaApi.Encoding);
             }
         }
         set
@@ -530,14 +528,14 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             if (string.IsNullOrEmpty(value))
             {
                 // Scintilla docs suggest that setting to NULL rather than an empty string will free memory
-                scintilla.DirectMessage(SCI_MARGINSETTEXT, new IntPtr(Index), IntPtr.Zero);
+                ScintillaApi.DirectMessage(SCI_MARGINSETTEXT, new IntPtr(Index), IntPtr.Zero);
             }
             else
             {
-                var bytes = HelpersGeneral.GetBytes(value, scintilla.Encoding, zeroTerminated: true);
+                var bytes = HelpersGeneral.GetBytes(value, ScintillaApi.Encoding, zeroTerminated: true);
                 fixed (byte* bp = bytes)
                 {
-                    scintilla.DirectMessage(SCI_MARGINSETTEXT, new IntPtr(Index), new IntPtr(bp));
+                    ScintillaApi.DirectMessage(SCI_MARGINSETTEXT, new IntPtr(Index), new IntPtr(bp));
                 }
             }
         }
@@ -547,7 +545,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// Gets the zero-based character position in the document where the line begins.
     /// </summary>
     /// <returns>The document position of the first character in the line.</returns>
-    public virtual int Position => scintilla.Lines.CharPositionFromLine(Index);
+    public virtual int Position => ScintillaApi.Lines.CharPositionFromLine(Index);
 
     /// <summary>
     /// Gets the line text.
@@ -558,15 +556,15 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     {
         get
         {
-            var start = scintilla.DirectMessage(SCI_POSITIONFROMLINE, new IntPtr(Index));
-            var length = scintilla.DirectMessage(SCI_LINELENGTH, new IntPtr(Index));
-            var ptr = scintilla.DirectMessage(SCI_GETRANGEPOINTER, start, length);
+            var start = ScintillaApi.DirectMessage(SCI_POSITIONFROMLINE, new IntPtr(Index));
+            var length = ScintillaApi.DirectMessage(SCI_LINELENGTH, new IntPtr(Index));
+            var ptr = ScintillaApi.DirectMessage(SCI_GETRANGEPOINTER, start, length);
             if (ptr == IntPtr.Zero)
             {
                 return string.Empty;
             }
 
-            var text = new string((sbyte*)ptr, 0, length.ToInt32(), scintilla.Encoding);
+            var text = new string((sbyte*)ptr, 0, length.ToInt32(), ScintillaApi.Encoding);
             return text;
         }
     }
@@ -577,8 +575,8 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <returns>The indentation measured in character columns, which corresponds to the width of space characters.</returns>
     public virtual int Indentation
     {
-        get => scintilla.DirectMessage(SCI_GETLINEINDENTATION, new IntPtr(Index)).ToInt32();
-        set => scintilla.DirectMessage(SCI_SETLINEINDENTATION, new IntPtr(Index), new IntPtr(value));
+        get => ScintillaApi.DirectMessage(SCI_GETLINEINDENTATION, new IntPtr(Index)).ToInt32();
+        set => ScintillaApi.DirectMessage(SCI_SETLINEINDENTATION, new IntPtr(Index), new IntPtr(value));
     }
 
     /// <summary>
@@ -587,13 +585,13 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <returns>true if the line is visible; otherwise, false.</returns>
     /// <seealso cref="Scintilla.ShowLines" />
     /// <seealso cref="Scintilla.HideLines" />
-    public virtual bool Visible => scintilla.DirectMessage(SCI_GETLINEVISIBLE, new IntPtr(Index)) != IntPtr.Zero;
+    public virtual bool Visible => ScintillaApi.DirectMessage(SCI_GETLINEVISIBLE, new IntPtr(Index)) != IntPtr.Zero;
 
     /// <summary>
     /// Gets the number of display lines this line would occupy when wrapping is enabled.
     /// </summary>
     /// <returns>The number of display lines needed to wrap the current document line.</returns>
-    public virtual int WrapCount => scintilla.DirectMessage(SCI_WRAPCOUNT, new IntPtr(Index)).ToInt32();
+    public virtual int WrapCount => ScintillaApi.DirectMessage(SCI_WRAPCOUNT, new IntPtr(Index)).ToInt32();
 
     #endregion Properties
 
@@ -606,7 +604,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <param name="index">The index of this line within the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> that created it.</param>
     protected LineBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla, int index)
     {
-        this.scintilla = scintilla;
+        this.ScintillaApi = scintilla;
         Index = index;
     }
 

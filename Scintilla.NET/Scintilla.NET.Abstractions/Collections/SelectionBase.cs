@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Collections;
@@ -6,7 +7,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// Represents a selection when there are multiple active selections in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> 
+public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaSelection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -22,10 +23,11 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
     where TBitmap: class
     where TColor: struct
 {
-    /// <summary>
-    /// A reference to the Scintilla control interface.
-    /// </summary>
-    protected readonly IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla;
+    /// <inheritdoc />
+    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
+    {
+        get;
+    }
 
     /// <summary>
     /// Gets or sets the anchor position of the selection.
@@ -35,19 +37,19 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            var pos = scintilla.DirectMessage(SCI_GETSELECTIONNANCHOR, new IntPtr(Index)).ToInt32();
+            var pos = ScintillaApi.DirectMessage(SCI_GETSELECTIONNANCHOR, new IntPtr(Index)).ToInt32();
             if (pos <= 0)
             {
                 return pos;
             }
 
-            return scintilla.Lines.ByteToCharPosition(pos);
+            return ScintillaApi.Lines.ByteToCharPosition(pos);
         }
         set
         {
-            value = HelpersGeneral.Clamp(value, 0, scintilla.TextLength);
-            value = scintilla.Lines.CharToBytePosition(value);
-            scintilla.DirectMessage(SCI_SETSELECTIONNANCHOR, new IntPtr(Index), new IntPtr(value));
+            value = HelpersGeneral.Clamp(value, 0, ScintillaApi.TextLength);
+            value = ScintillaApi.Lines.CharToBytePosition(value);
+            ScintillaApi.DirectMessage(SCI_SETSELECTIONNANCHOR, new IntPtr(Index), new IntPtr(value));
         }
     }
 
@@ -59,12 +61,12 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            return scintilla.DirectMessage(SCI_GETSELECTIONNANCHORVIRTUALSPACE, new IntPtr(Index)).ToInt32();
+            return ScintillaApi.DirectMessage(SCI_GETSELECTIONNANCHORVIRTUALSPACE, new IntPtr(Index)).ToInt32();
         }
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);
-            scintilla.DirectMessage(SCI_SETSELECTIONNANCHORVIRTUALSPACE, new IntPtr(Index), new IntPtr(value));
+            ScintillaApi.DirectMessage(SCI_SETSELECTIONNANCHORVIRTUALSPACE, new IntPtr(Index), new IntPtr(value));
         }
     }
 
@@ -76,19 +78,19 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            var pos = scintilla.DirectMessage(SCI_GETSELECTIONNCARET, new IntPtr(Index)).ToInt32();
+            var pos = ScintillaApi.DirectMessage(SCI_GETSELECTIONNCARET, new IntPtr(Index)).ToInt32();
             if (pos <= 0)
             {
                 return pos;
             }
 
-            return scintilla.Lines.ByteToCharPosition(pos);
+            return ScintillaApi.Lines.ByteToCharPosition(pos);
         }
         set
         {
-            value = HelpersGeneral.Clamp(value, 0, scintilla.TextLength);
-            value = scintilla.Lines.CharToBytePosition(value);
-            scintilla.DirectMessage(SCI_SETSELECTIONNCARET, new IntPtr(Index), new IntPtr(value));
+            value = HelpersGeneral.Clamp(value, 0, ScintillaApi.TextLength);
+            value = ScintillaApi.Lines.CharToBytePosition(value);
+            ScintillaApi.DirectMessage(SCI_SETSELECTIONNCARET, new IntPtr(Index), new IntPtr(value));
         }
     }
 
@@ -100,12 +102,12 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            return scintilla.DirectMessage(SCI_GETSELECTIONNCARETVIRTUALSPACE, new IntPtr(Index)).ToInt32();
+            return ScintillaApi.DirectMessage(SCI_GETSELECTIONNCARETVIRTUALSPACE, new IntPtr(Index)).ToInt32();
         }
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);
-            scintilla.DirectMessage(SCI_SETSELECTIONNCARETVIRTUALSPACE, new IntPtr(Index), new IntPtr(value));
+            ScintillaApi.DirectMessage(SCI_SETSELECTIONNCARETVIRTUALSPACE, new IntPtr(Index), new IntPtr(value));
         }
     }
 
@@ -117,19 +119,19 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            var pos = scintilla.DirectMessage(SCI_GETSELECTIONNEND, new IntPtr(Index)).ToInt32();
+            var pos = ScintillaApi.DirectMessage(SCI_GETSELECTIONNEND, new IntPtr(Index)).ToInt32();
             if (pos <= 0)
             {
                 return pos;
             }
 
-            return scintilla.Lines.ByteToCharPosition(pos);
+            return ScintillaApi.Lines.ByteToCharPosition(pos);
         }
         set
         {
-            value = HelpersGeneral.Clamp(value, 0, scintilla.TextLength);
-            value = scintilla.Lines.CharToBytePosition(value);
-            scintilla.DirectMessage(SCI_SETSELECTIONNEND, new IntPtr(Index), new IntPtr(value));
+            value = HelpersGeneral.Clamp(value, 0, ScintillaApi.TextLength);
+            value = ScintillaApi.Lines.CharToBytePosition(value);
+            ScintillaApi.DirectMessage(SCI_SETSELECTIONNEND, new IntPtr(Index), new IntPtr(value));
         }
     }
 
@@ -147,19 +149,19 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            var pos = scintilla.DirectMessage(SCI_GETSELECTIONNSTART, new IntPtr(Index)).ToInt32();
+            var pos = ScintillaApi.DirectMessage(SCI_GETSELECTIONNSTART, new IntPtr(Index)).ToInt32();
             if (pos <= 0)
             {
                 return pos;
             }
 
-            return scintilla.Lines.ByteToCharPosition(pos);
+            return ScintillaApi.Lines.ByteToCharPosition(pos);
         }
         set
         {
-            value = HelpersGeneral.Clamp(value, 0, scintilla.TextLength);
-            value = scintilla.Lines.CharToBytePosition(value);
-            scintilla.DirectMessage(SCI_SETSELECTIONNSTART, new IntPtr(Index), new IntPtr(value));
+            value = HelpersGeneral.Clamp(value, 0, ScintillaApi.TextLength);
+            value = ScintillaApi.Lines.CharToBytePosition(value);
+            ScintillaApi.DirectMessage(SCI_SETSELECTIONNSTART, new IntPtr(Index), new IntPtr(value));
         }
     }
 
@@ -170,7 +172,7 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// <param name="index">The index of this selection within the <see cref="SelectionCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> that created it.</param>
     protected SelectionBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla, int index)
     {
-        this.scintilla = scintilla;
+        this.ScintillaApi = scintilla;
         Index = index;
     }
 }

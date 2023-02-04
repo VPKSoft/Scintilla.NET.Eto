@@ -78,7 +78,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         Markers = new MarkerCollection(this);
         Selections = new SelectionCollection(this);
         
-        this.SCNotification += Lines.scintilla_SCNotification;
+        this.SCNotification += Lines.ScNotificationCallback;
         
         AddSignalHandler ("sci-notify", OnSciNotified, new SciNotifyDelegate(OnSciNotified));
     }
@@ -1872,7 +1872,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <inheritdoc />
     public event EventHandler<NeedShownEventArgs>? NeedShown;
 
-    /// <inheritdoc cref="IScintillaNotificationEvent{TEventArgs}.SCNotification" />
+    /// <inheritdoc cref="IScintillaNotificationEvent.SCNotification" />
     public event EventHandler<SCNotificationEventArgs>? SCNotification;
 
     /// <inheritdoc />

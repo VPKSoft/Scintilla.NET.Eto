@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Collections;
@@ -8,7 +9,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// An immutable collection of margins in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IEnumerable<TMargin>
+public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaMarginCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -24,17 +25,18 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     where TBitmap: class
     where TColor: struct
 {
-    /// <summary>
-    /// A reference to the Scintilla control interface.
-    /// </summary>
-    protected readonly IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla;
+    /// <inheritdoc />
+    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
+    {
+        get;
+    }
 
     /// <summary>
     /// Removes all text displayed in every <see cref="MarginType.Text" /> and <see cref="MarginType.RightText" /> margins.
     /// </summary>
     public virtual void ClearAllText()
     {
-        scintilla.DirectMessage(SCI_MARGINTEXTCLEARALL);
+        ScintillaApi.DirectMessage(SCI_MARGINTEXTCLEARALL);
     }
 
     /// <summary>
@@ -61,12 +63,12 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     {
         get
         {
-            return scintilla.DirectMessage(SCI_GETMARGINS).ToInt32();
+            return ScintillaApi.DirectMessage(SCI_GETMARGINS).ToInt32();
         }
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);
-            scintilla.DirectMessage(SCI_SETMARGINS, new IntPtr(value));
+            ScintillaApi.DirectMessage(SCI_SETMARGINS, new IntPtr(value));
         }
     }
 
@@ -96,12 +98,12 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     {
         get
         {
-            return scintilla.DirectMessage(SCI_GETMARGINLEFT).ToInt32();
+            return ScintillaApi.DirectMessage(SCI_GETMARGINLEFT).ToInt32();
         }
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);
-            scintilla.DirectMessage(SCI_SETMARGINLEFT, IntPtr.Zero, new IntPtr(value));
+            ScintillaApi.DirectMessage(SCI_SETMARGINLEFT, IntPtr.Zero, new IntPtr(value));
         }
     }
 
@@ -141,12 +143,12 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     {
         get
         {
-            return scintilla.DirectMessage(SCI_GETMARGINRIGHT).ToInt32();
+            return ScintillaApi.DirectMessage(SCI_GETMARGINRIGHT).ToInt32();
         }
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);
-            scintilla.DirectMessage(SCI_SETMARGINRIGHT, IntPtr.Zero, new IntPtr(value));
+            ScintillaApi.DirectMessage(SCI_SETMARGINRIGHT, IntPtr.Zero, new IntPtr(value));
         }
     }
 
@@ -166,6 +168,6 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
     protected MarginCollectionBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla)
     {
-        this.scintilla = scintilla;
+        this.ScintillaApi = scintilla;
     }
 }

@@ -24,16 +24,22 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Collections;
+using Scintilla.NET.Abstractions.Enumerations;
 
+namespace Scintilla.NET.Abstractions.Structs;
 /// <summary>
-/// Common members for the Scintilla style collection.
+/// Stuff we track for each line.
 /// </summary>
-public interface IStyleCollection
+public struct PerLine
 {
     /// <summary>
-    /// Gets the number of styles.
+    /// The CHARACTER position where the line begins.
     /// </summary>
-    /// <returns>The number of styles in the <see cref="StyleCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
-    public int Count { get; }
+    public int Start;
+
+    /// <summary>
+    /// 1 if the line contains multi-byte (Unicode) characters; -1 if not; 0 if undetermined.
+    /// </summary>
+    /// <remarks>Using an enum instead of Nullable because it uses less memory per line...</remarks>
+    public ContainsMultiByte ContainsMultiByte;
 }

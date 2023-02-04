@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Collections;
@@ -7,7 +8,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// Represents an indicator in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> 
+public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaIndicator<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -23,14 +24,6 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     where TBitmap: class
     where TColor: struct
 {
-    #region Fields    
-    /// <summary>
-    /// A reference to the Scintilla control interface.
-    /// </summary>
-    protected readonly IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla;
-
-    #endregion Fields
-
     #region Constants
 
     /// <summary>
@@ -61,10 +54,10 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// </remarks>
     public virtual int End(int position)
     {
-        position = HelpersGeneral.Clamp(position, 0, scintilla.TextLength);
-        position = scintilla.Lines.CharToBytePosition(position);
-        position = scintilla.DirectMessage(SCI_INDICATOREND, new IntPtr(Index), new IntPtr(position)).ToInt32();
-        return scintilla.Lines.ByteToCharPosition(position);
+        position = HelpersGeneral.Clamp(position, 0, ScintillaApi.TextLength);
+        position = ScintillaApi.Lines.CharToBytePosition(position);
+        position = ScintillaApi.DirectMessage(SCI_INDICATOREND, new IntPtr(Index), new IntPtr(position)).ToInt32();
+        return ScintillaApi.Lines.ByteToCharPosition(position);
     }
 
     /// <summary>
@@ -80,10 +73,10 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// </remarks>
     public virtual int Start(int position)
     {
-        position = HelpersGeneral.Clamp(position, 0, scintilla.TextLength);
-        position = scintilla.Lines.CharToBytePosition(position);
-        position = scintilla.DirectMessage(SCI_INDICATORSTART, new IntPtr(Index), new IntPtr(position)).ToInt32();
-        return scintilla.Lines.ByteToCharPosition(position);
+        position = HelpersGeneral.Clamp(position, 0, ScintillaApi.TextLength);
+        position = ScintillaApi.Lines.CharToBytePosition(position);
+        position = ScintillaApi.DirectMessage(SCI_INDICATORSTART, new IntPtr(Index), new IntPtr(position)).ToInt32();
+        return ScintillaApi.Lines.ByteToCharPosition(position);
     }
 
     /// <summary>
@@ -93,10 +86,16 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// <returns>The user-defined value at the specified <paramref name="position" />.</returns>
     public virtual int ValueAt(int position)
     {
-        position = HelpersGeneral.Clamp(position, 0, scintilla.TextLength);
-        position = scintilla.Lines.CharToBytePosition(position);
+        position = HelpersGeneral.Clamp(position, 0, ScintillaApi.TextLength);
+        position = ScintillaApi.Lines.CharToBytePosition(position);
 
-        return scintilla.DirectMessage(SCI_INDICATORVALUEAT, new IntPtr(Index), new IntPtr(position)).ToInt32();
+        return ScintillaApi.DirectMessage(SCI_INDICATORVALUEAT, new IntPtr(Index), new IntPtr(position)).ToInt32();
+    }
+
+    /// <inheritdoc />
+    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
+    {
+        get;
     }
 
     #endregion Methods
@@ -114,12 +113,12 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            return scintilla.DirectMessage(SCI_INDICGETALPHA, new IntPtr(Index)).ToInt32();
+            return ScintillaApi.DirectMessage(SCI_INDICGETALPHA, new IntPtr(Index)).ToInt32();
         }
         set
         {
             value = HelpersGeneral.Clamp(value, 0, 255);
-            scintilla.DirectMessage(SCI_INDICSETALPHA, new IntPtr(Index), new IntPtr(value));
+            ScintillaApi.DirectMessage(SCI_INDICSETALPHA, new IntPtr(Index), new IntPtr(value));
         }
     }
 
@@ -134,12 +133,12 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            return (IndicatorFlags)scintilla.DirectMessage(SCI_INDICGETFLAGS, new IntPtr(Index));
+            return (IndicatorFlags)ScintillaApi.DirectMessage(SCI_INDICGETFLAGS, new IntPtr(Index));
         }
         set
         {
             var flags = (int)value;
-            scintilla.DirectMessage(SCI_INDICSETFLAGS, new IntPtr(Index), new IntPtr(flags));
+            ScintillaApi.DirectMessage(SCI_INDICSETFLAGS, new IntPtr(Index), new IntPtr(flags));
         }
     }
 
@@ -175,12 +174,12 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            return (IndicatorStyle)scintilla.DirectMessage(SCI_INDICGETHOVERSTYLE, new IntPtr(Index));
+            return (IndicatorStyle)ScintillaApi.DirectMessage(SCI_INDICGETHOVERSTYLE, new IntPtr(Index));
         }
         set
         {
             var style = (int)value;
-            scintilla.DirectMessage(SCI_INDICSETHOVERSTYLE, new IntPtr(Index), new IntPtr(style));
+            ScintillaApi.DirectMessage(SCI_INDICSETHOVERSTYLE, new IntPtr(Index), new IntPtr(style));
         }
     }
 
@@ -188,7 +187,7 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// Gets the zero-based indicator index this object represents.
     /// </summary>
     /// <returns>The indicator definition index within the <see cref="IndicatorCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
-    protected int Index { get; private set; }
+    public virtual int Index { get; private set; }
 
     /// <summary>
     /// Gets or sets the alpha transparency of the indicator outline.
@@ -201,12 +200,12 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            return scintilla.DirectMessage(SCI_INDICGETOUTLINEALPHA, new IntPtr(Index)).ToInt32();
+            return ScintillaApi.DirectMessage(SCI_INDICGETOUTLINEALPHA, new IntPtr(Index)).ToInt32();
         }
         set
         {
             value = HelpersGeneral.Clamp(value, 0, 255);
-            scintilla.DirectMessage(SCI_INDICSETOUTLINEALPHA, new IntPtr(Index), new IntPtr(value));
+            ScintillaApi.DirectMessage(SCI_INDICSETOUTLINEALPHA, new IntPtr(Index), new IntPtr(value));
         }
     }
 
@@ -220,12 +219,12 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            return (IndicatorStyle)scintilla.DirectMessage(SCI_INDICGETSTYLE, new IntPtr(Index));
+            return (IndicatorStyle)ScintillaApi.DirectMessage(SCI_INDICGETSTYLE, new IntPtr(Index));
         }
         set
         {
             var style = (int)value;
-            scintilla.DirectMessage(SCI_INDICSETSTYLE, new IntPtr(Index), new IntPtr(style));
+            ScintillaApi.DirectMessage(SCI_INDICSETSTYLE, new IntPtr(Index), new IntPtr(style));
         }
     }
 
@@ -238,12 +237,12 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     {
         get
         {
-            return scintilla.DirectMessage(SCI_INDICGETUNDER, new IntPtr(Index)) != IntPtr.Zero;
+            return ScintillaApi.DirectMessage(SCI_INDICGETUNDER, new IntPtr(Index)) != IntPtr.Zero;
         }
         set
         {
             var under = value ? new IntPtr(1) : IntPtr.Zero;
-            scintilla.DirectMessage(SCI_INDICSETUNDER, new IntPtr(Index), under);
+            ScintillaApi.DirectMessage(SCI_INDICSETUNDER, new IntPtr(Index), under);
         }
     }
 
@@ -258,7 +257,7 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// <param name="index">The index of this style within the <see cref="IndicatorCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> that created it.</param>
     protected IndicatorBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla, int index)
     {
-        this.scintilla = scintilla;
+        ScintillaApi = scintilla;
         Index = index;
     }
 
