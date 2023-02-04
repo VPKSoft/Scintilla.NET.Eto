@@ -4935,7 +4935,7 @@ public partial class Scintilla : Control,
         borderStyle = BorderStyle.Fixed3D;
 
         Lines = new LineCollection(this);
-        this.SCNotification += Lines.scintilla_SCNotification;
+        this.SCNotification += Lines.ScNotificationCallback;
 
         Styles = new StyleCollection(this);
         Indicators = new IndicatorCollection(this);

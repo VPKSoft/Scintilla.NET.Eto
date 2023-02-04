@@ -50,7 +50,7 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
     public override void SetBackColor(Color color)
     {
         var colorNum = ColorTranslator.ToInt(color);
-        scintilla.DirectMessage(SCI_MARKERSETBACK, new IntPtr(Index), new IntPtr(colorNum));
+        ScintillaApi.DirectMessage(SCI_MARKERSETBACK, new IntPtr(Index), new IntPtr(colorNum));
     }
 
     /// <summary>
@@ -60,7 +60,7 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
     public override void SetForeColor(Color color)
     {
         var colorNum = ColorTranslator.ToInt(color);
-        scintilla.DirectMessage(SCI_MARKERSETFORE, new IntPtr(Index), new IntPtr(colorNum));
+        ScintillaApi.DirectMessage(SCI_MARKERSETFORE, new IntPtr(Index), new IntPtr(colorNum));
     }
     
     /// <summary>

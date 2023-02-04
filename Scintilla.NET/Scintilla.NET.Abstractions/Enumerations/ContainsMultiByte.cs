@@ -24,16 +24,25 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Collections;
+namespace Scintilla.NET.Abstractions.Enumerations;
 
 /// <summary>
-/// Common members for the Scintilla marker collection.
+/// An enumeration indicating multi-byte state.
 /// </summary>
-public interface IIndicatorCollection
+public enum ContainsMultiByte
 {
     /// <summary>
-    /// Gets the number of indicators in the <see cref="IndicatorCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.
+    /// No multi-byte characters.
     /// </summary>
-    /// <returns>The number of indicators in the <see cref="IndicatorCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
-    public int Count { get; }
+    No = -1,
+
+    /// <summary>
+    /// The value is not known.
+    /// </summary>
+    Unknown,
+
+    /// <summary>
+    /// Multi-byte characters are contained.
+    /// </summary>
+    Yes,
 }

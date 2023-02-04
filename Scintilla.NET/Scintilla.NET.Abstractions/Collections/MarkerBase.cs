@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Collections;
@@ -7,7 +8,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// Represents a margin marker in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
+public abstract class MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaMarker<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -23,8 +24,6 @@ public abstract class MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     where TBitmap: class
     where TColor: struct
 {
-    public readonly IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla;
-
     /// <summary>
     /// An unsigned 32-bit mask of all <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes where each bit corresponds to a margin index.
     /// </summary>
@@ -71,6 +70,12 @@ public abstract class MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// </summary>
     public const int FolderOpen = SC_MARKNUM_FOLDEROPEN;
 
+    /// <inheritdoc />
+    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
+    {
+        get;
+    }
+
     /// <summary>
     /// Sets the marker symbol to a custom image.
     /// </summary>
@@ -83,7 +88,7 @@ public abstract class MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// </summary>
     public void DeleteAll()
     {
-        scintilla.MarkerDeleteAll(Index);
+        ScintillaApi.MarkerDeleteAll(Index);
     }
 
     /// <summary>
@@ -95,7 +100,7 @@ public abstract class MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     public virtual void SetAlpha(int alpha)
     {
         alpha = HelpersGeneral.Clamp(alpha, 0, 255);
-        scintilla.DirectMessage(SCI_MARKERSETALPHA, new IntPtr(Index), new IntPtr(alpha));
+        ScintillaApi.DirectMessage(SCI_MARKERSETALPHA, new IntPtr(Index), new IntPtr(alpha));
     }
 
     /// <summary>
@@ -132,12 +137,12 @@ public abstract class MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     {
         get
         {
-            return (MarkerSymbol)scintilla.DirectMessage(SCI_MARKERSYMBOLDEFINED, new IntPtr(Index));
+            return (MarkerSymbol)ScintillaApi.DirectMessage(SCI_MARKERSYMBOLDEFINED, new IntPtr(Index));
         }
         set
         {
             var markerSymbol = (int)value;
-            scintilla.DirectMessage(SCI_MARKERDEFINE, new IntPtr(Index), new IntPtr(markerSymbol));
+            ScintillaApi.DirectMessage(SCI_MARKERDEFINE, new IntPtr(Index), new IntPtr(markerSymbol));
         }
     }
 
@@ -148,7 +153,7 @@ public abstract class MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// <param name="index">The index of this style within the <see cref="MarkerCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> that created it.</param>
     public MarkerBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla, int index)
     {
-        this.scintilla = scintilla;
+        this.ScintillaApi = scintilla;
         Index = index;
     }
 }

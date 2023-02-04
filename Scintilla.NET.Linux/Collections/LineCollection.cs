@@ -1,6 +1,7 @@
 ﻿using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.Abstractions.UtilityClasses;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 using Color = Gdk.Color;
@@ -15,7 +16,7 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
 {
     #region Methods
     
-    public override void scintilla_SCNotification(object sender, ISCNotificationEventArgs e)
+    public override void ScNotificationCallback(object sender, ISCNotificationEventArgs e)
     {
         var scn = e.SCNotification;
         switch (scn.nmhdr.code)
@@ -38,7 +39,7 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
         get
         {
             index = HelpersGeneral.Clamp(index, 0, Count - 1);
-            return new Line(scintilla, index);
+            return new Line(ScintillaApi, index);
         }
     }
 

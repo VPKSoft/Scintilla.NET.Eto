@@ -23,6 +23,7 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
+	  <ProjectReference Include="..\..\Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj" />
 	  <ProjectReference Include="..\..\Scintilla.NET\Scintilla.NET.WinForms\Scintilla.NET.WinForms.csproj" />
 	</ItemGroup>
 

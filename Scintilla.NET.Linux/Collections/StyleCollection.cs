@@ -22,7 +22,7 @@ public class StyleCollection : StyleCollectionBase<MarkerCollection, StyleCollec
         get
         {
             index = HelpersGeneral.Clamp(index, 0, Count - 1);
-            return new Style(scintilla, index);
+            return new Style(ScintillaApi, index);
         }
     }
 

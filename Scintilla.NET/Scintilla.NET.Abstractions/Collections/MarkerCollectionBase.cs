@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Collections;
@@ -6,7 +7,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// An immutable collection of markers in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IEnumerable<TMarker>, IMarkerCollection
+public abstract class MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -23,11 +24,6 @@ public abstract class MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLine
     where TColor: struct
 {
     /// <summary>
-    /// A reference to the Scintilla control interface.
-    /// </summary>
-    protected readonly IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla;
-
-    /// <summary>
     /// Provides an enumerator that iterates through the collection.
     /// </summary>
     /// <returns>An object for enumerating all <see cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
@@ -43,6 +39,12 @@ public abstract class MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLine
         return GetEnumerator();
     }
 
+    /// <inheritdoc />
+    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
+    {
+        get;
+    }
+
     /// <summary>
     /// Gets the number of markers in the <see cref="MarkerCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.
     /// </summary>
@@ -55,7 +57,7 @@ public abstract class MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLine
     /// <param name="index">The marker index.</param>
     /// <returns>An object representing the marker at the specified <paramref name="index" />.</returns>
     /// <remarks>Markers 25 through 31 are used by Scintilla for folding.</remarks>
-    protected abstract TMarker this[int index] { get; }
+    public abstract TMarker this[int index] { get; }
 
     /// <summary>
     /// Initializes a new instance of the <see cref="MarkerCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> class.
@@ -63,6 +65,6 @@ public abstract class MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLine
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
     protected MarkerCollectionBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla)
     {
-        this.scintilla = scintilla;
+        ScintillaApi = scintilla;
     }
 }

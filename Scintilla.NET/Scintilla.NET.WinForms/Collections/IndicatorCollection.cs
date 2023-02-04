@@ -33,7 +33,7 @@ public class IndicatorCollection: IndicatorCollectionBase<MarkerCollection, Styl
         get
         {
             index = Helpers.Clamp(index, 0, Count - 1);
-            return new Indicator(scintilla, index);
+            return new Indicator(ScintillaApi, index);
         }
     }
 

@@ -1,6 +1,9 @@
 ﻿using System.Collections;
 using System.Diagnostics;
+using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
+using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.Abstractions.UtilityClasses;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
@@ -11,7 +14,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IEnumerable<TLine>, ILineCollection
+public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -29,10 +32,6 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
 {
     #region Fields
 
-    /// <summary>
-    /// A reference to the Scintilla control interface.
-    /// </summary>
-    protected readonly IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla;
     protected GapBuffer<PerLine> perLineData;
 
     // The 'step' is a break in the continuity of our line starts. It allows us
@@ -52,9 +51,9 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         MoveStep(index);
         stepLength += delta;
 
-        // Invalidate multibyte flag
+        // Invalidate multi-byte flag
         var perLine = perLineData[index];
-        perLine.ContainsMultibyte = ContainsMultibyte.Unkown;
+        perLine.ContainsMultiByte = ContainsMultiByte.Unknown;
         perLineData[index] = perLine;
     }
 
@@ -64,10 +63,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     public virtual int ByteToCharPosition(int pos)
     {
         Debug.Assert(pos >= 0);
-        Debug.Assert(pos <= scintilla.DirectMessage(SCI_GETLENGTH).ToInt32());
+        Debug.Assert(pos <= ScintillaApi.DirectMessage(SCI_GETLENGTH).ToInt32());
 
-        var line = scintilla.DirectMessage(SCI_LINEFROMPOSITION, new IntPtr(pos)).ToInt32();
-        var byteStart = scintilla.DirectMessage(SCI_POSITIONFROMLINE, new IntPtr(line)).ToInt32();
+        var line = ScintillaApi.DirectMessage(SCI_LINEFROMPOSITION, new IntPtr(pos)).ToInt32();
+        var byteStart = ScintillaApi.DirectMessage(SCI_POSITIONFROMLINE, new IntPtr(line)).ToInt32();
         var count = CharPositionFromLine(line) + GetCharCount(byteStart, pos - byteStart);
 
         return count;
@@ -128,7 +127,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
 
         // Adjust to the nearest line start
         var line = LineFromCharPosition(pos);
-        var bytePos = scintilla.DirectMessage(SCI_POSITIONFROMLINE, new IntPtr(line)).ToInt32();
+        var bytePos = ScintillaApi.DirectMessage(SCI_POSITIONFROMLINE, new IntPtr(line)).ToInt32();
         pos -= CharPositionFromLine(line);
 
         // Optimization when the line contains NO multibyte characters
@@ -140,7 +139,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         while (pos > 0)
         {
             // Move char-by-char
-            bytePos = scintilla.DirectMessage(SCI_POSITIONRELATIVE, new IntPtr(bytePos), new IntPtr(1)).ToInt32();
+            bytePos = ScintillaApi.DirectMessage(SCI_POSITIONRELATIVE, new IntPtr(bytePos), new IntPtr(1)).ToInt32();
             pos--;
         }
 
@@ -167,74 +166,13 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         stepLine--;
     }
 
-    #region DebugMethods
-#if DEBUG
-
-    /// <summary>
-    /// Dumps the line buffer to a string.
-    /// </summary>
-    /// <returns>A string representing the line buffer.</returns>
-    public string Dump()
-    {
-        using (var writer = new StringWriter())
-        {
-            scintilla.Lines.Dump(writer);
-            return writer.ToString();
-        }
-    }
-
-    /// <summary>
-    /// Dumps the line buffer to the specified TextWriter.
-    /// </summary>
-    /// <param name="writer">The writer to use for dumping the line buffer.</param>
-    public unsafe void Dump(TextWriter writer)
-    {
-        var totalChars = 0;
-
-        for (var i = 0; i < perLineData.Count; i++)
-        {
-            var error = totalChars == CharPositionFromLine(i) ? null : "*";
-            if (i == perLineData.Count - 1)
-            {
-                writer.WriteLine("{0}[{1}] {2} (terminal)", error, i, CharPositionFromLine(i));
-            }
-            else
-            {
-                var len = scintilla.DirectMessage(SCI_GETLINE, new IntPtr(i)).ToInt32();
-                var bytes = new byte[len];
-
-                fixed (byte* ptr = bytes)
-                {
-                    scintilla.DirectMessage(SCI_GETLINE, new IntPtr(i), new IntPtr(ptr));
-                }
-
-                var str = scintilla.Encoding.GetString(bytes);
-                var containsMultibyte = "U";
-                if (perLineData[i].ContainsMultibyte == ContainsMultibyte.Yes)
-                {
-                    containsMultibyte = "Y";
-                }
-                else if (perLineData[i].ContainsMultibyte == ContainsMultibyte.No)
-                {
-                    containsMultibyte = "N";
-                }
-
-                writer.WriteLine("{0}[{1}] {2}:{3}:{4} {5}", error, i, CharPositionFromLine(i), str.Length, containsMultibyte, str.Replace("\r", "\\r").Replace("\n", "\\n"));
-                totalChars += str.Length;
-            }
-        }
-    }
-
-#endif
-    #endregion
-
     /// <summary>
     /// Gets the number of CHARACTERS int a BYTE range.
     /// </summary>
     public virtual int GetCharCount(int pos, int length)
     {
-        var ptr = scintilla.DirectMessage(SCI_GETRANGEPOINTER, new IntPtr(pos), new IntPtr(length));
-        return HelpersGeneral.GetCharCount(ptr, length, scintilla.Encoding);
+        var ptr = ScintillaApi.DirectMessage(SCI_GETRANGEPOINTER, new IntPtr(pos), new IntPtr(length));
+        return HelpersGeneral.GetCharCount(ptr, length, ScintillaApi.Encoding);
     }
 
     /// <summary>
@@ -261,17 +199,17 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     public virtual bool LineContainsMultiByteChar(int index)
     {
         var perLine = perLineData[index];
-        if (perLine.ContainsMultibyte == ContainsMultibyte.Unkown)
+        if (perLine.ContainsMultiByte == ContainsMultiByte.Unknown)
         {
-            perLine.ContainsMultibyte =
-                scintilla.DirectMessage(SCI_LINELENGTH, new IntPtr(index)).ToInt32() == CharLineLength(index)
-                    ? ContainsMultibyte.No
-                    : ContainsMultibyte.Yes;
+            perLine.ContainsMultiByte =
+                ScintillaApi.DirectMessage(SCI_LINELENGTH, new IntPtr(index)).ToInt32() == CharLineLength(index)
+                    ? ContainsMultiByte.No
+                    : ContainsMultiByte.Yes;
 
             perLineData[index] = perLine;
         }
 
-        return perLine.ContainsMultibyte == ContainsMultibyte.Yes;
+        return perLine.ContainsMultiByte == ContainsMultiByte.Yes;
     }
 
     /// <summary>
@@ -385,15 +323,20 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
 
         // Fake an insert notification
         var scn = new SCNotification();
-        var adjustedLines = scintilla.DirectMessage(SCI_GETLINECOUNT).ToInt32() - 1;
+        var adjustedLines = ScintillaApi.DirectMessage(SCI_GETLINECOUNT).ToInt32() - 1;
         scn.linesAdded = new IntPtr(adjustedLines);
         scn.position = IntPtr.Zero;
-        scn.length = scintilla.DirectMessage(SCI_GETLENGTH);
-        scn.text = scintilla.DirectMessage(SCI_GETRANGEPOINTER, scn.position, scn.length);
+        scn.length = ScintillaApi.DirectMessage(SCI_GETLENGTH);
+        scn.text = ScintillaApi.DirectMessage(SCI_GETRANGEPOINTER, scn.position, scn.length);
         TrackInsertText(scn);
     }
 
-    public abstract void scintilla_SCNotification(object sender, ISCNotificationEventArgs e);
+    /// <summary>
+    /// A method to be added as event subscription to <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.SCNotification"/> event.
+    /// </summary>
+    /// <param name="sender">The sender of the event.</param>
+    /// <param name="e">The <see cref="ISCNotificationEventArgs"/> instance containing the event data.</param>
+    public abstract void ScNotificationCallback(object sender, ISCNotificationEventArgs e);
 
     public virtual void ScnModified(SCNotification scn)
     {
@@ -410,18 +353,18 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
 
     public virtual void TrackDeleteText(SCNotification scn)
     {
-        var startLine = scintilla.DirectMessage(SCI_LINEFROMPOSITION, scn.position).ToInt32();
+        var startLine = ScintillaApi.DirectMessage(SCI_LINEFROMPOSITION, scn.position).ToInt32();
         if (scn.linesAdded == IntPtr.Zero)
         {
             // That was easy
-            var delta = HelpersGeneral.GetCharCount(scn.text, scn.length.ToInt32(), scintilla.Encoding);
+            var delta = HelpersGeneral.GetCharCount(scn.text, scn.length.ToInt32(), ScintillaApi.Encoding);
             AdjustLineLength(startLine, delta * -1);
         }
         else
         {
             // Adjust the existing line
-            var lineByteStart = scintilla.DirectMessage(SCI_POSITIONFROMLINE, new IntPtr(startLine)).ToInt32();
-            var lineByteLength = scintilla.DirectMessage(SCI_LINELENGTH, new IntPtr(startLine)).ToInt32();
+            var lineByteStart = ScintillaApi.DirectMessage(SCI_POSITIONFROMLINE, new IntPtr(startLine)).ToInt32();
+            var lineByteLength = ScintillaApi.DirectMessage(SCI_LINELENGTH, new IntPtr(startLine)).ToInt32();
             AdjustLineLength(startLine, GetCharCount(lineByteStart, lineByteLength) - CharLineLength(startLine));
 
             var linesRemoved = scn.linesAdded.ToInt32() * -1;
@@ -435,7 +378,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
 
     public virtual void TrackInsertText(SCNotification scn)
     {
-        var startLine = scintilla.DirectMessage(SCI_LINEFROMPOSITION, scn.position).ToInt32();
+        var startLine = ScintillaApi.DirectMessage(SCI_LINEFROMPOSITION, scn.position).ToInt32();
         if (scn.linesAdded == IntPtr.Zero)
         {
             // That was easy
@@ -445,8 +388,8 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         else
         {
             // Adjust existing line
-            var lineByteStart = scintilla.DirectMessage(SCI_POSITIONFROMLINE, new IntPtr(startLine)).ToInt32();
-            var lineByteLength = scintilla.DirectMessage(SCI_LINELENGTH, new IntPtr(startLine)).ToInt32();
+            var lineByteStart = ScintillaApi.DirectMessage(SCI_POSITIONFROMLINE, new IntPtr(startLine)).ToInt32();
+            var lineByteLength = ScintillaApi.DirectMessage(SCI_LINELENGTH, new IntPtr(startLine)).ToInt32();
             AdjustLineLength(startLine, GetCharCount(lineByteStart, lineByteLength) - CharLineLength(startLine));
 
             for (var i = 1; i <= scn.linesAdded.ToInt32(); i++)
@@ -455,10 +398,16 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
 
                 // Insert new line
                 lineByteStart += lineByteLength;
-                lineByteLength = scintilla.DirectMessage(SCI_LINELENGTH, new IntPtr(line)).ToInt32();
+                lineByteLength = ScintillaApi.DirectMessage(SCI_LINELENGTH, new IntPtr(line)).ToInt32();
                 InsertPerLine(line, GetCharCount(lineByteStart, lineByteLength));
             }
         }
+    }
+
+    /// <inheritdoc />
+    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
+    {
+        get;
     }
 
     #endregion Methods
@@ -473,7 +422,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     {
         get
         {
-            return scintilla.DirectMessage(SCI_GETALLLINESVISIBLE) != IntPtr.Zero;
+            return ScintillaApi.DirectMessage(SCI_GETALLLINESVISIBLE) != IntPtr.Zero;
         }
     }
 
@@ -520,7 +469,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     /// <param name="notifyApi">A class implementing the <see cref="IScintillaNotificationEvent{TEventArgs}"/> interface.</param>
     public LineCollectionBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla)
     {
-        this.scintilla = scintilla;
+        this.ScintillaApi = scintilla;
 
         perLineData = new GapBuffer<PerLine>();
         perLineData.Add(new PerLine { Start = 0 });
@@ -528,32 +477,4 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     }
 
     #endregion Constructors
-
-    #region Types
-
-    /// <summary>
-    /// Stuff we track for each line.
-    /// </summary>
-    public struct PerLine
-    {
-        /// <summary>
-        /// The CHARACTER position where the line begins.
-        /// </summary>
-        public int Start;
-
-        /// <summary>
-        /// 1 if the line contains multibyte (Unicode) characters; -1 if not; 0 if undetermined.
-        /// </summary>
-        /// <remarks>Using an enum instead of Nullable because it uses less memory per line...</remarks>
-        public ContainsMultibyte ContainsMultibyte;
-    }
-
-    public enum ContainsMultibyte
-    {
-        No = -1,
-        Unkown,
-        Yes
-    }
-
-    #endregion Types
 }

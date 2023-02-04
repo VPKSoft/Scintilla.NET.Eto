@@ -23,13 +23,13 @@ public class Indicator : IndicatorBase<MarkerCollection, StyleCollection, Indica
     {
         get
         {
-            var color = scintilla.DirectMessage(SCI_INDICGETFORE, new IntPtr(Index)).ToInt32();
+            var color = ScintillaApi.DirectMessage(SCI_INDICGETFORE, new IntPtr(Index)).ToInt32();
             return ColorTranslator.FromWin32(color);
         }
         set
         {
             var color = ColorTranslator.ToWin32(value);
-            scintilla.DirectMessage(SCI_INDICSETFORE, new IntPtr(Index), new IntPtr(color));
+            ScintillaApi.DirectMessage(SCI_INDICSETFORE, new IntPtr(Index), new IntPtr(color));
         }
     }
 
@@ -46,13 +46,13 @@ public class Indicator : IndicatorBase<MarkerCollection, StyleCollection, Indica
     {
         get
         {
-            var color = scintilla.DirectMessage(SCI_INDICGETHOVERFORE, new IntPtr(Index)).ToInt32();
+            var color = ScintillaApi.DirectMessage(SCI_INDICGETHOVERFORE, new IntPtr(Index)).ToInt32();
             return ColorTranslator.FromWin32(color);
         }
         set
         {
             var color = ColorTranslator.ToWin32(value);
-            scintilla.DirectMessage(SCI_INDICSETHOVERFORE, new IntPtr(Index), new IntPtr(color));
+            ScintillaApi.DirectMessage(SCI_INDICSETHOVERFORE, new IntPtr(Index), new IntPtr(color));
         }
     }
 

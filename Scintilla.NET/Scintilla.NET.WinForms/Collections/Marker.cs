@@ -24,13 +24,13 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
             return;
         }
 
-        scintilla.DirectMessage(SCI_RGBAIMAGESETWIDTH, new IntPtr(image.Width));
-        scintilla.DirectMessage(SCI_RGBAIMAGESETHEIGHT, new IntPtr(image.Height));
+        ScintillaApi.DirectMessage(SCI_RGBAIMAGESETWIDTH, new IntPtr(image.Width));
+        ScintillaApi.DirectMessage(SCI_RGBAIMAGESETHEIGHT, new IntPtr(image.Height));
 
         var bytes = Helpers.BitmapToArgb(image);
         fixed (byte* bp = bytes)
         {
-            scintilla.DirectMessage(SCI_MARKERDEFINERGBAIMAGE, new IntPtr(Index), new IntPtr(bp));
+            ScintillaApi.DirectMessage(SCI_MARKERDEFINERGBAIMAGE, new IntPtr(Index), new IntPtr(bp));
         }
     }
 
@@ -46,7 +46,7 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
     public override void SetBackColor(Color color)
     {
         var colorNum = ColorTranslator.ToWin32(color);
-        scintilla.DirectMessage(SCI_MARKERSETBACK, new IntPtr(Index), new IntPtr(colorNum));
+        ScintillaApi.DirectMessage(SCI_MARKERSETBACK, new IntPtr(Index), new IntPtr(colorNum));
     }
 
     /// <summary>
@@ -56,7 +56,7 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
     public override void SetForeColor(Color color)
     {
         var colorNum = ColorTranslator.ToWin32(color);
-        scintilla.DirectMessage(SCI_MARKERSETFORE, new IntPtr(Index), new IntPtr(colorNum));
+        ScintillaApi.DirectMessage(SCI_MARKERSETFORE, new IntPtr(Index), new IntPtr(colorNum));
     }
     
     /// <summary>
