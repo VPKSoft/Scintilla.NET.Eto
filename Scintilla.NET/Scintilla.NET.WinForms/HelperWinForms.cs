@@ -1,11 +1,15 @@
-﻿using System;
+﻿// ReSharper disable All, old code - don't know what to do with it or is it even useful
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Scintilla.NET.Abstractions.Classes;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.WinForms.Collections;
 using Scintilla.NET.WinForms.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 using static Scintilla.NET.WinForms.Helpers;
@@ -131,23 +135,23 @@ internal class HelperWinForms
             // Calculate twips per space
             int twips;
             var fontStyle = FontStyle.Regular;
-            if (styles[Style.Default].Weight >= 700)
+            if (styles[StyleConstants.Default].Weight >= 700)
             {
                 fontStyle |= FontStyle.Bold;
             }
 
-            if (styles[Style.Default].Italic != 0)
+            if (styles[StyleConstants.Default].Italic != 0)
             {
                 fontStyle |= FontStyle.Italic;
             }
 
-            if (styles[Style.Default].Underline != 0)
+            if (styles[StyleConstants.Default].Underline != 0)
             {
                 fontStyle |= FontStyle.Underline;
             }
 
             using (var graphics = scintilla.CreateGraphics())
-            using (var font = new Font(styles[Style.Default].FontName, styles[Style.Default].SizeF, fontStyle))
+            using (var font = new Font(styles[StyleConstants.Default].FontName, styles[StyleConstants.Default].SizeF, fontStyle))
             {
                 var width = graphics.MeasureString(" ", font).Width;
                 twips = (int)(width / graphics.DpiX * 1440);
@@ -166,7 +170,7 @@ internal class HelperWinForms
 
                 // Build the font table
                 tw.Write(@"{\fonttbl");
-                tw.Write(@"{{\f0 {0};}}", styles[Style.Default].FontName);
+                tw.Write(@"{{\f0 {0};}}", styles[StyleConstants.Default].FontName);
                 var fontIndex = 1;
                 for (var i = 0; i < styles.Length; i++)
                 {
@@ -175,13 +179,13 @@ internal class HelperWinForms
                         continue;
                     }
 
-                    if (i == Style.Default)
+                    if (i == StyleConstants.Default)
                     {
                         continue;
                     }
 
                     // Not a completely unique list, but close enough
-                    if (styles[i].FontName != styles[Style.Default].FontName)
+                    if (styles[i].FontName != styles[StyleConstants.Default].FontName)
                     {
                         styles[i].FontIndex = fontIndex++;
                         tw.Write(@"{{\f{0} {1};}}", styles[i].FontIndex, styles[i].FontName);
@@ -192,10 +196,10 @@ internal class HelperWinForms
 
                 // Build the color table
                 tw.Write(@"{\colortbl");
-                tw.Write(@"\red{0}\green{1}\blue{2};", (styles[Style.Default].ForeColor >> 0) & 0xFF, (styles[Style.Default].ForeColor >> 8) & 0xFF, (styles[Style.Default].ForeColor >> 16) & 0xFF);
-                tw.Write(@"\red{0}\green{1}\blue{2};", (styles[Style.Default].BackColor >> 0) & 0xFF, (styles[Style.Default].BackColor >> 8) & 0xFF, (styles[Style.Default].BackColor >> 16) & 0xFF);
-                styles[Style.Default].ForeColorIndex = 0;
-                styles[Style.Default].BackColorIndex = 1;
+                tw.Write(@"\red{0}\green{1}\blue{2};", (styles[StyleConstants.Default].ForeColor >> 0) & 0xFF, (styles[StyleConstants.Default].ForeColor >> 8) & 0xFF, (styles[StyleConstants.Default].ForeColor >> 16) & 0xFF);
+                tw.Write(@"\red{0}\green{1}\blue{2};", (styles[StyleConstants.Default].BackColor >> 0) & 0xFF, (styles[StyleConstants.Default].BackColor >> 8) & 0xFF, (styles[StyleConstants.Default].BackColor >> 16) & 0xFF);
+                styles[StyleConstants.Default].ForeColorIndex = 0;
+                styles[StyleConstants.Default].BackColorIndex = 1;
                 var colorIndex = 2;
                 for (var i = 0; i < styles.Length; i++)
                 {
@@ -204,54 +208,54 @@ internal class HelperWinForms
                         continue;
                     }
 
-                    if (i == Style.Default)
+                    if (i == StyleConstants.Default)
                     {
                         continue;
                     }
 
                     // Not a completely unique list, but close enough
-                    if (styles[i].ForeColor != styles[Style.Default].ForeColor)
+                    if (styles[i].ForeColor != styles[StyleConstants.Default].ForeColor)
                     {
                         styles[i].ForeColorIndex = colorIndex++;
                         tw.Write(@"\red{0}\green{1}\blue{2};", (styles[i].ForeColor >> 0) & 0xFF, (styles[i].ForeColor >> 8) & 0xFF, (styles[i].ForeColor >> 16) & 0xFF);
                     }
                     else
                     {
-                        styles[i].ForeColorIndex = styles[Style.Default].ForeColorIndex;
+                        styles[i].ForeColorIndex = styles[StyleConstants.Default].ForeColorIndex;
                     }
 
-                    if (styles[i].BackColor != styles[Style.Default].BackColor)
+                    if (styles[i].BackColor != styles[StyleConstants.Default].BackColor)
                     {
                         styles[i].BackColorIndex = colorIndex++;
                         tw.Write(@"\red{0}\green{1}\blue{2};", (styles[i].BackColor >> 0) & 0xFF, (styles[i].BackColor >> 8) & 0xFF, (styles[i].BackColor >> 16) & 0xFF);
                     }
                     else
                     {
-                        styles[i].BackColorIndex = styles[Style.Default].BackColorIndex;
+                        styles[i].BackColorIndex = styles[StyleConstants.Default].BackColorIndex;
                     }
                 }
                 tw.WriteLine("}"); // colortbl
                 tw.Flush();
 
                 // Start with the default style
-                tw.Write(@"\f{0}\fs{1}\cf{2}\chshdng0\chcbpat{3}\cb{3} ", styles[Style.Default].FontIndex, (int)(styles[Style.Default].SizeF * 2), styles[Style.Default].ForeColorIndex, styles[Style.Default].BackColorIndex);
-                if (styles[Style.Default].Italic != 0)
+                tw.Write(@"\f{0}\fs{1}\cf{2}\chshdng0\chcbpat{3}\cb{3} ", styles[StyleConstants.Default].FontIndex, (int)(styles[StyleConstants.Default].SizeF * 2), styles[StyleConstants.Default].ForeColorIndex, styles[StyleConstants.Default].BackColorIndex);
+                if (styles[StyleConstants.Default].Italic != 0)
                 {
                     tw.Write(@"\i");
                 }
 
-                if (styles[Style.Default].Underline != 0)
+                if (styles[StyleConstants.Default].Underline != 0)
                 {
                     tw.Write(@"\ul");
                 }
 
-                if (styles[Style.Default].Weight >= 700)
+                if (styles[StyleConstants.Default].Weight >= 700)
                 {
                     tw.Write(@"\b");
                 }
 
                 tw.AutoFlush = true;
-                var lastStyle = Style.Default;
+                var lastStyle = StyleConstants.Default;
                 var unicodeLineEndings = (scintilla.DirectMessage(SCI_GETLINEENDTYPESACTIVE).ToInt32() & SC_LINE_END_TYPE_UNICODE) > 0;
                 foreach (var seg in styledSegments)
                 {

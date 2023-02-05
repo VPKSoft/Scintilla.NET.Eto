@@ -1,5 +1,7 @@
 ﻿using System.Collections;
+using Scintilla.NET.Abstractions.Classes;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
@@ -45,10 +47,7 @@ public abstract class MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// <returns>One of the <see cref="MarginCursor" /> enumeration values. The default is <see cref="MarginCursor.Arrow" />.</returns>
     public virtual MarginCursor Cursor
     {
-        get
-        {
-            return (MarginCursor)ScintillaApi.DirectMessage(SCI_GETMARGINCURSORN, new IntPtr(Index));
-        }
+        get => (MarginCursor)ScintillaApi.DirectMessage(SCI_GETMARGINCURSORN, new IntPtr(Index));
         set
         {
             var cursor = (int)value;
@@ -59,20 +58,17 @@ public abstract class MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// <summary>
     /// Gets the zero-based margin index this object represents.
     /// </summary>
-    /// <returns>The margin index within the <see cref="MarginCollection" />.</returns>
+    /// <returns>The margin index within the <see cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Margins" />.</returns>
     public virtual int Index { get; private set; }
 
     /// <summary>
     /// Gets or sets whether the margin is sensitive to mouse clicks.
     /// </summary>
     /// <returns>true if the margin is sensitive to mouse clicks; otherwise, false. The default is false.</returns>
-    /// <seealso cref="Scintilla.MarginClick" />
+    /// <seealso cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.MarginClick" />
     public virtual bool Sensitive
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETMARGINSENSITIVEN, new IntPtr(Index)) != IntPtr.Zero;
-        }
+        get => ScintillaApi.DirectMessage(SCI_GETMARGINSENSITIVEN, new IntPtr(Index)) != IntPtr.Zero;
         set
         {
             var sensitive = value ? new IntPtr(1) : IntPtr.Zero;
@@ -86,10 +82,7 @@ public abstract class MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// <returns>One of the <see cref="MarginType" /> enumeration values. The default is <see cref="MarginType.Symbol" />.</returns>
     public virtual MarginType Type
     {
-        get
-        {
-            return (MarginType)ScintillaApi.DirectMessage(SCI_GETMARGINTYPEN, new IntPtr(Index));
-        }
+        get => (MarginType)ScintillaApi.DirectMessage(SCI_GETMARGINTYPEN, new IntPtr(Index));
         set
         {
             var type = (int)value;
@@ -104,10 +97,7 @@ public abstract class MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// <remarks>Scintilla assigns various default widths.</remarks>
     public virtual int Width
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETMARGINWIDTHN, new IntPtr(Index)).ToInt32();
-        }
+        get => ScintillaApi.DirectMessage(SCI_GETMARGINWIDTHN, new IntPtr(Index)).ToInt32();
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);
@@ -119,19 +109,16 @@ public abstract class MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// Gets or sets a mask indicating which markers this margin can display.
     /// </summary>
     /// <returns>
-    /// An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="Margin" /> indexes.
+    /// An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="IScintillaMargin{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> indexes.
     /// The default is 0x1FFFFFF, which is every marker except folder markers (i.e. 0 through 24).
     /// </returns>
     /// <remarks>
     /// For example, the mask for marker index 10 is 1 shifted left 10 times (1 &lt;&lt; 10).
-    /// <see cref="Marker.MaskFolders" /> is a useful constant for working with just folder margin indexes.
+    /// <see cref="MarkerConstants.MaskFolders" /> is a useful constant for working with just folder margin indexes.
     /// </remarks>
     public virtual uint Mask
     {
-        get
-        {
-            return unchecked((uint)ScintillaApi.DirectMessage(SCI_GETMARGINMASKN, new IntPtr(Index)).ToInt32());
-        }
+        get => unchecked((uint)ScintillaApi.DirectMessage(SCI_GETMARGINMASKN, new IntPtr(Index)).ToInt32());
         set
         {
             var mask = unchecked((int)value);
@@ -144,10 +131,10 @@ public abstract class MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     #region Constructors
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="Margin" /> class.
+    /// Initializes a new instance of the <see cref="MarginBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this margin.</param>
-    /// <param name="index">The index of this margin within the <see cref="MarginCollection" /> that created it.</param>
+    /// <param name="index">The index of this margin within the <see cref="IScintillaMarginCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> that created it.</param>
     protected MarginBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla, int index)
     {
         this.ScintillaApi = scintilla;

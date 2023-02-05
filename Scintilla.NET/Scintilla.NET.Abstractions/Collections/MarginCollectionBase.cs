@@ -42,7 +42,7 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     /// <summary>
     /// Provides an enumerator that iterates through the collection.
     /// </summary>
-    /// <returns>An object that contains all <see cref="Margin" /> objects within the <see cref="MarginCollection" />.</returns>
+    /// <returns>An object that contains all <see cref="IScintillaMargin{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> objects within the <see cref="IScintillaMarginCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.</returns>
     public virtual IEnumerator<TMargin> GetEnumerator()
     {
         var count = Count;
@@ -56,15 +56,12 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     }
 
     /// <summary>
-    /// Gets or sets the number of margins in the <see cref="MarginCollection" />.
+    /// Gets or sets the number of margins in the <see cref="IScintillaMarginCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.
     /// </summary>
     /// <returns>The number of margins in the collection. The default is 5.</returns>
     public virtual int Capacity
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETMARGINS).ToInt32();
-        }
+        get => ScintillaApi.DirectMessage(SCI_GETMARGINS).ToInt32();
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);
@@ -73,20 +70,14 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     }
 
     /// <summary>
-    /// Gets the number of margins in the <see cref="MarginCollection" />.
+    /// Gets the number of margins in the <see cref="IScintillaMarginCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.
     /// </summary>
     /// <returns>The number of margins in the collection.</returns>
     /// <remarks>This property is kept for convenience. The return value will always be equal to <see cref="Capacity" />.</remarks>
     /// <seealso cref="Capacity" />
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public virtual int Count
-    {
-        get
-        {
-            return Capacity;
-        }
-    }
+    public virtual int Count => Capacity;
 
     /// <summary>
     /// Gets or sets the width in pixels of the left margin padding.
@@ -96,10 +87,7 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     [Description("The left margin padding in pixels.")]
     public virtual int Left
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETMARGINLEFT).ToInt32();
-        }
+        get => ScintillaApi.DirectMessage(SCI_GETMARGINLEFT).ToInt32();
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);
@@ -141,10 +129,7 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     [Description("The right margin padding in pixels.")]
     public virtual int Right
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETMARGINRIGHT).ToInt32();
-        }
+        get => ScintillaApi.DirectMessage(SCI_GETMARGINRIGHT).ToInt32();
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);
@@ -153,7 +138,7 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     }
 
     /// <summary>
-    /// Gets a <see cref="Margin" /> object at the specified index.
+    /// Gets a <see cref="MarginBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> object at the specified index.
     /// </summary>
     /// <param name="index">The margin index.</param>
     /// <returns>An object representing the margin at the specified <paramref name="index" />.</returns>
@@ -163,7 +148,7 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     public abstract TMargin this[int index] { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MarginCollection" /> class.
+    /// Initializes a new instance of the <see cref="MarginCollectionBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
     protected MarginCollectionBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla)

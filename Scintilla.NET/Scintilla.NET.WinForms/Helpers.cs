@@ -7,11 +7,11 @@ using System.Linq;
 using System.Text;
 using System.Windows.Forms;
 using Scintilla.NET.Abstractions;
+using Scintilla.NET.Abstractions.Classes;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.WinForms.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
-
 namespace Scintilla.NET.WinForms;
 
 internal static class Helpers
@@ -156,7 +156,7 @@ internal static class Helpers
             tw.Write(" float: left;");
             tw.Write(" white-space: pre;");
             tw.Write(" line-height: {0}px;", scintilla.DirectMessage(SCI_TEXTHEIGHT, new IntPtr(0)).ToInt32());
-            tw.Write(" background-color: #{0:X2}{1:X2}{2:X2};", (styles[Style.Default].BackColor >> 0) & 0xFF, (styles[Style.Default].BackColor >> 8) & 0xFF, (styles[Style.Default].BackColor >> 16) & 0xFF);
+            tw.Write(" background-color: #{0:X2}{1:X2}{2:X2};", (styles[StyleConstants.Default].BackColor >> 0) & 0xFF, (styles[StyleConstants.Default].BackColor >> 8) & 0xFF, (styles[StyleConstants.Default].BackColor >> 16) & 0xFF);
             tw.WriteLine(" }");
 
             for (var i = 0; i < styles.Length; i++)
@@ -201,14 +201,14 @@ internal static class Helpers
             }
 
             tw.WriteLine("</style>");
-            tw.Write(@"<div id=""segments""><span class=""s{0}"">", Style.Default);
+            tw.Write(@"<div id=""segments""><span class=""s{0}"">", StyleConstants.Default);
             tw.Flush();
 
             var tabSize = scintilla.DirectMessage(SCI_GETTABWIDTH).ToInt32();
             var tab = new string(' ', tabSize);
 
             tw.AutoFlush = true;
-            var lastStyle = Style.Default;
+            var lastStyle = StyleConstants.Default;
             var unicodeLineEndings = (scintilla.DirectMessage(SCI_GETLINEENDTYPESACTIVE).ToInt32() & SC_LINE_END_TYPE_UNICODE) > 0;
             foreach (var seg in styledSegments)
             {
@@ -376,7 +376,7 @@ internal static class Helpers
         sw.Write(" float: left;");
         sw.Write(" white-space: pre;");
         sw.Write(" line-height: {0}px;", scintilla.DirectMessage(SCI_TEXTHEIGHT, new IntPtr(0)).ToInt32());
-        sw.Write(" background-color: #{0:X2}{1:X2}{2:X2};", (styles[Style.Default].BackColor >> 0) & 0xFF, (styles[Style.Default].BackColor >> 8) & 0xFF, (styles[Style.Default].BackColor >> 16) & 0xFF);
+        sw.Write(" background-color: #{0:X2}{1:X2}{2:X2};", (styles[StyleConstants.Default].BackColor >> 0) & 0xFF, (styles[StyleConstants.Default].BackColor >> 8) & 0xFF, (styles[StyleConstants.Default].BackColor >> 16) & 0xFF);
         sw.WriteLine(" }");
 
         for (var i = 0; i < styles.Length; i++)
@@ -425,10 +425,10 @@ internal static class Helpers
         var unicodeLineEndings = (scintilla.DirectMessage(SCI_GETLINEENDTYPESACTIVE).ToInt32() & SC_LINE_END_TYPE_UNICODE) > 0;
         var tabSize = scintilla.DirectMessage(SCI_GETTABWIDTH).ToInt32();
         var tab = new string(' ', tabSize);
-        var lastStyle = Style.Default;
+        var lastStyle = StyleConstants.Default;
 
         // Write the styled text
-        sw.Write(@"<div id=""segments""><span class=""s{0}"">", Style.Default);
+        sw.Write(@"<div id=""segments""><span class=""s{0}"">", StyleConstants.Default);
         sw.Flush();
         sw.AutoFlush = true;
 
@@ -590,16 +590,16 @@ internal static class Helpers
         // Build a list of (used) styles
         styles = new StyleData[STYLE_MAX + 1];
 
-        styles[Style.Default].Used = true;
-        styles[Style.Default].FontName = scintilla.Styles[Style.Default].Font;
-        styles[Style.Default].SizeF = scintilla.Styles[Style.Default].SizeF;
-        styles[Style.Default].Weight = scintilla.DirectMessage(SCI_STYLEGETWEIGHT, new IntPtr(Style.Default), IntPtr.Zero).ToInt32();
-        styles[Style.Default].Italic = scintilla.DirectMessage(SCI_STYLEGETITALIC, new IntPtr(Style.Default), IntPtr.Zero).ToInt32();
-        styles[Style.Default].Underline = scintilla.DirectMessage(SCI_STYLEGETUNDERLINE, new IntPtr(Style.Default), IntPtr.Zero).ToInt32();
-        styles[Style.Default].BackColor = scintilla.DirectMessage(SCI_STYLEGETBACK, new IntPtr(Style.Default), IntPtr.Zero).ToInt32();
-        styles[Style.Default].ForeColor = scintilla.DirectMessage(SCI_STYLEGETFORE, new IntPtr(Style.Default), IntPtr.Zero).ToInt32();
-        styles[Style.Default].Case = scintilla.DirectMessage(SCI_STYLEGETCASE, new IntPtr(Style.Default), IntPtr.Zero).ToInt32();
-        styles[Style.Default].Visible = scintilla.DirectMessage(SCI_STYLEGETVISIBLE, new IntPtr(Style.Default), IntPtr.Zero).ToInt32();
+        styles[StyleConstants.Default].Used = true;
+        styles[StyleConstants.Default].FontName = scintilla.Styles[StyleConstants.Default].Font;
+        styles[StyleConstants.Default].SizeF = scintilla.Styles[StyleConstants.Default].SizeF;
+        styles[StyleConstants.Default].Weight = scintilla.DirectMessage(SCI_STYLEGETWEIGHT, new IntPtr(StyleConstants.Default), IntPtr.Zero).ToInt32();
+        styles[StyleConstants.Default].Italic = scintilla.DirectMessage(SCI_STYLEGETITALIC, new IntPtr(StyleConstants.Default), IntPtr.Zero).ToInt32();
+        styles[StyleConstants.Default].Underline = scintilla.DirectMessage(SCI_STYLEGETUNDERLINE, new IntPtr(StyleConstants.Default), IntPtr.Zero).ToInt32();
+        styles[StyleConstants.Default].BackColor = scintilla.DirectMessage(SCI_STYLEGETBACK, new IntPtr(StyleConstants.Default), IntPtr.Zero).ToInt32();
+        styles[StyleConstants.Default].ForeColor = scintilla.DirectMessage(SCI_STYLEGETFORE, new IntPtr(StyleConstants.Default), IntPtr.Zero).ToInt32();
+        styles[StyleConstants.Default].Case = scintilla.DirectMessage(SCI_STYLEGETCASE, new IntPtr(StyleConstants.Default), IntPtr.Zero).ToInt32();
+        styles[StyleConstants.Default].Visible = scintilla.DirectMessage(SCI_STYLEGETVISIBLE, new IntPtr(StyleConstants.Default), IntPtr.Zero).ToInt32();
 
         foreach (var seg in segments)
         {

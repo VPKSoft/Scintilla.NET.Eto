@@ -24,23 +24,7 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     where TBitmap: class
     where TColor: struct
 {
-    #region Constants
-
-    /// <summary>
-    /// An OR mask to use with <see cref="Scintilla.IndicatorValue" /> and <see cref="IndicatorFlags.ValueFore" /> to indicate
-    /// that the user-defined indicator value should be treated as a RGB color.
-    /// </summary>
-    public const int ValueBit = SC_INDICVALUEBIT;
-
-    /// <summary>
-    /// An AND mask to use with <see cref="Indicator.ValueAt" /> to retrieve the user-defined value as a RGB color when being treated as such.
-    /// </summary>
-    public const int ValueMask = SC_INDICVALUEMASK;
-
-    #endregion Constants
-
     #region Methods
-
     /// <summary>
     /// Given a document position which is filled with this indicator, will return the document position
     /// where the use of this indicator ends.
@@ -111,10 +95,7 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// </returns>
     public virtual int Alpha
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_INDICGETALPHA, new IntPtr(Index)).ToInt32();
-        }
+        get => ScintillaApi.DirectMessage(SCI_INDICGETALPHA, new IntPtr(Index)).ToInt32();
         set
         {
             value = HelpersGeneral.Clamp(value, 0, 255);
@@ -131,10 +112,7 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// </returns>
     public virtual IndicatorFlags Flags
     {
-        get
-        {
-            return (IndicatorFlags)ScintillaApi.DirectMessage(SCI_INDICGETFLAGS, new IntPtr(Index));
-        }
+        get => (IndicatorFlags)ScintillaApi.DirectMessage(SCI_INDICGETFLAGS, new IntPtr(Index));
         set
         {
             var flags = (int)value;
@@ -172,10 +150,7 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// <seealso cref="Style" />
     public virtual IndicatorStyle HoverStyle
     {
-        get
-        {
-            return (IndicatorStyle)ScintillaApi.DirectMessage(SCI_INDICGETHOVERSTYLE, new IntPtr(Index));
-        }
+        get => (IndicatorStyle)ScintillaApi.DirectMessage(SCI_INDICGETHOVERSTYLE, new IntPtr(Index));
         set
         {
             var style = (int)value;
@@ -198,10 +173,7 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// </returns>
     public virtual int OutlineAlpha
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_INDICGETOUTLINEALPHA, new IntPtr(Index)).ToInt32();
-        }
+        get => ScintillaApi.DirectMessage(SCI_INDICGETOUTLINEALPHA, new IntPtr(Index)).ToInt32();
         set
         {
             value = HelpersGeneral.Clamp(value, 0, 255);
@@ -217,10 +189,7 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// <seealso cref="HoverStyle" />
     public virtual IndicatorStyle Style
     {
-        get
-        {
-            return (IndicatorStyle)ScintillaApi.DirectMessage(SCI_INDICGETSTYLE, new IntPtr(Index));
-        }
+        get => (IndicatorStyle)ScintillaApi.DirectMessage(SCI_INDICGETSTYLE, new IntPtr(Index));
         set
         {
             var style = (int)value;
@@ -235,10 +204,7 @@ public abstract class IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// <remarks>Drawing indicators under text requires <see cref="Phases.One" /> or <see cref="Phases.Multiple" /> drawing.</remarks>
     public virtual bool Under
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_INDICGETUNDER, new IntPtr(Index)) != IntPtr.Zero;
-        }
+        get => ScintillaApi.DirectMessage(SCI_INDICGETUNDER, new IntPtr(Index)) != IntPtr.Zero;
         set
         {
             var under = value ? new IntPtr(1) : IntPtr.Zero;

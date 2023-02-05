@@ -24,52 +24,6 @@ public abstract class MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     where TBitmap: class
     where TColor: struct
 {
-    /// <summary>
-    /// An unsigned 32-bit mask of all <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes where each bit corresponds to a margin index.
-    /// </summary>
-    public const uint MaskAll = unchecked((uint)-1);
-
-    /// <summary>
-    /// An unsigned 32-bit mask of folder <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes (25 through 31) where each bit corresponds to a margin index.
-    /// </summary>
-    /// <seealso cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Mask" />
-    public const uint MaskFolders = SC_MASK_FOLDERS;
-
-    /// <summary>
-    /// Folder end marker index. This marker is typically configured to display the <see cref="MarkerSymbol.BoxPlusConnected" /> symbol.
-    /// </summary>
-    public const int FolderEnd = SC_MARKNUM_FOLDEREND;
-
-    /// <summary>
-    /// Folder open marker index. This marker is typically configured to display the <see cref="MarkerSymbol.BoxMinusConnected" /> symbol.
-    /// </summary>
-    public const int FolderOpenMid = SC_MARKNUM_FOLDEROPENMID;
-
-    /// <summary>
-    /// Folder mid tail marker index. This marker is typically configured to display the <see cref="MarkerSymbol.TCorner" /> symbol.
-    /// </summary>
-    public const int FolderMidTail = SC_MARKNUM_FOLDERMIDTAIL;
-
-    /// <summary>
-    /// Folder tail marker index. This marker is typically configured to display the <see cref="MarkerSymbol.LCorner" /> symbol.
-    /// </summary>
-    public const int FolderTail = SC_MARKNUM_FOLDERTAIL;
-
-    /// <summary>
-    /// Folder sub marker index. This marker is typically configured to display the <see cref="MarkerSymbol.VLine" /> symbol.
-    /// </summary>
-    public const int FolderSub = SC_MARKNUM_FOLDERSUB;
-
-    /// <summary>
-    /// Folder marker index. This marker is typically configured to display the <see cref="MarkerSymbol.BoxPlus" /> symbol.
-    /// </summary>
-    public const int Folder = SC_MARKNUM_FOLDER;
-
-    /// <summary>
-    /// Folder open marker index. This marker is typically configured to display the <see cref="MarkerSymbol.BoxMinus" /> symbol.
-    /// </summary>
-    public const int FolderOpen = SC_MARKNUM_FOLDEROPEN;
-
     /// <inheritdoc />
     public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
     {
@@ -135,10 +89,7 @@ public abstract class MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// </returns>
     public virtual MarkerSymbol Symbol
     {
-        get
-        {
-            return (MarkerSymbol)ScintillaApi.DirectMessage(SCI_MARKERSYMBOLDEFINED, new IntPtr(Index));
-        }
+        get => (MarkerSymbol)ScintillaApi.DirectMessage(SCI_MARKERSYMBOLDEFINED, new IntPtr(Index));
         set
         {
             var markerSymbol = (int)value;

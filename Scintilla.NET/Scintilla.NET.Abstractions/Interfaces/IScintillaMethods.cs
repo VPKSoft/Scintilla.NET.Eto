@@ -148,7 +148,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <summary>
     /// Styles the specified character position with the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.BraceBad" /> style when there is an unmatched brace.
     /// </summary>
-    /// <param name="position">The zero-based document position of the unmatched brace character or <seealso cref="IApiConstants.InvalidPosition"/> to remove the highlight.</param>
+    /// <param name="position">The zero-based document position of the unmatched brace character or <seealso cref="ApiConstants.InvalidPosition"/> to remove the highlight.</param>
     void BraceBadLight(int position);
 
     /// <summary>
@@ -156,7 +156,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// </summary>
     /// <param name="position1">The zero-based document position of the open brace character.</param>
     /// <param name="position2">The zero-based document position of the close brace character.</param>
-    /// <remarks>Brace highlighting can be removed by specifying <see cref="IApiConstants.InvalidPosition" /> for <paramref name="position1" /> and <paramref name="position2" />.</remarks>
+    /// <remarks>Brace highlighting can be removed by specifying <see cref="ApiConstants.InvalidPosition" /> for <paramref name="position1" /> and <paramref name="position2" />.</remarks>
     /// <seealso cref="IScintillaProperties{TColor}.HighlightGuide" />
     void BraceHighlight(int position1, int position2);
 
@@ -165,7 +165,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// The brace characters handled are '(', ')', '[', ']', '{', '}', '&lt;', and '&gt;'.
     /// </summary>
     /// <param name="position">The zero-based document position of a brace character to start the search from for a matching brace character.</param>
-    /// <returns>The zero-based document position of the corresponding matching brace or <see cref="IApiConstants.InvalidPosition" /> it no matching brace could be found.</returns>
+    /// <returns>The zero-based document position of the corresponding matching brace or <see cref="ApiConstants.InvalidPosition" /> it no matching brace could be found.</returns>
     /// <remarks>A match only occurs if the style of the matching brace is the same as the starting brace. Nested braces are handled correctly.</remarks>
     int BraceMatch(int position);
 
@@ -405,7 +405,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <summary>
     /// Clears any undo or redo history.
     /// </summary>
-    /// <remarks>This will also cause <see cref="SetSavePoint" /> to be called but will not raise the <see cref="SavePointReached" /> event.</remarks>
+    /// <remarks>This will also cause <see cref="SetSavePoint" /> to be called but will not raise the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.SavePointReached" /> event.</remarks>
     void EmptyUndoBuffer();
 
     /// <summary>

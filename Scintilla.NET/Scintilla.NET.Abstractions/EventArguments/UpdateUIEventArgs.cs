@@ -1,9 +1,10 @@
 ﻿using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
 
 /// <summary>
-/// Provides data for the <see cref="Scintilla.UpdateUI" /> event.
+/// Provides data for the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.UpdateUi" /> event.
 /// </summary>
 // ReSharper disable once InconsistentNaming, part of the API
 public abstract class UpdateUIEventArgsBase : EventArgs

@@ -52,13 +52,7 @@ public abstract class IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TL
     /// <returns>The number of indicators in the <see cref="IndicatorCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-    public virtual int Count
-    {
-        get
-        {
-            return INDIC_MAX + 1;
-        }
-    }
+    public virtual int Count => INDIC_MAX + 1;
 
     /// <summary>
     /// Gets an <see cref="IndicatorBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> object at the specified index.

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
 
@@ -34,14 +35,14 @@ public abstract class AutoCSelectionEventArgsBase<TMarkers, TStyles, TIndicators
     /// </summary>
     /// <returns>The fill-up character used to cause the completion; otherwise, 0.</returns>
     /// <remarks>Only a <see cref="ListCompletionMethod" /> of <see cref="Scintilla.NET.Abstractions.Enumerations.ListCompletionMethod.FillUp" /> will return a non-zero character.</remarks>
-    /// <seealso cref="Scintilla.AutoCSetFillUps" />
-    public virtual int Char { get; private set; }
+    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.AutoCSetFillUps" />
+    public virtual int Char { get; }
 
     /// <summary>
     /// Gets a value indicating how the completion occurred.
     /// </summary>
     /// <returns>One of the <see cref="Scintilla.NET.Abstractions.Enumerations.ListCompletionMethod" /> enumeration values.</returns>
-    public virtual ListCompletionMethod ListCompletionMethod { get; private set; }
+    public virtual ListCompletionMethod ListCompletionMethod { get; }
 
     /// <summary>
     /// Gets the start position of the word being completed.

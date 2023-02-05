@@ -1,7 +1,6 @@
 ﻿using System.Collections;
-using Scintilla.NET.Abstractions.Collections;
+using Scintilla.NET.Abstractions.Classes;
 using Scintilla.NET.Abstractions.Enumerations;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 
@@ -47,14 +46,14 @@ public interface IScintillaMargin<TMarkers, TStyles, TIndicators, TLines, TMargi
     /// <summary>
     /// Gets the zero-based margin index this object represents.
     /// </summary>
-    /// <returns>The margin index within the <see cref="MarginCollection" />.</returns>
+    /// <returns>The margin index within the <see cref="IScintillaMarginCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.</returns>
     int Index { get; }
 
     /// <summary>
     /// Gets or sets whether the margin is sensitive to mouse clicks.
     /// </summary>
     /// <returns>true if the margin is sensitive to mouse clicks; otherwise, false. The default is false.</returns>
-    /// <seealso cref="ScintillaApi.MarginClick" />
+    /// <seealso cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.MarginClick" />
     bool Sensitive { get; set; }
 
     /// <summary>
@@ -74,12 +73,12 @@ public interface IScintillaMargin<TMarkers, TStyles, TIndicators, TLines, TMargi
     /// Gets or sets a mask indicating which markers this margin can display.
     /// </summary>
     /// <returns>
-    /// An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="Margin" /> indexes.
+    /// An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="IScintillaMargin{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> indexes.
     /// The default is 0x1FFFFFF, which is every marker except folder markers (i.e. 0 through 24).
     /// </returns>
     /// <remarks>
     /// For example, the mask for marker index 10 is 1 shifted left 10 times (1 &lt;&lt; 10).
-    /// <see cref="Marker.MaskFolders" /> is a useful constant for working with just folder margin indexes.
+    /// <see cref="MarkerConstants.MaskFolders" /> is a useful constant for working with just folder margin indexes.
     /// </remarks>
     uint Mask { get; set; }
     #endregion Properties

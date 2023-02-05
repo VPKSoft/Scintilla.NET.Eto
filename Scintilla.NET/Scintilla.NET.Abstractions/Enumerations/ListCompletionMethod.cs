@@ -7,7 +7,7 @@ public enum ListCompletionMethod
 {
     /// <summary>
     /// A fill-up character (see <see cref="Scintilla.AutoCSetFillUps" />) triggered the completion.
-    /// The character used is indicated by the <see cref="AutoCSelectionEventArgs.Char" /> property.
+    /// The character used is indicated by the <see cref="AutoCSelectionEventArgsBase.Char" /> property.
     /// </summary>
     FillUp = ScintillaConstants.SC_AC_FILLUP,
 

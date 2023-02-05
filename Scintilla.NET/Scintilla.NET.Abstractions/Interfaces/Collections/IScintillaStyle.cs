@@ -1,6 +1,4 @@
 using System.Collections;
-using System.Text;
-using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
 
 namespace Scintilla.NET.Abstractions.Interfaces.Collections;
@@ -28,7 +26,7 @@ public interface IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// <summary>
     /// Copies the current style to another style.
     /// </summary>
-    /// <param name="destination">The <see cref="StyleBase" /> to which the current style should be copied.</param>
+    /// <param name="destination">The <see cref="IScintillaStyle{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> to which the current style should be copied.</param>
     public void CopyTo(
         IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator,
             TLine, TMargin, TSelection, TBitmap, TColor>? destination);

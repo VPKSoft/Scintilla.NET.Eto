@@ -11,9 +11,11 @@ using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Scintilla.NET.Abstractions;
+using Scintilla.NET.Abstractions.Classes;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Extensions;
 using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.WinForms.Collections;
 using Scintilla.NET.WinForms.EventArguments;
@@ -28,7 +30,7 @@ namespace Scintilla.NET.WinForms;
 /// Represents a Scintilla editor control.
 /// </summary>
 [Docking(DockingBehavior.Ask)]
-public partial class Scintilla : Control,
+public class Scintilla : Control,
     IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>,
     IScintillaProperties<Color>,
@@ -312,7 +314,7 @@ public partial class Scintilla : Control,
     }
 
     /// <summary>
-    /// Styles the specified character position with the <see cref="Style.BraceBad" /> style when there is an unmatched brace.
+    /// Styles the specified character position with the <see cref="StyleConstants.BraceBad" /> style when there is an unmatched brace.
     /// </summary>
     /// <param name="position">The zero-based document position of the unmatched brace character or <seealso cref="ApiConstants.InvalidPosition"/> to remove the highlight.</param>
     public void BraceBadLight(int position)
@@ -321,7 +323,7 @@ public partial class Scintilla : Control,
     }
 
     /// <summary>
-    /// Styles the specified character positions with the <see cref="Style.BraceLight" /> style.
+    /// Styles the specified character positions with the <see cref="StyleConstants.BraceLight" /> style.
     /// </summary>
     /// <param name="position1">The zero-based document position of the open brace character.</param>
     /// <param name="position2">The zero-based document position of the close brace character.</param>
@@ -470,7 +472,7 @@ public partial class Scintilla : Control,
     /// Makes the specified key definition do nothing.
     /// </summary>
     /// <param name="keyDefinition">The key combination to bind.</param>
-    /// <remarks>This is equivalent to binding the keys to <see cref="Command.Null" />.</remarks>
+    /// <remarks>This is equivalent to binding the keys to <see cref="global::Scintilla.NET.Abstractions.Enumerations.Command.Null" />.</remarks>
     public void ClearCmdKey(Keys keyDefinition)
     {
         this.ClearCmdKeyExtension(keyDefinition, Helpers.TranslateKeys);
@@ -758,7 +760,7 @@ public partial class Scintilla : Control,
     /// </summary>
     /// <param name="displayLine">The zero-based display line index.</param>
     /// <returns>The zero-based document line index.</returns>
-    /// <seealso cref="Line.DisplayIndex" />
+    /// <seealso cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.DisplayIndex" />
     public int DocLineFromVisible(int displayLine)
     {
         return this.DocLineFromVisibleExtension(displayLine, VisibleLineCount);
@@ -815,8 +817,8 @@ public partial class Scintilla : Control,
     /// Changes the appearance of fold text tags.
     /// </summary>
     /// <param name="style">One of the <see cref="FoldDisplayText" /> enumeration values.</param>
-    /// <remarks>The text tag to display on a folded line can be set using <see cref="Line.ToggleFoldShowText" />.</remarks>
-    /// <seealso cref="Line.ToggleFoldShowText" />.
+    /// <remarks>The text tag to display on a folded line can be set using <see cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.ToggleFoldShowText" />.</remarks>
+    /// <seealso cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.ToggleFoldShowText" />.
     public void FoldDisplayTextSetStyle(FoldDisplayText style)
     {
         this.FoldDisplayTextSetStyleExtension(style);
@@ -1041,7 +1043,7 @@ public partial class Scintilla : Control,
     /// <param name="lineStart">The zero-based index of the line range to start hiding.</param>
     /// <param name="lineEnd">The zero-based index of the line range to end hiding.</param>
     /// <seealso cref="ShowLines" />
-    /// <seealso cref="Line.Visible" />
+    /// <seealso cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
     public void HideLines(int lineStart, int lineEnd)
     {
         this.HideLinesExtension(lineStart, lineEnd, Lines);
@@ -1141,7 +1143,7 @@ public partial class Scintilla : Control,
     /// <param name="columns">The number of columns to scroll.</param>
     /// <remarks>
     /// Negative values scroll in the opposite direction.
-    /// A column is the width in pixels of a space character in the <see cref="Style.Default" /> style.
+    /// A column is the width in pixels of a space character in the <see cref="StyleConstants.Default" /> style.
     /// </remarks>
     public void LineScroll(int lines, int columns)
     {
@@ -1169,7 +1171,7 @@ public partial class Scintilla : Control,
     /// <summary>
     /// Searches the document for the marker handle and deletes the marker if found.
     /// </summary>
-    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="Line.MarkerAdd" /> of the marker to delete.</param>
+    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.MarkerAdd" /> of the marker to delete.</param>
     public void MarkerDeleteHandle(MarkerHandle markerHandle)
     {
         this.MarkerDeleteHandleExtension(markerHandle);
@@ -1187,7 +1189,7 @@ public partial class Scintilla : Control,
     /// <summary>
     /// Searches the document for the marker handle and returns the line number containing the marker if found.
     /// </summary>
-    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="Line.MarkerAdd" /> of the marker to search for.</param>
+    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.MarkerAdd" /> of the marker to search for.</param>
     /// <returns>If found, the zero-based line index containing the marker; otherwise, -1.</returns>
     public int MarkerLineFromHandle(MarkerHandle markerHandle)
     {
@@ -1199,7 +1201,7 @@ public partial class Scintilla : Control,
     /// </summary>
     /// <param name="column">The zero-based column number to indicate.</param>
     /// <param name="edgeColor">The color of the vertical long line indicator.</param>
-    /// <remarks>A column is defined as the width of a space character in the <see cref="Style.Default" /> style.</remarks>
+    /// <remarks>A column is defined as the width of a space character in the <see cref="StyleConstants.Default" /> style.</remarks>
     /// <seealso cref="MultiEdgeClearAll" />
     public void MultiEdgeAddLine(int column, Color edgeColor)
     {
@@ -1810,7 +1812,7 @@ public partial class Scintilla : Control,
     /// <param name="lineStart">The zero-based index of the line range to start showing.</param>
     /// <param name="lineEnd">The zero-based index of the line range to end showing.</param>
     /// <seealso cref="HideLines" />
-    /// <seealso cref="Line.Visible" />
+    /// <seealso cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
     public void ShowLines(int lineStart, int lineEnd)
     {
         this.ShowLinesExtension(lineStart, lineEnd, Lines);
@@ -1831,7 +1833,7 @@ public partial class Scintilla : Control,
     }
 
     /// <summary>
-    /// Resets all style properties to those currently configured for the <see cref="Style.Default" /> style.
+    /// Resets all style properties to those currently configured for the <see cref="StyleConstants.Default" /> style.
     /// </summary>
     /// <seealso cref="StyleResetDefault" />
     public void StyleClearAll()
@@ -1840,7 +1842,7 @@ public partial class Scintilla : Control,
     }
 
     /// <summary>
-    /// Resets the <see cref="Style.Default" /> style to its initial state.
+    /// Resets the <see cref="StyleConstants.Default" /> style to its initial state.
     /// </summary>
     /// <seealso cref="StyleClearAll" />
     public void StyleResetDefault()
@@ -2765,7 +2767,7 @@ public partial class Scintilla : Control,
     /// </summary>
     /// <returns>The number of columns in a long line. The default is 0.</returns>
     /// <remarks>
-    /// When using <see cref="Line"/>, a column is defined as the width of a space character in the <see cref="Style.Default" /> style.
+    /// When using <see cref="Line"/>, a column is defined as the width of a space character in the <see cref="StyleConstants.Default" /> style.
     /// When using <see cref="VisualStyleElement.TrayNotify.Background" /> a column is equal to a character (including tabs).
     /// </remarks>
     [DefaultValue(0)]
@@ -2893,7 +2895,7 @@ public partial class Scintilla : Control,
     /// Gets or sets the column number of the indentation guide to highlight.
     /// </summary>
     /// <returns>The column number of the indentation guide to highlight or 0 if disabled.</returns>
-    /// <remarks>Guides are highlighted in the <see cref="Style.BraceLight" /> style. Column numbers can be determined by calling <see cref="GetColumn" />.</remarks>
+    /// <remarks>Guides are highlighted in the <see cref="StyleConstants.BraceLight" /> style. Column numbers can be determined by calling <see cref="GetColumn" />.</remarks>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public int HighlightGuide
@@ -2953,7 +2955,7 @@ public partial class Scintilla : Control,
     /// Gets or sets whether to display indentation guides.
     /// </summary>
     /// <returns>One of the <see cref="IndentView" /> enumeration values. The default is <see cref="IndentView.None" />.</returns>
-    /// <remarks>The <see cref="Style.IndentGuide" /> style can be used to specify the foreground and background color of indentation guides.</remarks>
+    /// <remarks>The <see cref="StyleConstants.IndentGuide" /> style can be used to specify the foreground and background color of indentation guides.</remarks>
     [DefaultValue(IndentView.None)]
     [Category("Indentation")]
     [Description("Indicates whether indentation guides are displayed.")]
@@ -4255,7 +4257,7 @@ public partial class Scintilla : Control,
     }
 
     /// <summary>
-    /// Occurs when the user clicks on text that is in a style with the <see cref="Style.Hotspot" /> property set.
+    /// Occurs when the user clicks on text that is in a style with the <see cref="IScintillaStyle{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Hotspot" /> property set.
     /// </summary>
     [Category("Notifications")]
     [Description("Occurs when the user clicks text styled with the hotspot flag.")]
@@ -4266,7 +4268,7 @@ public partial class Scintilla : Control,
     }
 
     /// <summary>
-    /// Occurs when the user double clicks on text that is in a style with the <see cref="Style.Hotspot" /> property set.
+    /// Occurs when the user double clicks on text that is in a style with the <see cref="IScintillaStyle{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Hotspot" /> property set.
     /// </summary>
     [Category("Notifications")]
     [Description("Occurs when the user double clicks text styled with the hotspot flag.")]
@@ -4277,7 +4279,7 @@ public partial class Scintilla : Control,
     }
 
     /// <summary>
-    /// Occurs when the user releases a click on text that is in a style with the <see cref="Style.Hotspot" /> property set.
+    /// Occurs when the user releases a click on text that is in a style with the <see cref="IScintillaStyle{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Hotspot" /> property set.
     /// </summary>
     [Category("Notifications")]
     [Description("Occurs when the user releases a click on text styled with the hotspot flag.")]
@@ -4334,7 +4336,7 @@ public partial class Scintilla : Control,
     /// <summary>
     /// Occurs when the mouse was clicked inside a margin that was marked as sensitive.
     /// </summary>
-    /// <remarks>The <see cref="Margin.Sensitive" /> property must be set for a margin to raise this event.</remarks>
+    /// <remarks>The <see cref="IScintillaMargin{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Sensitive" /> property must be set for a margin to raise this event.</remarks>
     [Category("Notifications")]
     [Description("Occurs when the mouse is clicked in a sensitive margin.")]
     public event EventHandler<MarginClickEventArgs> MarginClick
@@ -4348,7 +4350,7 @@ public partial class Scintilla : Control,
     /// <summary>
     /// Occurs when the mouse was right-clicked inside a margin that was marked as sensitive.
     /// </summary>
-    /// <remarks>The <see cref="Margin.Sensitive" /> property and <see cref="PopupMode.Text" /> must be set for a margin to raise this event.</remarks>
+    /// <remarks>The <see cref="IScintillaMargin{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Sensitive" /> property and <see cref="PopupMode.Text" /> must be set for a margin to raise this event.</remarks>
     /// <seealso cref="UsePopup(PopupMode)" />
     [Category("Notifications")]
     [Description("Occurs when the mouse is right-clicked in a sensitive margin.")]
@@ -5050,7 +5052,7 @@ public partial class Scintilla : Control,
                 return base.Font;
             }
 
-            var defaultFontStyle = Styles[Style.Default];
+            var defaultFontStyle = Styles[StyleConstants.Default];
 
             var fontStyle = defaultFontStyle.Bold ? FontStyle.Bold : FontStyle.Regular;
 
@@ -5069,7 +5071,7 @@ public partial class Scintilla : Control,
 
         set
         {
-            var defaultFontStyle = Styles[Style.Default];
+            var defaultFontStyle = Styles[StyleConstants.Default];
             defaultFontStyle.Font = value.Name;
             defaultFontStyle.SizeF = value.Size;
             defaultFontStyle.Bold = value.Bold;

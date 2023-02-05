@@ -1,5 +1,4 @@
 ﻿using System.Collections;
-using Scintilla.NET.Abstractions.Collections;
 
 namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 

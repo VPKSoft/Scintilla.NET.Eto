@@ -30,16 +30,6 @@ namespace Scintilla.NET.Abstractions;
 
 public static class HelpersGeneral
 {
-    #region Fields
-
-    private static bool registeredFormats;
-    private static uint CF_HTML;
-    private static uint CF_RTF;
-    private static uint CF_LINESELECT;
-    private static uint CF_VSLINETAG;
-
-    #endregion Fields
-
     #region Methods
 
     public static long CopyTo(this Stream source, Stream destination)
@@ -81,27 +71,6 @@ public static class HelpersGeneral
     }
     
     #endregion Methods
-
-    #region Types
-
-    private struct StyleData
-    {
-        public bool Used;
-        public string FontName;
-        public int FontIndex; // RTF Only
-        public float SizeF;
-        public int Weight;
-        public int Italic;
-        public int Underline;
-        public int BackColor;
-        public int BackColorIndex; // RTF Only
-        public int ForeColor;
-        public int ForeColorIndex; // RTF Only
-        public int Case; // HTML only
-        public int Visible; // HTML only
-    }
-
-    #endregion Types
 
     #region Miscellaneous
     public static unsafe byte[] GetBytes(string text, Encoding encoding, bool zeroTerminated)

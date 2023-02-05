@@ -1,11 +1,13 @@
-﻿namespace Scintilla.NET.Abstractions.Enumerations;
+﻿using Scintilla.NET.Abstractions.Interfaces;
+
+namespace Scintilla.NET.Abstractions.Enumerations;
 
 /// <summary>
 /// Line endings types supported by lexers and allowed by a <see cref="Scintilla" /> control.
 /// </summary>
-/// <seealso cref="Scintilla.LineEndTypesSupported" />
-/// <seealso cref="Scintilla.LineEndTypesAllowed" />
-/// <seealso cref="Scintilla.LineEndTypesActive" />
+/// <seealso cref="IScintillaProperties{TColor}.LineEndTypesSupported" />
+/// <seealso cref="IScintillaProperties{TColor}.LineEndTypesAllowed" />
+/// <seealso cref="IScintillaProperties{TColor}.LineEndTypesActive" />
 [Flags]
 public enum LineEndType
 {

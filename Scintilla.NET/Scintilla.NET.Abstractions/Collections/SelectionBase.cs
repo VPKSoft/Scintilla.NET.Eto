@@ -59,10 +59,7 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// <returns>The amount of virtual space past the end of the line offsetting the selection anchor.</returns>
     public virtual int AnchorVirtualSpace
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETSELECTIONNANCHORVIRTUALSPACE, new IntPtr(Index)).ToInt32();
-        }
+        get => ScintillaApi.DirectMessage(SCI_GETSELECTIONNANCHORVIRTUALSPACE, new IntPtr(Index)).ToInt32();
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);
@@ -100,10 +97,7 @@ public abstract class SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMar
     /// <returns>The amount of virtual space past the end of the line offsetting the selection caret.</returns>
     public virtual int CaretVirtualSpace
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETSELECTIONNCARETVIRTUALSPACE, new IntPtr(Index)).ToInt32();
-        }
+        get => ScintillaApi.DirectMessage(SCI_GETSELECTIONNCARETVIRTUALSPACE, new IntPtr(Index)).ToInt32();
         set
         {
             value = HelpersGeneral.ClampMin(value, 0);

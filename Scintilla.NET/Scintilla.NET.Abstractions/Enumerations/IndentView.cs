@@ -1,9 +1,11 @@
-﻿namespace Scintilla.NET.Abstractions.Enumerations;
+﻿using Scintilla.NET.Abstractions.Classes;
+
+namespace Scintilla.NET.Abstractions.Enumerations;
 
 /// <summary>
 /// Options for displaying indentation guides in a <see cref="Scintilla" /> control.
 /// </summary>
-/// <remarks>Indentation guides can be styled using the <see cref="Style.IndentGuide" /> style.</remarks>
+/// <remarks>Indentation guides can be styled using the <see cref="StyleConstants.IndentGuide" /> style.</remarks>
 public enum IndentView
 {
     /// <summary>

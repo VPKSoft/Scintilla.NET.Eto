@@ -49,25 +49,13 @@ public abstract class SelectionCollectionBase<TMarkers, TStyles, TIndicators, TL
     /// Gets the number of active selections.
     /// </summary>
     /// <returns>The number of selections in the <see cref="SelectionCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
-    public virtual int Count
-    {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETSELECTIONS).ToInt32();
-        }
-    }
+    public virtual int Count => ScintillaApi.DirectMessage(SCI_GETSELECTIONS).ToInt32();
 
     /// <summary>
     /// Gets a value indicating whether all selection ranges are empty.
     /// </summary>
     /// <returns>true if all selection ranges are empty; otherwise, false.</returns>
-    public virtual bool IsEmpty
-    {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETSELECTIONEMPTY) != IntPtr.Zero;
-        }
-    }
+    public virtual bool IsEmpty => ScintillaApi.DirectMessage(SCI_GETSELECTIONEMPTY) != IntPtr.Zero;
 
     /// <summary>
     /// Gets the <see cref="SelectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> at the specified zero-based index.

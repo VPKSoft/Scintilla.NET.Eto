@@ -3,6 +3,7 @@ using System.Drawing;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.WinForms.Collections;
@@ -40,7 +41,7 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
     /// <param name="color">The <see cref="Marker" /> background Color. The default is White.</param>
     /// <remarks>
     /// The background color of the whole line will be drawn in the <paramref name="color" /> specified when the marker is not visible
-    /// because it is hidden by a <see cref="Margin.Mask" /> or the <see cref="Margin.Width" /> is zero.
+    /// because it is hidden by a <see cref="IScintillaMargin{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Mask" /> or the <see cref="IScintillaMargin{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Width" /> is zero.
     /// </remarks>
     /// <seealso cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.SetAlpha" />
     public override void SetBackColor(Color color)

@@ -3,7 +3,7 @@
 /// <summary>
 /// Possible strategies for styling text using application idle time.
 /// </summary>
-/// <seealso cref="Scintilla.IdleStyling" />
+/// <seealso cref="IdleStyling" />
 public enum IdleStyling
 {
     /// <summary>

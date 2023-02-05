@@ -1,5 +1,6 @@
 ﻿using Scintilla.NET.Abstractions.Enumerations;
 using System.Collections;
+using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Structs;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
@@ -159,8 +160,8 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// Toggles the folding state of the line; expanding or contracting all child lines, and specifies the text tag to display to the right of the fold.
     /// </summary>
     /// <param name="text">The text tag to show to the right of the folded text.</param>
-    /// <remarks>The display of fold text tags are determined by the <see cref="Scintilla.FoldDisplayTextSetStyle" /> method.</remarks>
-    /// <seealso cref="Scintilla.FoldDisplayTextSetStyle" />
+    /// <remarks>The display of fold text tags are determined by the <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.FoldDisplayTextSetStyle" /> method.</remarks>
+    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.FoldDisplayTextSetStyle" />
     public virtual unsafe void ToggleFoldShowText(string text)
     {
         if (string.IsNullOrEmpty(text))
@@ -203,10 +204,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <seealso cref="AnnotationStyles" />
     public virtual int AnnotationStyle
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_ANNOTATIONGETSTYLE, new IntPtr(Index)).ToInt32();
-        }
+        get => ScintillaApi.DirectMessage(SCI_ANNOTATIONGETSTYLE, new IntPtr(Index)).ToInt32();
         set
         {
             value = HelpersGeneral.Clamp(value, 0, ScintillaApi.Styles.Count - 1);
@@ -234,7 +232,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
             var length = ScintillaApi.DirectMessage(SCI_ANNOTATIONGETTEXT, new IntPtr(Index)).ToInt32();
             if (length == 0)
             {
-                return new byte[0];
+                return Array.Empty<byte>();
             }
 
             var text = new byte[length + 1];
@@ -325,7 +323,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// taking into consideration folded (hidden) lines.
     /// </summary>
     /// <returns>The zero-based display line index.</returns>
-    /// <seealso cref="Scintilla.DocLineFromVisible" />
+    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.DocLineFromVisible" />
     public virtual int DisplayIndex => ScintillaApi.DirectMessage(SCI_VISIBLEFROMDOCLINE, new IntPtr(Index)).ToInt32();
 
     /// <summary>
@@ -344,10 +342,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <seealso cref="ToggleFold" />
     public virtual bool Expanded
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETFOLDEXPANDED, new IntPtr(Index)) != IntPtr.Zero;
-        }
+        get => ScintillaApi.DirectMessage(SCI_GETFOLDEXPANDED, new IntPtr(Index)) != IntPtr.Zero;
         set
         {
             var expanded = value ? new IntPtr(1) : IntPtr.Zero;
@@ -413,7 +408,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// Gets the line index.
     /// </summary>
     /// <returns>The zero-based line index within the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> that created it.</returns>
-    public int Index { get; private set; }
+    public int Index { get; }
 
     /// <summary>
     /// Gets the length of the line.
@@ -431,10 +426,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <seealso cref="MarginStyles" />
     public virtual int MarginStyle
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_MARGINGETSTYLE, new IntPtr(Index)).ToInt32();
-        }
+        get => ScintillaApi.DirectMessage(SCI_MARGINGETSTYLE, new IntPtr(Index)).ToInt32();
         set
         {
             value = HelpersGeneral.Clamp(value, 0, ScintillaApi.Styles.Count - 1);
@@ -583,8 +575,8 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// Gets a value indicating whether the line is visible.
     /// </summary>
     /// <returns>true if the line is visible; otherwise, false.</returns>
-    /// <seealso cref="Scintilla.ShowLines" />
-    /// <seealso cref="Scintilla.HideLines" />
+    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.ShowLines" />
+    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.HideLines" />
     public virtual bool Visible => ScintillaApi.DirectMessage(SCI_GETLINEVISIBLE, new IntPtr(Index)) != IntPtr.Zero;
 
     /// <summary>

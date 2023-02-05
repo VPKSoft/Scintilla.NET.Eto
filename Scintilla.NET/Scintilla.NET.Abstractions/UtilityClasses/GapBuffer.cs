@@ -133,13 +133,7 @@ public sealed class GapBuffer<T> : IEnumerable<T>
         }
     }
 
-    public int Count
-    {
-        get
-        {
-            return buffer.Length - (gapEnd - gapStart);
-        }
-    }
+    public int Count => buffer.Length - (gapEnd - gapStart);
 
 #if DEBUG
     // Poor man's DebuggerTypeProxy because I can't seem to get that working

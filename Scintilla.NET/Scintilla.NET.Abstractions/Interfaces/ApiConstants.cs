@@ -31,7 +31,7 @@ namespace Scintilla.NET.Abstractions.Interfaces;
 /// <summary>
 /// Public constants for the Scintilla API.
 /// </summary>
-public class ApiConstants
+public static class ApiConstants
 {
     /// <summary>
     /// A constant used to specify an invalid document position.

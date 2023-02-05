@@ -75,7 +75,7 @@ public static class ScintillaExtensionsGeneral
     /// <param name="caret">The zero-based document position to end the selection.</param>
     /// <param name="anchor">The zero-based document position to start the selection.</param>
     /// <param name="lines">The line collection of the Scintilla control.</param>
-    /// <remarks>A main selection must first have been set by a call to <see cref="SetSelectionExtension" />.</remarks>
+    /// <remarks>A main selection must first have been set by a call to <see cref="SetSelectionExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.</remarks>
     public static void AddSelectionExtension<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>(this IScintillaApi scintilla, int caret, int anchor, IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> lines)
         where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
         where TStyles : IScintillaStyleCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -931,7 +931,7 @@ public static class ScintillaExtensionsGeneral
     /// Clears any undo or redo history.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
-    /// <remarks>This will also cause <see cref="SetSavePointExtension" /> to be called but will not raise the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.SavePointReached" /> event.</remarks>
+    /// <remarks>This will also cause <see cref="SetSavePointExtension" /> to be called but will not raise the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.SavePointReached" /> event.</remarks>
     public static void EmptyUndoBufferExtension(this IScintillaApi scintilla)
     {
         scintilla.DirectMessage(SCI_EMPTYUNDOBUFFER);
@@ -1267,7 +1267,7 @@ public static class ScintillaExtensionsGeneral
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     /// <param name="tagNumber">The capture group (1 through 9) to get the text for.</param>
     /// <returns>A String containing the capture group text if it participated in the match; otherwise, an empty string.</returns>
-    /// <seealso cref="SearchInTargetExtension" />
+    /// <seealso cref="SearchInTargetExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
     public static unsafe string GetTagExtension(this IScintillaApi scintilla, int tagNumber)
     {
         tagNumber = HelpersGeneral.Clamp(tagNumber, 1, 9);
@@ -1389,7 +1389,7 @@ public static class ScintillaExtensionsGeneral
     /// <param name="lineStart">The zero-based index of the line range to start hiding.</param>
     /// <param name="lineEnd">The zero-based index of the line range to end hiding.</param>
     /// <param name="lines">The line collection of the Scintilla control.</param>
-    /// <seealso cref="ShowLinesExtension" />
+    /// <seealso cref="ShowLinesExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
     /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
     public static void HideLinesExtension<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>(this IScintillaApi scintilla, int lineStart, int lineEnd, IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> lines)
         where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -2420,14 +2420,14 @@ public static class ScintillaExtensionsGeneral
     /// <param name="styles">The style collection of the Scintilla control.</param>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="length" /> or <paramref name="style" /> is less than zero. -or-
-    /// The sum of a preceding call to <see cref="StartStylingExtension" /> or <see name="SetStylingExtension" /> and <paramref name="length" /> is greater than the document length. -or-
+    /// The sum of a preceding call to <see cref="StartStylingExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> or <see name="SetStylingExtension" /> and <paramref name="length" /> is greater than the document length. -or-
     /// <paramref name="style" /> is greater than or equal to the number of style definitions.
     /// </exception>
     /// <remarks>
     /// The styling position is advanced by <paramref name="length" /> after each call allowing multiple
-    /// calls to <see cref="SetStylingExtension" /> for a single call to <see cref="StartStylingExtension" />.
+    /// calls to <see cref="SetStylingExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> for a single call to <see cref="StartStylingExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.
     /// </remarks>
-    /// <seealso cref="StartStylingExtension" />
+    /// <seealso cref="StartStylingExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
     // ReSharper disable three times ParameterOnlyUsedForPreconditionCheck.Global
     public static void SetStylingExtension<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>(this IScintillaApi scintilla, int length, int style, int textLength,
         ref int stylingPosition, ref int stylingBytePosition, IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> lines, IScintillaStyleCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> styles)
@@ -2550,7 +2550,7 @@ public static class ScintillaExtensionsGeneral
     /// <param name="lineStart">The zero-based index of the line range to start showing.</param>
     /// <param name="lineEnd">The zero-based index of the line range to end showing.</param>
     /// <param name="lines">The line collection of the Scintilla control.</param>
-    /// <seealso cref="HideLinesExtension" />
+    /// <seealso cref="HideLinesExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
     /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
     public static void ShowLinesExtension<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>(this IScintillaApi scintilla, int lineStart, int lineEnd, IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> lines)
         where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -2584,10 +2584,10 @@ public static class ScintillaExtensionsGeneral
     /// <param name="textLength">The total length of the text in the Scintilla control.</param>
     /// <param name="lines">The line collection of the Scintilla control.</param>
     /// <remarks>
-    /// After preparing the document for styling, use successive calls to <see cref="SetStylingExtension" />
+    /// After preparing the document for styling, use successive calls to <see cref="SetStylingExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
     /// to style the document.
     /// </remarks>
-    /// <seealso cref="SetStylingExtension" />
+    /// <seealso cref="SetStylingExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
     public static void StartStylingExtension<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>(this IScintillaApi scintilla, int position, out int stylingPosition,
         out int stylingBytePosition, int textLength, IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> lines)
         where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -2739,7 +2739,7 @@ public static class ScintillaExtensionsGeneral
     /// </param>
     /// <param name="lines">The line collection of the Scintilla control.</param>
     /// <returns>The zero-based document position of the word boundary.</returns>
-    /// <seealso cref="WordStartPositionExtension" />
+    /// <seealso cref="WordStartPositionExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
     public static int WordEndPositionExtension<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>(this IScintillaApi scintilla, int position, bool onlyWordCharacters, IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> lines)
         where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
         where TStyles : IScintillaStyleCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -2774,7 +2774,7 @@ public static class ScintillaExtensionsGeneral
     /// </param>
     /// <param name="lines">The line collection of the Scintilla control.</param>
     /// <returns>The zero-based document position of the word boundary.</returns>
-    /// <seealso cref="WordEndPositionExtension" />
+    /// <seealso cref="WordEndPositionExtension{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
     public static int WordStartPositionExtension<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>(this IScintillaApi scintilla, int position, bool onlyWordCharacters, IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> lines)
         where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
         where TStyles : IScintillaStyleCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable

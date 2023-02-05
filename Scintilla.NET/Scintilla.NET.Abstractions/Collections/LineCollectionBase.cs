@@ -418,38 +418,22 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     /// Gets a value indicating whether all the document lines are visible (not hidden).
     /// </summary>
     /// <returns>true if all the lines are visible; otherwise, false.</returns>
-    public virtual bool AllLinesVisible
-    {
-        get
-        {
-            return ScintillaApi.DirectMessage(SCI_GETALLLINESVISIBLE) != IntPtr.Zero;
-        }
-    }
+    public virtual bool AllLinesVisible => ScintillaApi.DirectMessage(SCI_GETALLLINESVISIBLE) != IntPtr.Zero;
 
     /// <summary>
     /// Gets the number of lines.
     /// </summary>
     /// <returns>The number of lines in the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
-    public virtual int Count
-    {
-        get
-        {
-            // Subtract the terminal line
-            return perLineData.Count - 1;
-        }
-    }
+    public virtual int Count =>
+        // Subtract the terminal line
+        perLineData.Count - 1;
 
     /// <summary>
     /// Gets the number of CHARACTERS in the document.
     /// </summary>
-    public virtual int TextLength
-    {
-        get
-        {
-            // Where the terminal line begins
-            return CharPositionFromLine(perLineData.Count - 1);
-        }
-    }
+    public virtual int TextLength =>
+        // Where the terminal line begins
+        CharPositionFromLine(perLineData.Count - 1);
 
     /// <summary>
     /// Gets the <see cref="LineBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> at the specified zero-based index.
@@ -466,7 +450,6 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     /// Initializes a new instance of the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    /// <param name="notifyApi">A class implementing the <see cref="IScintillaNotificationEvent{TEventArgs}"/> interface.</param>
     public LineCollectionBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla)
     {
         this.ScintillaApi = scintilla;

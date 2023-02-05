@@ -24,49 +24,6 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     where TBitmap: class
     where TColor: struct
 {
-    #region Constants
-
-    /// <summary>
-    /// Default style index. This style is used to define properties that all styles receive when calling <see cref="Scintilla.StyleClearAll" />.
-    /// </summary>
-    public const int Default = ScintillaConstants.STYLE_DEFAULT;
-
-    /// <summary>
-    /// Line number style index. This style is used for text in line number margins. The background color of this style also
-    /// sets the background color for all margins that do not have any folding mask set.
-    /// </summary>
-    public const int LineNumber = ScintillaConstants.STYLE_LINENUMBER;
-
-    /// <summary>
-    /// Call tip style index. Only font name, size, foreground color, background color, and character set attributes
-    /// can be used when displaying a call tip.
-    /// </summary>
-    public const int CallTip = ScintillaConstants.STYLE_CALLTIP;
-
-    /// <summary>
-    /// Indent guide style index. This style is used to specify the foreground and background colors of <see cref="Scintilla.IndentationGuides" />.
-    /// </summary>
-    public const int IndentGuide = ScintillaConstants.STYLE_INDENTGUIDE;
-
-    /// <summary>
-    /// Brace highlighting style index. This style is used on a brace character when set with the <see cref="Scintilla.BraceHighlight" /> method
-    /// or the indentation guide when used with the <see cref="Scintilla.HighlightGuide" /> property.
-    /// </summary>
-    public const int BraceLight = ScintillaConstants.STYLE_BRACELIGHT;
-
-    /// <summary>
-    /// Bad brace style index. This style is used on an unmatched brace character when set with the <see cref="Scintilla.BraceBadLight" /> method.
-    /// </summary>
-    public const int BraceBad = ScintillaConstants.STYLE_BRACEBAD;
-
-    /// <summary>
-    /// Fold text tag style index. This is the style used for drawing text tags attached to folded text when
-    /// <see cref="Scintilla.FoldDisplayTextSetStyle" /> and <see cref="Line.ToggleFoldShowText" /> are used.
-    /// </summary>
-    public const int FoldDisplayText = ScintillaConstants.STYLE_FOLDDISPLAYTEXT;
-
-    #endregion Constants
-
     #region Methods
     /// <inheritdoc />
     public void CopyTo(IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>? destination)
@@ -113,10 +70,7 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     /// <remarks>Setting this property affects the <see cref="Weight" /> property.</remarks>
     public virtual bool Bold
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETBOLD, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
-        }
+        get => ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETBOLD, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
         set
         {
             var bold = value ? new IntPtr(1) : IntPtr.Zero;
@@ -151,10 +105,7 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     /// <returns>true to fill the line; otherwise, false. The default is false.</returns>
     public virtual bool FillLine
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETEOLFILLED, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
-        }
+        get => ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETEOLFILLED, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
         set
         {
             var fillLine = value ? new IntPtr(1) : IntPtr.Zero;
@@ -216,10 +167,7 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     /// <returns>true to use hyperlink behavior; otherwise, false. The default is false.</returns>
     public virtual bool Hotspot
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETHOTSPOT, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
-        }
+        get => ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETHOTSPOT, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
         set
         {
             var hotspot = value ? new IntPtr(1) : IntPtr.Zero;
@@ -230,8 +178,8 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     /// <summary>
     /// Gets the zero-based style definition index.
     /// </summary>
-    /// <returns>The style definition index within the <see cref="StyleCollectionBase" />.</returns>
-    public int Index { get; private set; }
+    /// <returns>The style definition index within the <see cref="StyleCollectionBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.</returns>
+    public int Index { get; }
 
     /// <summary>
     /// Gets or sets whether the style font is italic.
@@ -239,10 +187,7 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     /// <returns>true if italic; otherwise, false. The default is false.</returns>
     public virtual bool Italic
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETITALIC, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
-        }
+        get => ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETITALIC, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
         set
         {
             var italic = value ? new IntPtr(1) : IntPtr.Zero;
@@ -256,14 +201,8 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     /// <returns>The size of the style font as a whole number of points. The default is 8.</returns>
     public virtual int Size
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETSIZE, new IntPtr(Index), IntPtr.Zero).ToInt32();
-        }
-        set
-        {
-            ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLESETSIZE, new IntPtr(Index), new IntPtr(value));
-        }
+        get => ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETSIZE, new IntPtr(Index), IntPtr.Zero).ToInt32();
+        set => ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLESETSIZE, new IntPtr(Index), new IntPtr(value));
     }
 
     /// <summary>
@@ -290,10 +229,7 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     /// <returns>true if underlined; otherwise, false. The default is false.</returns>
     public virtual bool Underline
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETUNDERLINE, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
-        }
+        get => ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETUNDERLINE, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
         set
         {
             var underline = value ? new IntPtr(1) : IntPtr.Zero;
@@ -307,10 +243,7 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     /// <returns>true to display the style text; otherwise, false. The default is true.</returns>
     public virtual bool Visible
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETVISIBLE, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
-        }
+        get => ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETVISIBLE, new IntPtr(Index), IntPtr.Zero) != IntPtr.Zero;
         set
         {
             var visible = value ? new IntPtr(1) : IntPtr.Zero;
@@ -325,14 +258,8 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     /// <remarks>Setting this property affects the <see cref="Bold" /> property.</remarks>
     public virtual int Weight
     {
-        get
-        {
-            return ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETWEIGHT, new IntPtr(Index), IntPtr.Zero).ToInt32();
-        }
-        set
-        {
-            ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLESETWEIGHT, new IntPtr(Index), new IntPtr(value));
-        }
+        get => ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETWEIGHT, new IntPtr(Index), IntPtr.Zero).ToInt32();
+        set => ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLESETWEIGHT, new IntPtr(Index), new IntPtr(value));
     }
 
     #endregion Properties
@@ -340,10 +267,10 @@ public abstract class StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins
     #region Constructors
 
     /// <summary>
-    /// Initializes a new instances of the <see cref="StyleBase" /> class.
+    /// Initializes a new instances of the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this style.</param>
-    /// <param name="index">The index of this style within the <see cref="StyleCollectionBase" /> that created it.</param>
+    /// <param name="index">The index of this style within the <see cref="StyleCollectionBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> that created it.</param>
     public StyleBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla, int index)
     {
         this.ScintillaApi = scintilla;

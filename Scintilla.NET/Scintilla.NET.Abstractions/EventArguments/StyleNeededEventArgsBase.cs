@@ -1,10 +1,11 @@
 ﻿using System.Collections;
 using Scintilla.NET.Abstractions.Collections;
+using Scintilla.NET.Abstractions.Interfaces;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
 
 /// <summary>
-/// Provides data for the <see cref="Scintilla.StyleNeeded" /> event.
+/// Provides data for the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.StyleNeeded" /> event.
 /// </summary>
 public abstract class StyleNeededEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> 
     : ScintillaEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
@@ -27,7 +28,7 @@ public abstract class StyleNeededEventArgsBase<TMarkers, TStyles, TIndicators, T
     private int? position;
 
     /// <summary>
-    /// Gets the document position where styling should end. The <see cref="Scintilla.GetEndStyled" /> method
+    /// Gets the document position where styling should end. The <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.GetEndStyled" /> method
     /// indicates the last position styled correctly and the starting place for where styling should begin.
     /// </summary>
     /// <returns>The zero-based position within the document to perform styling up to.</returns>

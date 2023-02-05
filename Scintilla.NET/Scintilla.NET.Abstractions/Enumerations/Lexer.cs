@@ -1,3 +1,5 @@
+using Scintilla.NET.Abstractions.Interfaces;
+
 namespace Scintilla.NET.Abstractions.Enumerations;
 
 /// <summary>
@@ -15,7 +17,7 @@ public enum Lexer
 
     /// <summary>
     /// Lexing is performed by the <see cref="Scintilla" /> control container (host) using
-    /// the <see cref="Scintilla.StyleNeeded" /> event.
+    /// the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.StyleNeeded" /> event.
     /// </summary>
     Container = ScintillaConstants.SCLEX_CONTAINER,
 

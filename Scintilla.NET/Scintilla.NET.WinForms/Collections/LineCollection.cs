@@ -54,7 +54,6 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
     /// Initializes a new instance of the <see cref="LineCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    /// <param name="notifyApi">A class implementing the <see cref="IScintillaNotificationEvent{TEventArgs}"/> interface.</param>
     public LineCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
     {
         perLineData = new GapBuffer<PerLine>

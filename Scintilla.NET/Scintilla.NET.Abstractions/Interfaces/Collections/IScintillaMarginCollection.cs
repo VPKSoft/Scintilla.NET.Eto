@@ -1,8 +1,5 @@
 ﻿using System.Collections;
-using System.ComponentModel;
-using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 
@@ -38,13 +35,13 @@ public interface IScintillaMarginCollection<TMarkers, TStyles, TIndicators, TLin
     void ClearAllText();
 
     /// <summary>
-    /// Gets or sets the number of margins in the <see cref="MarginCollection" />.
+    /// Gets or sets the number of margins in the <see cref="IScintillaMarginCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.
     /// </summary>
     /// <returns>The number of margins in the collection. The default is 5.</returns>
     int Capacity { get; set; }
 
     /// <summary>
-    /// Gets the number of margins in the <see cref="MarginCollection" />.
+    /// Gets the number of margins in the <see cref="IScintillaMarginCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.
     /// </summary>
     /// <returns>The number of margins in the collection.</returns>
     /// <remarks>This property is kept for convenience. The return value will always be equal to <see cref="Capacity" />.</remarks>
@@ -64,7 +61,7 @@ public interface IScintillaMarginCollection<TMarkers, TStyles, TIndicators, TLin
     int Right { get; set; }
 
     /// <summary>
-    /// Gets a <see cref="Margin" /> object at the specified index.
+    /// Gets a <see cref="IScintillaMargin{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> object at the specified index.
     /// </summary>
     /// <param name="index">The margin index.</param>
     /// <returns>An object representing the margin at the specified <paramref name="index" />.</returns>
