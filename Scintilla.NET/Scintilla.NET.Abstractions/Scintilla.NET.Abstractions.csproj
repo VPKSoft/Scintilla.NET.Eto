@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-	<TargetFrameworks>netstandard2.1;net461</TargetFrameworks>
+	<TargetFrameworks>netstandard2.1</TargetFrameworks>
 	<Copyright>Copyright (c) VPKSoft 2023.</Copyright>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
@@ -13,11 +13,6 @@
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 	
-  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-	<Reference Include="System.Net.Http" />
-	<Reference Include="System.Threading.Tasks" />
-  </ItemGroup>
-
   <PropertyGroup>
 	<DefineConstants>SCINTILLA5</DefineConstants>
   </PropertyGroup>
