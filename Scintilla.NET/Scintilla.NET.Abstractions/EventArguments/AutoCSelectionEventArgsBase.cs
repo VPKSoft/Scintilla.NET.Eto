@@ -2,6 +2,7 @@
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
 
@@ -9,7 +10,8 @@ namespace Scintilla.NET.Abstractions.EventArguments;
 /// Provides data for the Scintilla.AutoCSelection event.
 /// </summary>
 public abstract class AutoCSelectionEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> 
-    : ScintillaEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
+    : ScintillaEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>,
+        IAutoCSelectionEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -54,7 +56,7 @@ public abstract class AutoCSelectionEventArgsBase<TMarkers, TStyles, TIndicators
         {
             if (position == null)
             {
-                position = scintilla.Lines.ByteToCharPosition(bytePosition);
+                position = ScintillaApi.Lines.ByteToCharPosition(bytePosition);
             }
 
             return (int)position;
@@ -75,7 +77,7 @@ public abstract class AutoCSelectionEventArgsBase<TMarkers, TStyles, TIndicators
                 while (((byte*)textPtr)[len] != 0)
                     len++;
 
-                text = HelpersGeneral.GetString(textPtr, len, scintilla.Encoding);
+                text = HelpersGeneral.GetString(textPtr, len, ScintillaApi.Encoding);
             }
 
             return text;

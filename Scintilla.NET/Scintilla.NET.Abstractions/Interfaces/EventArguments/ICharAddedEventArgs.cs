@@ -2,7 +2,7 @@
 /*
 MIT License
 
-Copyright(c) 2022 Petteri Kautonen
+Copyright(c) 2023 Petteri Kautonen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -24,17 +24,15 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Interfaces;
-
+namespace Scintilla.NET.Abstractions.Interfaces.EventArguments;
 /// <summary>
-/// An interface for the Scintilla native event notifications.
+/// Provides data for the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.CharAdded" /> event.
 /// </summary>
-/// <typeparam name="TEventArgs">The type of the event arguments.</typeparam>
-public interface IScintillaNotificationEvent
+public interface ICharAddedEventArgs
 {
     /// <summary>
-    /// The Scintilla native notification.
+    /// Gets the text character added to a <see cref="Scintilla" /> control.
     /// </summary>
-    // ReSharper disable once InconsistentNaming
-    event EventHandler<ISCNotificationEventArgs> SCNotification;
+    /// <returns>The character added.</returns>
+    int Char { get; }
 }

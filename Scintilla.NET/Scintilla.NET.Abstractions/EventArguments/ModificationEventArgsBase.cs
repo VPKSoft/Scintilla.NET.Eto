@@ -2,6 +2,7 @@
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
@@ -10,7 +11,8 @@ namespace Scintilla.NET.Abstractions.EventArguments;
 /// Provides data for the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.Delete" /> and <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.Insert" /> events.
 /// </summary>
 public abstract class ModificationEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> 
-    : ScintillaEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
+    : ScintillaEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>,
+        IModificationEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -50,7 +52,7 @@ public abstract class ModificationEventArgsBase<TMarkers, TStyles, TIndicators, 
     {
         get
         {
-            CachedPosition ??= scintilla.Lines.ByteToCharPosition(bytePosition);
+            CachedPosition ??= ScintillaApi.Lines.ByteToCharPosition(bytePosition);
 
             return (int)CachedPosition;
         }
@@ -86,12 +88,12 @@ public abstract class ModificationEventArgsBase<TMarkers, TStyles, TIndicators, 
                 // SC_MOD_BEFOREDELETE... but we can get it from the document.
                 if (textPtr == IntPtr.Zero)
                 {
-                    var ptr = scintilla.DirectMessage(SCI_GETRANGEPOINTER, new IntPtr(bytePosition), new IntPtr(byteLength));
-                    CachedText = new string((sbyte*)ptr, 0, byteLength, scintilla.Encoding);
+                    var ptr = ScintillaApi.DirectMessage(SCI_GETRANGEPOINTER, new IntPtr(bytePosition), new IntPtr(byteLength));
+                    CachedText = new string((sbyte*)ptr, 0, byteLength, ScintillaApi.Encoding);
                 }
                 else
                 {
-                    CachedText = HelpersGeneral.GetString(textPtr, byteLength, scintilla.Encoding);
+                    CachedText = HelpersGeneral.GetString(textPtr, byteLength, ScintillaApi.Encoding);
                 }
             }
 
@@ -100,7 +102,7 @@ public abstract class ModificationEventArgsBase<TMarkers, TStyles, TIndicators, 
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="BeforeModificationEventArgsBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> class.
+    /// Initializes a new instance of the <see cref="BeforeModificationEventArgsBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that generated this event.</param>
     /// <param name="source">The source of the modification.</param>

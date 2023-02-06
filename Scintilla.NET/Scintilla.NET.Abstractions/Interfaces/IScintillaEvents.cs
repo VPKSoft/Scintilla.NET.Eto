@@ -29,7 +29,8 @@ using System.ComponentModel;
 using System.Net.Mime;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.EventArguments;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
+using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 
 namespace Scintilla.NET.Abstractions.Interfaces;
 
@@ -74,63 +75,63 @@ public interface IScintillaEvents<TMarkers, TStyles, TIndicators, TLines, TMargi
     TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs,
     TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs,
     TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs>
-    where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, 
+    where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, 
         TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, 
+    where TStyles : IScintillaStyleCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, 
         TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :
-    IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
+    IScintillaIndicatorCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
         TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker
+    where TLines : IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker
         , TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : MarginCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections,
+    where TMargins : IScintillaMarginCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections,
         TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TSelections :
-    SelectionCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
+    IScintillaSelectionCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
         TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker : MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TMarker : IScintillaMarker<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
+    where TStyle : IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
         TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TIndicator : IScintillaIndicator<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
+    where TLine : IScintillaLine<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
         TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TMargin : IScintillaMargin<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TSelection : IScintillaSelection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TBitmap : class
     where TColor : struct
     where TKeys : Enum
-    where TAutoCSelectionEventArgs : AutoCSelectionEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TAutoCSelectionEventArgs : IAutoCSelectionEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBeforeModificationEventArgs: BeforeModificationEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TBeforeModificationEventArgs: IBeforeModificationEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TModificationEventArgs: ModificationEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TModificationEventArgs: IModificationEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TChangeAnnotationEventArgs: ChangeAnnotationEventArgsBase
-    where TCharAddedEventArgs: CharAddedEventArgsBase
-    where TDoubleClickEventArgs: DoubleClickEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys>
-    where TDwellEventArgs: DwellEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TChangeAnnotationEventArgs: IChangeAnnotationEventArgs
+    where TCharAddedEventArgs: ICharAddedEventArgs
+    where TDoubleClickEventArgs: IDoubleClickEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys>
+    where TDwellEventArgs: IDwellEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TCallTipClickEventArgs: CallTipClickEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TCallTipClickEventArgs: ICallTipClickEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where THotspotClickEventArgs: HotspotClickEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where THotspotClickEventArgs: IHotspotClickEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys>
-    where TIndicatorClickEventArgs: IndicatorClickEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TIndicatorClickEventArgs: IIndicatorClickEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys>
-    where TIndicatorReleaseEventArgs: IndicatorReleaseEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TIndicatorReleaseEventArgs: IIndicatorReleaseEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TInsertCheckEventArgs: InsertCheckEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TInsertCheckEventArgs: IInsertCheckEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMarginClickEventArgs: MarginClickEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TMarginClickEventArgs: IMarginClickEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys>
-    where TNeedShownEventArgs: NeedShownEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TNeedShownEventArgs: INeedShownEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyleNeededEventArgs: StyleNeededEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
+    where TStyleNeededEventArgs: IStyleNeededEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
         TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TUpdateUiEventArgs: UpdateUIEventArgsBase
+    where TUpdateUiEventArgs: IUpdateUIEventArgs
     where TScNotificationEventArgs: ISCNotificationEventArgs
 {
     /// <summary>

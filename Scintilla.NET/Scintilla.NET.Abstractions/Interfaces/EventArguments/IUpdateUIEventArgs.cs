@@ -24,20 +24,18 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Classes;
+using Scintilla.NET.Abstractions.Enumerations;
 
-namespace Scintilla.NET.Abstractions.Interfaces;
-
+namespace Scintilla.NET.Abstractions.Interfaces.EventArguments;
 /// <summary>
-/// An interface for the SCNotificationEventArgs event argument classes.
+/// Provides data for the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.UpdateUi" /> event.
 /// </summary>
-// ReSharper disable once InconsistentNaming
-public interface ISCNotificationEventArgs
+// ReSharper disable once InconsistentNaming, part of the API
+public interface IUpdateUIEventArgs
 {
     /// <summary>
-    /// Gets the Scintilla notification data structure.
+    /// The UI update that occurred.
     /// </summary>
-    /// <value>The Scintilla notification data structure.</value>
-    // ReSharper disable once InconsistentNaming
-    ScintillaApiStructs.SCNotification SCNotification { get; }
+    /// <returns>A bitwise combination of <see cref="UpdateChange" /> values specifying the UI update that occurred.</returns>
+    UpdateChange Change { get; }
 }

@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
@@ -9,7 +10,8 @@ namespace Scintilla.NET.Abstractions.EventArguments;
 /// Provides data for the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.InsertCheck" /> event.
 /// </summary>
 public abstract class InsertCheckEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> 
-    : ScintillaEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
+    : ScintillaEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>,
+        IInsertCheckEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
     where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
     where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
@@ -41,7 +43,7 @@ public abstract class InsertCheckEventArgsBase<TMarkers, TStyles, TIndicators, T
     {
         get
         {
-            CachedPosition ??= scintilla.Lines.ByteToCharPosition(bytePosition);
+            CachedPosition ??= ScintillaApi.Lines.ByteToCharPosition(bytePosition);
 
             return (int)CachedPosition;
         }
@@ -53,15 +55,15 @@ public abstract class InsertCheckEventArgsBase<TMarkers, TStyles, TIndicators, T
     /// <returns>The text being inserted into the document.</returns>
     public virtual unsafe string? Text
     {
-        get => CachedText ??= HelpersGeneral.GetString(textPtr, byteLength, scintilla.Encoding);
+        get => CachedText ??= HelpersGeneral.GetString(textPtr, byteLength, ScintillaApi.Encoding);
         set
         {
             CachedText = value ?? string.Empty;
 
-            var bytes = HelpersGeneral.GetBytes(CachedText, scintilla.Encoding, zeroTerminated: false);
+            var bytes = HelpersGeneral.GetBytes(CachedText, ScintillaApi.Encoding, zeroTerminated: false);
             fixed (byte* bp = bytes)
             {
-                scintilla.DirectMessage(SCI_CHANGEINSERTION, new IntPtr(bytes.Length), new IntPtr(bp));
+                ScintillaApi.DirectMessage(SCI_CHANGEINSERTION, new IntPtr(bytes.Length), new IntPtr(bp));
             }
         }
     }
