@@ -37,6 +37,6 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - name: Restore dependencies
-      run: dotnet restore "$Env:$GITHUB_WORKSPACE/Scintilla.NET.EtoForms-Windows.sln"
+      run: dotnet restore "$$GITHUB_WORKSPACE/Scintilla.NET.EtoForms-Windows.sln"
     - name: Build
-      run: dotnet build --no-restore "$Env:$GITHUB_WORKSPACE/Scintilla.NET.EtoForms-Windows.sln"
+      run: dotnet build --no-restore "$$GITHUB_WORKSPACE/Scintilla.NET.EtoForms-Windows.sln"
