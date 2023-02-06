@@ -16,6 +16,9 @@
 		<Company>VPKSoft</Company>
 		<PackageLicenseExpression>MIT</PackageLicenseExpression>
 		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
+		<IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
+		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
+		<IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
 	</PropertyGroup>
 
 
@@ -23,9 +26,12 @@
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 
-	<ItemGroup>
+	<ItemGroup Condition="'$(IsWindows)'=='true'" >
 	  <ProjectReference Include="..\Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj" />
-      <!--<ProjectReference Include="..\Scintilla.NET.Eto.Linux\Scintilla.NET.Eto.Linux.csproj" />-->
+	</ItemGroup>
+
+	<ItemGroup Condition="'$(IsLinux)'=='true'" >
+		<ProjectReference Include="..\Scintilla.NET.Eto.Linux\Scintilla.NET.Eto.Linux.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
