@@ -1,0 +1,42 @@
+name: Linux and Windows .NET Core
+
+on:
+  push:
+    branches: [ "main" ]
+    paths-ignore:
+      - '**/README.md'
+  pull_request:
+    branches: [ "main" ]    
+    paths-ignore:
+      - '**/README.md'
+
+jobs:
+  build-linux:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore "$GITHUB_WORKSPACE/Scintilla.NET.EtoForms-Linux.sln"
+    - name: Build
+      run: dotnet build --no-restore "$GITHUB_WORKSPACE/Scintilla.NET.EtoForms-Linux.sln"
+
+  build-windows:
+
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v2
+      with:
+        dotnet-version: 6.0.x
+    - name: Restore dependencies
+      run: dotnet restore "$Env:$GITHUB_WORKSPACE/Scintilla.NET.EtoForms-Windows.sln"
+    - name: Build
+      run: dotnet build --no-restore "$Env:$GITHUB_WORKSPACE/Scintilla.NET.EtoForms-Windows.sln"
