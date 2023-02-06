@@ -23,10 +23,6 @@
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 
-	<PropertyGroup>
-		<RestoreSources>$(RestoreSources);../LocalNuGets;https://api.nuget.org/v3/index.json</RestoreSources>
-	</PropertyGroup>
-
 	<ItemGroup>
 	  <ProjectReference Include="..\Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj" />
       <!--<ProjectReference Include="..\Scintilla.NET.Eto.Linux\Scintilla.NET.Eto.Linux.csproj" />-->
