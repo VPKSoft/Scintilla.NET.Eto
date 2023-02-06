@@ -47,16 +47,6 @@
 	<PropertyGroup Condition="'$(Configuration)|$(TargetFramework)|$(Platform)'=='Release|net461|AnyCPU'">
 		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
-	<ItemGroup Condition=" '$(TargetFramework)' == 'net461' ">
-		<Reference Include="System.Windows.Forms" />
-		<Reference Include="System.Data.DataSetExtensions" />
-		<Reference Include="Microsoft.CSharp" />
-		<Reference Include="System.IO.Compression" />
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="..\Shared\x64\Scintilla.zip" Link="x64\Scintilla.zip" />
-		<EmbeddedResource Include="..\Shared\x86\Scintilla.zip" Link="x86\Scintilla.zip" />
-	</ItemGroup>
 	<ItemGroup>
 		<Compile Update="Scintilla.cs" />
 	</ItemGroup>
