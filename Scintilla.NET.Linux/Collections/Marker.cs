@@ -18,24 +18,22 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
     /// Sets the marker symbol to a custom image.
     /// </summary>
     /// <param name="image">The Bitmap to use as a marker symbol.</param>
-    /// <remarks>Calling this method will also update the <see cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Symbol" /> property to <see cref="MarkerSymbol.RgbaImage" />.</remarks>
-    public override unsafe void DefineRgbaImage(Image image)
+    /// <remarks>Calling this method will also update the <see cref="MarkerBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Symbol" /> property to <see cref="MarkerSymbol.RgbaImage" />.</remarks>
+    public override unsafe void DefineRgbaImage(Image? image)
     {
-        throw new NotImplementedException();
+        if (image == null)
+        {
+            return;
+        }
 
-        //if (image == null)
-        //{
-        //    return;
-        //}
+        ScintillaApi.DirectMessage(SCI_RGBAIMAGESETWIDTH, new IntPtr(image.Allocation.Width));
+        ScintillaApi.DirectMessage(SCI_RGBAIMAGESETHEIGHT, new IntPtr(image.Allocation.Width));
 
-        //scintilla.DirectMessage(SCI_RGBAIMAGESETWIDTH, new IntPtr(image.Allocation.Width));
-        //scintilla.DirectMessage(SCI_RGBAIMAGESETHEIGHT, new IntPtr(image.Allocation.Width));
-
-        //var bytes = Helpers.BitmapToArgb(image);
-        //fixed (byte* bp = bytes)
-        //{
-        //    scintilla.DirectMessage(SCI_MARKERDEFINERGBAIMAGE, new IntPtr(Index), new IntPtr(bp));
-        //}
+        var bytes = NativeImageRgbaConverter.PixBufToBytes(image);
+        fixed (byte* bp = bytes)
+        {
+            ScintillaApi.DirectMessage(SCI_MARKERDEFINERGBAIMAGE, new IntPtr(Index), new IntPtr(bp));
+        }
     }
 
     /// <summary>
@@ -46,7 +44,7 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
     /// The background color of the whole line will be drawn in the <paramref name="color" /> specified when the marker is not visible
     /// because it is hidden by a <see cref="Margin.Mask" /> or the <see cref="Margin.Width" /> is zero.
     /// </remarks>
-    /// <seealso cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TEventArgs, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.SetAlpha" />
+    /// <seealso cref="MarkerBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.SetAlpha" />
     public override void SetBackColor(Color color)
     {
         var colorNum = ColorTranslator.ToInt(color);

@@ -27,7 +27,6 @@ SOFTWARE.
 using System;
 using System.Runtime.InteropServices;
 using System.Text;
-using Gdk;
 using Gtk;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Classes;
@@ -186,9 +185,16 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
             }
         }
     }
-    
+
+    /// <summary>
+    /// A delegate to process the native Scintilla control notifications.
+    /// </summary>
+    /// <param name="widget">The widget pointer.</param>
+    /// <param name="something">Unknown data with unknown use.</param>
+    /// <param name="notification">The Scintilla notification code.</param>
+    /// <param name="userData">The user data.</param>
     [UnmanagedFunctionPointer (CallingConvention.Cdecl)]
-    public delegate void SciNotifyDelegate(IntPtr widget, IntPtr something, IntPtr notification, IntPtr userData);
+    private delegate void SciNotifyDelegate(IntPtr widget, IntPtr something, IntPtr notification, IntPtr userData);
     
     #region Fields
     // Pinned dataDwellStart
@@ -424,7 +430,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <summary>
-    /// Styles the specified character position with the <see cref="Style.BraceBad" /> style when there is an unmatched brace.
+    /// Styles the specified character position with the <see cref="StyleConstants.BraceBad" /> style when there is an unmatched brace.
     /// </summary>
     /// <param name="position">The zero-based document position of the unmatched brace character or <seealso cref="ApiConstants.InvalidPosition"/> to remove the highlight.</param>
     public void BraceBadLight(int position)
@@ -433,7 +439,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <summary>
-    /// Styles the specified character positions with the <see cref="Style.BraceLight" /> style.
+    /// Styles the specified character positions with the <see cref="StyleConstants.BraceLight" /> style.
     /// </summary>
     /// <param name="position1">The zero-based document position of the open brace character.</param>
     /// <param name="position2">The zero-based document position of the close brace character.</param>
@@ -1125,7 +1131,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <param name="columns">The number of columns to scroll.</param>
     /// <remarks>
     /// Negative values scroll in the opposite direction.
-    /// A column is the width in pixels of a space character in the <see cref="Style.Default" /> style.
+    /// A column is the width in pixels of a space character in the <see cref="StyleConstants.Default" /> style.
     /// </remarks>
     public void LineScroll(int lines, int columns)
     {
@@ -1183,7 +1189,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// </summary>
     /// <param name="column">The zero-based column number to indicate.</param>
     /// <param name="edgeColor">The color of the vertical long line indicator.</param>
-    /// <remarks>A column is defined as the width of a space character in the <see cref="Style.Default" /> style.</remarks>
+    /// <remarks>A column is defined as the width of a space character in the <see cref="StyleConstants.Default" /> style.</remarks>
     /// <seealso cref="MultiEdgeClearAll" />
     public void MultiEdgeAddLine(int column, Color edgeColor)
     {
@@ -1284,9 +1290,21 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <inheritdoc />
-    public void RegisterRgbaImage(int type, Image image)
+    public unsafe void RegisterRgbaImage(int type, Image? image)
     {
-        throw new NotImplementedException();
+        if (image == null)
+        {
+            return;
+        }
+
+        DirectMessage(SCI_RGBAIMAGESETWIDTH, new IntPtr(image.Pixbuf.Width));
+        DirectMessage(SCI_RGBAIMAGESETHEIGHT, new IntPtr(image.Pixbuf.Height));
+
+        var bytes = NativeImageRgbaConverter.PixBufToBytes(image);
+        fixed (byte* bp = bytes)
+        {
+            DirectMessage(SCI_REGISTERRGBAIMAGE, new IntPtr(type), new IntPtr(bp));
+        }
     }
 
     /// <summary>
@@ -1639,7 +1657,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <summary>
-    /// Resets all style properties to those currently configured for the <see cref="Style.Default" /> style.
+    /// Resets all style properties to those currently configured for the <see cref="StyleConstants.Default" /> style.
     /// </summary>
     /// <seealso cref="StyleResetDefault" />
     public void StyleClearAll()
@@ -1648,7 +1666,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <summary>
-    /// Resets the <see cref="Style.Default" /> style to its initial state.
+    /// Resets the <see cref="StyleConstants.Default" /> style to its initial state.
     /// </summary>
     /// <seealso cref="StyleClearAll" />
     public void StyleResetDefault()
@@ -1872,7 +1890,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <inheritdoc />
     public event EventHandler<NeedShownEventArgs>? NeedShown;
 
-    /// <inheritdoc cref="IScintillaNotificationEvent.SCNotification" />
+    /// <inheritdoc cref="ScintillaApiStructs.SCNotification" />
     public event EventHandler<SCNotificationEventArgs>? SCNotification;
 
     /// <inheritdoc />
@@ -2417,7 +2435,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// </summary>
     /// <returns>The number of columns in a long line. The default is 0.</returns>
     /// <remarks>
-    /// When using <see cref="Line"/>, a column is defined as the width of a space character in the <see cref="Style.Default" /> style.
+    /// When using <see cref="Line"/>, a column is defined as the width of a space character in the <see cref="StyleConstants.Default" /> style.
     /// </remarks>
     public int EdgeColumn
     {
@@ -2521,7 +2539,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// Gets or sets the column number of the indentation guide to highlight.
     /// </summary>
     /// <returns>The column number of the indentation guide to highlight or 0 if disabled.</returns>
-    /// <remarks>Guides are highlighted in the <see cref="Style.BraceLight" /> style. Column numbers can be determined by calling <see cref="GetColumn" />.</remarks>
+    /// <remarks>Guides are highlighted in the <see cref="StyleConstants.BraceLight" /> style. Column numbers can be determined by calling <see cref="GetColumn" />.</remarks>
     public int HighlightGuide
     {
         get => this.HighlightGuideGet();
@@ -2570,7 +2588,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// Gets or sets whether to display indentation guides.
     /// </summary>
     /// <returns>One of the <see cref="IndentView" /> enumeration values. The default is <see cref="IndentView.None" />.</returns>
-    /// <remarks>The <see cref="Style.IndentGuide" /> style can be used to specify the foreground and background color of indentation guides.</remarks>
+    /// <remarks>The <see cref="StyleConstants.IndentGuide" /> style can be used to specify the foreground and background color of indentation guides.</remarks>
     public IndentView IndentationGuides
     {
         get => this.IndentationGuidesGet();
