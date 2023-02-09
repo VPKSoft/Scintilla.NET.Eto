@@ -1,4 +1,4 @@
-using System.Collections;
+using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
 
 namespace Scintilla.NET.Abstractions.Interfaces.Collections;
@@ -6,38 +6,22 @@ namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 /// <summary>
 /// A style definition in a <see cref="ScintillaApi" /> control.
 /// </summary>
-public interface IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : IScintillaStyleCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TIndicators :IScintillaIndicatorCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : IScintillaMarginCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TSelections : IScintillaSelectionCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker: IScintillaMarker<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IScintillaIndicator<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : IScintillaLine<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : IScintillaMargin<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : IScintillaSelection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBitmap: class
+public interface IScintillaStyle<TColor>
     where TColor: struct
 {
     #region Methods
     /// <summary>
     /// Copies the current style to another style.
     /// </summary>
-    /// <param name="destination">The <see cref="IScintillaStyle{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> to which the current style should be copied.</param>
-    public void CopyTo(
-        IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator,
-            TLine, TMargin, TSelection, TBitmap, TColor>? destination);
+    /// <param name="destination">The <see cref="IScintillaStyle{TColor}" /> to which the current style should be copied.</param>
+    public void CopyTo<TDestination>(IScintillaStyle<TColor>? destination) where TDestination : IScintillaStyle<TColor>;
     #endregion Methods
 
     #region Properties
     /// <summary>
     /// A reference to the Scintilla control interface.
     /// </summary>
-    IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine,
-        TMargin, TSelection, TBitmap, TColor> ScintillaApi { get; }
+    IScintillaApi ScintillaApi { get; }
 
     /// <summary>
     /// Gets or sets the background color of the style.
@@ -90,7 +74,7 @@ public interface IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargin
     /// <summary>
     /// Gets the zero-based style definition index.
     /// </summary>
-    /// <returns>The style definition index within the <see cref="IScintillaStyleCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.</returns>
+    /// <returns>The style definition index within the <see cref="IScintillaStyleCollection{TStyle,TColor}" />.</returns>
     int Index { get; }
 
     /// <summary>

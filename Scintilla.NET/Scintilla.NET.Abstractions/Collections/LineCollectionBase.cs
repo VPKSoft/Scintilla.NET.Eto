@@ -2,7 +2,6 @@
 using System.Diagnostics;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.Abstractions.UtilityClasses;
@@ -10,35 +9,20 @@ using static Scintilla.NET.Abstractions.ScintillaConstants;
 using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
 
 namespace Scintilla.NET.Abstractions.Collections;
-// TODO Revisit this following Scintilla v3.7.0 because is said to be better about character handling
 
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : MarginCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TSelections : SelectionCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker: MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBitmap: class
-    where TColor: struct
+public abstract class LineCollectionBase<TLine> : IEnumerable<TLine>
+    where TLine : LineBase
 {
-    #region Fields
-
-    protected GapBuffer<PerLine> perLineData;
+    #region Fields    
+    private GapBuffer<PerLine> perLineData;
 
     // The 'step' is a break in the continuity of our line starts. It allows us
     // to delay the updating of every line start when text is inserted/deleted.
-    protected int stepLine;
-    protected int stepLength;
+    private int stepLine;
+    private int stepLength;
 
     #endregion Fields
 
@@ -179,7 +163,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     /// <summary>
     /// Provides an enumerator that iterates through the collection.
     /// </summary>
-    /// <returns>An object that contains all <see cref="LineBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> objects within the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
+    /// <returns>An object that contains all <see cref="LineBase" />.</returns>
     public IEnumerator<TLine> GetEnumerator()
     {
         var count = Count;
@@ -339,6 +323,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     /// <param name="e">The <see cref="ISCNotificationEventArgs"/> instance containing the event data.</param>
     public abstract void ScNotificationCallback(object sender, ISCNotificationEventArgs e);
 
+    /// <summary>
+    /// Handles the Scintilla's text change events.
+    /// </summary>
+    /// <param name="scn">The Scintilla notification data.</param>
     public virtual void ScnModified(SCNotification scn)
     {
         if ((scn.modificationType & SC_MOD_DELETETEXT) > 0)
@@ -352,6 +340,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         }
     }
 
+    /// <summary>
+    /// Tracks the delete text.
+    /// </summary>
+    /// <param name="scn">The Scintilla notification data.</param>
     public virtual void TrackDeleteText(SCNotification scn)
     {
         var startLine = ScintillaApi.DirectMessage(SCI_LINEFROMPOSITION, scn.position).ToInt32();
@@ -377,6 +369,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         }
     }
 
+    /// <summary>
+    /// Tracks the insert text.
+    /// </summary>
+    /// <param name="scn">The Scintilla notification data.</param>
     public virtual void TrackInsertText(SCNotification scn)
     {
         var startLine = ScintillaApi.DirectMessage(SCI_LINEFROMPOSITION, scn.position).ToInt32();
@@ -405,11 +401,11 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         }
     }
 
-    /// <inheritdoc />
-    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
-    {
-        get;
-    }
+    /// <summary>
+    /// Gets the scintilla API.
+    /// </summary>
+    /// <value>The scintilla API.</value>
+    protected IScintillaApi ScintillaApi { get; }
 
     #endregion Methods
 
@@ -424,7 +420,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     /// <summary>
     /// Gets the number of lines.
     /// </summary>
-    /// <returns>The number of lines in the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
+    /// <returns>The number of lines in the <see cref="LineCollectionBase{TLine}" />.</returns>
     public virtual int Count =>
         // Subtract the terminal line
         perLineData.Count - 1;
@@ -437,10 +433,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         CharPositionFromLine(perLineData.Count - 1);
 
     /// <summary>
-    /// Gets the <see cref="LineBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> at the specified zero-based index.
+    /// Gets the <see cref="LineBase" /> at the specified zero-based index.
     /// </summary>
-    /// <param name="index">The zero-based index of the <see cref="LineBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> to get.</param>
-    /// <returns>The <see cref="LineBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> at the specified index.</returns>
+    /// <param name="index">The zero-based index of the <see cref="LineBase" /> to get.</param>
+    /// <returns>The <see cref="LineBase" /> at the specified index.</returns>
     public abstract TLine this[int index] { get; }
 
     #endregion Properties
@@ -448,10 +444,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     #region Constructors
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> class.
+    /// Initializes a new instance of the <see cref="LineCollectionBase{TLine}" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public LineCollectionBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla)
+    public LineCollectionBase(IScintillaApi scintilla)
     {
         this.ScintillaApi = scintilla;
 
