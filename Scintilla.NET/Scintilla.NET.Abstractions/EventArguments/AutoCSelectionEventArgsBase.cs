@@ -1,7 +1,6 @@
-﻿using System.Collections;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
+﻿using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
@@ -9,23 +8,8 @@ namespace Scintilla.NET.Abstractions.EventArguments;
 /// <summary>
 /// Provides data for the Scintilla.AutoCSelection event.
 /// </summary>
-public abstract class AutoCSelectionEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> 
-    : ScintillaEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>,
-        IAutoCSelectionEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : MarginCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TSelections : SelectionCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker: MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBitmap: class
-    where TColor: struct
+public abstract class AutoCSelectionEventArgsBase : ScintillaEventArgs, IAutoCSelectionEventArgs
+
 {
     private readonly IntPtr textPtr;
     private readonly int bytePosition;
@@ -39,6 +23,9 @@ public abstract class AutoCSelectionEventArgsBase<TMarkers, TStyles, TIndicators
     /// <remarks>Only a <see cref="ListCompletionMethod" /> of <see cref="Scintilla.NET.Abstractions.Enumerations.ListCompletionMethod.FillUp" /> will return a non-zero character.</remarks>
     /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.AutoCSetFillUps" />
     public virtual int Char { get; }
+
+    /// <inheritdoc />
+    public IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
 
     /// <summary>
     /// Gets a value indicating how the completion occurred.
@@ -56,7 +43,7 @@ public abstract class AutoCSelectionEventArgsBase<TMarkers, TStyles, TIndicators
         {
             if (position == null)
             {
-                position = ScintillaApi.Lines.ByteToCharPosition(bytePosition);
+                position = LineCollectionGeneral.ByteToCharPosition(bytePosition);
             }
 
             return (int)position;
@@ -85,21 +72,24 @@ public abstract class AutoCSelectionEventArgsBase<TMarkers, TStyles, TIndicators
     }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="AutoCSelectionEventArgsBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> class.
+    /// Initializes a new instance of the <see cref="AutoCSelectionEventArgsBase" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that generated this event.</param>
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     /// <param name="bytePosition">The zero-based byte position within the document of the word being completed.</param>
     /// <param name="text">A pointer to the selected auto-completion text.</param>
     /// <param name="ch">The character that caused the completion.</param>
     /// <param name="listCompletionMethod">A value indicating the way in which the completion occurred.</param>
     protected AutoCSelectionEventArgsBase(
-        IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
-            TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla, int bytePosition, IntPtr text, int ch,
+        IScintillaApi scintilla, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral,
+        int bytePosition, IntPtr text, int ch,
         ListCompletionMethod listCompletionMethod) : base(scintilla)
     {
         this.bytePosition = bytePosition;
         textPtr = text;
         Char = ch;
         ListCompletionMethod = listCompletionMethod;
+        LineCollectionGeneral = lineCollectionGeneral;
     }
 }
