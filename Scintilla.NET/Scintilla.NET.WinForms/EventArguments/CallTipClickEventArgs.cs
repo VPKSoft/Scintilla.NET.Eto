@@ -1,15 +1,13 @@
-﻿using System.Drawing;
-using Scintilla.NET.Abstractions;
+﻿using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.EventArguments;
-using Scintilla.NET.WinForms.Collections;
 
 namespace Scintilla.NET.WinForms.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.CallTipClick" /> event.
 /// </summary>
-public class CallTipClickEventArgs: CallTipClickEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class CallTipClickEventArgs: CallTipClickEventArgsBase
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="DwellEventArgs" /> class.
@@ -17,9 +15,7 @@ public class CallTipClickEventArgs: CallTipClickEventArgsBase<MarkerCollection, 
     /// <param name="scintilla">The <see cref="Scintilla" /> control that generated this event.</param>
     /// /// <param name="callTipClickType">Type of the call tip click.</param>
     public CallTipClickEventArgs(
-        IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-            SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap,
-            Color> scintilla, CallTipClickType callTipClickType) : base(scintilla, callTipClickType)
+        IScintillaApi scintilla, CallTipClickType callTipClickType) : base(scintilla, callTipClickType)
     {
     }
 }

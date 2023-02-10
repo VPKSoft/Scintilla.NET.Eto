@@ -1,4 +1,5 @@
-﻿using Scintilla.NET.Abstractions.Enumerations;
+﻿using Scintilla.NET.Abstractions;
+using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.EventArguments;
 
 namespace Scintilla.NET.WinForms.EventArguments;
@@ -12,8 +13,9 @@ public class UpdateUIEventArgs : UpdateUIEventArgsBase
     /// <summary>
     /// Initializes a new instance of the <see cref="UpdateUIEventArgs" /> class.
     /// </summary>
+    /// <param name="scintillaApi">The <see cref="IScintillaApi" /> control interface that generated this event.</param>
     /// <param name="change">A bitwise combination of <see cref="UpdateChange" /> values specifying the reason to update the UI.</param>
-    public UpdateUIEventArgs(UpdateChange change) : base(change)
+    public UpdateUIEventArgs(IScintillaApi scintillaApi, UpdateChange change) : base(scintillaApi, change)
     {
     }
 }
