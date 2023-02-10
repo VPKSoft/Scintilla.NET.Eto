@@ -1,22 +1,24 @@
 ﻿using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.Abstractions.UtilityClasses;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
-using Color = Gdk.Color;
-using Image = Gtk.Image;
 
 namespace Scintilla.NET.Linux.Collections;
 
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class LineCollection : LineCollectionBase<Line>
 {
-    #region Methods
-    
+    private readonly IScintillaStyleCollectionGeneral styleCollectionGeneral;
+    private readonly IScintillaLineCollectionGeneral lineCollectionGeneral;
+    private readonly IScintillaMarkerCollectionGeneral markerCollectionGeneral;
+
+    #region Methods    
+    /// <inheritdoc />
     public override void ScNotificationCallback(object sender, ISCNotificationEventArgs e)
     {
         var scn = e.SCNotification;
@@ -40,7 +42,7 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
         get
         {
             index = HelpersGeneral.Clamp(index, 0, Count - 1);
-            return new Line(ScintillaApi, index);
+            return new Line(ScintillaApi, styleCollectionGeneral, lineCollectionGeneral, markerCollectionGeneral, index);
         }
     }
 
@@ -52,12 +54,23 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
     /// Initializes a new instance of the <see cref="LineCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public LineCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
+    /// <param name="styleCollectionGeneral">A reference to Scintilla's style collection.</param>
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
+    /// <param name="markerCollectionGeneral">A reference to Scintilla's marker collection.</param>
+    public LineCollection(
+        IScintillaApi scintilla,
+        IScintillaStyleCollectionGeneral styleCollectionGeneral, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral, 
+        IScintillaMarkerCollectionGeneral markerCollectionGeneral
+        ) : base(scintilla)
     {
-        perLineData = new GapBuffer<PerLine>
+        this.styleCollectionGeneral = styleCollectionGeneral;
+        this.lineCollectionGeneral = lineCollectionGeneral;
+        this.markerCollectionGeneral = markerCollectionGeneral;
+        PerLineData = new GapBuffer<PerLine>
         {
-            new() { Start = 0 },
-            new() { Start = 0 }, // Terminal
+            new() { Start = 0, },
+            new() { Start = 0, }, // Terminal
         };
     }
 

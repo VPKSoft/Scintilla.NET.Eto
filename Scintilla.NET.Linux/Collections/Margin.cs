@@ -5,14 +5,13 @@ using Scintilla.NET.Abstractions.Enumerations;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 using Color = Gdk.Color;
 using ColorTranslator = Scintilla.NET.Linux.GdkUtils.ColorTranslator;
-using Image = Gtk.Image;
 
 namespace Scintilla.NET.Linux.Collections;
 
 /// <summary>
 /// Represents a margin displayed on the left edge of a <see cref="Scintilla" /> control.
 /// </summary>
-public class Margin : MarginBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class Margin : MarginBase<Color>
 {
     #region Properties
 
@@ -44,7 +43,7 @@ public class Margin : MarginBase<MarkerCollection, StyleCollection, IndicatorCol
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this margin.</param>
     /// <param name="index">The index of this margin within the <see cref="MarginCollection" /> that created it.</param>
-    public Margin(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, int index) : base(scintilla, index)
+    public Margin(IScintillaApi scintilla, int index) : base(scintilla, index)
     {
     }
 

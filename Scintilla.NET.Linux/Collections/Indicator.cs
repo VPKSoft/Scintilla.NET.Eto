@@ -1,17 +1,17 @@
 ﻿using System;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 using Color = Gdk.Color;
 using ColorTranslator = Scintilla.NET.Linux.GdkUtils.ColorTranslator;
-using Image = Gtk.Image;
 
 namespace Scintilla.NET.Linux.Collections;
 
 /// <summary>
 /// Represents an indicator in a <see cref="Scintilla" /> control.
 /// </summary>
-public class Indicator : IndicatorBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class Indicator : IndicatorBase<Color>
 {
     #region Properties
 
@@ -67,8 +67,12 @@ public class Indicator : IndicatorBase<MarkerCollection, StyleCollection, Indica
     /// Initializes a new instance of the <see cref="Indicator" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this indicator.</param>
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     /// <param name="index">The index of this style within the <see cref="IndicatorCollection" /> that created it.</param>
-    public Indicator(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, int index) : base(scintilla, index)
+    public Indicator(
+        IScintillaApi scintilla, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral,
+        int index) : base(scintilla, lineCollectionGeneral, index)
     {
     }
 

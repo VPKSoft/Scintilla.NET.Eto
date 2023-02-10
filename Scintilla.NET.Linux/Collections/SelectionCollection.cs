@@ -1,21 +1,15 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using Scintilla.NET.Abstractions;
+﻿using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
-using Color = Gdk.Color;
-using Image = Gtk.Image;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 
 namespace Scintilla.NET.Linux.Collections;
 
 /// <summary>
 /// A multiple selection collection.
 /// </summary>
-public class SelectionCollection : SelectionCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>, IEnumerable<Selection>
+public class SelectionCollection : SelectionCollectionBase<Selection>
 {
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    private readonly IScintillaLineCollectionGeneral lineCollectionGeneral;
 
     /// <summary>
     /// Gets the <see cref="Selection" /> at the specified zero-based index.
@@ -27,7 +21,7 @@ public class SelectionCollection : SelectionCollectionBase<MarkerCollection, Sty
         get
         {
             index = HelpersGeneral.Clamp(index, 0, Count - 1);
-            return new Selection(ScintillaApi, index);
+            return new Selection(ScintillaApi, lineCollectionGeneral, index);
         }
     }
 
@@ -35,7 +29,11 @@ public class SelectionCollection : SelectionCollectionBase<MarkerCollection, Sty
     /// Initializes a new instance of the <see cref="SelectionCollection" /> class.
     /// </summary>
     /// <param name="scintilla"></param>
-    public SelectionCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla) : base(scintilla)
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
+    public SelectionCollection(
+        IScintillaApi scintilla, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral) : base(scintilla, lineCollectionGeneral)
     {
+        this.lineCollectionGeneral = lineCollectionGeneral;
     }
 }
