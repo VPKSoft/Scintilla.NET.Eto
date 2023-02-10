@@ -24,6 +24,7 @@ SOFTWARE.
 */
 #endregion
 
+using Scintilla.NET.Abstractions.Classes;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Structs;
@@ -35,11 +36,11 @@ namespace Scintilla.NET.Abstractions.Interfaces;
 /// </summary>
 /// <typeparam name="TColor">The type of the color used in the platform.</typeparam>
 /// <typeparam name="TKeys">The type of the keys enumeration used by the platform.</typeparam>
-/// <typeparam name="TBitmap">The type of the bitmap used in the platform.</typeparam>
-public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
+/// <typeparam name="TImage">The type of the image used in the platform.</typeparam>
+public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     where TColor : struct
     where TKeys: Enum
-    where TBitmap : class
+    where TImage : class
 {
     /// <summary>
     /// Increases the reference count of the specified document by 1.
@@ -71,7 +72,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     int AllocateSubStyles(int styleBase, int numberStyles);
 
     /// <summary>
-    /// Removes the annotation text for every <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> in the document.
+    /// Removes the annotation text for every <see cref="LineBase" /> in the document.
     /// </summary>
     void AnnotationClearAll();
 
@@ -146,13 +147,13 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     void BeginUndoAction();
 
     /// <summary>
-    /// Styles the specified character position with the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.BraceBad" /> style when there is an unmatched brace.
+    /// Styles the specified character position with the <see cref="StyleConstants.BraceBad" /> style when there is an unmatched brace.
     /// </summary>
     /// <param name="position">The zero-based document position of the unmatched brace character or <seealso cref="ApiConstants.InvalidPosition"/> to remove the highlight.</param>
     void BraceBadLight(int position);
 
     /// <summary>
-    /// Styles the specified character positions with the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.BraceLight" /> style.
+    /// Styles the specified character positions with the <see cref="StyleConstants.BraceLight" /> style.
     /// </summary>
     /// <param name="position1">The zero-based document position of the open brace character.</param>
     /// <param name="position2">The zero-based document position of the close brace character.</param>
@@ -392,7 +393,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// </summary>
     /// <param name="displayLine">The zero-based display line index.</param>
     /// <returns>The zero-based document line index.</returns>
-    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.DisplayIndex" />
+    /// <seealso cref="LineBase.DisplayIndex" />
     int DocLineFromVisible(int displayLine);
 
     /// <summary>
@@ -405,7 +406,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <summary>
     /// Clears any undo or redo history.
     /// </summary>
-    /// <remarks>This will also cause <see cref="SetSavePoint" /> to be called but will not raise the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.SavePointReached" /> event.</remarks>
+    /// <remarks>This will also cause <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.SavePointReached" /> event.</remarks>
     void EmptyUndoBuffer();
 
     /// <summary>
@@ -431,8 +432,8 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// Changes the appearance of fold text tags.
     /// </summary>
     /// <param name="style">One of the <see cref="FoldDisplayText" /> enumeration values.</param>
-    /// <remarks>The text tag to display on a folded line can be set using <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.ToggleFoldShowText" />.</remarks>
-    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.ToggleFoldShowText" />.
+    /// <remarks>The text tag to display on a folded line can be set using <see cref="LineBase.ToggleFoldShowText" />.</remarks>
+    /// <seealso cref="LineBase.ToggleFoldShowText" />.
     void FoldDisplayTextSetStyle(FoldDisplayText style);
 
     /// <summary>
@@ -506,7 +507,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// Gets the style of the specified document position.
     /// </summary>
     /// <param name="position">The zero-based document position of the character to get the style for.</param>
-    /// <returns>The zero-based <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> index used at the specified <paramref name="position" />.</returns>
+    /// <returns>The zero-based <see cref="StyleBase{TColor}" /> index used at the specified <paramref name="position" />.</returns>
     int GetStyleAt(int position);
 
     /// <summary>
@@ -574,7 +575,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <param name="lineStart">The zero-based index of the line range to start hiding.</param>
     /// <param name="lineEnd">The zero-based index of the line range to end hiding.</param>
     /// <seealso cref="ShowLines" />
-    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
+    /// <seealso cref="LineBase.Visible" />
     void HideLines(int lineStart, int lineEnd);
 
     /// <summary>
@@ -640,7 +641,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <param name="columns">The number of columns to scroll.</param>
     /// <remarks>
     /// Negative values scroll in the opposite direction.
-    /// A column is the width in pixels of a space character in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.
+    /// A column is the width in pixels of a space character in the <see cref="StyleConstants.Default" /> style.
     /// </remarks>
     void LineScroll(int lines, int columns);
 
@@ -653,13 +654,13 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <summary>
     /// Removes the specified marker from all lines.
     /// </summary>
-    /// <param name="marker">The zero-based <see cref="MarkerBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> index to remove from all lines, or -1 to remove all markers from all lines.</param>
+    /// <param name="marker">The zero-based <see cref="MarkerBase{TImage, TColor}" /> index to remove from all lines, or -1 to remove all markers from all lines.</param>
     void MarkerDeleteAll(int marker);
 
     /// <summary>
     /// Searches the document for the marker handle and deletes the marker if found.
     /// </summary>
-    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.MarkerAdd" /> of the marker to delete.</param>
+    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="LineBase.MarkerAdd" /> of the marker to delete.</param>
     void MarkerDeleteHandle(MarkerHandle markerHandle);
 
     /// <summary>
@@ -671,7 +672,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <summary>
     /// Searches the document for the marker handle and returns the line number containing the marker if found.
     /// </summary>
-    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.MarkerAdd" /> of the marker to search for.</param>
+    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="LineBase.MarkerAdd" /> of the marker to search for.</param>
     /// <returns>If found, the zero-based line index containing the marker; otherwise, -1.</returns>
     int MarkerLineFromHandle(MarkerHandle markerHandle);
 
@@ -680,7 +681,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// </summary>
     /// <param name="column">The zero-based column number to indicate.</param>
     /// <param name="edgeColor">The color of the vertical long line indicator.</param>
-    /// <remarks>A column is defined as the width of a space character in the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.</remarks>
+    /// <remarks>A column is defined as the width of a space character in the <see cref="StyleConstants.Default" /> style.</remarks>
     /// <seealso cref="MultiEdgeClearAll" />
     void MultiEdgeAddLine(int column, TColor edgeColor);
 
@@ -761,7 +762,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// "int?2 long?3 short?1" etc....
     /// </remarks>
     /// <seealso cref="IScintillaProperties{TColor}.AutoCTypeSeparator" />
-    void RegisterRgbaImage(int type, TBitmap image);
+    void RegisterRgbaImage(int type, TImage image);
 
     /// <summary>
     /// Decreases the reference count of the specified document by 1.
@@ -967,7 +968,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// Styles the specified length of characters.
     /// </summary>
     /// <param name="length">The number of characters to style.</param>
-    /// <param name="style">The <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> definition index to assign each character.</param>
+    /// <param name="style">The <see cref="StyleBase{TColor}" /> definition index to assign each character.</param>
     /// <exception cref="ArgumentOutOfRangeException">
     /// <paramref name="length" /> or <paramref name="style" /> is less than zero. -or-
     /// The sum of a preceding call to <see cref="StartStyling" /> or <see name="SetStyling" /> and <paramref name="length" /> is greater than the document length. -or-
@@ -1015,7 +1016,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <param name="lineStart">The zero-based index of the line range to start showing.</param>
     /// <param name="lineEnd">The zero-based index of the line range to end showing.</param>
     /// <seealso cref="HideLines" />
-    /// <seealso cref="LineBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
+    /// <seealso cref="LineBase.Visible" />
     void ShowLines(int lineStart, int lineEnd);
 
     /// <summary>
@@ -1030,13 +1031,13 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     void StartStyling(int position);
 
     /// <summary>
-    /// Resets all style properties to those currently configured for the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style.
+    /// Resets all style properties to those currently configured for the <see cref="StyleConstants.Default" /> style.
     /// </summary>
     /// <seealso cref="StyleResetDefault" />
     void StyleClearAll();
 
     /// <summary>
-    /// Resets the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Default" /> style to its initial state.
+    /// Resets the <see cref="StyleConstants.Default" /> style to its initial state.
     /// </summary>
     /// <seealso cref="StyleClearAll" />
     void StyleResetDefault();
@@ -1061,7 +1062,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TBitmap>
     /// <summary>
     /// Measures the width in pixels of the specified string when rendered in the specified style.
     /// </summary>
-    /// <param name="style">The index of the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> to use when rendering the text to measure.</param>
+    /// <param name="style">The index of the <see cref="StyleBase{TColor}" /> to use when rendering the text to measure.</param>
     /// <param name="text">The text to measure.</param>
     /// <returns>The width in pixels.</returns>
     int TextWidth(int style, string text);

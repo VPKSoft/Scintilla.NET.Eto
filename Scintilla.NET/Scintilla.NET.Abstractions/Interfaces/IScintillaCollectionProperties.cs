@@ -32,20 +32,20 @@ namespace Scintilla.NET.Abstractions.Interfaces;
 /// <summary>
 /// Properties for Scintilla API with without generic type members.
 /// </summary>
-public interface IScintillaCollectionProperties<out TMarkers, out TStyles, out TIndicators, out TLines, out TMargins, out TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : IScintillaStyleCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TIndicators :IScintillaIndicatorCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : IScintillaMarginCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TSelections : IScintillaSelectionCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker: IScintillaMarker<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IScintillaIndicator<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : IScintillaLine<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : IScintillaMargin<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : IScintillaSelection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBitmap: class
+public interface IScintillaCollectionProperties<out TMarkers, out TStyles, out TIndicators, out TLines, out TMargins, out TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TImage, TColor>
+    where TMarkers : IScintillaMarkerCollection<TMarker, TImage, TColor>, IEnumerable
+    where TStyles : IScintillaStyleCollection<TStyle, TColor>, IEnumerable
+    where TIndicators :IScintillaIndicatorCollection<TIndicator, TColor>, IEnumerable
+    where TLines : IScintillaLineCollection<TLine>, IEnumerable
+    where TMargins : IScintillaMarginCollection<TMargin, TColor>, IEnumerable
+    where TSelections : IScintillaSelectionCollection<TSelection>, IEnumerable
+    where TMarker: IScintillaMarker<TImage, TColor>
+    where TStyle : IScintillaStyle<TColor>
+    where TIndicator : IScintillaIndicator<TColor>
+    where TLine : IScintillaLine
+    where TMargin : IScintillaMargin<TColor>
+    where TSelection : IScintillaSelection
+    where TImage: class
     where TColor: struct
 {
     /// <summary>
