@@ -32,25 +32,20 @@ namespace Scintilla.NET.EtoForms.WinForms;
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaMethods{TColor, TKeys, TBitmap}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaEvents{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs, TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs, TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs, TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs}" />
+/// Implements the <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
 /// </summary>
 /// <seealso cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
 /// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaMethods{TColor, TKeys, TBitmap}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaEvents{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs, TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs, TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs, TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs}" />
+/// <seealso cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
 public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, ScintillaControl, Control.ICallback>,
     IScintillaControl,
     IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>,
+        SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
     IScintillaProperties<Color>,
-    IScintillaMethods<Color, Keys, Bitmap>,
-    IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection,
-        Marker, Style, Indicator, Line, Margin, Selection, 
-        Bitmap, Color, Keys,
-        AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs,
-        DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, IndicatorReleaseEventArgs,
-        InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
+    IScintillaMethods<Color, Keys, Image>,
+    IScintillaEvents<Keys, AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs<Keys>, IndicatorClickEventArgs, IndicatorReleaseEventArgs, InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
 {
     readonly IntPtr editor;
     private readonly ScintillaWinForms nativeControl;
@@ -159,7 +154,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     public void Redo() => nativeControl.Redo();
 
     /// <inheritdoc />
-    public void RegisterRgbaImage(int type, Bitmap image) => nativeControl.RegisterRgbaImage(type, image);
+    public void RegisterRgbaImage(int type, Image image) => nativeControl.RegisterRgbaImage(type, image);
 
     /// <inheritdoc />
     public void ReleaseDocument(Document document) => nativeControl.ReleaseDocument(document);
@@ -659,21 +654,21 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     }
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotClick
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotClick
     {
         add => nativeControl.HotspotClick += value;
         remove => nativeControl.HotspotClick -= value;
     }
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotDoubleClick
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotDoubleClick
     {
         add => nativeControl.HotspotDoubleClick += value;
         remove => nativeControl.HotspotDoubleClick -= value;
     }
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotReleaseClick
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotReleaseClick
     {
         add => nativeControl.HotspotReleaseClick += value;
         remove => nativeControl.HotspotReleaseClick -= value;
