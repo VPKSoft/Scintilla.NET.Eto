@@ -1,38 +1,23 @@
-﻿using System.Collections;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces;
+﻿using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
 
 /// <summary>
-/// Provides data for the <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.InsertCheck" /> event.
+/// Provides data for the <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.InsertCheck" /> event.
 /// </summary>
-public abstract class InsertCheckEventArgsBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> 
-    : ScintillaEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>,
-        IInsertCheckEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : MarginCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TSelections : SelectionCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker: MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBitmap: class
-    where TColor: struct
+public abstract class InsertCheckEventArgsBase : ScintillaEventArgs, IInsertCheckEventArgs
 {
     private readonly int bytePosition;
     private readonly int byteLength;
     private readonly IntPtr textPtr;
 
+    /// <inheritdoc />
     public virtual int? CachedPosition { get; set; }
     
+    /// <inheritdoc />
     public virtual string? CachedText { get; set; }
 
     /// <summary>
@@ -43,7 +28,7 @@ public abstract class InsertCheckEventArgsBase<TMarkers, TStyles, TIndicators, T
     {
         get
         {
-            CachedPosition ??= ScintillaApi.Lines.ByteToCharPosition(bytePosition);
+            CachedPosition ??= LineCollectionGeneral.ByteToCharPosition(bytePosition);
 
             return (int)CachedPosition;
         }
@@ -68,20 +53,26 @@ public abstract class InsertCheckEventArgsBase<TMarkers, TStyles, TIndicators, T
         }
     }
 
+    /// <inheritdoc />
+    public IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
+
     /// <summary>
-    /// Initializes a new instance of the <see cref="InsertCheckEventArgsBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> class.
+    /// Initializes a new instance of the <see cref="InsertCheckEventArgsBase" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that generated this event.</param>
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     /// <param name="bytePosition">The zero-based byte position within the document where text is being inserted.</param>
     /// <param name="byteLength">The length in bytes of the inserted text.</param>
     /// <param name="text">A pointer to the text being inserted.</param>
     protected InsertCheckEventArgsBase(
-        IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
-            TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla, int bytePosition, int byteLength,
+        IScintillaApi scintilla, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral,
+        int bytePosition, int byteLength,
         IntPtr text) : base(scintilla)
     {
         this.bytePosition = bytePosition;
         this.byteLength = byteLength;
+        LineCollectionGeneral = lineCollectionGeneral;
         textPtr = text;
     }
 }

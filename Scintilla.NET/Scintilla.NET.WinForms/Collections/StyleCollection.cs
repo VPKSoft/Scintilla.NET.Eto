@@ -7,7 +7,7 @@ namespace Scintilla.NET.WinForms.Collections;
 /// <summary>
 /// An immutable collection of style definitions in a <see cref="Scintilla" /> control.
 /// </summary>
-public class StyleCollection : StyleCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class StyleCollection : StyleCollectionBase<Style, Color>
 {
 
     /// <summary>
@@ -29,7 +29,7 @@ public class StyleCollection : StyleCollectionBase<MarkerCollection, StyleCollec
     /// Initializes a new instance of the <see cref="StyleCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="IScintillaApi" /> control that created this collection.</param>
-    public StyleCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
+    public StyleCollection(IScintillaApi scintilla) : base(scintilla)
     {
     }
 }

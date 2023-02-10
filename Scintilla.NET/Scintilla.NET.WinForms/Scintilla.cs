@@ -32,14 +32,10 @@ namespace Scintilla.NET.WinForms;
 [Docking(DockingBehavior.Ask)]
 public class Scintilla : Control,
     IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>,
+        SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
     IScintillaProperties<Color>,
-    IScintillaMethods<Color, Keys, Bitmap>,
-    IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color, Keys, 
-        AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs,
-        DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, IndicatorReleaseEventArgs,
-        InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
+    IScintillaMethods<Color, Keys, Image>,
+    IScintillaEvents<Keys, AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs<Keys>, IndicatorClickEventArgs, IndicatorReleaseEventArgs, InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
 {
     static Scintilla()
     {
@@ -147,25 +143,6 @@ public class Scintilla : Control,
     #endregion Fields
 
     #region Methods
-        
-    /// <summary>
-    /// Sets the name of the lexer by its name.
-    /// </summary>
-    /// <param name="name">Name of the lexer.</param>
-    /// <returns><c>true</c> if the lexer was successfully set, <c>false</c> otherwise.</returns>
-    private bool SetLexerByName(string name)
-    {
-        var ptr = LexillaSingleton.CreateLexer(name);
-
-        if (ptr == IntPtr.Zero)
-        {
-            return false;
-        }
-
-        DirectMessage(SCI_SETILEXER, IntPtr.Zero, ptr);
-
-        return true;
-    }
 
     /// <summary>
     /// Increases the reference count of the specified document by 1.
@@ -760,7 +737,7 @@ public class Scintilla : Control,
     /// </summary>
     /// <param name="displayLine">The zero-based display line index.</param>
     /// <returns>The zero-based document line index.</returns>
-    /// <seealso cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.DisplayIndex" />
+    /// <seealso cref="IScintillaLine.DisplayIndex" />
     public int DocLineFromVisible(int displayLine)
     {
         return this.DocLineFromVisibleExtension(displayLine, VisibleLineCount);
@@ -817,8 +794,8 @@ public class Scintilla : Control,
     /// Changes the appearance of fold text tags.
     /// </summary>
     /// <param name="style">One of the <see cref="FoldDisplayText" /> enumeration values.</param>
-    /// <remarks>The text tag to display on a folded line can be set using <see cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.ToggleFoldShowText" />.</remarks>
-    /// <seealso cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.ToggleFoldShowText" />.
+    /// <remarks>The text tag to display on a folded line can be set using <see cref="IScintillaLine.ToggleFoldShowText" />.</remarks>
+    /// <seealso cref="IScintillaLine.ToggleFoldShowText" />.
     public void FoldDisplayTextSetStyle(FoldDisplayText style)
     {
         this.FoldDisplayTextSetStyleExtension(style);
@@ -1043,7 +1020,7 @@ public class Scintilla : Control,
     /// <param name="lineStart">The zero-based index of the line range to start hiding.</param>
     /// <param name="lineEnd">The zero-based index of the line range to end hiding.</param>
     /// <seealso cref="ShowLines" />
-    /// <seealso cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
+    /// <seealso cref="IScintillaLine.Visible" />
     public void HideLines(int lineStart, int lineEnd)
     {
         this.HideLinesExtension(lineStart, lineEnd, Lines);
@@ -1171,7 +1148,7 @@ public class Scintilla : Control,
     /// <summary>
     /// Searches the document for the marker handle and deletes the marker if found.
     /// </summary>
-    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.MarkerAdd" /> of the marker to delete.</param>
+    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="IScintillaLine.MarkerAdd" /> of the marker to delete.</param>
     public void MarkerDeleteHandle(MarkerHandle markerHandle)
     {
         this.MarkerDeleteHandleExtension(markerHandle);
@@ -1189,7 +1166,7 @@ public class Scintilla : Control,
     /// <summary>
     /// Searches the document for the marker handle and returns the line number containing the marker if found.
     /// </summary>
-    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.MarkerAdd" /> of the marker to search for.</param>
+    /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="IScintillaLine.MarkerAdd" /> of the marker to search for.</param>
     /// <returns>If found, the zero-based line index containing the marker; otherwise, -1.</returns>
     public int MarkerLineFromHandle(MarkerHandle markerHandle)
     {
@@ -1312,7 +1289,7 @@ public class Scintilla : Control,
     /// "int?2 long?3 short?1" etc....
     /// </remarks>
     /// <seealso cref="AutoCTypeSeparator" />
-    public unsafe void RegisterRgbaImage(int type, Bitmap image)
+    public unsafe void RegisterRgbaImage(int type, Image image)
     {
         if (image == null)
         {
@@ -1322,7 +1299,8 @@ public class Scintilla : Control,
         DirectMessage(SCI_RGBAIMAGESETWIDTH, new IntPtr(image.Width));
         DirectMessage(SCI_RGBAIMAGESETHEIGHT, new IntPtr(image.Height));
 
-        var bytes = Helpers.BitmapToArgb(image);
+        using var bitmap = new Bitmap(image);
+        var bytes = Helpers.BitmapToArgb(bitmap);
         fixed (byte* bp = bytes)
         {
             DirectMessage(SCI_REGISTERRGBAIMAGE, new IntPtr(type), new IntPtr(bp));
@@ -1400,14 +1378,14 @@ public class Scintilla : Control,
     private void ScnDoubleClick(ref SCNotification scn)
     {
         var keys = Keys.Modifiers & (Keys)(scn.modifiers << 16);
-        var eventArgs = new DoubleClickEventArgs(this, keys, scn.position.ToInt32(), scn.line.ToInt32());
+        var eventArgs = new DoubleClickEventArgs(this, Lines, keys, scn.position.ToInt32(), scn.line.ToInt32());
         OnDoubleClick(eventArgs);
     }
 
     private void ScnHotspotClick(ref SCNotification scn)
     {
         var keys = Keys.Modifiers & (Keys)(scn.modifiers << 16);
-        var eventArgs = new HotspotClickEventArgs(this, keys, scn.position.ToInt32());
+        var eventArgs = new HotspotClickEventArgs<Keys>(this, Lines, keys, scn.position.ToInt32());
         switch (scn.nmhdr.code)
         {
             case SCN_HOTSPOTCLICK:
@@ -1430,11 +1408,11 @@ public class Scintilla : Control,
         {
             case SCN_INDICATORCLICK:
                 var keys = Keys.Modifiers & (Keys)(scn.modifiers << 16);
-                OnIndicatorClick(new IndicatorClickEventArgs(this, keys, scn.position.ToInt32()));
+                OnIndicatorClick(new IndicatorClickEventArgs(this, keys));
                 break;
 
             case SCN_INDICATORRELEASE:
-                OnIndicatorRelease(new IndicatorReleaseEventArgs(this, scn.position.ToInt32()));
+                OnIndicatorRelease(new IndicatorReleaseEventArgs(this, Lines, scn.position.ToInt32()));
                 break;
         }
     }
@@ -1442,7 +1420,7 @@ public class Scintilla : Control,
     private void ScnMarginClick(ref SCNotification scn)
     {
         var keys = Keys.Modifiers & (Keys)(scn.modifiers << 16);
-        var eventArgs = new MarginClickEventArgs(this, keys, scn.position.ToInt32(), scn.margin);
+        var eventArgs = new MarginClickEventArgs(this, Lines, keys, scn.position.ToInt32(), scn.margin);
 
         if (scn.nmhdr.code == SCN_MARGINCLICK)
         {
@@ -1462,7 +1440,7 @@ public class Scintilla : Control,
 
         if ((scn.modificationType & SC_MOD_INSERTCHECK) > 0)
         {
-            var eventArgs = new InsertCheckEventArgs(this, scn.position.ToInt32(), scn.length.ToInt32(), scn.text);
+            var eventArgs = new InsertCheckEventArgs(this, Lines, scn.position.ToInt32(), scn.length.ToInt32(), scn.text);
             OnInsertCheck(eventArgs);
 
             cachedPosition = eventArgs.CachedPosition;
@@ -1474,7 +1452,7 @@ public class Scintilla : Control,
         if ((scn.modificationType & (SC_MOD_BEFOREDELETE | SC_MOD_BEFOREINSERT)) > 0)
         {
             var source = (ModificationSource)(scn.modificationType & sourceMask);
-            var eventArgs = new BeforeModificationEventArgs(this, source, scn.position.ToInt32(), scn.length.ToInt32(), scn.text)
+            var eventArgs = new BeforeModificationEventArgs(this, Lines, source, scn.position.ToInt32(), scn.length.ToInt32(), scn.text)
                 {
                     CachedPosition = cachedPosition,
                     CachedText = cachedText,
@@ -1496,7 +1474,7 @@ public class Scintilla : Control,
         if ((scn.modificationType & (SC_MOD_DELETETEXT | SC_MOD_INSERTTEXT)) > 0)
         {
             var source = (ModificationSource)(scn.modificationType & sourceMask);
-            var eventArgs = new ModificationEventArgs(this, source, scn.position.ToInt32(), scn.length.ToInt32(), scn.text, scn.linesAdded.ToInt32())
+            var eventArgs = new ModificationEventArgs(this, Lines, source, scn.position.ToInt32(), scn.length.ToInt32(), scn.text, scn.linesAdded.ToInt32())
                 {
                     CachedPosition = cachedPosition,
                     CachedText = cachedText,
@@ -1760,7 +1738,7 @@ public class Scintilla : Control,
     /// <seealso cref="StartStyling" />
     public void SetStyling(int length, int style)
     {
-        this.SetStylingExtension(length, style, TextLength, ref stylingPosition, ref stylingBytePosition, Lines, Styles);
+        this.SetStylingExtension(Lines, length, style, TextLength, ref stylingPosition, ref stylingBytePosition);
     }
 
     /// <summary>
@@ -1812,7 +1790,7 @@ public class Scintilla : Control,
     /// <param name="lineStart">The zero-based index of the line range to start showing.</param>
     /// <param name="lineEnd">The zero-based index of the line range to end showing.</param>
     /// <seealso cref="HideLines" />
-    /// <seealso cref="IScintillaLine{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Visible" />
+    /// <seealso cref="IScintillaLine.Visible" />
     public void ShowLines(int lineStart, int lineEnd)
     {
         this.ShowLinesExtension(lineStart, lineEnd, Lines);
@@ -1964,7 +1942,7 @@ public class Scintilla : Control,
                     break;
 
                 case SCN_STYLENEEDED:
-                    OnStyleNeeded(new StyleNeededEventArgs(this, scn.position.ToInt32()));
+                    OnStyleNeeded(new StyleNeededEventArgs(this, Lines, scn.position.ToInt32()));
                     break;
 
                 case SCN_SAVEPOINTLEFT:
@@ -1981,7 +1959,7 @@ public class Scintilla : Control,
                     break;
 
                 case SCN_UPDATEUI:
-                    OnUpdateUI(new UpdateUIEventArgs((UpdateChange)scn.updated));
+                    OnUpdateUI(new UpdateUIEventArgs(this, (UpdateChange)scn.updated));
                     break;
 
                 case SCN_CHARADDED:
@@ -1989,11 +1967,11 @@ public class Scintilla : Control,
                     break;
 
                 case SCN_AUTOCSELECTION:
-                    OnAutoCSelection(new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch, (ListCompletionMethod)scn.listCompletionMethod));
+                    OnAutoCSelection(new AutoCSelectionEventArgs(this, Lines, scn.position.ToInt32(), scn.text, scn.ch, (ListCompletionMethod)scn.listCompletionMethod));
                     break;
 
                 case SCN_AUTOCCOMPLETED:
-                    OnAutoCCompleted(new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch, (ListCompletionMethod)scn.listCompletionMethod));
+                    OnAutoCCompleted(new AutoCSelectionEventArgs(this, Lines, scn.position.ToInt32(), scn.text, scn.ch, (ListCompletionMethod)scn.listCompletionMethod));
                     break;
 
                 case SCN_AUTOCCANCELLED:
@@ -2005,11 +1983,11 @@ public class Scintilla : Control,
                     break;
 
                 case SCN_DWELLSTART:
-                    OnDwellStart(new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
+                    OnDwellStart(new DwellEventArgs(this, Lines, scn.position.ToInt32(), scn.x, scn.y));
                     break;
 
                 case SCN_DWELLEND:
-                    OnDwellEnd(new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
+                    OnDwellEnd(new DwellEventArgs(this, Lines, scn.position.ToInt32(), scn.x, scn.y));
                     break;
 
                 case SCN_DOUBLECLICK:
@@ -2017,7 +1995,7 @@ public class Scintilla : Control,
                     break;
 
                 case SCN_NEEDSHOWN:
-                    OnNeedShown(new NeedShownEventArgs(this, scn.position.ToInt32(), scn.length.ToInt32()));
+                    OnNeedShown(new NeedShownEventArgs(this, Lines, scn.position.ToInt32(), scn.length.ToInt32()));
                     break;
 
                 case SCN_HOTSPOTCLICK:
@@ -2976,7 +2954,7 @@ public class Scintilla : Control,
     {
         get => this.IndicatorCurrentGet();
 
-        set => this.IndicatorCurrentSet(value, Indicators);
+        set => this.IndicatorCurrentSet(value, Lines);
     }
 
     /// <summary>
@@ -4257,33 +4235,33 @@ public class Scintilla : Control,
     }
 
     /// <summary>
-    /// Occurs when the user clicks on text that is in a style with the <see cref="IScintillaStyle{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Hotspot" /> property set.
+    /// Occurs when the user clicks on text that is in a style with the <see cref="IScintillaStyle{TColor}.Hotspot" /> property set.
     /// </summary>
     [Category("Notifications")]
     [Description("Occurs when the user clicks text styled with the hotspot flag.")]
-    public event EventHandler<HotspotClickEventArgs> HotspotClick
+    public event EventHandler<HotspotClickEventArgs<Keys>> HotspotClick
     {
         add => Events.AddHandler(hotspotClickEventKey, value);
         remove => Events.RemoveHandler(hotspotClickEventKey, value);
     }
 
     /// <summary>
-    /// Occurs when the user double clicks on text that is in a style with the <see cref="IScintillaStyle{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Hotspot" /> property set.
+    /// Occurs when the user double clicks on text that is in a style with the <see cref="IScintillaStyle{TColor}.Hotspot" /> property set.
     /// </summary>
     [Category("Notifications")]
     [Description("Occurs when the user double clicks text styled with the hotspot flag.")]
-    public event EventHandler<HotspotClickEventArgs> HotspotDoubleClick
+    public event EventHandler<HotspotClickEventArgs<Keys>> HotspotDoubleClick
     {
         add => Events.AddHandler(hotspotDoubleClickEventKey, value);
         remove => Events.RemoveHandler(hotspotDoubleClickEventKey, value);
     }
 
     /// <summary>
-    /// Occurs when the user releases a click on text that is in a style with the <see cref="IScintillaStyle{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Hotspot" /> property set.
+    /// Occurs when the user releases a click on text that is in a style with the <see cref="IScintillaStyle{TColor}.Hotspot" /> property set.
     /// </summary>
     [Category("Notifications")]
     [Description("Occurs when the user releases a click on text styled with the hotspot flag.")]
-    public event EventHandler<HotspotClickEventArgs> HotspotReleaseClick
+    public event EventHandler<HotspotClickEventArgs<Keys>> HotspotReleaseClick
     {
         add => Events.AddHandler(hotspotReleaseClickEventKey, value);
         remove => Events.RemoveHandler(hotspotReleaseClickEventKey, value);
@@ -4336,7 +4314,7 @@ public class Scintilla : Control,
     /// <summary>
     /// Occurs when the mouse was clicked inside a margin that was marked as sensitive.
     /// </summary>
-    /// <remarks>The <see cref="IScintillaMargin{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Sensitive" /> property must be set for a margin to raise this event.</remarks>
+    /// <remarks>The <see cref="IScintillaMargin{TColor}.Sensitive" /> property must be set for a margin to raise this event.</remarks>
     [Category("Notifications")]
     [Description("Occurs when the mouse is clicked in a sensitive margin.")]
     public event EventHandler<MarginClickEventArgs> MarginClick
@@ -4350,7 +4328,7 @@ public class Scintilla : Control,
     /// <summary>
     /// Occurs when the mouse was right-clicked inside a margin that was marked as sensitive.
     /// </summary>
-    /// <remarks>The <see cref="IScintillaMargin{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Sensitive" /> property and <see cref="PopupMode.Text" /> must be set for a margin to raise this event.</remarks>
+    /// <remarks>The <see cref="IScintillaMargin{TColor}.Sensitive" /> property and <see cref="PopupMode.Text" /> must be set for a margin to raise this event.</remarks>
     /// <seealso cref="UsePopup(PopupMode)" />
     [Category("Notifications")]
     [Description("Occurs when the mouse is right-clicked in a sensitive margin.")]
@@ -4686,10 +4664,10 @@ public class Scintilla : Control,
     /// <summary>
     /// Raises the <see cref="HotspotClick" /> event.
     /// </summary>
-    /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnHotspotClick(HotspotClickEventArgs e)
+    /// <param name="e">A <see cref="HotspotClickEventArgs{TKeys}" /> that contains the event data.</param>
+    protected virtual void OnHotspotClick(HotspotClickEventArgs<Keys> e)
     {
-        if (Events[hotspotClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
+        if (Events[hotspotClickEventKey] is EventHandler<HotspotClickEventArgs<Keys>> handler)
         {
             handler(this, e);
         }
@@ -4698,10 +4676,10 @@ public class Scintilla : Control,
     /// <summary>
     /// Raises the <see cref="HotspotDoubleClick" /> event.
     /// </summary>
-    /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnHotspotDoubleClick(HotspotClickEventArgs e)
+    /// <param name="e">A <see cref="HotspotClickEventArgs{TKeys}" /> that contains the event data.</param>
+    protected virtual void OnHotspotDoubleClick(HotspotClickEventArgs<Keys> e)
     {
-        if (Events[hotspotDoubleClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
+        if (Events[hotspotDoubleClickEventKey] is EventHandler<HotspotClickEventArgs<Keys>> handler)
         {
             handler(this, e);
         }
@@ -4710,10 +4688,10 @@ public class Scintilla : Control,
     /// <summary>
     /// Raises the <see cref="HotspotReleaseClick" /> event.
     /// </summary>
-    /// <param name="e">A <see cref="HotspotClickEventArgs" /> that contains the event data.</param>
-    protected virtual void OnHotspotReleaseClick(HotspotClickEventArgs e)
+    /// <param name="e">A <see cref="HotspotClickEventArgs{TKeys}" /> that contains the event data.</param>
+    protected virtual void OnHotspotReleaseClick(HotspotClickEventArgs<Keys> e)
     {
-        if (Events[hotspotReleaseClickEventKey] is EventHandler<HotspotClickEventArgs> handler)
+        if (Events[hotspotReleaseClickEventKey] is EventHandler<HotspotClickEventArgs<Keys>> handler)
         {
             handler(this, e);
         }
@@ -4936,14 +4914,13 @@ public class Scintilla : Control,
 
         borderStyle = BorderStyle.Fixed3D;
 
-        Lines = new LineCollection(this);
-        this.SCNotification += Lines.ScNotificationCallback;
-
         Styles = new StyleCollection(this);
-        Indicators = new IndicatorCollection(this);
         Margins = new MarginCollection(this);
         Markers = new MarkerCollection(this);
-        Selections = new SelectionCollection(this);
+        Lines = new LineCollection(this, Styles, Markers);
+        Selections = new SelectionCollection(this, Lines);
+        Indicators = new IndicatorCollection(this, Lines);
+        this.SCNotification += Lines.ScNotificationCallback;
     }
 
     #endregion Constructors

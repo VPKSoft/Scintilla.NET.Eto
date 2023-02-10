@@ -1,5 +1,4 @@
-﻿using System.Collections;
-using Scintilla.NET.Abstractions.Collections;
+﻿using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
 
 namespace Scintilla.NET.Abstractions.Interfaces.Collections;
@@ -7,21 +6,8 @@ namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 /// <summary>
 /// Represents an indicator in a <see cref="ScintillaApi" /> control.
 /// </summary>
-public interface IScintillaIndicator<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> 
-    where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : IScintillaStyleCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TIndicators :IScintillaIndicatorCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : IScintillaMarginCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TSelections : IScintillaSelectionCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker: IScintillaMarker<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IScintillaIndicator<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : IScintillaLine<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : IScintillaMargin<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : IScintillaSelection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBitmap: class
-    where TColor: struct
+public interface IScintillaIndicator<TColor>
+    where TColor : struct
 {
     #region Methods
     /// <summary>
@@ -62,8 +48,7 @@ public interface IScintillaIndicator<TMarkers, TStyles, TIndicators, TLines, TMa
     /// <summary>
     /// A reference to the Scintilla control interface.
     /// </summary>
-    IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine,
-        TMargin, TSelection, TBitmap, TColor> ScintillaApi { get; }
+    IScintillaApi ScintillaApi { get; }
 
     /// <summary>
     /// Gets or sets the alpha transparency of the indicator.
@@ -116,7 +101,7 @@ public interface IScintillaIndicator<TMarkers, TStyles, TIndicators, TLines, TMa
     /// <summary>
     /// Gets the zero-based indicator index this object represents.
     /// </summary>
-    /// <returns>The indicator definition index within the <see cref="IndicatorCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
+    /// <returns>The indicator definition index within the <see cref="IndicatorCollectionBase{TIndicator, TColor}" />.</returns>
     int Index { get; }
 
     /// <summary>

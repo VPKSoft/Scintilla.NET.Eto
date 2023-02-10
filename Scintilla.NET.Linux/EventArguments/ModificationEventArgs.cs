@@ -1,18 +1,14 @@
 ﻿using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.EventArguments;
-using Scintilla.NET.Linux.Collections;
-using Color = Gdk.Color;
-using Selection = Scintilla.NET.Linux.Collections.Selection;
-using Style = Scintilla.NET.Linux.Collections.Style;
-using Image = Gtk.Image;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 
 namespace Scintilla.NET.Linux.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.Insert" /> and <see cref="Scintilla.Delete" /> events.
 /// </summary>
-public class ModificationEventArgs : ModificationEventArgsBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>
+public class ModificationEventArgs : ModificationEventArgsBase
 {
     /// <summary>
     /// Gets the number of lines added or removed.
@@ -25,12 +21,20 @@ public class ModificationEventArgs : ModificationEventArgsBase<MarkerCollection,
     /// Initializes a new instance of the <see cref="ModificationEventArgs" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that generated this event.</param>
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     /// <param name="source">The source of the modification.</param>
     /// <param name="bytePosition">The zero-based byte position within the document where text was modified.</param>
     /// <param name="byteLength">The length in bytes of the inserted or deleted text.</param>
     /// <param name="text">>A pointer to the text inserted or deleted.</param>
     /// <param name="linesAdded">The number of lines added or removed (delta).</param>
-    public ModificationEventArgs(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, ModificationSource source, int bytePosition, int byteLength, nint text, int linesAdded) : base(scintilla, source, bytePosition, byteLength, text)
+    public ModificationEventArgs(
+        IScintillaApi scintilla, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral,
+        ModificationSource source, 
+        int bytePosition, 
+        int byteLength, 
+        nint text, 
+        int linesAdded) : base(scintilla, lineCollectionGeneral, source, bytePosition, byteLength, text)
     {
         LinesAdded = linesAdded;
     }

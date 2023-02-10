@@ -24,12 +24,10 @@ SOFTWARE.
 */
 #endregion
 
-using System.Collections;
 using System.ComponentModel;
 using System.Net.Mime;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 
 namespace Scintilla.NET.Abstractions.Interfaces;
@@ -37,20 +35,6 @@ namespace Scintilla.NET.Abstractions.Interfaces;
 /// <summary>
 /// The events of the Scintilla API.
 /// </summary>
-/// <typeparam name="TMarkers">The type of the markers collection of the Scintilla control implementation.</typeparam>
-/// <typeparam name="TStyles">The type of the styles collection of the Scintilla control implementation.</typeparam>
-/// <typeparam name="TIndicators">The type of the indicators collection of the Scintilla control implementation.</typeparam>
-/// <typeparam name="TLines">The type of the lines collection of the Scintilla control implementation.</typeparam>
-/// <typeparam name="TMargins">The type of the margins collection of the Scintilla control implementation.</typeparam>
-/// <typeparam name="TSelections">The type of the selections collection of the Scintilla control implementation.</typeparam>
-/// <typeparam name="TMarker">The type of the item in the <typeparamref name="TMarkers"/> collection.</typeparam>
-/// <typeparam name="TStyle">The type of the item in the <typeparamref name="TStyles"/> collection.</typeparam>
-/// <typeparam name="TIndicator">The type of the item in the <typeparamref name="TIndicators"/> collection.</typeparam>
-/// <typeparam name="TLine">The type of the item in the <typeparamref name="TLines"/> collection.</typeparam>
-/// <typeparam name="TMargin">The type of the item in the <typeparamref name="TMargin"/> collection.</typeparam>
-/// <typeparam name="TSelection">The type of the item in the <typeparamref name="TSelections"/> collection.</typeparam>
-/// <typeparam name="TBitmap">The type of the bitmap used in the platform.</typeparam>
-/// <typeparam name="TColor">The type of the color used in the platform.</typeparam>
 /// <typeparam name="TKeys">The type of the keys enumeration used by the platform.</typeparam>
 /// <typeparam name="TAutoCSelectionEventArgs">The type of the automatic code completion related event arguments.</typeparam>
 /// <typeparam name="TBeforeModificationEventArgs">The type of the event arguments used in events before the Scintilla text is about to be changed.</typeparam>
@@ -69,68 +53,26 @@ namespace Scintilla.NET.Abstractions.Interfaces;
 /// <typeparam name="TStyleNeededEventArgs">The type of the t style needed event arguments.</typeparam>
 /// <typeparam name="TUpdateUiEventArgs">The type of the t update UI event arguments.</typeparam>
 /// <typeparam name="TScNotificationEventArgs">The type of the TSC notification event arguments.</typeparam>
-public interface IScintillaEvents<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-    TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys,
+public interface IScintillaEvents<TKeys,
     TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs,
     TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs,
     TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs,
-    TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs>
-    where TMarkers : IScintillaMarkerCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, 
-        TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : IScintillaStyleCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, 
-        TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TIndicators :
-    IScintillaIndicatorCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
-        TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker
-        , TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : IScintillaMarginCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections,
-        TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TSelections :
-    IScintillaSelectionCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
-        TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker : IScintillaMarker<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : IScintillaStyle<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
-        TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IScintillaIndicator<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : IScintillaLine<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle,
-        TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : IScintillaMargin<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : IScintillaSelection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBitmap : class
-    where TColor : struct
-    where TKeys : Enum
-    where TAutoCSelectionEventArgs : IAutoCSelectionEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBeforeModificationEventArgs: IBeforeModificationEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TModificationEventArgs: IModificationEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
+    TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs> where TKeys : Enum
+    where TAutoCSelectionEventArgs : IAutoCSelectionEventArgs
+    where TBeforeModificationEventArgs: IBeforeModificationEventArgs
+    where TModificationEventArgs: IModificationEventArgs
     where TChangeAnnotationEventArgs: IChangeAnnotationEventArgs
     where TCharAddedEventArgs: ICharAddedEventArgs
-    where TDoubleClickEventArgs: IDoubleClickEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys>
-    where TDwellEventArgs: IDwellEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TCallTipClickEventArgs: ICallTipClickEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where THotspotClickEventArgs: IHotspotClickEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys>
-    where TIndicatorClickEventArgs: IIndicatorClickEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys>
-    where TIndicatorReleaseEventArgs: IIndicatorReleaseEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TInsertCheckEventArgs: IInsertCheckEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMarginClickEventArgs: IMarginClickEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor, TKeys>
-    where TNeedShownEventArgs: INeedShownEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyleNeededEventArgs: IStyleNeededEventArgs<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker,
-        TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
+    where TDoubleClickEventArgs: IDoubleClickEventArgs
+    where TDwellEventArgs: IDwellEventArgs
+    where TCallTipClickEventArgs: ICallTipClickEventArgs
+    where THotspotClickEventArgs: IHotspotClickEventArgs<TKeys>
+    where TIndicatorClickEventArgs: IIndicatorClickEventArgs<TKeys>
+    where TIndicatorReleaseEventArgs: IIndicatorReleaseEventArgs
+    where TInsertCheckEventArgs: IInsertCheckEventArgs
+    where TMarginClickEventArgs: IMarginClickEventArgs<TKeys>
+    where TNeedShownEventArgs: INeedShownEventArgs
+    where TStyleNeededEventArgs: IStyleNeededEventArgs
     where TUpdateUiEventArgs: IUpdateUIEventArgs
     where TScNotificationEventArgs: ISCNotificationEventArgs
 {
@@ -201,18 +143,18 @@ public interface IScintillaEvents<TMarkers, TStyles, TIndicators, TLines, TMargi
     event EventHandler<TDwellEventArgs> DwellStart;
 
     /// <summary>
-    /// Occurs when the user clicks on text that is in a style with the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Hotspot" /> property set.
+    /// Occurs when the user clicks on text that is in a style with the <see cref="StyleBase{TColor}.Hotspot" /> property set.
     /// </summary>
     event EventHandler<THotspotClickEventArgs> HotspotClick;
 
     /// <summary>
-    /// Occurs when the user double clicks on text that is in a style with the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Hotspot" /> property set.
+    /// Occurs when the user double clicks on text that is in a style with the <see cref="StyleBase{TColor}.Hotspot" /> property set.
     /// </summary>
     event EventHandler<THotspotClickEventArgs>
         HotspotDoubleClick;
 
     /// <summary>
-    /// Occurs when the user releases a click on text that is in a style with the <see cref="StyleBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Hotspot" /> property set.
+    /// Occurs when the user releases a click on text that is in a style with the <see cref="StyleBase{TColor}.Hotspot" /> property set.
     /// </summary>
     event EventHandler<THotspotClickEventArgs> HotspotReleaseClick;
 
@@ -239,13 +181,13 @@ public interface IScintillaEvents<TMarkers, TStyles, TIndicators, TLines, TMargi
     /// <summary>
     /// Occurs when the mouse was clicked inside a margin that was marked as sensitive.
     /// </summary>
-    /// <remarks>The <see cref="MarginBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Sensitive" /> property must be set for a margin to raise this event.</remarks>
+    /// <remarks>The <see cref="MarginBase{TColor}.Sensitive" /> property must be set for a margin to raise this event.</remarks>
     event EventHandler<TMarginClickEventArgs> MarginClick;
 
     /// <summary>
     /// Occurs when the mouse was right-clicked inside a margin that was marked as sensitive.
     /// </summary>
-    /// <remarks>The <see cref="MarginBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Sensitive" /> property and <see cref="MediaTypeNames.Text" /> must be set for a margin to raise this event.</remarks>
+    /// <remarks>The <see cref="MarginBase{TColor}.Sensitive" /> property and <see cref="MediaTypeNames.Text" /> must be set for a margin to raise this event.</remarks>
     /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.UsePopup(Scintilla.NET.Abstractions.Enumerations.PopupMode)" />
     event EventHandler<TMarginClickEventArgs> MarginRightClick;
 

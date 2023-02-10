@@ -55,9 +55,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
         SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
     IScintillaProperties<Color>,
     IScintillaMethods<Color, Key, Image>,
-    IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, 
-        Marker, Style, Indicator, Line, Margin, Selection, 
-        Image, Color, Key,
+    IScintillaEvents<Key,
         AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs,
         DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, 
         IndicatorReleaseEventArgs, InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, 
@@ -70,12 +68,12 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     public Scintilla() : base(scintilla_new())
     {
         editor = base.Raw;
-        Lines = new LineCollection(this);
         Styles = new StyleCollection(this);
-        Indicators = new IndicatorCollection(this);
         Margins = new MarginCollection(this);
         Markers = new MarkerCollection(this);
-        Selections = new SelectionCollection(this);
+        Lines = new LineCollection(this, Styles, Markers);
+        Indicators = new IndicatorCollection(this, Lines);
+        Selections = new SelectionCollection(this, Lines);
         
         this.SCNotification += Lines.ScNotificationCallback;
         
@@ -107,14 +105,14 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
                     this.Painted?.Invoke(this, EventArgs.Empty);
                     break;
                 case SCN_MODIFIED:
-                    this.ScnModified(ref scn, InsertCheck, BeforeInsert, BeforeDelete, Insert, Delete, ChangeAnnotation,
+                    this.ScnModified(Lines, ref scn, InsertCheck, BeforeInsert, BeforeDelete, Insert, Delete, ChangeAnnotation,
                         ref cachedPosition, ref cachedText);
                     break;
                 case SCN_MODIFYATTEMPTRO:
                     ModifyAttempt?.Invoke(this, EventArgs.Empty);
                     break;
                 case SCN_STYLENEEDED:
-                    StyleNeeded?.Invoke(this, new StyleNeededEventArgs(this, scn.position.ToInt32()));
+                    StyleNeeded?.Invoke(this, new StyleNeededEventArgs(this, Lines, scn.position.ToInt32()));
                     break;
                 case SCN_SAVEPOINTLEFT:
                     SavePointLeft?.Invoke(this, EventArgs.Empty);
@@ -124,10 +122,10 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
                     break;   
                 case SCN_MARGINCLICK:
                 case SCN_MARGINRIGHTCLICK:
-                    this.ScnMarginClick(ref scn, MarginClick, MarginRightClick);
+                    this.ScnMarginClick(Lines, ref scn, MarginClick, MarginRightClick);
                     break;
                 case SCN_UPDATEUI:
-                    UpdateUi?.Invoke(this, new UpdateUIEventArgs((UpdateChange)scn.updated));
+                    UpdateUi?.Invoke(this, new UpdateUIEventArgs(this, (UpdateChange)scn.updated));
                     break;
                 case SCN_KEY:
                 case SCI_ADDTEXT: // This is not in the documentation, but seems to be called when a "char is added"?
@@ -139,12 +137,12 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
                     break;
                 case SCN_AUTOCSELECTION:
                     AutoCSelection?.Invoke(this,
-                        new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch,
+                        new AutoCSelectionEventArgs(this, Lines, scn.position.ToInt32(), scn.text, scn.ch,
                             (ListCompletionMethod) scn.listCompletionMethod));
                     break;                
                 case SCN_AUTOCCOMPLETED:
                     AutoCCompleted?.Invoke(this,
-                        new AutoCSelectionEventArgs(this, scn.position.ToInt32(), scn.text, scn.ch,
+                        new AutoCSelectionEventArgs(this, Lines, scn.position.ToInt32(), scn.text, scn.ch,
                             (ListCompletionMethod) scn.listCompletionMethod));
                     break;
                 case SCN_AUTOCCANCELLED:
@@ -155,25 +153,25 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
                     AutoCCharDeleted?.Invoke(this, EventArgs.Empty);
                     break;                
                 case SCN_DWELLSTART:
-                    DwellStart?.Invoke(this, new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
+                    DwellStart?.Invoke(this, new DwellEventArgs(this, Lines, scn.position.ToInt32(), scn.x, scn.y));
                     break;
                 case SCN_DWELLEND:
-                    DwellEnd?.Invoke(this, new DwellEventArgs(this, scn.position.ToInt32(), scn.x, scn.y));
+                    DwellEnd?.Invoke(this, new DwellEventArgs(this, Lines, scn.position.ToInt32(), scn.x, scn.y));
                     break;
                 case SCN_DOUBLECLICK:
-                    this.ScnDoubleClick(ref scn, DoubleClick);
+                    this.ScnDoubleClick(Lines, ref scn, DoubleClick);
                     break;
                 case SCN_NEEDSHOWN:
-                    NeedShown?.Invoke(this, new NeedShownEventArgs(this, scn.position.ToInt32(), scn.length.ToInt32()));
+                    NeedShown?.Invoke(this, new NeedShownEventArgs(this, Lines, scn.position.ToInt32(), scn.length.ToInt32()));
                     break;
                 case SCN_HOTSPOTCLICK:
                 case SCN_HOTSPOTDOUBLECLICK:
                 case SCN_HOTSPOTRELEASECLICK:
-                    this.ScnHotspotClick(ref scn, HotspotClick, HotspotDoubleClick);
+                    this.ScnHotspotClick(Lines, ref scn, HotspotClick, HotspotDoubleClick);
                     break;
                 case SCN_INDICATORCLICK:
                 case SCN_INDICATORRELEASE:
-                    this.ScnIndicatorClick(ref scn, IndicatorClick, IndicatorRelease);
+                    this.ScnIndicatorClick(Lines, ref scn, IndicatorClick, IndicatorRelease);
                     break;
                 case SCN_ZOOM:
                     ZoomChanged?.Invoke(this, EventArgs.Empty);
@@ -1589,7 +1587,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     /// <seealso cref="StartStyling" />
     public void SetStyling(int length, int style)
     {
-        this.SetStylingExtension(length, style, TextLength, ref stylingPosition, ref stylingBytePosition, Lines, Styles);
+        this.SetStylingExtension(Lines, length, style, TextLength, ref stylingPosition, ref stylingBytePosition);
     }
 
     /// <summary>
@@ -2265,19 +2263,6 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     }
 
     /// <summary>
-    /// Gets or sets the caret line background color
-    /// </summary>
-    /// <returns>The caret line background color. The default is yellow.</returns>
-
-    public Color CaretLineBackColo
-
-    {
-        get => this.CaretLineBackColorGet(ColorTranslator.ToColor);
-
-        set => this.CaretLineBackColorSet(value, ColorTranslator.ToInt);
-    }
-
-    /// <summary>
     /// Gets or sets the alpha transparency of the <see cref="CaretLineBackColor" />.
     /// </summary>
     /// <returns>
@@ -2604,7 +2589,7 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     {
         get => this.IndicatorCurrentGet();
 
-        set => this.IndicatorCurrentSet(value, Indicators);
+        set => this.IndicatorCurrentSet(value, Lines);
     }
 
     /// <summary>

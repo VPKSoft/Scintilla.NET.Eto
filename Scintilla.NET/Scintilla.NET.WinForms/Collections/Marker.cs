@@ -11,14 +11,14 @@ namespace Scintilla.NET.WinForms.Collections;
 /// <summary>
 /// Represents a margin marker in a <see cref="Scintilla" /> control.
 /// </summary>
-public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class Marker : MarkerBase<Image, Color>
 {
     /// <summary>
     /// Sets the marker symbol to a custom image.
     /// </summary>
     /// <param name="image">The Bitmap to use as a marker symbol.</param>
-    /// <remarks>Calling this method will also update the <see cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Symbol" /> property to <see cref="MarkerSymbol.RgbaImage" />.</remarks>
-    public override unsafe void DefineRgbaImage(Bitmap image)
+    /// <remarks>Calling this method will also update the <see cref="MarkerBase{TImage, TColor}.Symbol" /> property to <see cref="MarkerSymbol.RgbaImage" />.</remarks>
+    public override unsafe void DefineRgbaImage(Image image)
     {
         if (image == null)
         {
@@ -28,7 +28,8 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
         ScintillaApi.DirectMessage(SCI_RGBAIMAGESETWIDTH, new IntPtr(image.Width));
         ScintillaApi.DirectMessage(SCI_RGBAIMAGESETHEIGHT, new IntPtr(image.Height));
 
-        var bytes = Helpers.BitmapToArgb(image);
+        using var bitmap = new Bitmap(image);
+        var bytes = Helpers.BitmapToArgb(bitmap);
         fixed (byte* bp = bytes)
         {
             ScintillaApi.DirectMessage(SCI_MARKERDEFINERGBAIMAGE, new IntPtr(Index), new IntPtr(bp));
@@ -41,9 +42,9 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
     /// <param name="color">The <see cref="Marker" /> background Color. The default is White.</param>
     /// <remarks>
     /// The background color of the whole line will be drawn in the <paramref name="color" /> specified when the marker is not visible
-    /// because it is hidden by a <see cref="IScintillaMargin{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Mask" /> or the <see cref="IScintillaMargin{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Width" /> is zero.
+    /// because it is hidden by a <see cref="IScintillaMargin{TColor}.Width" /> is zero.
     /// </remarks>
-    /// <seealso cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.SetAlpha" />
+    /// <seealso cref="MarkerBase{TImage, TColor}.SetAlpha" />
     public override void SetBackColor(Color color)
     {
         var colorNum = ColorTranslator.ToWin32(color);
@@ -65,7 +66,7 @@ public class Marker : MarkerBase<MarkerCollection, StyleCollection, IndicatorCol
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this marker.</param>
     /// <param name="index">The index of this style within the <see cref="MarkerCollection" /> that created it.</param>
-    public Marker(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla, int index) : base(scintilla, index)
+    public Marker(IScintillaApi scintilla, int index) : base(scintilla, index)
     {
     }
 }

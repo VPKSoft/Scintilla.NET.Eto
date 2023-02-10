@@ -4,18 +4,25 @@ using System.ComponentModel;
 using System.Drawing;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 
 namespace Scintilla.NET.WinForms.Collections;
 
 /// <summary>
 /// An immutable collection of indicators in a <see cref="Scintilla" /> control.
 /// </summary>
-public class IndicatorCollection: IndicatorCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>, IEnumerable<Indicator>
+public class IndicatorCollection: IndicatorCollectionBase<Indicator, Color>, IEnumerable<Indicator>
 {
     IEnumerator IEnumerable.GetEnumerator()
     {
         return GetEnumerator();
     }
+
+    /// <summary>
+    /// Gets the line collection general members.
+    /// </summary>
+    /// <value>The line collection  general members.</value>
+    private IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
 
     /// <summary>
     /// Gets an <see cref="Indicator" /> object at the specified index.
@@ -33,7 +40,7 @@ public class IndicatorCollection: IndicatorCollectionBase<MarkerCollection, Styl
         get
         {
             index = Helpers.Clamp(index, 0, Count - 1);
-            return new Indicator(ScintillaApi, index);
+            return new Indicator(ScintillaApi, LineCollectionGeneral, index);
         }
     }
 
@@ -41,7 +48,9 @@ public class IndicatorCollection: IndicatorCollectionBase<MarkerCollection, Styl
     /// Initializes a new instance of the <see cref="IndicatorCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public IndicatorCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
+    public IndicatorCollection(IScintillaApi scintilla, IScintillaLineCollectionGeneral lineCollectionGeneral) : base(scintilla)
     {
+        LineCollectionGeneral = lineCollectionGeneral;
     }
 }

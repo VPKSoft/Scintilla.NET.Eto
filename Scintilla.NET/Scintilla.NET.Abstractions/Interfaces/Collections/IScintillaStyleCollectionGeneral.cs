@@ -24,16 +24,17 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Interfaces.EventArguments;
+namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 
 /// <summary>
-/// Provides data for the <see cref="IScintillaEvents{TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs,TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs,TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs,TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs}.ChangeAnnotation" /> events.
+/// An interface for the <see cref="IScintillaStyleCollection{TLine, TColor}"/> methods and properties.
 /// </summary>
-public interface IChangeAnnotationEventArgs
+
+public interface IScintillaStyleCollectionGeneral
 {
     /// <summary>
-    /// Gets the line index where the annotation changed.
+    /// Gets the number of styles.
     /// </summary>
-    /// <returns>The zero-based line index where the annotation change occurred.</returns>
-    int Line { get; }
+    /// <returns>The number of styles in the <see cref="IScintillaStyleCollection{TStyle, TColor}" />.</returns>
+    int Count { get; }
 }

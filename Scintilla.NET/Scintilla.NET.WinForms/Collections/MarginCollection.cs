@@ -9,7 +9,7 @@ namespace Scintilla.NET.WinForms.Collections;
 /// <summary>
 /// An immutable collection of margins in a <see cref="Scintilla" /> control.
 /// </summary>
-public class MarginCollection : MarginCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class MarginCollection : MarginCollectionBase<Margin, Color>
 {
     /// <summary>
     /// Gets or sets the number of margins in the <see cref="MarginCollection" />.
@@ -36,32 +36,6 @@ public class MarginCollection : MarginCollectionBase<MarkerCollection, StyleColl
 
         set => base.Left = value;
     }
-
-    // TODO Why is this commented out?
-    /*
-    /// <summary>
-    /// Gets or sets the margin options.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="ScintillaNET.MarginOptions" /> that represents the margin options.
-    /// The default is <see cref="ScintillaNET.MarginOptions.None" />.
-    /// </returns>
-    [DefaultValue(MarginOptions.None)]
-    [Description("Margin options flags.")]
-    [TypeConverter(typeof(FlagsEnumTypeConverter.FlagsEnumConverter))]
-    public MarginOptions Options
-    {
-        get
-        {
-            return (MarginOptions)scintilla.DirectMessage(NativeMethods.SCI_GETMARGINOPTIONS);
-        }
-        set
-        {
-            var options = (int)value;
-            scintilla.DirectMessage(NativeMethods.SCI_SETMARGINOPTIONS, new IntPtr(options));
-        }
-    }
-    */
 
     /// <summary>
     /// Gets or sets the width in pixels of the right margin padding.
@@ -97,7 +71,7 @@ public class MarginCollection : MarginCollectionBase<MarkerCollection, StyleColl
     /// Initializes a new instance of the <see cref="MarginCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public MarginCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
+    public MarginCollection(IScintillaApi scintilla) : base(scintilla)
     {
     }
 }

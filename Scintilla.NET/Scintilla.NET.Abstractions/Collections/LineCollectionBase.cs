@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 using Scintilla.NET.Abstractions.Structs;
@@ -10,35 +9,23 @@ using static Scintilla.NET.Abstractions.ScintillaConstants;
 using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
 
 namespace Scintilla.NET.Abstractions.Collections;
-// TODO Revisit this following Scintilla v3.7.0 because is said to be better about character handling
 
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaLineCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : MarginCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TSelections : SelectionCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker: MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBitmap: class
-    where TColor: struct
+public abstract class LineCollectionBase<TLine> : IScintillaLineCollection<TLine>
+    where TLine : LineBase
 {
-    #region Fields
-
-    protected GapBuffer<PerLine> perLineData;
+    #region Fields    
+    /// <summary>
+    /// Data per Scintilla control line.
+    /// </summary>
+    protected GapBuffer<PerLine> PerLineData { get; set; }
 
     // The 'step' is a break in the continuity of our line starts. It allows us
     // to delay the updating of every line start when text is inserted/deleted.
-    protected int stepLine;
-    protected int stepLength;
+    private int stepLine;
+    private int stepLength;
 
     #endregion Fields
 
@@ -53,9 +40,9 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         stepLength += delta;
 
         // Invalidate multi-byte flag
-        var perLine = perLineData[index];
+        var perLine = PerLineData[index];
         perLine.ContainsMultiByte = ContainsMultiByte.Unknown;
-        perLineData[index] = perLine;
+        PerLineData[index] = perLine;
     }
 
     /// <summary>
@@ -87,15 +74,15 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
 
         if (index + 1 <= stepLine)
         {
-            return perLineData[index + 1].Start - perLineData[index].Start;
+            return PerLineData[index + 1].Start - PerLineData[index].Start;
         }
         else if (index <= stepLine)
         {
-            return perLineData[index + 1].Start + stepLength - perLineData[index].Start;
+            return PerLineData[index + 1].Start + stepLength - PerLineData[index].Start;
         }
         else
         {
-            return perLineData[index + 1].Start + stepLength - (perLineData[index].Start + stepLength);
+            return PerLineData[index + 1].Start + stepLength - (PerLineData[index].Start + stepLength);
         }
     }
 
@@ -105,9 +92,9 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     public virtual int CharPositionFromLine(int index)
     {
         Debug.Assert(index >= 0);
-        Debug.Assert(index < perLineData.Count); // Allow query of terminal line start
+        Debug.Assert(index < PerLineData.Count); // Allow query of terminal line start
 
-        var start = perLineData[index].Start;
+        var start = PerLineData[index].Start;
         if (index > stepLine)
         {
             start += stepLength;
@@ -161,7 +148,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         stepLength -= CharLineLength(index);
 
         // Remove the line
-        perLineData.RemoveAt(index);
+        PerLineData.RemoveAt(index);
 
         // Move the step to the line before the one removed
         stepLine--;
@@ -179,7 +166,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     /// <summary>
     /// Provides an enumerator that iterates through the collection.
     /// </summary>
-    /// <returns>An object that contains all <see cref="LineBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> objects within the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
+    /// <returns>An object that contains all <see cref="LineBase" />.</returns>
     public IEnumerator<TLine> GetEnumerator()
     {
         var count = Count;
@@ -199,7 +186,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     /// <returns><c>true</c> if the line specified by its index contains multi-byte character(s), <c>false</c> otherwise.</returns>
     public virtual bool LineContainsMultiByteChar(int index)
     {
-        var perLine = perLineData[index];
+        var perLine = PerLineData[index];
         if (perLine.ContainsMultiByte == ContainsMultiByte.Unknown)
         {
             perLine.ContainsMultiByte =
@@ -207,7 +194,7 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
                     ? ContainsMultiByte.No
                     : ContainsMultiByte.Yes;
 
-            perLineData[index] = perLine;
+            PerLineData[index] = perLine;
         }
 
         return perLine.ContainsMultiByte == ContainsMultiByte.Yes;
@@ -262,14 +249,14 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         PerLine data;
 
         // Add the new line length to the existing line start
-        data = perLineData[index];
+        data = PerLineData[index];
         var lineStart = data.Start;
         data.Start += length;
-        perLineData[index] = data;
+        PerLineData[index] = data;
 
         // Insert the new line
-        data = new PerLine { Start = lineStart };
-        perLineData.Insert(index, data);
+        data = new PerLine { Start = lineStart, };
+        PerLineData.Insert(index, data);
 
         // Move the step
         stepLength += length;
@@ -291,18 +278,18 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
             while (stepLine < line)
             {
                 stepLine++;
-                var data = perLineData[stepLine];
+                var data = PerLineData[stepLine];
                 data.Start += stepLength;
-                perLineData[stepLine] = data;
+                PerLineData[stepLine] = data;
             }
         }
         else if (stepLine > line)
         {
             while (stepLine > line)
             {
-                var data = perLineData[stepLine];
+                var data = PerLineData[stepLine];
                 data.Start -= stepLength;
-                perLineData[stepLine] = data;
+                PerLineData[stepLine] = data;
                 stepLine--;
             }
         }
@@ -316,10 +303,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         stepLine = 0;
         stepLength = 0;
 
-        perLineData = new GapBuffer<PerLine>
+        PerLineData = new GapBuffer<PerLine>
         {
-            new() { Start = 0 },
-            new() { Start = 0 } // Terminal
+            new() { Start = 0, },
+            new() { Start = 0, }, // Terminal
         };
 
         // Fake an insert notification
@@ -333,12 +320,16 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     }
 
     /// <summary>
-    /// A method to be added as event subscription to <see cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.SCNotification"/> event.
+    /// Scintilla notification callback delegate.
     /// </summary>
     /// <param name="sender">The sender of the event.</param>
     /// <param name="e">The <see cref="ISCNotificationEventArgs"/> instance containing the event data.</param>
     public abstract void ScNotificationCallback(object sender, ISCNotificationEventArgs e);
 
+    /// <summary>
+    /// Handles the Scintilla's text change events.
+    /// </summary>
+    /// <param name="scn">The Scintilla notification data.</param>
     public virtual void ScnModified(SCNotification scn)
     {
         if ((scn.modificationType & SC_MOD_DELETETEXT) > 0)
@@ -352,6 +343,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         }
     }
 
+    /// <summary>
+    /// Tracks the delete text.
+    /// </summary>
+    /// <param name="scn">The Scintilla notification data.</param>
     public virtual void TrackDeleteText(SCNotification scn)
     {
         var startLine = ScintillaApi.DirectMessage(SCI_LINEFROMPOSITION, scn.position).ToInt32();
@@ -377,6 +372,10 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         }
     }
 
+    /// <summary>
+    /// Tracks the insert text.
+    /// </summary>
+    /// <param name="scn">The Scintilla notification data.</param>
     public virtual void TrackInsertText(SCNotification scn)
     {
         var startLine = ScintillaApi.DirectMessage(SCI_LINEFROMPOSITION, scn.position).ToInt32();
@@ -405,11 +404,11 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
         }
     }
 
-    /// <inheritdoc />
-    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
-    {
-        get;
-    }
+    /// <summary>
+    /// Gets the scintilla API.
+    /// </summary>
+    /// <value>The scintilla API.</value>
+    public IScintillaApi ScintillaApi { get; }
 
     #endregion Methods
 
@@ -424,23 +423,23 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     /// <summary>
     /// Gets the number of lines.
     /// </summary>
-    /// <returns>The number of lines in the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />.</returns>
+    /// <returns>The number of lines in the <see cref="LineCollectionBase{TLine}" />.</returns>
     public virtual int Count =>
         // Subtract the terminal line
-        perLineData.Count - 1;
+        PerLineData.Count - 1;
 
     /// <summary>
     /// Gets the number of CHARACTERS in the document.
     /// </summary>
     public virtual int TextLength =>
         // Where the terminal line begins
-        CharPositionFromLine(perLineData.Count - 1);
+        CharPositionFromLine(PerLineData.Count - 1);
 
     /// <summary>
-    /// Gets the <see cref="LineBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> at the specified zero-based index.
+    /// Gets the <see cref="LineBase" /> at the specified zero-based index.
     /// </summary>
-    /// <param name="index">The zero-based index of the <see cref="LineBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> to get.</param>
-    /// <returns>The <see cref="LineBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> at the specified index.</returns>
+    /// <param name="index">The zero-based index of the <see cref="LineBase" /> to get.</param>
+    /// <returns>The <see cref="LineBase" /> at the specified index.</returns>
     public abstract TLine this[int index] { get; }
 
     #endregion Properties
@@ -448,16 +447,18 @@ public abstract class LineCollectionBase<TMarkers, TStyles, TIndicators, TLines,
     #region Constructors
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> class.
+    /// Initializes a new instance of the <see cref="LineCollectionBase{TLine}" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public LineCollectionBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla)
+    public LineCollectionBase(IScintillaApi scintilla)
     {
         this.ScintillaApi = scintilla;
 
-        perLineData = new GapBuffer<PerLine>();
-        perLineData.Add(new PerLine { Start = 0 });
-        perLineData.Add(new PerLine { Start = 0 }); // Terminal
+        PerLineData = new GapBuffer<PerLine>
+        {
+            new() { Start = 0, },
+            new() { Start = 0, }, // Terminal
+        };
     }
 
     #endregion Constructors

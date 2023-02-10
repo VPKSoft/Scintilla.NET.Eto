@@ -2,6 +2,7 @@ using System;
 using Gdk;
 using Scintilla.NET.Abstractions.Classes;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Linux.EventArguments;
 
 namespace Scintilla.NET.Linux;
@@ -13,7 +14,9 @@ using static ScintillaApiStructs;
 /// </summary>
 internal static class NativeEventHandling
 {
-    internal static void ScnModified(this Scintilla scintilla, ref SCNotification scn,
+    internal static void ScnModified(this Scintilla scintilla,
+        IScintillaLineCollectionGeneral lineCollectionGeneral, 
+        ref SCNotification scn,
         EventHandler<InsertCheckEventArgs>? insertCheck,
         EventHandler<BeforeModificationEventArgs>? beforeInsert,
         EventHandler<BeforeModificationEventArgs>? beforeDelete, 
@@ -29,7 +32,7 @@ internal static class NativeEventHandling
 
         if ((scn.modificationType & SC_MOD_INSERTCHECK) > 0)
         {
-            var eventArgs = new InsertCheckEventArgs(scintilla, scn.position.ToInt32(), scn.length.ToInt32(), scn.text);
+            var eventArgs = new InsertCheckEventArgs(scintilla, lineCollectionGeneral, scn.position.ToInt32(), scn.length.ToInt32(), scn.text);
             insertCheck?.Invoke(scintilla, eventArgs);
 
             cachedPosition = eventArgs.CachedPosition;
@@ -41,7 +44,7 @@ internal static class NativeEventHandling
         if ((scn.modificationType & (SC_MOD_BEFOREDELETE | SC_MOD_BEFOREINSERT)) > 0)
         {
             var source = (ModificationSource)(scn.modificationType & sourceMask);
-            var eventArgs = new BeforeModificationEventArgs(scintilla, source, scn.position.ToInt32(), scn.length.ToInt32(), scn.text)
+            var eventArgs = new BeforeModificationEventArgs(scintilla, lineCollectionGeneral, source, scn.position.ToInt32(), scn.length.ToInt32(), scn.text)
                 {
                     CachedPosition = cachedPosition,
                     CachedText = cachedText,
@@ -63,7 +66,7 @@ internal static class NativeEventHandling
         if ((scn.modificationType & (SC_MOD_DELETETEXT | SC_MOD_INSERTTEXT)) > 0)
         {
             var source = (ModificationSource)(scn.modificationType & sourceMask);
-            var eventArgs = new ModificationEventArgs(scintilla, source, scn.position.ToInt32(), scn.length.ToInt32(), scn.text, scn.linesAdded.ToInt32())
+            var eventArgs = new ModificationEventArgs(scintilla, lineCollectionGeneral, source, scn.position.ToInt32(), scn.length.ToInt32(), scn.text, scn.linesAdded.ToInt32())
                 {
                     CachedPosition = cachedPosition,
                     CachedText = cachedText,
@@ -90,12 +93,15 @@ internal static class NativeEventHandling
         }
     }
     
-    internal static void ScnMarginClick(this Scintilla scintilla, ref SCNotification scn,
+    internal static void ScnMarginClick(
+        this Scintilla scintilla, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral,
+        ref SCNotification scn,
         EventHandler<MarginClickEventArgs>? marginClick,
         EventHandler<MarginClickEventArgs>? marginRightClick)
     {
         var keys = (Key)(scn.modifiers << 16);
-        var eventArgs = new MarginClickEventArgs(scintilla, keys, scn.position.ToInt32(), scn.margin);
+        var eventArgs = new MarginClickEventArgs(scintilla, lineCollectionGeneral, keys, scn.position.ToInt32(), scn.margin);
 
         if (scn.nmhdr.code == SCN_MARGINCLICK)
         {
@@ -107,20 +113,25 @@ internal static class NativeEventHandling
         }
     }
 
-    internal static void ScnDoubleClick(this Scintilla scintilla, ref SCNotification scn,
+    internal static void ScnDoubleClick(
+        this Scintilla scintilla, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral,
+        ref SCNotification scn,
         EventHandler<DoubleClickEventArgs>? doubleClick)
     {
         var keys = (Key)(scn.modifiers << 16);
-        var eventArgs = new DoubleClickEventArgs(scintilla, keys, scn.position.ToInt32(), scn.line.ToInt32());
+        var eventArgs = new DoubleClickEventArgs(scintilla, lineCollectionGeneral, keys, scn.position.ToInt32(), scn.line.ToInt32());
         doubleClick?.Invoke(scintilla, eventArgs);
     }
     
-    internal static void ScnHotspotClick(this Scintilla scintilla, ref SCNotification scn,
+    internal static void ScnHotspotClick(this Scintilla scintilla, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral,
+        ref SCNotification scn,
         EventHandler<HotspotClickEventArgs>? hotspotClick,
         EventHandler<HotspotClickEventArgs>? hotspotDoubleClick)
     {
         var keys = (Key)(scn.modifiers << 16);
-        var eventArgs = new HotspotClickEventArgs(scintilla, keys, scn.position.ToInt32());
+        var eventArgs = new HotspotClickEventArgs(scintilla, lineCollectionGeneral, keys, scn.position.ToInt32());
         switch (scn.nmhdr.code)
         {
             case SCN_HOTSPOTCLICK:
@@ -137,7 +148,10 @@ internal static class NativeEventHandling
         }
     }
     
-    internal static void ScnIndicatorClick(this Scintilla scintilla, ref SCNotification scn,
+    internal static void ScnIndicatorClick(
+        this Scintilla scintilla, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral, 
+        ref SCNotification scn,
         EventHandler<IndicatorClickEventArgs>? indicatorClick,
         EventHandler<IndicatorReleaseEventArgs>? indicatorRelease)
     {
@@ -145,11 +159,11 @@ internal static class NativeEventHandling
         {
             case SCN_INDICATORCLICK:
                 var keys = (Key)(scn.modifiers << 16);
-                indicatorClick?.Invoke(scintilla, new IndicatorClickEventArgs(scintilla, keys, scn.position.ToInt32()));
+                indicatorClick?.Invoke(scintilla, new IndicatorClickEventArgs(scintilla, keys));
                 break;
 
             case SCN_INDICATORRELEASE:
-                indicatorRelease?.Invoke(scintilla, new IndicatorReleaseEventArgs(scintilla, scn.position.ToInt32()));
+                indicatorRelease?.Invoke(scintilla, new IndicatorReleaseEventArgs(scintilla, lineCollectionGeneral, scn.position.ToInt32()));
                 break;
         }
     }

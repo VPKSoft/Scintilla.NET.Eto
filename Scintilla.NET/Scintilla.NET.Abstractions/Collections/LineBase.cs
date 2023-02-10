@@ -1,5 +1,4 @@
 ﻿using Scintilla.NET.Abstractions.Enumerations;
-using System.Collections;
 using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Structs;
@@ -10,23 +9,26 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// Represents a line of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaLine<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : MarginCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TSelections : SelectionCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker: MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBitmap: class
-    where TColor: struct
+public abstract class LineBase : IScintillaLine
 {
     #region Methods
+    /// <summary>
+    /// Gets the style collection general members.
+    /// </summary>
+    /// <value>The style collection  general members.</value>
+    private IScintillaStyleCollectionGeneral StyleCollectionGeneral { get; }
+
+    /// <summary>
+    /// Gets the line collection general members.
+    /// </summary>
+    /// <value>The line collection  general members.</value>
+    private IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
+
+    /// <summary>
+    /// Gets the line collection general members.
+    /// </summary>
+    /// <value>The line collection  general members.</value>
+    private IScintillaMarkerCollectionGeneral MarkerCollectionGeneral { get; }
 
     /// <summary>
     /// Expands any parent folds to ensure the line is visible.
@@ -79,14 +81,14 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     }
 
     /// <summary>
-    /// Adds the specified <see cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> to the line.
+    /// Adds the specified <see cref="MarkerBase{TImage, TColor}" /> to the line.
     /// </summary>
     /// <param name="marker">The zero-based index of the marker to add to the line.</param>
     /// <returns>A <see cref="MarkerHandle" /> which can be used to track the line.</returns>
     /// <remarks>This method does not check if the line already contains the <paramref name="marker" />.</remarks>
     public virtual MarkerHandle MarkerAdd(int marker)
     {
-        marker = HelpersGeneral.Clamp(marker, 0, ScintillaApi.Markers.Count - 1);
+        marker = HelpersGeneral.Clamp(marker, 0, MarkerCollectionGeneral.Count - 1);
         var handle = ScintillaApi.DirectMessage(SCI_MARKERADD, new IntPtr(Index), new IntPtr(marker));
         return new MarkerHandle { Value = handle };
     }
@@ -94,7 +96,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <summary>
     /// Adds one or more markers to the line in a single call using a bit mask.
     /// </summary>
-    /// <param name="markerMask">An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes to add.</param>
+    /// <param name="markerMask">An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarginBase{TColor}" /> indexes to add.</param>
     public virtual void MarkerAddSet(uint markerMask)
     {
         var mask = unchecked((int)markerMask);
@@ -102,20 +104,20 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     }
 
     /// <summary>
-    /// Removes the specified <see cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> from the line.
+    /// Removes the specified <see cref="MarkerBase{TImage, TColor}" /> from the line.
     /// </summary>
     /// <param name="marker">The zero-based index of the marker to remove from the line or -1 to delete all markers from the line.</param>
     /// <remarks>If the same marker has been added to the line more than once, this will delete one copy each time it is used.</remarks>
     public virtual void MarkerDelete(int marker)
     {
-        marker = HelpersGeneral.Clamp(marker, -1, ScintillaApi.Markers.Count - 1);
+        marker = HelpersGeneral.Clamp(marker, -1, MarkerCollectionGeneral.Count - 1);
         ScintillaApi.DirectMessage(SCI_MARKERDELETE, new IntPtr(Index), new IntPtr(marker));
     }
 
     /// <summary>
     /// Returns a bit mask indicating which markers are present on the line.
     /// </summary>
-    /// <returns>An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarkerBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes.</returns>
+    /// <returns>An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarkerBase{TImage, TColor}" /> indexes.</returns>
     public virtual uint MarkerGet()
     {
         var mask = ScintillaApi.DirectMessage(SCI_MARKERGET, new IntPtr(Index)).ToInt32();
@@ -125,7 +127,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <summary>
     /// Efficiently searches from the current line forward to the end of the document for the specified markers.
     /// </summary>
-    /// <param name="markerMask">An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes.</param>
+    /// <param name="markerMask">An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarginBase{TColor}" /> indexes.</param>
     /// <returns>If found, the zero-based line index containing one of the markers in <paramref name="markerMask" />; otherwise, -1.</returns>
     /// <remarks>For example, the mask for marker index 10 is 1 shifted left 10 times (1 &lt;&lt; 10).</remarks>
     public virtual int MarkerNext(uint markerMask)
@@ -137,7 +139,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <summary>
     /// Efficiently searches from the current line backward to the start of the document for the specified markers.
     /// </summary>
-    /// <param name="markerMask">An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes.</param>
+    /// <param name="markerMask">An unsigned 32-bit value with each bit corresponding to one of the 32 zero-based <see cref="MarginBase{TColor}" /> indexes.</param>
     /// <returns>If found, the zero-based line index containing one of the markers in <paramref name="markerMask" />; otherwise, -1.</returns>
     /// <remarks>For example, the mask for marker index 10 is 1 shifted left 10 times (1 &lt;&lt; 10).</remarks>
     public virtual int MarkerPrevious(uint markerMask)
@@ -178,11 +180,10 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
         }
     }
 
-    /// <inheritdoc />
-    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
-    {
-        get;
-    }
+    /// <summary>
+    /// A reference to the Scintilla control interface.
+    /// </summary>
+    public IScintillaApi ScintillaApi { get; }    
 
     #endregion Methods
 
@@ -198,7 +199,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// Gets or sets the style of the annotation text.
     /// </summary>
     /// <returns>
-    /// The zero-based index of the annotation text <see cref="StyleBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> or 256 when <see cref="AnnotationStyles" />
+    /// The zero-based index of the annotation text <see cref="StyleBase{TColor}" /> or 256 when <see cref="AnnotationStyles" />
     /// has been used to set individual character styles.
     /// </returns>
     /// <seealso cref="AnnotationStyles" />
@@ -207,7 +208,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
         get => ScintillaApi.DirectMessage(SCI_ANNOTATIONGETSTYLE, new IntPtr(Index)).ToInt32();
         set
         {
-            value = HelpersGeneral.Clamp(value, 0, ScintillaApi.Styles.Count - 1);
+            value = HelpersGeneral.Clamp(value, 0, StyleCollectionGeneral.Count - 1);
             ScintillaApi.DirectMessage(SCI_ANNOTATIONSETSTYLE, new IntPtr(Index), new IntPtr(value));
         }
     }
@@ -217,7 +218,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// so that each character may be individually styled.
     /// </summary>
     /// <returns>
-    /// An array of <see cref="StyleBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes corresponding with each annotation text character or an uninitialized
+    /// An array of <see cref="StyleBase{TColor}" /> indexes corresponding with each annotation text character or an uninitialized
     /// array when <see cref="AnnotationStyle" /> has been used to set a single style for all characters.
     /// </returns>
     /// <remarks>
@@ -407,20 +408,20 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// <summary>
     /// Gets the line index.
     /// </summary>
-    /// <returns>The zero-based line index within the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> that created it.</returns>
+    /// <returns>The zero-based line index within the <see cref="LineCollectionBase{TLine}" /> that created it.</returns>
     public int Index { get; }
 
     /// <summary>
     /// Gets the length of the line.
     /// </summary>
     /// <returns>The number of characters in the line including any end of line characters.</returns>
-    public virtual int Length => ScintillaApi.Lines.CharLineLength(Index);
+    public virtual int Length => LineCollectionGeneral.CharLineLength(Index);
 
     /// <summary>
     /// Gets or sets the style of the margin text in a <see cref="MarginType.Text" /> or <see cref="MarginType.RightText" /> margin.
     /// </summary>
     /// <returns>
-    /// The zero-based index of the margin text <see cref="StyleBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> or 256 when <see cref="MarginStyles" />
+    /// The zero-based index of the margin text <see cref="StyleBase{TColor}" /> or 256 when <see cref="MarginStyles" />
     /// has been used to set individual character styles.
     /// </returns>
     /// <seealso cref="MarginStyles" />
@@ -429,7 +430,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
         get => ScintillaApi.DirectMessage(SCI_MARGINGETSTYLE, new IntPtr(Index)).ToInt32();
         set
         {
-            value = HelpersGeneral.Clamp(value, 0, ScintillaApi.Styles.Count - 1);
+            value = HelpersGeneral.Clamp(value, 0, StyleCollectionGeneral.Count - 1);
             ScintillaApi.DirectMessage(SCI_MARGINSETSTYLE, new IntPtr(Index), new IntPtr(value));
         }
     }
@@ -439,7 +440,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// so that each character may be individually styled.
     /// </summary>
     /// <returns>
-    /// An array of <see cref="StyleBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes corresponding with each margin text character or an uninitialized
+    /// An array of <see cref="StyleBase{TColor}" /> indexes corresponding with each margin text character or an uninitialized
     /// array when <see cref="MarginStyle" /> has been used to set a single style for all characters.
     /// </returns>
     /// <remarks>
@@ -537,7 +538,7 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     /// Gets the zero-based character position in the document where the line begins.
     /// </summary>
     /// <returns>The document position of the first character in the line.</returns>
-    public virtual int Position => ScintillaApi.Lines.CharPositionFromLine(Index);
+    public virtual int Position => LineCollectionGeneral.CharPositionFromLine(Index);
 
     /// <summary>
     /// Gets the line text.
@@ -590,13 +591,23 @@ public abstract class LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins,
     #region Constructors
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="LineBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> class.
+    /// Initializes a new instance of the <see cref="LineBase" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this line.</param>
-    /// <param name="index">The index of this line within the <see cref="LineCollectionBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> that created it.</param>
-    protected LineBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla, int index)
+    /// <param name="styleCollectionGeneral">A reference to Scintilla's style collection.</param>
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
+    /// <param name="markerCollectionGeneral">A reference to Scintilla's marker collection.</param>
+    /// <param name="index">The index of this line within the <see cref="LineCollectionBase{TLine}" /> that created it.</param>
+    protected LineBase(IScintillaApi scintilla, 
+        IScintillaStyleCollectionGeneral styleCollectionGeneral, 
+        IScintillaLineCollectionGeneral lineCollectionGeneral, 
+        IScintillaMarkerCollectionGeneral markerCollectionGeneral,
+        int index)
     {
-        this.ScintillaApi = scintilla;
+        ScintillaApi = scintilla;
+        StyleCollectionGeneral = styleCollectionGeneral;
+        LineCollectionGeneral = lineCollectionGeneral;
+        MarkerCollectionGeneral = markerCollectionGeneral;
         Index = index;
     }
 

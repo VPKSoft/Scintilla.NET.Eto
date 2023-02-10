@@ -356,7 +356,7 @@ internal static class Helpers
         return HelpersGeneral.GetBytes(text, length, encoding, zeroTerminated);
     }
 
-    public static string GetHtml(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla, int startBytePos, int endBytePos)
+    public static string GetHtml(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, int startBytePos, int endBytePos)
     {
         // If we ever allow more than UTF-8, this will have to be revisited
         Debug.Assert(scintilla.DirectMessage(SCI_GETCODEPAGE).ToInt32() == SC_CP_UTF8);
@@ -539,7 +539,7 @@ internal static class Helpers
         return HelpersGeneral.GetString(bytes, length, encoding);
     }
 
-    internal static List<ArraySegment<byte>> GetStyledSegments(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla, bool currentSelection, bool currentLine, int startBytePos, int endBytePos, out StyleData[] styles)
+    internal static List<ArraySegment<byte>> GetStyledSegments(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color> scintilla, bool currentSelection, bool currentLine, int startBytePos, int endBytePos, out StyleData[] styles)
     {
         var segments = new List<ArraySegment<byte>>();
         if (currentSelection)

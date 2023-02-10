@@ -24,16 +24,16 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Interfaces.EventArguments;
+namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 
 /// <summary>
-/// Provides data for the <see cref="IScintillaEvents{TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs,TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs,TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs,TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs}.ChangeAnnotation" /> events.
+/// An interface for the <see cref="IScintillaMarkerCollection{TMarker, TImage, TColor}"/> methods and properties.
 /// </summary>
-public interface IChangeAnnotationEventArgs
+public interface IScintillaMarkerCollectionGeneral
 {
     /// <summary>
-    /// Gets the line index where the annotation changed.
+    /// Gets the number of markers in the <see cref="IScintillaMarkerCollection{TMarker, TImage, TColor}" />.
     /// </summary>
-    /// <returns>The zero-based line index where the annotation change occurred.</returns>
-    int Line { get; }
+    /// <returns>This property always returns 32.</returns>
+    int Count { get; }
 }

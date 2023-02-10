@@ -7,7 +7,7 @@ namespace Scintilla.NET.WinForms.Collections;
 /// <summary>
 /// An immutable collection of markers in a <see cref="Scintilla" /> control.
 /// </summary>
-public class MarkerCollection : MarkerCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class MarkerCollection : MarkerCollectionBase<Marker, Image, Color>
 {
     /// <summary>
     /// Gets a <see cref="Marker" /> object at the specified index.
@@ -28,7 +28,7 @@ public class MarkerCollection : MarkerCollectionBase<MarkerCollection, StyleColl
     /// Initializes a new instance of the <see cref="MarkerCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public MarkerCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
+    public MarkerCollection(IScintillaApi scintilla) : base(scintilla)
     {
 
     }

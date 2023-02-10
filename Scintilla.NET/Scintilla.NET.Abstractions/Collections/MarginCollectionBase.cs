@@ -9,27 +9,16 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// An immutable collection of margins in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> : IScintillaMarginCollection<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMarkers : MarkerCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TStyles : StyleCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TIndicators :IndicatorCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TLines : LineCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMargins : MarginCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TSelections : SelectionCollectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>, IEnumerable
-    where TMarker: MarkerBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TStyle : StyleBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TIndicator : IndicatorBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TLine : LineBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TMargin : MarginBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TSelection : SelectionBase<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor>
-    where TBitmap: class
+public abstract class MarginCollectionBase<TMargin, TColor> : 
+    IScintillaMarginCollection<TMargin, TColor>
+    where TMargin : MarginBase<TColor>
     where TColor: struct
 {
-    /// <inheritdoc />
-    public IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> ScintillaApi
-    {
-        get;
-    }
+    /// <summary>
+    /// Gets the scintilla API.
+    /// </summary>
+    /// <value>The scintilla API.</value>
+    protected IScintillaApi ScintillaApi { get; }
 
     /// <summary>
     /// Removes all text displayed in every <see cref="MarginType.Text" /> and <see cref="MarginType.RightText" /> margins.
@@ -42,7 +31,7 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     /// <summary>
     /// Provides an enumerator that iterates through the collection.
     /// </summary>
-    /// <returns>An object that contains all <see cref="IScintillaMargin{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> objects within the <see cref="IScintillaMarginCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.</returns>
+    /// <returns>An object that contains all <see cref="IScintillaMargin{TColor}" />.</returns>
     public virtual IEnumerator<TMargin> GetEnumerator()
     {
         var count = Count;
@@ -56,7 +45,7 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     }
 
     /// <summary>
-    /// Gets or sets the number of margins in the <see cref="IScintillaMarginCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.
+    /// Gets or sets the number of margins in the <see cref="MarginCollectionBase{TMargin,TColor}" />.
     /// </summary>
     /// <returns>The number of margins in the collection. The default is 5.</returns>
     public virtual int Capacity
@@ -70,7 +59,7 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     }
 
     /// <summary>
-    /// Gets the number of margins in the <see cref="IScintillaMarginCollection{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />.
+    /// Gets the number of margins in the <see cref="MarginCollectionBase{TMargin,TColor}" />.
     /// </summary>
     /// <returns>The number of margins in the collection.</returns>
     /// <remarks>This property is kept for convenience. The return value will always be equal to <see cref="Capacity" />.</remarks>
@@ -95,32 +84,6 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
         }
     }
 
-    // TODO Why is this commented out?
-    /*
-    /// <summary>
-    /// Gets or sets the margin options.
-    /// </summary>
-    /// <returns>
-    /// A <see cref="ScintillaNET.MarginOptions" /> that represents the margin options.
-    /// The default is <see cref="ScintillaNET.MarginOptions.None" />.
-    /// </returns>
-    [DefaultValue(MarginOptions.None)]
-    [Description("Margin options flags.")]
-    [TypeConverter(typeof(FlagsEnumTypeConverter.FlagsEnumConverter))]
-    public MarginOptions Options
-    {
-        get
-        {
-            return (MarginOptions)scintilla.DirectMessage(NativeMethods.SCI_GETMARGINOPTIONS);
-        }
-        set
-        {
-            var options = (int)value;
-            scintilla.DirectMessage(NativeMethods.SCI_SETMARGINOPTIONS, new IntPtr(options));
-        }
-    }
-    */
-
     /// <summary>
     /// Gets or sets the width in pixels of the right margin padding.
     /// </summary>
@@ -138,7 +101,7 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     }
 
     /// <summary>
-    /// Gets a <see cref="MarginBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> object at the specified index.
+    /// Gets a <see cref="MarginBase{TColor}" /> object at the specified index.
     /// </summary>
     /// <param name="index">The margin index.</param>
     /// <returns>An object representing the margin at the specified <paramref name="index" />.</returns>
@@ -148,10 +111,10 @@ public abstract class MarginCollectionBase<TMarkers, TStyles, TIndicators, TLine
     public abstract TMargin this[int index] { get; }
 
     /// <summary>
-    /// Initializes a new instance of the <see cref="MarginCollectionBase{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" /> class.
+    /// Initializes a new instance of the <see cref="MarginCollectionBase{TMargin,TColor}" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    protected MarginCollectionBase(IScintillaApi<TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor> scintilla)
+    protected MarginCollectionBase(IScintillaApi scintilla)
     {
         this.ScintillaApi = scintilla;
     }
