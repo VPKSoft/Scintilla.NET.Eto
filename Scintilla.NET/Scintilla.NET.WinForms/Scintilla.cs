@@ -4914,14 +4914,13 @@ public class Scintilla : Control,
 
         borderStyle = BorderStyle.Fixed3D;
 
-        Lines = new LineCollection(this, Styles, Lines, Markers);
-        this.SCNotification += Lines.ScNotificationCallback;
-
         Styles = new StyleCollection(this);
-        Indicators = new IndicatorCollection(this, Lines);
         Margins = new MarginCollection(this);
         Markers = new MarkerCollection(this);
+        Lines = new LineCollection(this, Styles, Markers);
         Selections = new SelectionCollection(this, Lines);
+        Indicators = new IndicatorCollection(this, Lines);
+        this.SCNotification += Lines.ScNotificationCallback;
     }
 
     #endregion Constructors

@@ -54,8 +54,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Gtk.Image, Gdk.Color>,
     IScintillaProperties<Gdk.Color>,
     IScintillaMethods<Gdk.Color, Key, Gtk.Image>,
-    IScintillaEvents<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-    SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Gtk.Image, Gdk.Color, Key, 
+    IScintillaEvents<Key, 
     AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs,
     DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, IndicatorReleaseEventArgs,
     InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>

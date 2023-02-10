@@ -45,12 +45,6 @@ public class LineCollection : LineCollectionBase<Line>
     /// Gets the line collection general members.
     /// </summary>
     /// <value>The line collection  general members.</value>
-    private IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
-
-    /// <summary>
-    /// Gets the line collection general members.
-    /// </summary>
-    /// <value>The line collection  general members.</value>
     private IScintillaMarkerCollectionGeneral MarkerCollectionGeneral { get; }
 
     /// <summary>
@@ -63,7 +57,7 @@ public class LineCollection : LineCollectionBase<Line>
         get
         {
             index = Helpers.Clamp(index, 0, Count - 1);
-            return new Line(ScintillaApi, StyleCollectionGeneral, LineCollectionGeneral, MarkerCollectionGeneral,
+            return new Line(ScintillaApi, StyleCollectionGeneral, this, MarkerCollectionGeneral,
                 index);
         }
     }
@@ -77,16 +71,13 @@ public class LineCollection : LineCollectionBase<Line>
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
     /// <param name="styleCollectionGeneral">A reference to Scintilla's style collection.</param>
-    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     /// <param name="markerCollectionGeneral">A reference to Scintilla's marker collection.</param>
     public LineCollection(IScintillaApi scintilla,
         IScintillaStyleCollectionGeneral styleCollectionGeneral,
-        IScintillaLineCollectionGeneral lineCollectionGeneral,
         IScintillaMarkerCollectionGeneral markerCollectionGeneral
     ) : base(scintilla)
     {
         StyleCollectionGeneral = styleCollectionGeneral;
-        LineCollectionGeneral = lineCollectionGeneral;
         MarkerCollectionGeneral = markerCollectionGeneral;
         PerLineData = new GapBuffer<PerLine>
         {
