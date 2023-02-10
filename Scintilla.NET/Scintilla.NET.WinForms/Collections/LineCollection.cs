@@ -1,7 +1,6 @@
-﻿using System.Drawing;
-using Scintilla.NET.Abstractions;
+﻿using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.Abstractions.UtilityClasses;
@@ -12,9 +11,10 @@ namespace Scintilla.NET.WinForms.Collections;
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class LineCollection : LineCollectionBase<Line>
 {
-    #region Methods    
+    #region Methods
+
     /// <summary>
     /// A method to be added as event subscription to <see cref="E:Scintilla.NET.Abstractions.Interfaces.IScintillaEvents`32.SCNotification" /> event.
     /// </summary>
@@ -30,9 +30,29 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
                 break;
         }
     }
+
     #endregion Methods
 
     #region Properties
+
+    /// <summary>
+    /// Gets the style collection general members.
+    /// </summary>
+    /// <value>The style collection  general members.</value>
+    private IScintillaStyleCollectionGeneral StyleCollectionGeneral { get; }
+
+    /// <summary>
+    /// Gets the line collection general members.
+    /// </summary>
+    /// <value>The line collection  general members.</value>
+    private IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
+
+    /// <summary>
+    /// Gets the line collection general members.
+    /// </summary>
+    /// <value>The line collection  general members.</value>
+    private IScintillaMarkerCollectionGeneral MarkerCollectionGeneral { get; }
+
     /// <summary>
     /// Gets the <see cref="Line" /> at the specified zero-based index.
     /// </summary>
@@ -43,7 +63,8 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
         get
         {
             index = Helpers.Clamp(index, 0, Count - 1);
-            return new Line(ScintillaApi, index);
+            return new Line(ScintillaApi, StyleCollectionGeneral, LineCollectionGeneral, MarkerCollectionGeneral,
+                index);
         }
     }
 
@@ -55,12 +76,22 @@ public class LineCollection : LineCollectionBase<MarkerCollection, StyleCollecti
     /// Initializes a new instance of the <see cref="LineCollection" /> class.
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
-    public LineCollection(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla) : base(scintilla)
+    /// <param name="styleCollectionGeneral">A reference to Scintilla's style collection.</param>
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
+    /// <param name="markerCollectionGeneral">A reference to Scintilla's marker collection.</param>
+    public LineCollection(IScintillaApi scintilla,
+        IScintillaStyleCollectionGeneral styleCollectionGeneral,
+        IScintillaLineCollectionGeneral lineCollectionGeneral,
+        IScintillaMarkerCollectionGeneral markerCollectionGeneral
+    ) : base(scintilla)
     {
-        perLineData = new GapBuffer<PerLine>
+        StyleCollectionGeneral = styleCollectionGeneral;
+        LineCollectionGeneral = lineCollectionGeneral;
+        MarkerCollectionGeneral = markerCollectionGeneral;
+        PerLineData = new GapBuffer<PerLine>
         {
-            new() { Start = 0 },
-            new() { Start = 0 }, // Terminal
+            new() { Start = 0, },
+            new() { Start = 0, }, // Terminal
         };
     }
 

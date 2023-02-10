@@ -8,7 +8,7 @@ namespace Scintilla.NET.WinForms.Collections;
 /// <summary>
 /// A style definition in a <see cref="Scintilla" /> control.
 /// </summary>
-public class Style : StyleBase<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color>
+public class Style : StyleBase<Color>
 {
     #region Properties
 
@@ -68,7 +68,7 @@ public class Style : StyleBase<MarkerCollection, StyleCollection, IndicatorColle
     /// </summary>
     /// <param name="scintilla">The <see cref="Scintilla" /> control that created this style.</param>
     /// <param name="index">The index of this style within the <see cref="StyleCollection" /> that created it.</param>
-    public Style(IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection, SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Bitmap, Color> scintilla, int index) : base(scintilla, index)
+    public Style(IScintillaApi scintilla, int index) : base(scintilla, index)
     {
     }
 
