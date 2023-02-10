@@ -6,7 +6,7 @@ namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 /// An immutable collection of lines of text in a <see cref="ScintillaApi" /> control.
 /// </summary>
 public interface IScintillaLineCollection<out TLine> : IEnumerable<TLine>, IScintillaLineCollectionGeneral
-    where TLine : LineBase
+    where TLine : IScintillaLine
 {
     #region Properties
     /// <summary>

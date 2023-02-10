@@ -6,9 +6,9 @@ namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 /// <summary>
 /// Represents a margin marker in a <see cref="Scintilla" /> control.
 /// </summary>
-public interface IScintillaMarker<in TColor, in TImage>
-    where TColor : struct
+public interface IScintillaMarker<in TImage, in TColor>
     where TImage : class
+    where TColor : struct
 {
     /// <summary>
     /// A reference to the Scintilla control interface.

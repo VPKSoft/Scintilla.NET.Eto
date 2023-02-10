@@ -1,12 +1,10 @@
-﻿using Scintilla.NET.Abstractions.Collections;
-
-namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+﻿namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// An immutable collection of markers in a <see cref="ScintillaApi" /> control.
 /// </summary>
 public interface IScintillaMarkerCollection<out TMarker, TImage, TColor> : IEnumerable<TMarker>, IScintillaMarkerCollectionGeneral
-    where TMarker : MarkerBase<TImage, TColor>
+    where TMarker : IScintillaMarker<TImage, TColor>
     where TImage: class
     where TColor: struct
 {

@@ -6,7 +6,7 @@ namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 /// A multiple selection collection.
 /// </summary>
 public interface IScintillaSelectionCollection<out TSelection> : IEnumerable<TSelection>
-    where TSelection : SelectionBase
+    where TSelection : IScintillaSelection
 {
     /// <summary>
     /// A reference to the Scintilla control interface.

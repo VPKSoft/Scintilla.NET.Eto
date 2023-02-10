@@ -1,5 +1,4 @@
-﻿using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
+﻿using Scintilla.NET.Abstractions.Enumerations;
 
 namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 
@@ -7,7 +6,7 @@ namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 /// An immutable collection of margins in the Scintilla control.
 /// </summary>
 public interface IScintillaMarginCollection<out TMargin, TColor> : IEnumerable<TMargin>
-    where TMargin : MarginBase<TColor>
+    where TMargin : IScintillaMargin<TColor>
     where TColor: struct
 {
     /// <summary>
