@@ -9,7 +9,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// Represents a line of text in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class LineBase
+public abstract class LineBase : IScintillaLine
 {
     #region Methods
     /// <summary>
@@ -183,7 +183,7 @@ public abstract class LineBase
     /// <summary>
     /// A reference to the Scintilla control interface.
     /// </summary>
-    private IScintillaApi ScintillaApi { get; }    
+    public IScintillaApi ScintillaApi { get; }    
 
     #endregion Methods
 

@@ -1,4 +1,5 @@
 ﻿using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Collections;
@@ -6,7 +7,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// Represents a margin marker in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class MarkerBase<TImage, TColor>
+public abstract class MarkerBase<TImage, TColor> : IScintillaMarker<TImage, TColor>
     where TColor : struct
     where TImage : class
 {
@@ -14,7 +15,7 @@ public abstract class MarkerBase<TImage, TColor>
     /// Gets the scintilla API.
     /// </summary>
     /// <value>The scintilla API.</value>
-    protected IScintillaApi ScintillaApi { get; }
+    public IScintillaApi ScintillaApi { get; }
 
     /// <summary>
     /// Sets the marker symbol to a custom image.

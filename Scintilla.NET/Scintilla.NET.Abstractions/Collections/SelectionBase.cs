@@ -6,20 +6,20 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// Represents a selection when there are multiple active selections in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class SelectionBase
+public abstract class SelectionBase : IScintillaSelection
 {
     /// <summary>
     /// Gets the scintilla API.
     /// </summary>
     /// <value>The scintilla API.</value>
-    protected IScintillaApi ScintillaApi { get; }
+    public IScintillaApi ScintillaApi { get; }
 
 
     /// <summary>
     /// Gets the line collection general members.
     /// </summary>
     /// <value>The line collection  general members.</value>
-    private IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
+    protected IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
 
     /// <summary>
     /// Gets or sets the anchor position of the selection.

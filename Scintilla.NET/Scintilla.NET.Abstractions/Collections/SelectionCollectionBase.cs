@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using Scintilla.NET.Abstractions.Interfaces.Collections;
+using System.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Collections;
@@ -6,7 +7,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// A multiple selection collection.
 /// </summary>
-public abstract class SelectionCollectionBase<TSelection> : IEnumerable<TSelection>
+public abstract class SelectionCollectionBase<TSelection> : IScintillaSelectionCollection<TSelection>
     where TSelection : SelectionBase
 {
     /// <summary>
@@ -29,7 +30,13 @@ public abstract class SelectionCollectionBase<TSelection> : IEnumerable<TSelecti
     /// Gets the scintilla API.
     /// </summary>
     /// <value>The scintilla API.</value>
-    protected IScintillaApi ScintillaApi { get; }
+    public IScintillaApi ScintillaApi { get; }
+
+    /// <summary>
+    /// Gets the line collection general members.
+    /// </summary>
+    /// <value>The line collection  general members.</value>
+    protected IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
 
     /// <summary>
     /// Gets the number of active selections.
@@ -54,8 +61,10 @@ public abstract class SelectionCollectionBase<TSelection> : IEnumerable<TSelecti
     /// Initializes a new instance of the <see cref="SelectionCollectionBase{TSelection}" /> class.
     /// </summary>
     /// <param name="scintilla"></param>
-    public SelectionCollectionBase(IScintillaApi scintilla)
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
+    public SelectionCollectionBase(IScintillaApi scintilla, IScintillaLineCollectionGeneral lineCollectionGeneral)
     {
-        this.ScintillaApi = scintilla;
+        ScintillaApi = scintilla;
+        LineCollectionGeneral = lineCollectionGeneral;
     }
 }

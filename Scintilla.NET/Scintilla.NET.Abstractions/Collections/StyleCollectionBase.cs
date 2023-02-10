@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Collections;
@@ -6,7 +7,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// An immutable collection of style definitions in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class StyleCollectionBase<TStyle, TColor> : IEnumerable<TStyle>
+public abstract class StyleCollectionBase<TStyle, TColor> : IScintillaStyleCollection<TStyle, TColor>, IScintillaStyleCollectionGeneral
     where TStyle : StyleBase<TColor>
     where TColor: struct
 {
@@ -30,7 +31,7 @@ public abstract class StyleCollectionBase<TStyle, TColor> : IEnumerable<TStyle>
     /// Gets the scintilla API.
     /// </summary>
     /// <value>The scintilla API.</value>
-    protected IScintillaApi ScintillaApi { get; }
+    public IScintillaApi ScintillaApi { get; }
 
     /// <summary>
     /// Gets the number of styles.

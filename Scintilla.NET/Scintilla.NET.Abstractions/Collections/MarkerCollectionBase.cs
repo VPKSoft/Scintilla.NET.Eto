@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using Scintilla.NET.Abstractions.Interfaces.Collections;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.Abstractions.Collections;
@@ -6,7 +7,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// An immutable collection of markers in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class MarkerCollectionBase<TMarker, TImage, TColor> : IEnumerable<TMarker>
+public abstract class MarkerCollectionBase<TMarker, TImage, TColor> : IScintillaMarkerCollection<TMarker, TImage, TColor>
     where TMarker : MarkerBase<TImage, TColor>
     where TImage: class
     where TColor: struct
@@ -31,7 +32,7 @@ public abstract class MarkerCollectionBase<TMarker, TImage, TColor> : IEnumerabl
     /// Gets the scintilla API.
     /// </summary>
     /// <value>The scintilla API.</value>
-    protected IScintillaApi ScintillaApi { get; }
+    public IScintillaApi ScintillaApi { get; }
 
     /// <summary>
     /// Gets the number of markers in the <see cref="MarkerCollectionBase{TMarker, TImage, TColor}" />.

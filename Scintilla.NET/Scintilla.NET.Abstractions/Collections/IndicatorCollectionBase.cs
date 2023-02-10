@@ -8,7 +8,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// An immutable collection of indicators in a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class IndicatorCollectionBase<TIndicator, TColor> : IEnumerable<TIndicator>
+public abstract class IndicatorCollectionBase<TIndicator, TColor> : IScintillaIndicatorCollection<TIndicator, TColor>
     where TIndicator : IScintillaIndicator<TColor>
     where TColor: struct
 {
@@ -32,7 +32,7 @@ public abstract class IndicatorCollectionBase<TIndicator, TColor> : IEnumerable<
     /// Gets the scintilla API.
     /// </summary>
     /// <value>The scintilla API.</value>
-    protected IScintillaApi ScintillaApi { get; }
+    public IScintillaApi ScintillaApi { get; }
 
     /// <summary>
     /// Gets the number of indicators.

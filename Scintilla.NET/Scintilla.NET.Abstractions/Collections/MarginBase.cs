@@ -9,7 +9,7 @@ namespace Scintilla.NET.Abstractions.Collections;
 /// <summary>
 /// Represents a margin displayed on the left edge of a <see cref="Scintilla" /> control.
 /// </summary>
-public abstract class MarginBase<TColor>
+public abstract class MarginBase<TColor> : IScintillaMargin<TColor>
     where TColor : struct
 {
     #region Properties
@@ -18,7 +18,8 @@ public abstract class MarginBase<TColor>
     /// Gets the scintilla API.
     /// </summary>
     /// <value>The scintilla API.</value>
-    protected IScintillaApi ScintillaApi { get; }
+    public IScintillaApi ScintillaApi { get; }
+
 
     /// <summary>
     /// Gets or sets the background color of the margin when the <see cref="Type" /> property is set to <see cref="MarginType.Color" />.
@@ -51,7 +52,6 @@ public abstract class MarginBase<TColor>
     /// Gets or sets whether the margin is sensitive to mouse clicks.
     /// </summary>
     /// <returns>true if the margin is sensitive to mouse clicks; otherwise, false. The default is false.</returns>
-    /// <seealso cref="IScintillaEvents{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor,TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.MarginClick" />
     public virtual bool Sensitive
     {
         get => ScintillaApi.DirectMessage(SCI_GETMARGINSENSITIVEN, new IntPtr(Index)) != IntPtr.Zero;
