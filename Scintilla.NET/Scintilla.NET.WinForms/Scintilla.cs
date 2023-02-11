@@ -565,8 +565,8 @@ public class Scintilla : Control, IScintillaWinForms
     public void CopyRange(int start, int end, CopyFormat format)
     {
         var textLength = TextLength;
-        start = Helpers.Clamp(start, 0, textLength);
-        end = Helpers.Clamp(end, 0, textLength);
+        start = HelpersGeneral.Clamp(start, 0, textLength);
+        end = HelpersGeneral.Clamp(end, 0, textLength);
         if (start == end)
         {
             return;
@@ -596,7 +596,7 @@ public class Scintilla : Control, IScintillaWinForms
     /// <returns>A new <see cref="ILoader" /> object, or null if the loader could not be created.</returns>
     public ILoader CreateLoader(int length)
     {
-        length = Helpers.ClampMin(length, 0);
+        length = HelpersGeneral.ClampMin(length, 0);
         var ptr = DirectMessage(SCI_CREATELOADER, new IntPtr(length));
         if (ptr == IntPtr.Zero)
         {
@@ -970,8 +970,8 @@ public class Scintilla : Control, IScintillaWinForms
     public string GetTextRangeAsHtml(int position, int length)
     {
         var textLength = TextLength;
-        position = Helpers.Clamp(position, 0, textLength);
-        length = Helpers.Clamp(length, 0, textLength - position);
+        position = HelpersGeneral.Clamp(position, 0, textLength);
+        length = HelpersGeneral.Clamp(length, 0, textLength - position);
 
         var startBytePos = Lines.CharToBytePosition(position);
         var endBytePos = Lines.CharToBytePosition(position + length);

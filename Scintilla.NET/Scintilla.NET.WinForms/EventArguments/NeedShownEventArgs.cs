@@ -2,7 +2,7 @@
 using Scintilla.NET.Abstractions.EventArguments;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.WinForms;
+namespace Scintilla.NET.WinForms.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.NeedShown" /> event.
