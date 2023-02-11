@@ -38,6 +38,7 @@ using Image = Gtk.Image;
 using Key = Gdk.Key;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Extensions;
+using Scintilla.NET.Abstractions.Interfaces.Methods;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.Linux.GdkUtils;
 using Style = Scintilla.NET.Linux.Collections.Style;
@@ -53,8 +54,12 @@ using static ScintillaConstants;
 /// </summary>
 public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
+    IScintillaProperties,
     IScintillaProperties<Color>,
-    IScintillaMethods<Color, Key, Image>,
+    IScintillaMethods,
+    IScintillaMethodsColor<Color>,
+    IScintillaMethodsKeys<Key>,
+    IScintillaMethodsImage<Image>,
     IScintillaEvents<Key,
         AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs,
         DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, 

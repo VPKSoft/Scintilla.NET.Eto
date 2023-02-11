@@ -27,17 +27,20 @@ SOFTWARE.
 using System.Text;
 using Eto.Forms;
 using Eto.GtkSharp.Forms;
-using Gdk;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.Methods;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.EtoForms.Shared;
 using Scintilla.NET.Linux.Collections;
 using Scintilla.NET.Linux.EventArguments;
 using Color = Gdk.Color;
+using Key = Gdk.Key;
+using Image = Gtk.Image;
 using Selection = Scintilla.NET.Linux.Collections.Selection;
 using Status = Scintilla.NET.Abstractions.Enumerations.Status;
+using Style = Scintilla.NET.Linux.Collections.Style;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
 
 namespace Scintilla.NET.EtoForms.GTK;
@@ -51,15 +54,18 @@ namespace Scintilla.NET.EtoForms.GTK;
 /// <seealso cref="IScintillaControl" />
 public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl, Control.ICallback>, IScintillaControl,
     IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-    SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Gtk.Image, Gdk.Color>,
-    IScintillaProperties<Gdk.Color>,
-    IScintillaMethods<Gdk.Color, Key, Gtk.Image>,
+    SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
+    IScintillaProperties,
+    IScintillaProperties<Color>,
+    IScintillaMethods,
+    IScintillaMethodsColor<Color>,
+    IScintillaMethodsKeys<Key>,
+    IScintillaMethodsImage<Image>,
     IScintillaEvents<Key, 
     AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs,
     DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, IndicatorReleaseEventArgs,
     InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
 {
-    readonly IntPtr editor;
     private readonly ScintillaGtk nativeControl;
 
 
@@ -69,7 +75,6 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public ScintillaControlHandler()
     {
         nativeControl = new ScintillaGtk();
-        editor = nativeControl.SciPointer;
         Control = nativeControl;
     }
     
@@ -168,7 +173,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public void Redo() => nativeControl.Redo();
 
     /// <inheritdoc />
-    public void RegisterRgbaImage(int type, Gtk.Image image) => nativeControl.RegisterRgbaImage(type, image);
+    public void RegisterRgbaImage(int type, Image image) => nativeControl.RegisterRgbaImage(type, image);
 
     /// <inheritdoc />
     public void ReleaseDocument(Document document) => nativeControl.ReleaseDocument(document);
@@ -377,7 +382,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public void AppendText(string text) => nativeControl.AppendText(text);
 
     /// <inheritdoc />
-    public void AssignCmdKey(Key keyDefinition, Scintilla.NET.Abstractions.Enumerations.Command sciCommand) => nativeControl.AssignCmdKey(keyDefinition, sciCommand);
+    public void AssignCmdKey(Key keyDefinition, Abstractions.Enumerations.Command sciCommand) => nativeControl.AssignCmdKey(keyDefinition, sciCommand);
 
     /// <inheritdoc />
     public void AutoCCancel() => nativeControl.AutoCCancel();
@@ -515,7 +520,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public void EndUndoAction() => nativeControl.EndUndoAction();
 
     /// <inheritdoc />
-    public void ExecuteCmd(Scintilla.NET.Abstractions.Enumerations.Command sciCommand) => nativeControl.ExecuteCmd(sciCommand);
+    public void ExecuteCmd(Abstractions.Enumerations.Command sciCommand) => nativeControl.ExecuteCmd(sciCommand);
 
     /// <summary>
     /// Performs the specified fold action on the entire document.
