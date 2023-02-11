@@ -5,6 +5,7 @@ using Eto.Wpf.Forms;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.Methods;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.EtoForms.Shared;
 using Scintilla.NET.EtoForms.WinForms;
@@ -24,19 +25,23 @@ namespace Scintilla.NET.EtoForms.Wpf;
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaMethods{TColor, TKeys, TBitmap}" />
+/// Implements the <see cref="IScintillaMethods" />
 /// Implements the <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
 /// </summary>
 /// <seealso cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
 /// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaMethods{TColor, TKeys, TBitmap}" />
+/// <seealso cref="IScintillaMethods" />
 /// <seealso cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
 public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForms, ScintillaControl, Control.ICallback>, IScintillaControl,
     IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
+    IScintillaProperties,
     IScintillaProperties<Color>,
-    IScintillaMethods<Color, Keys, Image>,
+    IScintillaMethods,
+    IScintillaMethodsColor<Color>,
+    IScintillaMethodsKeys<Keys>,
+    IScintillaMethodsImage<Image>,
     IScintillaEvents<Keys, AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs<Keys>, IndicatorClickEventArgs, IndicatorReleaseEventArgs, InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
 {
     readonly IntPtr editor;
@@ -989,7 +994,7 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
     public bool InternalFocusFlag { get => nativeControl.InternalFocusFlag; set => nativeControl.InternalFocusFlag = value; }
 
     /// <inheritdoc />
-    public string LexerName { get => nativeControl.LexerName; set => nativeControl.LexerName = value; }
+    public string? LexerName { get => nativeControl.LexerName; set => nativeControl.LexerName = value; }
 
     /// <inheritdoc />
     public Layer SelectionLayer { get => nativeControl.SelectionLayer; set => nativeControl.SelectionLayer = value; }

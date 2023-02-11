@@ -1,7 +1,7 @@
 ﻿using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments;
+using Scintilla.NET.Abstractions.Interfaces.Methods;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
 
@@ -21,7 +21,7 @@ public abstract class AutoCSelectionEventArgsBase : ScintillaEventArgs, IAutoCSe
     /// </summary>
     /// <returns>The fill-up character used to cause the completion; otherwise, 0.</returns>
     /// <remarks>Only a <see cref="ListCompletionMethod" /> of <see cref="Scintilla.NET.Abstractions.Enumerations.ListCompletionMethod.FillUp" /> will return a non-zero character.</remarks>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.AutoCSetFillUps" />
+    /// <seealso cref="IScintillaMethods.AutoCSetFillUps" />
     public virtual int Char { get; }
 
     /// <inheritdoc />

@@ -1,6 +1,6 @@
 ﻿using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
+using Scintilla.NET.Abstractions.Interfaces.Methods;
 using Scintilla.NET.Abstractions.Structs;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
 
@@ -162,8 +162,8 @@ public abstract class LineBase : IScintillaLine
     /// Toggles the folding state of the line; expanding or contracting all child lines, and specifies the text tag to display to the right of the fold.
     /// </summary>
     /// <param name="text">The text tag to show to the right of the folded text.</param>
-    /// <remarks>The display of fold text tags are determined by the <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.FoldDisplayTextSetStyle" /> method.</remarks>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.FoldDisplayTextSetStyle" />
+    /// <remarks>The display of fold text tags are determined by the <see cref="IScintillaMethods.FoldDisplayTextSetStyle" /> method.</remarks>
+    /// <seealso cref="IScintillaMethods.FoldDisplayTextSetStyle" />
     public virtual unsafe void ToggleFoldShowText(string text)
     {
         if (string.IsNullOrEmpty(text))
@@ -324,7 +324,7 @@ public abstract class LineBase : IScintillaLine
     /// taking into consideration folded (hidden) lines.
     /// </summary>
     /// <returns>The zero-based display line index.</returns>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.DocLineFromVisible" />
+    /// <seealso cref="IScintillaMethods.DocLineFromVisible" />
     public virtual int DisplayIndex => ScintillaApi.DirectMessage(SCI_VISIBLEFROMDOCLINE, new IntPtr(Index)).ToInt32();
 
     /// <summary>
@@ -576,8 +576,8 @@ public abstract class LineBase : IScintillaLine
     /// Gets a value indicating whether the line is visible.
     /// </summary>
     /// <returns>true if the line is visible; otherwise, false.</returns>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.ShowLines" />
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.HideLines" />
+    /// <seealso cref="IScintillaMethods.ShowLines" />
+    /// <seealso cref="IScintillaMethods.HideLines" />
     public virtual bool Visible => ScintillaApi.DirectMessage(SCI_GETLINEVISIBLE, new IntPtr(Index)) != IntPtr.Zero;
 
     /// <summary>

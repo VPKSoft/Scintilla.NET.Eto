@@ -3,6 +3,7 @@ using Eto.WinForms.Forms;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces;
+using Scintilla.NET.Abstractions.Interfaces.Methods;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.EtoForms.Shared;
 using Scintilla.NET.WinForms.EventArguments;
@@ -31,20 +32,24 @@ namespace Scintilla.NET.EtoForms.WinForms;
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
 /// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaMethods{TColor, TKeys, TBitmap}" />
+/// Implements the <see cref="IScintillaMethods" />
 /// Implements the <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
 /// </summary>
 /// <seealso cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
 /// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
 /// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaMethods{TColor, TKeys, TBitmap}" />
+/// <seealso cref="IScintillaMethods" />
 /// <seealso cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
 public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, ScintillaControl, Control.ICallback>,
     IScintillaControl,
     IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
         SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
+    IScintillaProperties,
     IScintillaProperties<Color>,
-    IScintillaMethods<Color, Keys, Image>,
+    IScintillaMethods,
+    IScintillaMethodsColor<Color>,
+    IScintillaMethodsKeys<Keys>,
+    IScintillaMethodsImage<Image>,
     IScintillaEvents<Keys, AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs<Keys>, IndicatorClickEventArgs, IndicatorReleaseEventArgs, InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
 {
     readonly IntPtr editor;
@@ -363,7 +368,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     public void AppendText(string text) => nativeControl.AppendText(text);
 
     /// <inheritdoc />
-    public void AssignCmdKey(Keys keyDefinition, Scintilla.NET.Abstractions.Enumerations.Command sciCommand) => nativeControl.AssignCmdKey(keyDefinition, sciCommand);
+    public void AssignCmdKey(Keys keyDefinition, Command sciCommand) => nativeControl.AssignCmdKey(keyDefinition, sciCommand);
 
     /// <inheritdoc />
     public void AutoCCancel() => nativeControl.AutoCCancel();
@@ -501,7 +506,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     public void EndUndoAction() => nativeControl.EndUndoAction();
 
     /// <inheritdoc />
-    public void ExecuteCmd(Scintilla.NET.Abstractions.Enumerations.Command sciCommand) => nativeControl.ExecuteCmd(sciCommand);
+    public void ExecuteCmd(Command sciCommand) => nativeControl.ExecuteCmd(sciCommand);
 
     /// <summary>
     /// Performs the specified fold action on the entire document.
@@ -997,7 +1002,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     public bool InternalFocusFlag { get => nativeControl.InternalFocusFlag; set => nativeControl.InternalFocusFlag = value; }
 
     /// <inheritdoc />
-    public string LexerName { get => nativeControl.LexerName; set => nativeControl.LexerName = value; }
+    public string? LexerName { get => nativeControl.LexerName; set => nativeControl.LexerName = value; }
 
     /// <inheritdoc />
     public Layer SelectionLayer { get => nativeControl.SelectionLayer; set => nativeControl.SelectionLayer = value; }

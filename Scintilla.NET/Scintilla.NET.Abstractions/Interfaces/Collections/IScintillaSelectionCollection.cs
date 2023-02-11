@@ -1,6 +1,4 @@
-﻿using Scintilla.NET.Abstractions.Collections;
-
-namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+﻿namespace Scintilla.NET.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// A multiple selection collection.
