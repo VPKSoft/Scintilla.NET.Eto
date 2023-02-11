@@ -55,6 +55,7 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
         nativeControl = new ScintillaWinForms();
         WinFormsControl = nativeControl;
         editor = nativeControl.SciPointer;
+        NativeControl = nativeControl;
     }
     
     private static Lexilla? lexillaInstance;
@@ -558,6 +559,9 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
     /// </summary>
     /// <value>The lexilla library access.</value>
     public ILexilla Lexilla => LexillaSingleton;
+
+    /// <inheritdoc />
+    public object NativeControl { get; }
 
     /// <inheritdoc />
     public event EventHandler<EventArgs>? AutoCCancelled

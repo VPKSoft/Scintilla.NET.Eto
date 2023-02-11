@@ -39,7 +39,7 @@ public class IndicatorCollection: IndicatorCollectionBase<Indicator, Color>, IEn
     {
         get
         {
-            index = Helpers.Clamp(index, 0, Count - 1);
+            index = HelpersGeneral.Clamp(index, 0, Count - 1);
             return new Indicator(ScintillaApi, LineCollectionGeneral, index);
         }
     }

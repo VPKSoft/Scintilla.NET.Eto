@@ -75,6 +75,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public ScintillaControlHandler()
     {
         nativeControl = new ScintillaGtk();
+        NativeControl = nativeControl;
         Control = nativeControl;
     }
     
@@ -579,6 +580,9 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     /// </summary>
     /// <value>The lexilla library access.</value>
     public ILexilla Lexilla => LexillaSingleton;
+
+    /// <inheritdoc />
+    public object NativeControl { get; }
 
     /// <inheritdoc />
     public event EventHandler<EventArgs>? AutoCCancelled
