@@ -42,4 +42,10 @@ public interface IScintillaControl : Control.IHandler, IScintillaApi
     /// Gets the Lexilla instance.
     /// </summary>
     ILexilla Lexilla { get; }
+
+    /// <summary>
+    /// Gets the native control.
+    /// </summary>
+    /// <value>The native control.</value>
+    public object NativeControl { get; }
 }
