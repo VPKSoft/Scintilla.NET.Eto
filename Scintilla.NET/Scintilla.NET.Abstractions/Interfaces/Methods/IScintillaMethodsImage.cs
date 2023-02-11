@@ -24,26 +24,25 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
-
-namespace Scintilla.NET.Abstractions.Classes.Lexers;
+namespace Scintilla.NET.Abstractions.Interfaces.Methods;
 
 /// <summary>
-/// Constants related to <see cref="IScintillaIndicator{TColor}"/>.
+/// An interface for Scintilla methods with generic image.
 /// </summary>
-public static class IndicatorConstants
+/// <typeparam name="TImage">The type of the image used in the platform.</typeparam>
+public interface IScintillaMethodsImage<in TImage>
+    where TImage : class
 {
     /// <summary>
-    /// An OR mask to use with <see cref="IScintillaProperties.IndicatorValue" /> and <see cref="IndicatorFlags.ValueFore" /> to indicate
-    /// that the user-defined indicator value should be treated as a RGB color.
+    /// Maps the specified image to a type identifier for use in an auto-completion list.
     /// </summary>
-    public const int ValueBit = SC_INDICVALUEBIT;
-
-    /// <summary>
-    /// An AND mask to use with <see cref="IScintillaIndicator{TColor}.ValueAt" /> to retrieve the user-defined value as a RGB color when being treated as such.
-    /// </summary>
-    public const int ValueMask = SC_INDICVALUEMASK;
+    /// <param name="type">The numeric identifier for this image.</param>
+    /// <param name="image">The Bitmap to use in an auto-completion list.</param>
+    /// <remarks>
+    /// The <paramref name="image" /> registered can be referenced by its <paramref name="type" /> identifier in an auto-completion
+    /// list by suffixing a word with the <see cref="IScintillaProperties.AutoCTypeSeparator" /> character and the <paramref name="type" /> value. e.g.
+    /// "int?2 long?3 short?1" etc....
+    /// </remarks>
+    /// <seealso cref="IScintillaProperties.AutoCTypeSeparator" />
+    void RegisterRgbaImage(int type, TImage image);
 }

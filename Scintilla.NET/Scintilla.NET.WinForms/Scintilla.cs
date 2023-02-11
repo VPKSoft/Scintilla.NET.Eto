@@ -30,12 +30,7 @@ namespace Scintilla.NET.WinForms;
 /// Represents a Scintilla editor control.
 /// </summary>
 [Docking(DockingBehavior.Ask)]
-public class Scintilla : Control,
-    IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
-    IScintillaProperties<Color>,
-    IScintillaMethods<Color, Keys, Image>,
-    IScintillaEvents<Keys, AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs<Keys>, IndicatorClickEventArgs, IndicatorReleaseEventArgs, InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
+public class Scintilla : Control, IScintillaWinForms
 {
     static Scintilla()
     {

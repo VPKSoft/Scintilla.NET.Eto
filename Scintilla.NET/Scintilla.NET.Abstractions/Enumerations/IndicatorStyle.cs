@@ -20,6 +20,7 @@ public enum IndicatorStyle
     /// <summary>
     /// A line of small T shapes.
     /// </summary>
+    // ReSharper disable once InconsistentNaming
     TT = ScintillaConstants.INDIC_TT,
 
     /// <summary>
@@ -44,13 +45,13 @@ public enum IndicatorStyle
 
     /// <summary>
     /// A rectangle around the text with rounded corners. The rectangle outline and fill transparencies can be adjusted using
-    /// <see cref="IScintillaIndicator{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Alpha" /> and <see cref="IScintillaIndicator{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.OutlineAlpha" />.
+    /// <see cref="IScintillaIndicator{TColor}.Alpha" /> and <see cref="IScintillaIndicator{TColor}.OutlineAlpha" />.
     /// </summary>
     RoundBox = ScintillaConstants.INDIC_ROUNDBOX,
 
     /// <summary>
     /// A rectangle around the text. The rectangle outline and fill transparencies can be adjusted using
-    /// <see cref="IScintillaIndicator{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Alpha" /> and <see cref="IScintillaIndicator{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.OutlineAlpha"/>.
+    /// <see cref="IScintillaIndicator{TColor}.OutlineAlpha"/>.
     /// </summary>
     StraightBox = ScintillaConstants.INDIC_STRAIGHTBOX,
 
@@ -71,7 +72,7 @@ public enum IndicatorStyle
 
     /// <summary>
     /// A dotted rectangle around the text. The dots transparencies can be adjusted using
-    /// <see cref="IScintillaIndicator{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Alpha" /> and <see cref="IScintillaIndicator{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.OutlineAlpha" />.
+    /// <see cref="IScintillaIndicator{TColor}.OutlineAlpha" />.
     /// </summary>
     DotBox = ScintillaConstants.INDIC_DOTBOX,
 
@@ -89,7 +90,7 @@ public enum IndicatorStyle
 
     /// <summary>
     /// A rectangle around the entire character area. The rectangle outline and fill transparencies can be adjusted using
-    /// <see cref="IScintillaIndicator{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Alpha" /> and <see cref="IScintillaIndicator{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.OutlineAlpha"/>.
+    /// <see cref="IScintillaIndicator{TColor}.OutlineAlpha"/>.
     /// </summary>
     FullBox = ScintillaConstants.INDIC_FULLBOX,
 

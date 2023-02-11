@@ -27,28 +27,21 @@ SOFTWARE.
 using System.ComponentModel;
 using Scintilla.NET.Abstractions.Classes;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces.Methods;
 using Scintilla.NET.Abstractions.Structs;
 
 namespace Scintilla.NET.Abstractions.Interfaces;
 
 /// <summary>
-/// Properties for Scintilla API with generic type members.
+/// Properties for Scintilla API with common type members.
 /// </summary>
-/// <typeparam name="TColor">The type of the color used in the platform.</typeparam>
-public interface IScintillaProperties<TColor>
-    where TColor : struct
+public interface IScintillaProperties
 {
     /// <summary>
     /// Gets or sets the bi-directionality of the Scintilla control.
     /// </summary>
     /// <value>The bi-directionality of the Scintilla control.</value>
     public BiDirectionalDisplayType BiDirectionality { get; set; }
-
-    /// <summary>
-    /// Gets or sets the caret foreground color for additional selections.
-    /// </summary>
-    /// <returns>The caret foreground color in additional selections. The default is (127, 127, 127).</returns>
-    TColor AdditionalCaretForeColor { get; set; }
 
     /// <summary>
     /// Gets or sets whether the carets in additional selections will blink.
@@ -70,7 +63,7 @@ public interface IScintillaProperties<TColor>
     /// Setting the current anchor position will create a selection between it and the <see cref="CurrentPosition" />.
     /// The caret is not scrolled into view.
     /// </remarks>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.ScrollCaret" />
+    /// <seealso cref="IScintillaMethods.ScrollCaret" />
     public int AnchorPosition { get; set; }
 
     /// <summary>
@@ -166,15 +159,15 @@ public interface IScintillaProperties<TColor>
     int AutoCMaxWidth { get; set; }
 
     /// <summary>
-    /// Gets or sets the auto-completion list sort order to expect when calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.AutoCShow" />.
+    /// Gets or sets the auto-completion list sort order to expect when calling <see cref="IScintillaMethods.AutoCShow" />.
     /// </summary>
     /// <returns>One of the <see cref="Order" /> enumeration values. The default is <see cref="Order.Presorted" />.</returns>
     Order AutoCOrder { get; set; }
 
     /// <summary>
-    /// Gets the document position at the time <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.AutoCShow" /> was called.
+    /// Gets the document position at the time <see cref="IScintillaMethods.AutoCShow" /> was called.
     /// </summary>
-    /// <returns>The zero-based document position at the time <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.AutoCShow" /> was called.</returns>
+    /// <returns>The zero-based document position at the time <see cref="IScintillaMethods.AutoCShow" /> was called.</returns>
     int AutoCPosStart { get; }
 
     /// <summary>
@@ -199,14 +192,14 @@ public interface IScintillaProperties<TColor>
     /// <summary>
     /// Gets or sets the delimiter character used to separate words in an auto-completion list.
     /// </summary>
-    /// <returns>The separator character used when calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.AutoCShow" />. The default is the space character.</returns>
+    /// <returns>The separator character used when calling <see cref="IScintillaMethods.AutoCShow" />. The default is the space character.</returns>
     /// <remarks>The <paramref name="value" /> specified should be limited to printable ASCII characters.</remarks>
     char AutoCSeparator { get; set; }
 
     /// <summary>
     /// Gets or sets the delimiter character used to separate words and image type identifiers in an auto-completion list.
     /// </summary>
-    /// <returns>The separator character used to reference an image registered with <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.RegisterRgbaImage" />. The default is '?'.</returns>
+    /// <returns>The separator character used to reference an image registered with <see cref="IScintillaMethodsImage{TImage}.RegisterRgbaImage" />. The default is '?'.</returns>
     /// <remarks>The <paramref name="value" /> specified should be limited to printable ASCII characters.</remarks>
     char AutoCTypeSeparator { get; set; }
 
@@ -261,19 +254,7 @@ public interface IScintillaProperties<TColor>
     bool CanUndo { get; }
 
     /// <summary>
-    /// Gets or sets the caret foreground color.
-    /// </summary>
-    /// <returns>The caret foreground color. The default is black.</returns>
-    TColor CaretForeColor { get; set; }
-
-    /// <summary>
-    /// Gets or sets the caret line background color.
-    /// </summary>
-    /// <returns>The caret line background color. The default is yellow.</returns>
-    TColor CaretLineBackColor { get; set; }
-
-    /// <summary>
-    /// Gets or sets the alpha transparency of the <see cref="CaretLineBackColor" />.
+    /// Gets or sets the alpha transparency of the <see cref="IScintillaProperties{TColor}.CaretLineBackColor" />.
     /// </summary>
     /// <returns>
     /// The alpha transparency ranging from 0 (completely transparent) to 255 (completely opaque).
@@ -345,7 +326,7 @@ public interface IScintillaProperties<TColor>
     /// Setting the current caret position will create a selection between it and the current <see cref="AnchorPosition" />.
     /// The caret is not scrolled into view.
     /// </remarks>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.ScrollCaret" />
+    /// <seealso cref="IScintillaMethods.ScrollCaret" />
     public int CurrentPosition { get; set; }
 
     /// <summary>
@@ -353,13 +334,6 @@ public interface IScintillaProperties<TColor>
     /// </summary>
     /// <returns>Returns the distance between a primary style and its corresponding secondary style.</returns>
     int DistanceToSecondaryStyles { get; }
-
-    /// <summary>
-    /// Gets or sets the background color to use when indicating long lines with
-    /// <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.Background" />.
-    /// </summary>
-    /// <returns>The background Color. The default is Silver.</returns>
-    TColor EdgeColor { get; set; }
 
     /// <summary>
     /// Gets or sets the column number at which to begin indicating long lines.
@@ -425,7 +399,7 @@ public interface IScintillaProperties<TColor>
     /// Gets or sets the column number of the indentation guide to highlight.
     /// </summary>
     /// <returns>The column number of the indentation guide to highlight or 0 if disabled.</returns>
-    /// <remarks>Guides are highlighted in the <see cref="StyleConstants.BraceLight" /> style. Column numbers can be determined by calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.GetColumn" />.</remarks>
+    /// <remarks>Guides are highlighted in the <see cref="StyleConstants.BraceLight" /> style. Column numbers can be determined by calling <see cref="IScintillaMethods.GetColumn" />.</remarks>
     int HighlightGuide { get; set; }
 
     /// <summary>
@@ -458,15 +432,15 @@ public interface IScintillaProperties<TColor>
     IndentView IndentationGuides { get; set; }
 
     /// <summary>
-    /// Gets or sets the indicator used in a subsequent call to <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.IndicatorFillRange" /> or <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.IndicatorClearRange" />.
+    /// Gets or sets the indicator used in a subsequent call to <see cref="IScintillaMethods.IndicatorFillRange" /> or <see cref="IScintillaMethods.IndicatorClearRange" />.
     /// </summary>
-    /// <returns>The zero-based indicator index to apply when calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.IndicatorFillRange" /> or remove when calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.IndicatorClearRange" />.</returns>
+    /// <returns>The zero-based indicator index to apply when calling <see cref="IScintillaMethods.IndicatorFillRange" /> or remove when calling <see cref="IScintillaMethods.IndicatorClearRange" />.</returns>
     public int IndicatorCurrent { get; set; }
 
     /// <summary>
-    /// Gets or sets the user-defined value used in a subsequent call to <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.IndicatorFillRange" />.
+    /// Gets or sets the user-defined value used in a subsequent call to <see cref="IScintillaMethods.IndicatorFillRange" />.
     /// </summary>
-    /// <returns>The indicator value to apply when calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.IndicatorFillRange" />.</returns>
+    /// <returns>The indicator value to apply when calling <see cref="IScintillaMethods.IndicatorFillRange" />.</returns>
     int IndicatorValue { get; set; }
 
     /// <summary>
@@ -569,7 +543,7 @@ public interface IScintillaProperties<TColor>
 
     /// <summary>
     /// Gets a value indicating whether the document has been modified (is dirty)
-    /// since the last call to <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.SetSavePoint" />.
+    /// since the last call to <see cref="IScintillaMethods.SetSavePoint" />.
     /// </summary>
     /// <returns>true if the document has been modified; otherwise, false.</returns>
     bool Modified { get; }
@@ -663,7 +637,7 @@ public interface IScintillaProperties<TColor>
     /// Gets or sets the search flags used when searching text.
     /// </summary>
     /// <returns>A bitwise combination of <see cref="Scintilla.NET.Abstractions.Enumerations.SearchFlags" /> values. The default is <see cref="Scintilla.NET.Abstractions.Enumerations.SearchFlags.None" />.</returns>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.SearchInTarget" />
+    /// <seealso cref="IScintillaMethods.SearchInTarget" />
     SearchFlags SearchFlags { get; set; }
 
     /// <summary>
@@ -715,8 +689,8 @@ public interface IScintillaProperties<TColor>
     /// </summary>
     /// <returns>The zero-based character position within the document to end a search or replace operation.</returns>
     /// <seealso cref="TargetStart"/>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.SearchInTarget" />
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.ReplaceTarget" />
+    /// <seealso cref="IScintillaMethods.SearchInTarget" />
+    /// <seealso cref="IScintillaMethods.ReplaceTarget" />
     public int TargetEnd { get; set; }
 
     /// <summary>
@@ -724,8 +698,8 @@ public interface IScintillaProperties<TColor>
     /// </summary>
     /// <returns>The zero-based character position within the document to start a search or replace operation.</returns>
     /// <seealso cref="TargetEnd"/>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.SearchInTarget" />
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.ReplaceTarget" />
+    /// <seealso cref="IScintillaMethods.SearchInTarget" />
+    /// <seealso cref="IScintillaMethods.ReplaceTarget" />
     public int TargetStart { get; set; }
 
     /// <summary>
@@ -769,8 +743,8 @@ public interface IScintillaProperties<TColor>
     /// Gets or sets how to display whitespace characters.
     /// </summary>
     /// <returns>One of the <see cref="WhitespaceMode" /> enumeration values. The default is <see cref="WhitespaceMode.Invisible" />.</returns>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.SetWhitespaceForeColor" />
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.SetWhitespaceBackColor" />
+    /// <seealso cref="IScintillaMethodsColor{TColor}.SetWhitespaceForeColor" />
+    /// <seealso cref="IScintillaMethodsColor{TColor}.SetWhitespaceBackColor" />
     WhitespaceMode ViewWhitespace { get; set; }
 
     /// <summary>
@@ -864,7 +838,40 @@ public interface IScintillaProperties<TColor>
     /// </summary>
     /// <returns>The zoom factor measured in points.</returns>
     /// <remarks>For best results, values should range from -10 to 20 points.</remarks>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.ZoomIn" />
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.ZoomOut" />
+    /// <seealso cref="IScintillaMethods.ZoomIn" />
+    /// <seealso cref="IScintillaMethods.ZoomOut" />
     int Zoom { get; set; }
+}
+
+/// <summary>
+/// Properties for Scintilla API with generic type members.
+/// </summary>
+/// <typeparam name="TColor">The type of the color used in the platform.</typeparam>
+public interface IScintillaProperties<TColor>
+    where TColor : struct
+{
+    /// <summary>
+    /// Gets or sets the caret foreground color for additional selections.
+    /// </summary>
+    /// <returns>The caret foreground color in additional selections. The default is (127, 127, 127).</returns>
+    TColor AdditionalCaretForeColor { get; set; }
+
+    /// <summary>
+    /// Gets or sets the caret foreground color.
+    /// </summary>
+    /// <returns>The caret foreground color. The default is black.</returns>
+    TColor CaretForeColor { get; set; }
+
+    /// <summary>
+    /// Gets or sets the caret line background color.
+    /// </summary>
+    /// <returns>The caret line background color. The default is yellow.</returns>
+    TColor CaretLineBackColor { get; set; }
+
+    /// <summary>
+    /// Gets or sets the background color to use when indicating long lines with
+    /// <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.Background" />.
+    /// </summary>
+    /// <returns>The background Color. The default is Silver.</returns>
+    TColor EdgeColor { get; set; }
 }

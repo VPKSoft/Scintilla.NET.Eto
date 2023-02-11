@@ -36,14 +36,14 @@ namespace Scintilla.NET.Abstractions.Classes;
 public static class MarkerConstants
 {
     /// <summary>
-    /// An unsigned 32-bit mask of all <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes where each bit corresponds to a margin index.
+    /// An unsigned 32-bit mask of all <see cref="MarginBase{TColor}" /> indexes where each bit corresponds to a margin index.
     /// </summary>
     public const uint MaskAll = unchecked((uint)-1);
 
     /// <summary>
-    /// An unsigned 32-bit mask of folder <see cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" /> indexes (25 through 31) where each bit corresponds to a margin index.
+    /// An unsigned 32-bit mask of folder <see cref="MarginBase{TColor}" /> indexes (25 through 31) where each bit corresponds to a margin index.
     /// </summary>
-    /// <seealso cref="MarginBase{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}.Mask" />
+    /// <seealso cref="MarginBase{TColor}.Mask" />
     public const uint MaskFolders = SC_MASK_FOLDERS;
 
     /// <summary>

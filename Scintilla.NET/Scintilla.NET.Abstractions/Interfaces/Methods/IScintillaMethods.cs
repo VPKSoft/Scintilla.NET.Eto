@@ -29,20 +29,14 @@ using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Structs;
 
-namespace Scintilla.NET.Abstractions.Interfaces;
+namespace Scintilla.NET.Abstractions.Interfaces.Methods;
 
 /// <summary>
-/// Interface IScintillaMethods
+/// Interface for Scintilla control methods without generic types.
 /// </summary>
-/// <typeparam name="TColor">The type of the color used in the platform.</typeparam>
-/// <typeparam name="TKeys">The type of the keys enumeration used by the platform.</typeparam>
-/// <typeparam name="TImage">The type of the image used in the platform.</typeparam>
-public interface IScintillaMethods<in TColor, in TKeys, in TImage>
-    where TColor : struct
-    where TKeys: Enum
-    where TImage : class
+public interface IScintillaMethods
 {
-    /// <summary>
+        /// <summary>
     /// Increases the reference count of the specified document by 1.
     /// </summary>
     /// <param name="document">The document reference count to increase.</param>
@@ -84,13 +78,6 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     void AppendText(string text);
 
     /// <summary>
-    /// Assigns the specified key definition to a <see cref="Scintilla" /> command.
-    /// </summary>
-    /// <param name="keyDefinition">The key combination to bind.</param>
-    /// <param name="sciCommand">The command to assign.</param>
-    void AssignCmdKey(TKeys keyDefinition, Command sciCommand);
-
-    /// <summary>
     /// Cancels any displayed auto-completion list.
     /// </summary>
     /// <seealso cref="AutoCStops" />
@@ -106,16 +93,16 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     /// </summary>
     /// <param name="select">
     /// The auto-completion word to select.
-    /// If found, the word in the auto-completion list is selected and the index can be obtained by calling <see cref="IScintillaProperties{TColor}.AutoCCurrent" />.
-    /// If not found, the behavior is determined by <see cref="IScintillaProperties{TColor}.AutoCAutoHide" />.
+    /// If found, the word in the auto-completion list is selected and the index can be obtained by calling <see cref="IScintillaProperties.AutoCCurrent" />.
+    /// If not found, the behavior is determined by <see cref="IScintillaProperties.AutoCAutoHide" />.
     /// </param>
     /// <remarks>
-    /// Comparisons are performed according to the <see cref="IScintillaProperties{TColor}.AutoCIgnoreCase" /> property
+    /// Comparisons are performed according to the <see cref="IScintillaProperties.AutoCIgnoreCase" /> property
     /// and will match the first word starting with <paramref name="select" />.
     /// </remarks>
-    /// <seealso cref="IScintillaProperties{TColor}.AutoCCurrent" />
-    /// <seealso cref="IScintillaProperties{TColor}.AutoCAutoHide" />
-    /// <seealso cref="IScintillaProperties{TColor}.AutoCIgnoreCase" />
+    /// <seealso cref="IScintillaProperties.AutoCCurrent" />
+    /// <seealso cref="IScintillaProperties.AutoCAutoHide" />
+    /// <seealso cref="IScintillaProperties.AutoCIgnoreCase" />
     void AutoCSelect(string select);
 
     /// <summary>
@@ -129,7 +116,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     /// Displays an auto completion list.
     /// </summary>
     /// <param name="lenEntered">The number of characters already entered to match on.</param>
-    /// <param name="list">A list of auto-completion words separated by the <see cref="IScintillaProperties{TColor}.AutoCSeparator" /> character.</param>
+    /// <param name="list">A list of auto-completion words separated by the <see cref="IScintillaProperties.AutoCSeparator" /> character.</param>
     void AutoCShow(int lenEntered, string list);
 
     /// <summary>
@@ -158,7 +145,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     /// <param name="position1">The zero-based document position of the open brace character.</param>
     /// <param name="position2">The zero-based document position of the close brace character.</param>
     /// <remarks>Brace highlighting can be removed by specifying <see cref="ApiConstants.InvalidPosition" /> for <paramref name="position1" /> and <paramref name="position2" />.</remarks>
-    /// <seealso cref="IScintillaProperties{TColor}.HighlightGuide" />
+    /// <seealso cref="IScintillaProperties.HighlightGuide" />
     void BraceHighlight(int position1, int position2);
 
     /// <summary>
@@ -174,12 +161,6 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     /// Cancels the display of a call tip window.
     /// </summary>
     void CallTipCancel();
-
-    /// <summary>
-    /// Sets the color of highlighted text in a call tip.
-    /// </summary>
-    /// <param name="color">The new highlight text Color. The default is dark blue.</param>
-    void CallTipSetForeHlt(TColor color);
 
     /// <summary>
     /// Sets the specified range of the call tip text to display in a highlighted style.
@@ -255,13 +236,6 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     /// Deletes all document text, unless the document is read-only.
     /// </summary>
     void ClearAll();
-
-    /// <summary>
-    /// Makes the specified key definition do nothing.
-    /// </summary>
-    /// <param name="keyDefinition">The key combination to bind.</param>
-    /// <remarks>This is equivalent to binding the keys to <see cref="Command.Null" />.</remarks>
-    void ClearCmdKey(TKeys keyDefinition);
 
     /// <summary>
     /// Removes all the key definition command mappings.
@@ -422,13 +396,6 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     void ExecuteCmd(Command sciCommand);
 
     /// <summary>
-    /// Performs the specified fold action on the entire document.
-    /// </summary>
-    /// <param name="action">One of the <see cref="FoldAction" /> enumeration values.</param>
-    /// <remarks>When using <see cref="FoldAction.Toggle" /> the first fold header in the document is examined to decide whether to expand or contract.</remarks>
-    void FoldAll(FoldAction action);
-
-    /// <summary>
     /// Changes the appearance of fold text tags.
     /// </summary>
     /// <param name="style">One of the <see cref="FoldDisplayText" /> enumeration values.</param>
@@ -540,14 +507,6 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     string GetTag(int tagNumber);
 
     /// <summary>
-    /// Gets a range of text from the document.
-    /// </summary>
-    /// <param name="position">The zero-based starting character position of the range to get.</param>
-    /// <param name="length">The number of characters to get.</param>
-    /// <returns>A string representing the text range.</returns>
-    string GetTextRange(int position, int length);
-
-    /// <summary>
     /// Gets a range of text from the document formatted as Hypertext Markup Language (HTML).
     /// </summary>
     /// <param name="position">The zero-based starting character position of the range to get.</param>
@@ -586,14 +545,14 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     uint IndicatorAllOnFor(int position);
 
     /// <summary>
-    /// Removes the <see cref="IScintillaProperties{TColor}.IndicatorCurrent" /> indicator (and user-defined value) from the specified range of text.
+    /// Removes the <see cref="IScintillaProperties.IndicatorCurrent" /> indicator (and user-defined value) from the specified range of text.
     /// </summary>
     /// <param name="position">The zero-based character position within the document to start clearing.</param>
     /// <param name="length">The number of characters to clear.</param>
     void IndicatorClearRange(int position, int length);
 
     /// <summary>
-    /// Adds the <see cref="IScintillaProperties{TColor}.IndicatorCurrent" /> indicator and <see cref="IScintillaProperties{TColor}.IndicatorValue" /> value to the specified range of text.
+    /// Adds the <see cref="IScintillaProperties.IndicatorCurrent" /> indicator and <see cref="IScintillaProperties.IndicatorValue" /> value to the specified range of text.
     /// </summary>
     /// <param name="position">The zero-based character position within the document to start filling.</param>
     /// <param name="length">The number of characters to fill.</param>
@@ -652,12 +611,6 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     void LoadLexerLibrary(string path);
 
     /// <summary>
-    /// Removes the specified marker from all lines.
-    /// </summary>
-    /// <param name="marker">The zero-based <see cref="MarkerBase{TImage, TColor}" /> index to remove from all lines, or -1 to remove all markers from all lines.</param>
-    void MarkerDeleteAll(int marker);
-
-    /// <summary>
     /// Searches the document for the marker handle and deletes the marker if found.
     /// </summary>
     /// <param name="markerHandle">The <see cref="MarkerHandle" /> created by a previous call to <see cref="LineBase.MarkerAdd" /> of the marker to delete.</param>
@@ -677,22 +630,13 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     int MarkerLineFromHandle(MarkerHandle markerHandle);
 
     /// <summary>
-    /// Specifies the long line indicator column number and color when <see cref="EdgeMode" /> is <see cref="EdgeMode.MultiLine" />.
+    /// Removes all the long line column indicators specified using <seealso cref="IScintillaMethodsColor{TColor}.MultiEdgeAddLine" />.
     /// </summary>
-    /// <param name="column">The zero-based column number to indicate.</param>
-    /// <param name="edgeColor">The color of the vertical long line indicator.</param>
-    /// <remarks>A column is defined as the width of a space character in the <see cref="StyleConstants.Default" /> style.</remarks>
-    /// <seealso cref="MultiEdgeClearAll" />
-    void MultiEdgeAddLine(int column, TColor edgeColor);
-
-    /// <summary>
-    /// Removes all the long line column indicators specified using <seealso cref="MultiEdgeAddLine" />.
-    /// </summary>
-    /// <seealso cref="MultiEdgeAddLine" />
+    /// <seealso cref="IScintillaMethodsColor{TColor}.MultiEdgeAddLine" />
     void MultiEdgeClearAll();
 
     /// <summary>
-    /// Searches for all instances of the main selection within the <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" />
+    /// Searches for all instances of the main selection within the <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" />
     /// range and adds any matches to the selection.
     /// </summary>
     /// <remarks>
@@ -703,7 +647,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     void MultipleSelectAddEach();
 
     /// <summary>
-    /// Searches for the next instance of the main selection within the <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" />
+    /// Searches for the next instance of the main selection within the <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" />
     /// range and adds any match to the selection.
     /// </summary>
     /// <remarks>
@@ -752,19 +696,6 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     void Redo();
 
     /// <summary>
-    /// Maps the specified image to a type identifer for use in an auto-completion list.
-    /// </summary>
-    /// <param name="type">The numeric identifier for this image.</param>
-    /// <param name="image">The Bitmap to use in an auto-completion list.</param>
-    /// <remarks>
-    /// The <paramref name="image" /> registered can be referenced by its <paramref name="type" /> identifer in an auto-completion
-    /// list by suffixing a word with the <see cref="IScintillaProperties{TColor}.AutoCTypeSeparator" /> character and the <paramref name="type" /> value. e.g.
-    /// "int?2 long?3 short?1" etc....
-    /// </remarks>
-    /// <seealso cref="IScintillaProperties{TColor}.AutoCTypeSeparator" />
-    void RegisterRgbaImage(int type, TImage image);
-
-    /// <summary>
     /// Decreases the reference count of the specified document by 1.
     /// </summary>
     /// <param name="document">
@@ -786,26 +717,26 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
 ;
 
     /// <summary>
-    /// Replaces the target defined by <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" /> with the specified <paramref name="text" />.
+    /// Replaces the target defined by <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" /> with the specified <paramref name="text" />.
     /// </summary>
     /// <param name="text">The text that will replace the current target.</param>
     /// <returns>The length of the replaced text.</returns>
     /// <remarks>
-    /// The <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" /> properties will be updated to the start and end positions of the replaced text.
+    /// The <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" /> properties will be updated to the start and end positions of the replaced text.
     /// The recommended way to delete text in the document is to set the target range to be removed and replace the target with an empty string.
     /// </remarks>
     int ReplaceTarget(string text)
 ;
 
     /// <summary>
-    /// Replaces the target text defined by <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" /> with the specified value after first substituting
+    /// Replaces the target text defined by <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" /> with the specified value after first substituting
     /// "\1" through "\9" macros in the <paramref name="text" /> with the most recent regular expression capture groups.
     /// </summary>
     /// <param name="text">The text containing "\n" macros that will be substituted with the most recent regular expression capture groups and then replace the current target.</param>
     /// <returns>The length of the replaced text.</returns>
     /// <remarks>
     /// The "\0" macro will be substituted by the entire matched text from the most recent search.
-    /// The <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" /> properties will be updated to the start and end positions of the replaced text.
+    /// The <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" /> properties will be updated to the start and end positions of the replaced text.
     /// </remarks>
     /// <seealso cref="GetTag" />
     int ReplaceTargetRe(string text);
@@ -833,13 +764,13 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     void ScrollRange(int start, int end);
 
     /// <summary>
-    /// Searches for the first occurrence of the specified text in the target defined by <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" />.
+    /// Searches for the first occurrence of the specified text in the target defined by <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" />.
     /// </summary>
     /// <param name="text">The text to search for. The interpretation of the text (i.e. whether it is a regular expression) is defined by the <see cref="SearchFlags" /> property.</param>
     /// <returns>The zero-based start position of the matched text within the document if successful; otherwise, -1.</returns>
     /// <remarks>
-    /// If successful, the <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" /> properties will be updated to the start and end positions of the matched text.
-    /// Searching can be performed in reverse using a <see cref="IScintillaProperties{TColor}.TargetStart" /> greater than the <see cref="IScintillaProperties{TColor}.TargetEnd" />.
+    /// If successful, the <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" /> properties will be updated to the start and end positions of the matched text.
+    /// Searching can be performed in reverse using a <see cref="IScintillaProperties.TargetStart" /> greater than the <see cref="IScintillaProperties.TargetEnd" />.
     /// </remarks>
     int SearchInTarget(string text);
 
@@ -848,20 +779,6 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     /// </summary>
     /// <remarks>The current position is not scrolled into view.</remarks>
     void SelectAll();
-
-    /// <summary>
-    /// Sets the background color of additional selections.
-    /// </summary>
-    /// <param name="color">Additional selections background color.</param>
-    /// <remarks>Calling <see cref="SetSelectionBackColor" /> will reset the <paramref name="color" /> specified.</remarks>
-    void SetAdditionalSelBack(TColor color);
-
-    /// <summary>
-    /// Sets the foreground color of additional selections.
-    /// </summary>
-    /// <param name="color">Additional selections foreground color.</param>
-    /// <remarks>Calling <see cref="SetSelectionForeColor" /> will reset the <paramref name="color" /> specified.</remarks>
-    void SetAdditionalSelFore(TColor color);
 
     /// <summary>
     /// Removes any selection and places the caret at the specified position.
@@ -875,22 +792,6 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     /// </summary>
     /// <param name="flags">A bitwise combination of the <see cref="FoldFlags" /> enumeration.</param>
     void SetFoldFlags(FoldFlags flags);
-
-    /// <summary>
-    /// Sets a global override to the fold margin color.
-    /// </summary>
-    /// <param name="use">true to override the fold margin color; otherwise, false.</param>
-    /// <param name="color">The global fold margin color.</param>
-    /// <seealso cref="SetFoldMarginHighlightColor" />
-    void SetFoldMarginColor(bool use, TColor color);
-
-    /// <summary>
-    /// Sets a global override to the fold margin highlight color.
-    /// </summary>
-    /// <param name="use">true to override the fold margin highlight color; otherwise, false.</param>
-    /// <param name="color">The global fold margin highlight color.</param>
-    /// <seealso cref="SetFoldMarginColor" />
-    void SetFoldMarginHighlightColor(bool use, TColor color);
 
     /// <summary>
     /// Similar to <see cref="SetKeywords" /> but for sub-styles.
@@ -925,7 +826,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     /// <summary>
     /// Marks the document as unmodified.
     /// </summary>
-    /// <seealso cref="IScintillaProperties{TColor}.Modified" />
+    /// <seealso cref="IScintillaProperties.Modified" />
     void SetSavePoint();
 
     /// <summary>
@@ -949,22 +850,6 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     void SetSelection(int caret, int anchor);
 
     /// <summary>
-    /// Sets a global override to the selection background color.
-    /// </summary>
-    /// <param name="use">true to override the selection background color; otherwise, false.</param>
-    /// <param name="color">The global selection background color.</param>
-    /// <seealso cref="SetSelectionForeColor" />
-    void SetSelectionBackColor(bool use, TColor color);
-
-    /// <summary>
-    /// Sets a global override to the selection foreground color.
-    /// </summary>
-    /// <param name="use">true to override the selection foreground color; otherwise, false.</param>
-    /// <param name="color">The global selection foreground color.</param>
-    /// <seealso cref="SetSelectionBackColor" />
-    void SetSelectionForeColor(bool use, TColor color);
-
-    /// <summary>
     /// Styles the specified length of characters.
     /// </summary>
     /// <param name="length">The number of characters to style.</param>
@@ -982,33 +867,13 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     void SetStyling(int length, int style);
 
     /// <summary>
-    /// Sets the <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" /> properties in a single call.
+    /// Sets the <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" /> properties in a single call.
     /// </summary>
     /// <param name="start">The zero-based character position within the document to start a search or replace operation.</param>
     /// <param name="end">The zero-based character position within the document to end a search or replace operation.</param>
-    /// <seealso cref="IScintillaProperties{TColor}.TargetStart" />
-    /// <seealso cref="IScintillaProperties{TColor}.TargetEnd" />
+    /// <seealso cref="IScintillaProperties.TargetStart" />
+    /// <seealso cref="IScintillaProperties.TargetEnd" />
     void SetTargetRange(int start, int end);
-
-    /// <summary>
-    /// Sets a global override to the whitespace background color.
-    /// </summary>
-    /// <param name="use">true to override the whitespace background color; otherwise, false.</param>
-    /// <param name="color">The global whitespace background color.</param>
-    /// <remarks>When not overridden globally, the whitespace background color is determined by the current lexer.</remarks>
-    /// <seealso cref="IScintillaProperties{TColor}.ViewWhitespace" />
-    /// <seealso cref="SetWhitespaceForeColor" />
-    void SetWhitespaceBackColor(bool use, TColor color);
-
-    /// <summary>
-    /// Sets a global override to the whitespace foreground color.
-    /// </summary>
-    /// <param name="use">true to override the whitespace foreground color; otherwise, false.</param>
-    /// <param name="color">The global whitespace foreground color.</param>
-    /// <remarks>When not overridden globally, the whitespace foreground color is determined by the current lexer.</remarks>
-    /// <seealso cref="IScintillaProperties{TColor}.ViewWhitespace" />
-    /// <seealso cref="SetWhitespaceBackColor" />
-    void SetWhitespaceForeColor(bool use, TColor color);
 
     /// <summary>
     /// Shows the range of lines specified.
@@ -1048,13 +913,13 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     void SwapMainAnchorCaret();
 
     /// <summary>
-    /// Sets the <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" /> to the start and end positions of the selection.
+    /// Sets the <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" /> to the start and end positions of the selection.
     /// </summary>
     /// <seealso cref="TargetWholeDocument" />
     void TargetFromSelection();
 
     /// <summary>
-    /// Sets the <see cref="IScintillaProperties{TColor}.TargetStart" /> and <see cref="IScintillaProperties{TColor}.TargetEnd" /> to the start and end positions of the document.
+    /// Sets the <see cref="IScintillaProperties.TargetStart" /> and <see cref="IScintillaProperties.TargetEnd" /> to the start and end positions of the document.
     /// </summary>
     /// <seealso cref="TargetFromSelection" />
     void TargetWholeDocument();
@@ -1112,13 +977,13 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     /// <summary>
     /// Increases the zoom factor by 1 until it reaches 20 points.
     /// </summary>
-    /// <seealso cref="IScintillaProperties{TColor}.Zoom" />
+    /// <seealso cref="IScintillaProperties.Zoom" />
     void ZoomIn();
 
     /// <summary>
     /// Decreases the zoom factor by 1 until it reaches -10 points.
     /// </summary>
-    /// <seealso cref="IScintillaProperties{TColor}.Zoom" />
+    /// <seealso cref="IScintillaProperties.Zoom" />
     void ZoomOut();
 
     /// <summary>
@@ -1126,7 +991,7 @@ public interface IScintillaMethods<in TColor, in TKeys, in TImage>
     /// </summary>
     /// <param name="encodedString">The encoded string. I.e. the Ohm character: Ω = \u2126.</param>
     /// <param name="representationString">The representation string for the <paramref name="encodedString"/>. I.e. "OHM".</param>
-    /// <remarks>The <see cref="IScintillaProperties{TColor}.ViewWhitespace"/> must be set to <see cref="WhitespaceMode.VisibleAlways"/> for this to work.</remarks>
+    /// <remarks>The <see cref="IScintillaProperties.ViewWhitespace"/> must be set to <see cref="WhitespaceMode.VisibleAlways"/> for this to work.</remarks>
     void SetRepresentation(string encodedString, string representationString);
 
     /// <summary>

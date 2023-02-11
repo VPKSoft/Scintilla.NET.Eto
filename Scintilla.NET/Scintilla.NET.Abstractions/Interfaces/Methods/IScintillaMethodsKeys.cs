@@ -25,25 +25,27 @@ SOFTWARE.
 #endregion
 
 using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Classes.Lexers;
+namespace Scintilla.NET.Abstractions.Interfaces.Methods;
 
 /// <summary>
-/// Constants related to <see cref="IScintillaIndicator{TColor}"/>.
+/// An interface for Scintilla methods with generic key type.
 /// </summary>
-public static class IndicatorConstants
+/// <typeparam name="TKeys">The type of the keys enumeration used by the platform.</typeparam>
+public interface IScintillaMethodsKeys<in TKeys>
+    where TKeys : Enum
 {
     /// <summary>
-    /// An OR mask to use with <see cref="IScintillaProperties.IndicatorValue" /> and <see cref="IndicatorFlags.ValueFore" /> to indicate
-    /// that the user-defined indicator value should be treated as a RGB color.
+    /// Assigns the specified key definition to a <see cref="Scintilla" /> command.
     /// </summary>
-    public const int ValueBit = SC_INDICVALUEBIT;
+    /// <param name="keyDefinition">The key combination to bind.</param>
+    /// <param name="sciCommand">The command to assign.</param>
+    void AssignCmdKey(TKeys keyDefinition, Command sciCommand);
 
     /// <summary>
-    /// An AND mask to use with <see cref="IScintillaIndicator{TColor}.ValueAt" /> to retrieve the user-defined value as a RGB color when being treated as such.
+    /// Makes the specified key definition do nothing.
     /// </summary>
-    public const int ValueMask = SC_INDICVALUEMASK;
+    /// <param name="keyDefinition">The key combination to bind.</param>
+    /// <remarks>This is equivalent to binding the keys to <see cref="Command.Null" />.</remarks>
+    void ClearCmdKey(TKeys keyDefinition);
 }
