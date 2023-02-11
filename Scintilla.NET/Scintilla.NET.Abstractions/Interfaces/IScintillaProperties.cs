@@ -32,23 +32,15 @@ using Scintilla.NET.Abstractions.Structs;
 namespace Scintilla.NET.Abstractions.Interfaces;
 
 /// <summary>
-/// Properties for Scintilla API with generic type members.
+/// Properties for Scintilla API with common type members.
 /// </summary>
-/// <typeparam name="TColor">The type of the color used in the platform.</typeparam>
-public interface IScintillaProperties<TColor>
-    where TColor : struct
+public interface IScintillaProperties
 {
     /// <summary>
     /// Gets or sets the bi-directionality of the Scintilla control.
     /// </summary>
     /// <value>The bi-directionality of the Scintilla control.</value>
     public BiDirectionalDisplayType BiDirectionality { get; set; }
-
-    /// <summary>
-    /// Gets or sets the caret foreground color for additional selections.
-    /// </summary>
-    /// <returns>The caret foreground color in additional selections. The default is (127, 127, 127).</returns>
-    TColor AdditionalCaretForeColor { get; set; }
 
     /// <summary>
     /// Gets or sets whether the carets in additional selections will blink.
@@ -261,19 +253,7 @@ public interface IScintillaProperties<TColor>
     bool CanUndo { get; }
 
     /// <summary>
-    /// Gets or sets the caret foreground color.
-    /// </summary>
-    /// <returns>The caret foreground color. The default is black.</returns>
-    TColor CaretForeColor { get; set; }
-
-    /// <summary>
-    /// Gets or sets the caret line background color.
-    /// </summary>
-    /// <returns>The caret line background color. The default is yellow.</returns>
-    TColor CaretLineBackColor { get; set; }
-
-    /// <summary>
-    /// Gets or sets the alpha transparency of the <see cref="CaretLineBackColor" />.
+    /// Gets or sets the alpha transparency of the <see cref="IScintillaProperties{TColor}.CaretLineBackColor" />.
     /// </summary>
     /// <returns>
     /// The alpha transparency ranging from 0 (completely transparent) to 255 (completely opaque).
@@ -353,13 +333,6 @@ public interface IScintillaProperties<TColor>
     /// </summary>
     /// <returns>Returns the distance between a primary style and its corresponding secondary style.</returns>
     int DistanceToSecondaryStyles { get; }
-
-    /// <summary>
-    /// Gets or sets the background color to use when indicating long lines with
-    /// <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.Background" />.
-    /// </summary>
-    /// <returns>The background Color. The default is Silver.</returns>
-    TColor EdgeColor { get; set; }
 
     /// <summary>
     /// Gets or sets the column number at which to begin indicating long lines.
@@ -867,4 +840,37 @@ public interface IScintillaProperties<TColor>
     /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.ZoomIn" />
     /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.ZoomOut" />
     int Zoom { get; set; }
+}
+
+/// <summary>
+/// Properties for Scintilla API with generic type members.
+/// </summary>
+/// <typeparam name="TColor">The type of the color used in the platform.</typeparam>
+public interface IScintillaProperties<TColor>
+    where TColor : struct
+{
+    /// <summary>
+    /// Gets or sets the caret foreground color for additional selections.
+    /// </summary>
+    /// <returns>The caret foreground color in additional selections. The default is (127, 127, 127).</returns>
+    TColor AdditionalCaretForeColor { get; set; }
+
+    /// <summary>
+    /// Gets or sets the caret foreground color.
+    /// </summary>
+    /// <returns>The caret foreground color. The default is black.</returns>
+    TColor CaretForeColor { get; set; }
+
+    /// <summary>
+    /// Gets or sets the caret line background color.
+    /// </summary>
+    /// <returns>The caret line background color. The default is yellow.</returns>
+    TColor CaretLineBackColor { get; set; }
+
+    /// <summary>
+    /// Gets or sets the background color to use when indicating long lines with
+    /// <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.Background" />.
+    /// </summary>
+    /// <returns>The background Color. The default is Silver.</returns>
+    TColor EdgeColor { get; set; }
 }
