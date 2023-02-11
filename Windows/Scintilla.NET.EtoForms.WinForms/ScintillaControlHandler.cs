@@ -16,7 +16,7 @@ using Margin = Scintilla.NET.WinForms.Collections.Margin;
 using MarginCollection = Scintilla.NET.WinForms.Collections.MarginCollection;
 using Marker = Scintilla.NET.WinForms.Collections.Marker;
 using MarkerCollection = Scintilla.NET.WinForms.Collections.MarkerCollection;
-using NeedShownEventArgs = Scintilla.NET.WinForms.NeedShownEventArgs;
+using NeedShownEventArgs = Scintilla.NET.WinForms.EventArguments.NeedShownEventArgs;
 using Selection = Scintilla.NET.WinForms.Collections.Selection;
 using SelectionCollection = Scintilla.NET.WinForms.Collections.SelectionCollection;
 using Style = Scintilla.NET.WinForms.Collections.Style;
@@ -63,6 +63,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
         nativeControl = new ScintillaWinForms();
         Control = nativeControl;
         editor = nativeControl.SciPointer;
+        NativeControl = nativeControl;
     }
     
     private static Lexilla? lexillaInstance;
@@ -565,6 +566,9 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     /// </summary>
     /// <value>The lexilla library access.</value>
     public ILexilla Lexilla => LexillaSingleton;
+
+    /// <inheritdoc />
+    public object NativeControl { get; }
 
     /// <inheritdoc />
     public event EventHandler<EventArgs>? AutoCCancelled
