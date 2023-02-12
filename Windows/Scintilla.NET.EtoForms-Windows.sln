@@ -3,19 +3,19 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.WinForms", "Windows\Scintilla.NET.EtoForms.WinForms\Scintilla.NET.EtoForms.WinForms.csproj", "{A8E0FB30-33EF-41B6-B9B4-801C669155C7}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.WinForms", "Scintilla.NET.EtoForms.WinForms\Scintilla.NET.EtoForms.WinForms.csproj", "{A8E0FB30-33EF-41B6-B9B4-801C669155C7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.Wpf", "Windows\Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj", "{060F97AE-7AB9-4557-A1AE-6AD38112C6D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.Wpf", "Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj", "{060F97AE-7AB9-4557-A1AE-6AD38112C6D2}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApplication", "TestApplication\TestApplication.csproj", "{5EEED95E-E2DC-4A2A-AB9E-F261316104CC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApplication", "..\TestApplication\TestApplication.csproj", "{5EEED95E-E2DC-4A2A-AB9E-F261316104CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Eto.Windows", "Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj", "{B6DC10B2-0C91-4D99-A3D9-4F412C846131}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Eto.Windows", "..\Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj", "{B6DC10B2-0C91-4D99-A3D9-4F412C846131}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Abstractions", "Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj", "{1CAB0B00-B1C7-4489-9658-FC0ACEFE5696}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Abstractions", "..\Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj", "{1CAB0B00-B1C7-4489-9658-FC0ACEFE5696}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.Shared", "Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj", "{82967AEE-5E4A-4BD6-A9D8-5FD9997576E8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.Shared", "..\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj", "{82967AEE-5E4A-4BD6-A9D8-5FD9997576E8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.WinForms", "Scintilla.NET\Scintilla.NET.WinForms\Scintilla.NET.WinForms.csproj", "{22AE2386-60F1-476E-9303-61CDB0AAC4CF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.WinForms", "..\Scintilla.NET\Scintilla.NET.WinForms\Scintilla.NET.WinForms.csproj", "{22AE2386-60F1-476E-9303-61CDB0AAC4CF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
