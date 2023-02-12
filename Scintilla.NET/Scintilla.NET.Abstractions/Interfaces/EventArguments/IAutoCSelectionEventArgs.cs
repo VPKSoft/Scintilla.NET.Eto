@@ -27,6 +27,7 @@ SOFTWARE.
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments.Base;
+using Scintilla.NET.Abstractions.Interfaces.Methods;
 
 namespace Scintilla.NET.Abstractions.Interfaces.EventArguments;
 /// <summary>
@@ -39,8 +40,14 @@ public interface  IAutoCSelectionEventArgs : IScintillaEventArgs, IPosition
     /// </summary>
     /// <returns>The fill-up character used to cause the completion; otherwise, 0.</returns>
     /// <remarks>Only a <see cref="ListCompletionMethod" /> of <see cref="Scintilla.NET.Abstractions.Enumerations.ListCompletionMethod.FillUp" /> will return a non-zero character.</remarks>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.AutoCSetFillUps" />
+    /// <seealso cref="IScintillaMethods.AutoCSetFillUps" />
     int Char { get; }
+
+    /// <summary>
+    /// Gets the text pointer for the <see cref="Text"/> property for event delegation purpose.
+    /// </summary>
+    /// <value>The text pointer for event delegation purpose..</value>
+    public IntPtr TextPtr { get; }
 
     /// <summary>
     /// Gets the line collection general members.

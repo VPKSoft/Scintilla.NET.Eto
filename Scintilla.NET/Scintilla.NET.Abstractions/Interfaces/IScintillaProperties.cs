@@ -41,7 +41,7 @@ public interface IScintillaProperties
     /// Gets or sets the bi-directionality of the Scintilla control.
     /// </summary>
     /// <value>The bi-directionality of the Scintilla control.</value>
-    public BiDirectionalDisplayType BiDirectionality { get; set; }
+    BiDirectionalDisplayType BiDirectionality { get; set; }
 
     /// <summary>
     /// Gets or sets whether the carets in additional selections will blink.
@@ -64,7 +64,7 @@ public interface IScintillaProperties
     /// The caret is not scrolled into view.
     /// </remarks>
     /// <seealso cref="IScintillaMethods.ScrollCaret" />
-    public int AnchorPosition { get; set; }
+    int AnchorPosition { get; set; }
 
     /// <summary>
     /// Gets or sets the alpha transparency of additional multiple selections.
@@ -327,7 +327,7 @@ public interface IScintillaProperties
     /// The caret is not scrolled into view.
     /// </remarks>
     /// <seealso cref="IScintillaMethods.ScrollCaret" />
-    public int CurrentPosition { get; set; }
+    int CurrentPosition { get; set; }
 
     /// <summary>
     /// Gets a value indicating the start index of the secondary styles.
@@ -435,7 +435,7 @@ public interface IScintillaProperties
     /// Gets or sets the indicator used in a subsequent call to <see cref="IScintillaMethods.IndicatorFillRange" /> or <see cref="IScintillaMethods.IndicatorClearRange" />.
     /// </summary>
     /// <returns>The zero-based indicator index to apply when calling <see cref="IScintillaMethods.IndicatorFillRange" /> or remove when calling <see cref="IScintillaMethods.IndicatorClearRange" />.</returns>
-    public int IndicatorCurrent { get; set; }
+    int IndicatorCurrent { get; set; }
 
     /// <summary>
     /// Gets or sets the user-defined value used in a subsequent call to <see cref="IScintillaMethods.IndicatorFillRange" />.
@@ -459,7 +459,7 @@ public interface IScintillaProperties
     /// <summary>
     /// Gets or sets the layer where the text selection will be painted. Default value is <see cref="Layer.Base"/>
     /// </summary>
-    public Layer SelectionLayer { get; set; }
+    Layer SelectionLayer { get; set; }
 
     /// <summary>
     /// Gets or sets the end position of the selection.
@@ -691,7 +691,7 @@ public interface IScintillaProperties
     /// <seealso cref="TargetStart"/>
     /// <seealso cref="IScintillaMethods.SearchInTarget" />
     /// <seealso cref="IScintillaMethods.ReplaceTarget" />
-    public int TargetEnd { get; set; }
+    int TargetEnd { get; set; }
 
     /// <summary>
     /// Gets or sets the start position used when performing a search or replace.
@@ -700,7 +700,7 @@ public interface IScintillaProperties
     /// <seealso cref="TargetEnd"/>
     /// <seealso cref="IScintillaMethods.SearchInTarget" />
     /// <seealso cref="IScintillaMethods.ReplaceTarget" />
-    public int TargetStart { get; set; }
+    int TargetStart { get; set; }
 
     /// <summary>
     /// Gets the current target text.

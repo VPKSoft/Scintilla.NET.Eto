@@ -34,7 +34,7 @@ namespace Scintilla.NET.Abstractions.Interfaces.EventArguments;
 /// Provides data for the <see cref="IScintillaEvents{TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs,TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs,TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs,TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs}.BeforeDelete" /> events.
 /// </summary>
 
-public interface IBeforeModificationEventArgs : IPosition, ICachedText
+public interface IBeforeModificationEventArgs : IPosition, ICachedText, ITextPointerData
 {
     /// <summary>
     /// Gets the zero-based document position where the modification will occur.

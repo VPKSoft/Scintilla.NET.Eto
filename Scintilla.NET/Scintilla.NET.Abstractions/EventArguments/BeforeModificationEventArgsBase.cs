@@ -12,8 +12,6 @@ namespace Scintilla.NET.Abstractions.EventArguments;
 public abstract class BeforeModificationEventArgsBase : ScintillaEventArgs, IBeforeModificationEventArgs
 {
     private readonly int bytePosition;
-    private readonly int byteLength;
-    private readonly IntPtr textPtr;
 
     /// <summary>
     /// Gets or sets the cached position.
@@ -26,6 +24,12 @@ public abstract class BeforeModificationEventArgsBase : ScintillaEventArgs, IBef
     /// </summary>
     /// <value>The cached text.</value>
     public virtual string? CachedText { get; set; }
+
+    /// <inheritdoc />
+    public int ByteLength { get; }
+
+    /// <inheritdoc />
+    public IntPtr TextPtr { get; }
 
     /// <summary>
     /// Gets the zero-based document position where the modification will occur.
@@ -72,14 +76,14 @@ public abstract class BeforeModificationEventArgsBase : ScintillaEventArgs, IBef
             {
                 // For some reason the Scintilla overlords don't provide text in
                 // SC_MOD_BEFOREDELETE... but we can get it from the document.
-                if (textPtr == IntPtr.Zero)
+                if (TextPtr == IntPtr.Zero)
                 {
-                    var ptr = ScintillaApi.DirectMessage(SCI_GETRANGEPOINTER, new IntPtr(bytePosition), new IntPtr(byteLength));
-                    CachedText = new string((sbyte*)ptr, 0, byteLength, ScintillaApi.Encoding);
+                    var ptr = ScintillaApi.DirectMessage(SCI_GETRANGEPOINTER, new IntPtr(bytePosition), new IntPtr(ByteLength));
+                    CachedText = new string((sbyte*)ptr, 0, ByteLength, ScintillaApi.Encoding);
                 }
                 else
                 {
-                    CachedText = HelpersGeneral.GetString(textPtr, byteLength, ScintillaApi.Encoding);
+                    CachedText = HelpersGeneral.GetString(TextPtr, ByteLength, ScintillaApi.Encoding);
                 }
             }
 
@@ -103,8 +107,8 @@ public abstract class BeforeModificationEventArgsBase : ScintillaEventArgs, IBef
         int bytePosition, int byteLength, IntPtr text) : base(scintilla)
     {
         this.bytePosition = bytePosition;
-        this.byteLength = byteLength;
-        textPtr = text;
+        this.ByteLength = byteLength;
+        TextPtr = text;
         LineCollectionGeneral = lineCollectionGeneral;
 
         Source = source;

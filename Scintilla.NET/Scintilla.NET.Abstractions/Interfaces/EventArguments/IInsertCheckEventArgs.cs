@@ -35,7 +35,8 @@ namespace Scintilla.NET.Abstractions.Interfaces.EventArguments;
 public interface IInsertCheckEventArgs:
     IScintillaEventArgs,
         IPosition,
-        ICachedText
+        ICachedText,
+        ITextPointerData
 {
     /// <summary>
     /// Gets the zero-based document position where text will be inserted.

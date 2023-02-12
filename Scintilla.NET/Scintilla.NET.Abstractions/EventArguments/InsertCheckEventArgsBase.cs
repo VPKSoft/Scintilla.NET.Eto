@@ -11,8 +11,6 @@ namespace Scintilla.NET.Abstractions.EventArguments;
 public abstract class InsertCheckEventArgsBase : ScintillaEventArgs, IInsertCheckEventArgs
 {
     private readonly int bytePosition;
-    private readonly int byteLength;
-    private readonly IntPtr textPtr;
 
     /// <inheritdoc />
     public virtual int? CachedPosition { get; set; }
@@ -40,7 +38,7 @@ public abstract class InsertCheckEventArgsBase : ScintillaEventArgs, IInsertChec
     /// <returns>The text being inserted into the document.</returns>
     public virtual unsafe string? Text
     {
-        get => CachedText ??= HelpersGeneral.GetString(textPtr, byteLength, ScintillaApi.Encoding);
+        get => CachedText ??= HelpersGeneral.GetString(TextPtr, ByteLength, ScintillaApi.Encoding);
         set
         {
             CachedText = value ?? string.Empty;
@@ -71,8 +69,14 @@ public abstract class InsertCheckEventArgsBase : ScintillaEventArgs, IInsertChec
         IntPtr text) : base(scintilla)
     {
         this.bytePosition = bytePosition;
-        this.byteLength = byteLength;
+        ByteLength = byteLength;
         LineCollectionGeneral = lineCollectionGeneral;
-        textPtr = text;
+        TextPtr = text;
     }
+
+    /// <inheritdoc />
+    public int ByteLength { get; }
+
+    /// <inheritdoc />
+    public IntPtr TextPtr { get; }
 }

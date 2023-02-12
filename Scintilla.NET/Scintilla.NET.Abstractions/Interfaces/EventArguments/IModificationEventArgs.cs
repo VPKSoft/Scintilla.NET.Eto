@@ -36,7 +36,8 @@ namespace Scintilla.NET.Abstractions.Interfaces.EventArguments;
 public interface IModificationEventArgs
     : IScintillaEventArgs,
         IPosition,
-        ICachedText
+        ICachedText,
+        ITextPointerData
 {
     /// <summary>
     /// Gets the zero-based document position where the modification will occur.
