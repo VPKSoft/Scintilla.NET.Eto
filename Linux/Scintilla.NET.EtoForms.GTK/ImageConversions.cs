@@ -55,22 +55,22 @@ internal class ImageConversions
     }
 
     /// <summary>
-    /// Converts a <see cref="Eto.Drawing.Image"/> to ARGB byte array.
+    /// Converts a <see cref="Image"/> to ARGB byte array.
     /// </summary>
     /// <param name="image">The image to covert.</param>
     /// <returns>The bitmap converted to ARGB byte array (<see cref="byte"/>[]).</returns>
-    public static byte[] BitmapToArgb(Eto.Drawing.Image image)
+    public static byte[] BitmapToArgb(Image image)
     {
         using var bitmap = new Bitmap(image);
         return BitmapToArgb(bitmap);
     }
 
     /// <summary>
-    /// Converts a <see cref="Eto.Drawing.Bitmap"/> to RGBA byte array.
+    /// Converts a <see cref="Bitmap"/> to RGBA byte array.
     /// </summary>
     /// <param name="bitmap">The bitmap to covert.</param>
     /// <returns>The bitmap converted to ARGB byte array (<see cref="byte"/>[]).</returns>
-    public static byte[] BitmapToArgb(Eto.Drawing.Bitmap bitmap)
+    public static byte[] BitmapToArgb(Bitmap bitmap)
     {
         var bytes = new byte[4 * bitmap.Width * bitmap.Height];
 

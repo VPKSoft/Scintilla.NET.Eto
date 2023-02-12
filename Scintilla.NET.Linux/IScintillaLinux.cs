@@ -54,14 +54,15 @@ namespace Scintilla.NET.Linux;
 /// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsImage{TImage}" />
 /// <seealso cref="global::Scintilla.NET.Linux.IScintillaLinuxEvents" />
 public interface IScintillaLinux: 
-    IScintillaLinuxEvents,
+    IScintillaLinuxCollections,
     IScintillaProperties<Color>,
     IScintillaProperties,
     IScintillaMethods,
     IScintillaMethodsColor<Color>,
     IScintillaMethodsKeys<Keys>,
     IScintillaMethodsImage<Image>,
-    IScintillaLinuxCollections    
+    IScintillaLinuxEvents,
+    IScintillaEvents
 {
 }
 

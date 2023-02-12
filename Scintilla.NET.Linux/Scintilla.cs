@@ -46,6 +46,7 @@ using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
 namespace Scintilla.NET.Linux;
 using static ScintillaConstants;
+using Keys = Gdk.Key;
 
 /// <summary>
 /// Represents a Scintilla editor control.
@@ -1847,13 +1848,13 @@ public class Scintilla : Widget, IScintillaLinux
     public event EventHandler<DwellEventArgs>? DwellStart;
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotClick;
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotClick;
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotDoubleClick;
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotDoubleClick;
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotReleaseClick;
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotReleaseClick;
 
     /// <inheritdoc />
     public event EventHandler<IndicatorClickEventArgs>? IndicatorClick;

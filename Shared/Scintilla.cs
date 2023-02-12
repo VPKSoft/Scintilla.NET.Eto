@@ -28,9 +28,6 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Eto.Drawing;
 using Eto.Forms;
-#if Windows
-using Eto.WinForms;
-#endif
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces;
@@ -38,11 +35,18 @@ using Scintilla.NET.Abstractions.Interfaces.Methods;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.EtoForms.Shared;
 using Scintilla.NET.EtoForms.Shared.Collections;
-#if Windows
-using Scintilla.NET.WinForms;
-#endif
 using Command = Scintilla.NET.Abstractions.Enumerations.Command;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
+
+#if Windows
+using Scintilla.NET.WinForms;
+using Eto.WinForms;
+#elif Linux
+using Scintilla.NET.Linux;
+using Eto.GtkSharp;
+#elif OSX
+#endif
+
 
 namespace Scintilla.NET.Eto;
 
@@ -162,7 +166,12 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
             indicators ??= new IndicatorCollection(this, ((IScintillaWinForms)BaseControl.NativeControl).Lines);
             return indicators;
+#elif Linux
+            indicators ??= new IndicatorCollection(this, ((IScintillaLinux)BaseControl.NativeControl).Lines);
+            return indicators;
+#elif OSX
 #endif
+
         }
     }
 
@@ -172,10 +181,18 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
     public LineCollection Lines {
         get
         {
+#if Windows
             linesCollection ??= new LineCollection(this, 
                 ((IScintillaWinForms)BaseControl.NativeControl).Styles,
                 ((IScintillaWinForms)BaseControl.NativeControl).Markers);
             return linesCollection;
+#elif Linux
+            linesCollection ??= new LineCollection(this, 
+                ((IScintillaLinux)BaseControl.NativeControl).Styles,
+                ((IScintillaLinux)BaseControl.NativeControl).Markers);
+            return linesCollection;            
+#elif OSX
+#endif            
         }
     }
 
@@ -214,6 +231,8 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
             selections ??= new SelectionCollection(BaseControl, ((IScintillaWinForms)BaseControl.NativeControl).Lines);
             return selections;
 #elif Linux
+            selections ??= new SelectionCollection(BaseControl, ((IScintillaLinux)BaseControl.NativeControl).Lines);
+            return selections;
 #elif OSX
 #endif
         }
@@ -238,6 +257,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
             return ((IScintillaWinForms)BaseControl.NativeControl).AdditionalCaretForeColor.ToEto();
 #elif Linux
+            return ((IScintillaLinux)BaseControl.NativeControl).AdditionalCaretForeColor.ToEto();
 #elif OSX
 #endif
         }
@@ -247,6 +267,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
             ((IScintillaWinForms)BaseControl.NativeControl).AdditionalCaretForeColor = value.ToSD();
 #elif Linux
+            ((IScintillaLinux)BaseControl.NativeControl).AdditionalCaretForeColor = value.ToGdk();
 #elif OSX
 #endif
         }
@@ -260,6 +281,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
             return ((IScintillaWinForms)BaseControl.NativeControl).CaretForeColor.ToEto();
 #elif Linux
+            return ((IScintillaLinux)BaseControl.NativeControl).CaretForeColor.ToEto();
 #elif OSX
 #endif
         }
@@ -269,6 +291,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
             ((IScintillaWinForms)BaseControl.NativeControl).CaretForeColor = value.ToSD();
 #elif Linux
+            ((IScintillaLinux)BaseControl.NativeControl).CaretForeColor = value.ToGdk();
 #elif OSX
 #endif
         }
@@ -280,8 +303,9 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
         get
         {
 #if Windows
-            return ((IScintillaWinForms)BaseControl).CaretLineBackColor.ToEto();
+            return ((IScintillaWinForms)BaseControl.NativeControl).CaretLineBackColor.ToEto();
 #elif Linux
+            return ((IScintillaLinux)BaseControl.NativeControl).CaretLineBackColor.ToEto();
 #elif OSX
 #endif
         }
@@ -289,8 +313,9 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
         set
         {
 #if Windows
-            ((IScintillaWinForms)BaseControl).CaretLineBackColor = value.ToSD();
+            ((IScintillaWinForms)BaseControl.NativeControl).CaretLineBackColor = value.ToSD();
 #elif Linux
+            ((IScintillaLinux)BaseControl.NativeControl).CaretLineBackColor = value.ToGdk();
 #elif OSX
 #endif
         }
@@ -302,8 +327,9 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
         get
         {
 #if Windows
-            return ((IScintillaWinForms)BaseControl).EdgeColor.ToEto();
+            return ((IScintillaWinForms)BaseControl.NativeControl).EdgeColor.ToEto();
 #elif Linux
+            return ((IScintillaLinux)BaseControl.NativeControl).EdgeColor.ToEto();
 #elif OSX
 #endif
         }
@@ -311,8 +337,9 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
         set
         {
 #if Windows
-            ((IScintillaWinForms)BaseControl).EdgeColor = value.ToSD();
+            ((IScintillaWinForms)BaseControl.NativeControl).EdgeColor = value.ToSD();
 #elif Linux
+            ((IScintillaLinux) BaseControl.NativeControl).EdgeColor = value.ToGdk();
 #elif OSX
 #endif
         }

@@ -8,6 +8,7 @@ using Scintilla.NET.Linux.EventArguments;
 namespace Scintilla.NET.Linux;
 using static Abstractions.ScintillaConstants;
 using static ScintillaApiStructs;
+using Keys = Gdk.Key;
 
 /// <summary>
 /// Extension methods fop native event generating and handling events for the current platform (Linux & GTK).
@@ -127,11 +128,11 @@ internal static class NativeEventHandling
     internal static void ScnHotspotClick(this Scintilla scintilla, 
         IScintillaLineCollectionGeneral lineCollectionGeneral,
         ref SCNotification scn,
-        EventHandler<HotspotClickEventArgs>? hotspotClick,
-        EventHandler<HotspotClickEventArgs>? hotspotDoubleClick)
+        EventHandler<HotspotClickEventArgs<Keys>>? hotspotClick,
+        EventHandler<HotspotClickEventArgs<Keys>>? hotspotDoubleClick)
     {
         var keys = (Key)(scn.modifiers << 16);
-        var eventArgs = new HotspotClickEventArgs(scintilla, lineCollectionGeneral, keys, scn.position.ToInt32());
+        var eventArgs = new HotspotClickEventArgs<Keys>(scintilla, lineCollectionGeneral, keys, scn.position.ToInt32());
         switch (scn.nmhdr.code)
         {
             case SCN_HOTSPOTCLICK:

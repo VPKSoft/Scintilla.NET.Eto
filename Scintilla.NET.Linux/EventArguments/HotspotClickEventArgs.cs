@@ -1,7 +1,7 @@
-﻿using Scintilla.NET.Abstractions;
+﻿using System;
+using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.EventArguments;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Key = Gdk.Key;
 
 namespace Scintilla.NET.Linux.EventArguments;
 
@@ -9,7 +9,8 @@ namespace Scintilla.NET.Linux.EventArguments;
 /// Provides data for the <see cref="Scintilla.HotspotClick" />, <see cref="Scintilla.HotspotDoubleClick" />,
 /// and <see cref="Scintilla.HotspotReleaseClick" /> events.
 /// </summary>
-public class HotspotClickEventArgs : HotspotClickEventArgsBase<Key>
+public class HotspotClickEventArgs<TKeys> : HotspotClickEventArgsBase<TKeys>
+    where TKeys : Enum
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="HotspotClickEventArgs" /> class.
@@ -21,7 +22,7 @@ public class HotspotClickEventArgs : HotspotClickEventArgsBase<Key>
     public HotspotClickEventArgs(
         IScintillaApi scintilla, 
         IScintillaLineCollectionGeneral lineCollectionGeneral,
-        Key modifiers, 
+        TKeys modifiers, 
         int bytePosition) : base(scintilla, lineCollectionGeneral, modifiers, bytePosition)
     {
     }
