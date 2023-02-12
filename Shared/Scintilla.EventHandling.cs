@@ -26,11 +26,15 @@ SOFTWARE.
 
 using Scintilla.NET.Abstractions;
 using Eto.Forms;
+#if Windows
 using Eto.WinForms;
+#endif
 using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Eto.Windows.EventArguments;
 using Scintilla.NET.EtoForms.Shared.EventArguments;
+#if Windows
 using Scintilla.NET.WinForms;
+#endif
 
 namespace Scintilla.NET.Eto;
 partial class Scintilla

@@ -63,7 +63,8 @@ public interface IScintillaEtoForms:
     IScintillaMethodsColor<Color>,
     IScintillaMethodsKeys<Keys>,
     IScintillaMethodsImage<Image>,
-    IScintillaEtoFormsEvents    
+    IScintillaEtoFormsEvents,
+    IScintillaEvents
 {
 }
 

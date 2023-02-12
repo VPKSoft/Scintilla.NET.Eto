@@ -28,7 +28,9 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Eto.Drawing;
 using Eto.Forms;
+#if Windows
 using Eto.WinForms;
+#endif
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces;
@@ -36,7 +38,9 @@ using Scintilla.NET.Abstractions.Interfaces.Methods;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.EtoForms.Shared;
 using Scintilla.NET.EtoForms.Shared.Collections;
+#if Windows
 using Scintilla.NET.WinForms;
+#endif
 using Command = Scintilla.NET.Abstractions.Enumerations.Command;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
 
@@ -47,8 +51,7 @@ namespace Scintilla.NET.Eto;
 /// Implements the <see cref="ScintillaControl" />
 /// </summary>
 /// <seealso cref="ScintillaControl" />
-public partial class Scintilla: ScintillaControl, 
-    IScintillaEtoForms
+public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 {
     private static bool initialized;
 
@@ -210,6 +213,8 @@ public partial class Scintilla: ScintillaControl,
 #if Windows
             selections ??= new SelectionCollection(BaseControl, ((IScintillaWinForms)BaseControl.NativeControl).Lines);
             return selections;
+#elif Linux
+#elif OSX
 #endif
         }
     }
@@ -232,6 +237,8 @@ public partial class Scintilla: ScintillaControl,
         {
 #if Windows
             return ((IScintillaWinForms)BaseControl.NativeControl).AdditionalCaretForeColor.ToEto();
+#elif Linux
+#elif OSX
 #endif
         }
 
@@ -239,6 +246,8 @@ public partial class Scintilla: ScintillaControl,
         {
 #if Windows
             ((IScintillaWinForms)BaseControl.NativeControl).AdditionalCaretForeColor = value.ToSD();
+#elif Linux
+#elif OSX
 #endif
         }
     }
@@ -250,12 +259,18 @@ public partial class Scintilla: ScintillaControl,
         {
 #if Windows
             return ((IScintillaWinForms)BaseControl.NativeControl).CaretForeColor.ToEto();
+#elif Linux
+#elif OSX
 #endif
         }
 
         set
         {
+#if Windows
             ((IScintillaWinForms)BaseControl.NativeControl).CaretForeColor = value.ToSD();
+#elif Linux
+#elif OSX
+#endif
         }
     }
 
@@ -266,6 +281,8 @@ public partial class Scintilla: ScintillaControl,
         {
 #if Windows
             return ((IScintillaWinForms)BaseControl).CaretLineBackColor.ToEto();
+#elif Linux
+#elif OSX
 #endif
         }
 
@@ -273,6 +290,8 @@ public partial class Scintilla: ScintillaControl,
         {
 #if Windows
             ((IScintillaWinForms)BaseControl).CaretLineBackColor = value.ToSD();
+#elif Linux
+#elif OSX
 #endif
         }
     }
@@ -284,6 +303,8 @@ public partial class Scintilla: ScintillaControl,
         {
 #if Windows
             return ((IScintillaWinForms)BaseControl).EdgeColor.ToEto();
+#elif Linux
+#elif OSX
 #endif
         }
 
@@ -291,6 +312,8 @@ public partial class Scintilla: ScintillaControl,
         {
 #if Windows
             ((IScintillaWinForms)BaseControl).EdgeColor = value.ToSD();
+#elif Linux
+#elif OSX
 #endif
         }
     }
