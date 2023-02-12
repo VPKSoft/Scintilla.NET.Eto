@@ -17,6 +17,7 @@
 	  <IsOSX Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' == 'true'">true</IsOSX>
 	  <IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
 	  <IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
+	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 	
   <PropertyGroup Condition="'$(IsOSX)'=='true'">
@@ -45,6 +46,7 @@
 	
   <ItemGroup>
     <Compile Include="..\Shared\Scintilla.cs" Link="Scintilla.cs" />
+    <Compile Include="..\Shared\Scintilla.EventHandling.cs" Link="Scintilla.EventHandling.cs" />
   </ItemGroup>
 
   <ItemGroup>

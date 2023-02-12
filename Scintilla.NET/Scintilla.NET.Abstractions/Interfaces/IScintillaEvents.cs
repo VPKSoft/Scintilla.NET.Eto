@@ -29,11 +29,60 @@ using System.Net.Mime;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments;
+using Scintilla.NET.Abstractions.Interfaces.Methods;
 
 namespace Scintilla.NET.Abstractions.Interfaces;
 
 /// <summary>
-/// The events of the Scintilla API.
+/// The events without generic types of the Scintilla API.
+/// </summary>
+public interface IScintillaEvents
+{
+    /// <summary>
+    /// Occurs when an auto-completion list is cancelled.
+    /// </summary>
+    event EventHandler<EventArgs> AutoCCancelled;
+
+    /// <summary>
+    /// Occurs when the user deletes a character while an auto-completion list is active.
+    /// </summary>
+    event EventHandler<EventArgs> AutoCCharDeleted;
+
+    /// <summary>
+    /// Occurs when painting has just been done.
+    /// </summary>
+    event EventHandler<EventArgs> Painted;
+
+    /// <summary>
+    /// Occurs when a user attempts to change text while the document is in read-only mode.
+    /// </summary>
+    /// <seealso cref="IScintillaProperties.ReadOnly" />
+    event EventHandler<EventArgs> ModifyAttempt;
+
+    /// <summary>
+    /// Occurs when the document becomes 'dirty'.
+    /// </summary>
+    /// <remarks>The document 'dirty' state can be checked with the <see cref="IScintillaProperties.Modified" /> property and reset by calling <see cref="IScintillaMethods.SetSavePoint" />.</remarks>
+    /// <seealso cref="IScintillaMethods.SetSavePoint" />
+    /// <seealso cref="SavePointReached" />
+    event EventHandler<EventArgs> SavePointLeft;
+
+    /// <summary>
+    /// Occurs when the document 'dirty' flag is reset.
+    /// </summary>
+    /// <remarks>The document 'dirty' state can be reset by calling <see cref="IScintillaMethods.SetSavePoint" /> or undoing an action that modified the document.</remarks>
+    /// <seealso cref="IScintillaMethods.SetSavePoint" />
+    /// <seealso cref="SavePointLeft" />
+    event EventHandler<EventArgs> SavePointReached;
+
+    /// <summary>
+    /// Occurs when the user zooms the display using the keyboard or the <see cref="IScintillaProperties.Zoom" /> property is changed.
+    /// </summary>
+    event EventHandler<EventArgs> ZoomChanged;
+}
+
+/// <summary>
+/// The events with generic types of the Scintilla API.
 /// </summary>
 /// <typeparam name="TKeys">The type of the keys enumeration used by the platform.</typeparam>
 /// <typeparam name="TAutoCSelectionEventArgs">The type of the automatic code completion related event arguments.</typeparam>
@@ -77,16 +126,6 @@ public interface IScintillaEvents<TKeys,
     where TScNotificationEventArgs: ISCNotificationEventArgs
 {
     /// <summary>
-    /// Occurs when an auto-completion list is cancelled.
-    /// </summary>
-    event EventHandler<EventArgs> AutoCCancelled;
-
-    /// <summary>
-    /// Occurs when the user deletes a character while an auto-completion list is active.
-    /// </summary>
-    event EventHandler<EventArgs> AutoCCharDeleted;
-
-    /// <summary>
     /// Occurs after auto-completed text is inserted.
     /// </summary>
     event EventHandler<TAutoCSelectionEventArgs> AutoCCompleted;
@@ -94,7 +133,7 @@ public interface IScintillaEvents<TKeys,
     /// <summary>
     /// Occurs when a user has selected an item in an auto-completion list.
     /// </summary>
-    /// <remarks>Automatic insertion can be cancelled by calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.AutoCCancel" /> from the event handler.</remarks>
+    /// <remarks>Automatic insertion can be cancelled by calling <see cref="IScintillaMethods.AutoCCancel" /> from the event handler.</remarks>
     event EventHandler<TAutoCSelectionEventArgs> AutoCSelection;
 
     /// <summary>
@@ -133,12 +172,12 @@ public interface IScintillaEvents<TKeys,
     event EventHandler<TDwellEventArgs> DwellEnd;
 
     /// <summary>
-    /// Occurs when the mouse clicked over a call tip displayed by the <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.CallTipShow" /> method.
+    /// Occurs when the mouse clicked over a call tip displayed by the <see cref="IScintillaMethods.CallTipShow" /> method.
     /// </summary>
     event EventHandler<TCallTipClickEventArgs> CallTipClick;
 
     /// <summary>
-    /// Occurs when the mouse is kept in one position (hovers) for the <see cref="IScintillaProperties{TColor}.MouseDwellTime" />.
+    /// Occurs when the mouse is kept in one position (hovers) for the <see cref="IScintillaProperties.MouseDwellTime" />.
     /// </summary>
     event EventHandler<TDwellEventArgs> DwellStart;
 
@@ -188,14 +227,8 @@ public interface IScintillaEvents<TKeys,
     /// Occurs when the mouse was right-clicked inside a margin that was marked as sensitive.
     /// </summary>
     /// <remarks>The <see cref="MarginBase{TColor}.Sensitive" /> property and <see cref="MediaTypeNames.Text" /> must be set for a margin to raise this event.</remarks>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.UsePopup(Scintilla.NET.Abstractions.Enumerations.PopupMode)" />
+    /// <seealso cref="IScintillaMethods.UsePopup(Scintilla.NET.Abstractions.Enumerations.PopupMode)" />
     event EventHandler<TMarginClickEventArgs> MarginRightClick;
-
-    /// <summary>
-    /// Occurs when a user attempts to change text while the document is in read-only mode.
-    /// </summary>
-    /// <seealso cref="IScintillaProperties{TColor}.ReadOnly" />
-    event EventHandler<EventArgs> ModifyAttempt;
 
     /// <summary>
     /// Occurs when the control determines hidden text needs to be shown.
@@ -210,34 +243,13 @@ public interface IScintillaEvents<TKeys,
     event EventHandler<TScNotificationEventArgs> SCNotification;
 
     /// <summary>
-    /// Occurs when painting has just been done.
-    /// </summary>
-    event EventHandler<EventArgs> Painted;
-
-    /// <summary>
-    /// Occurs when the document becomes 'dirty'.
-    /// </summary>
-    /// <remarks>The document 'dirty' state can be checked with the <see cref="IScintillaProperties{TColor}.Modified" /> property and reset by calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.SetSavePoint" />.</remarks>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.SetSavePoint" />
-    /// <seealso cref="SavePointReached" />
-    event EventHandler<EventArgs> SavePointLeft;
-
-    /// <summary>
-    /// Occurs when the document 'dirty' flag is reset.
-    /// </summary>
-    /// <remarks>The document 'dirty' state can be reset by calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.SetSavePoint" /> or undoing an action that modified the document.</remarks>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.SetSavePoint" />
-    /// <seealso cref="SavePointLeft" />
-    event EventHandler<EventArgs> SavePointReached;
-
-    /// <summary>
     /// Occurs when the control is about to display or print text and requires styling.
     /// </summary>
     /// <remarks>
     /// This event is only raised when <see cref="Lexer" /> is set to <see cref="Container" />.
-    /// The last position styled correctly can be determined by calling <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.GetEndStyled" />.
+    /// The last position styled correctly can be determined by calling <see cref="IScintillaMethods.GetEndStyled" />.
     /// </remarks>
-    /// <seealso cref="IScintillaMethods{TColor,TKeys,TBitmap}.GetEndStyled" />
+    /// <seealso cref="IScintillaMethods.GetEndStyled" />
     event EventHandler<TStyleNeededEventArgs> StyleNeeded;
 
     /// <summary>
@@ -245,9 +257,4 @@ public interface IScintillaEvents<TKeys,
     /// selection, and/or scroll positions.
     /// </summary>
     event EventHandler<TUpdateUiEventArgs> UpdateUi;
-
-    /// <summary>
-    /// Occurs when the user zooms the display using the keyboard or the <see cref="IScintillaProperties{TColor}.Zoom" /> property is changed.
-    /// </summary>
-    event EventHandler<EventArgs> ZoomChanged;
 }

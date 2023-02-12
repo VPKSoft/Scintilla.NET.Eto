@@ -46,6 +46,7 @@
 	
   <ItemGroup>
     <Compile Include="..\Shared\Scintilla.cs" Link="Scintilla.cs" />
+    <Compile Include="..\Shared\Scintilla.EventHandling.cs" Link="Scintilla.EventHandling.cs" />
   </ItemGroup>
 
   <ItemGroup>

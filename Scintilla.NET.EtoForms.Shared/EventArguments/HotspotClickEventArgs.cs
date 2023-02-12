@@ -1,21 +1,20 @@
-﻿using System;
-using Scintilla.NET.Abstractions;
+﻿using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.EventArguments;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.Linux.EventArguments;
+namespace Scintilla.NET.Eto.Windows.EventArguments;
 
 /// <summary>
-/// Provides data for the <see cref="Scintilla.HotspotClick" />, <see cref="Scintilla.HotspotDoubleClick" />,
-/// and <see cref="Scintilla.HotspotReleaseClick" /> events.
+/// Provides data for the <see cref="WinForms.Scintilla.HotspotClick" />, <see cref="WinForms.Scintilla.HotspotDoubleClick" />,
+/// and <see cref="WinForms.Scintilla.HotspotReleaseClick" /> events.
 /// </summary>
 public class HotspotClickEventArgs<TKeys> : HotspotClickEventArgsBase<TKeys>
     where TKeys : Enum
 {
     /// <summary>
-    /// Initializes a new instance of the <see cref="HotspotClickEventArgs" /> class.
+    /// Initializes a new instance of the <see cref="HotspotClickEventArgs{TKeys}" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="Scintilla" /> control that generated this event.</param>
+    /// <param name="scintilla">The <see cref="WinForms.Scintilla" /> control that generated this event.</param>
     /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     /// <param name="modifiers">The modifier keys that where held down at the time of the click.</param>
     /// <param name="bytePosition">The zero-based byte position of the clicked text.</param>

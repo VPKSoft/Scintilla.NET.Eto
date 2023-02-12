@@ -38,33 +38,20 @@ using Image = Gtk.Image;
 using Key = Gdk.Key;
 using Scintilla.NET.Abstractions.Enumerations;
 using Scintilla.NET.Abstractions.Extensions;
-using Scintilla.NET.Abstractions.Interfaces.Methods;
 using Scintilla.NET.Abstractions.Structs;
 using Scintilla.NET.Linux.GdkUtils;
 using Style = Scintilla.NET.Linux.Collections.Style;
-using Selection = Scintilla.NET.Linux.Collections.Selection;
 using Status = Scintilla.NET.Abstractions.Enumerations.Status;
 using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
 namespace Scintilla.NET.Linux;
 using static ScintillaConstants;
+using Keys = Gdk.Key;
 
 /// <summary>
 /// Represents a Scintilla editor control.
 /// </summary>
-public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection, LineCollection, MarginCollection,
-        SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>,
-    IScintillaProperties,
-    IScintillaProperties<Color>,
-    IScintillaMethods,
-    IScintillaMethodsColor<Color>,
-    IScintillaMethodsKeys<Key>,
-    IScintillaMethodsImage<Image>,
-    IScintillaEvents<Key,
-        AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs,
-        DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, 
-        IndicatorReleaseEventArgs, InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, 
-        UpdateUIEventArgs, SCNotificationEventArgs>
+public class Scintilla : Widget, IScintillaLinux
 {
     
     /// <summary>
@@ -1861,13 +1848,13 @@ public class Scintilla : Widget, IScintillaApi<MarkerCollection, StyleCollection
     public event EventHandler<DwellEventArgs>? DwellStart;
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotClick;
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotClick;
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotDoubleClick;
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotDoubleClick;
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotReleaseClick;
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotReleaseClick;
 
     /// <inheritdoc />
     public event EventHandler<IndicatorClickEventArgs>? IndicatorClick;

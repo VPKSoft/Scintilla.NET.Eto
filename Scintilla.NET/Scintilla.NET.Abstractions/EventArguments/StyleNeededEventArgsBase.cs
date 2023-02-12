@@ -1,6 +1,7 @@
 ﻿using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.Abstractions.Interfaces.EventArguments;
+using Scintilla.NET.Abstractions.Interfaces.Methods;
 
 namespace Scintilla.NET.Abstractions.EventArguments;
 
@@ -16,7 +17,7 @@ public abstract class StyleNeededEventArgsBase : ScintillaEventArgs, IStyleNeede
     public IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
 
     /// <summary>
-    /// Gets the document position where styling should end. The <see cref="IScintillaMethods{TColor,TKeys,TBitmap}.GetEndStyled" /> method
+    /// Gets the document position where styling should end. The <see cref="IScintillaMethods.GetEndStyled" /> method
     /// indicates the last position styled correctly and the starting place for where styling should begin.
     /// </summary>
     /// <returns>The zero-based position within the document to perform styling up to.</returns>

@@ -36,7 +36,7 @@ using Scintilla.NET.EtoForms.Shared;
 using Scintilla.NET.Linux.Collections;
 using Scintilla.NET.Linux.EventArguments;
 using Color = Gdk.Color;
-using Key = Gdk.Key;
+using Keys = Gdk.Key;
 using Image = Gtk.Image;
 using Selection = Scintilla.NET.Linux.Collections.Selection;
 using Status = Scintilla.NET.Abstractions.Enumerations.Status;
@@ -59,11 +59,11 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     IScintillaProperties<Color>,
     IScintillaMethods,
     IScintillaMethodsColor<Color>,
-    IScintillaMethodsKeys<Key>,
+    IScintillaMethodsKeys<Keys>,
     IScintillaMethodsImage<Image>,
-    IScintillaEvents<Key, 
+    IScintillaEvents<Keys, 
     AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs,
-    DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs, IndicatorClickEventArgs, IndicatorReleaseEventArgs,
+    DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs<Keys>, IndicatorClickEventArgs, IndicatorReleaseEventArgs,
     InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
 {
     private readonly ScintillaGtk nativeControl;
@@ -383,7 +383,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public void AppendText(string text) => nativeControl.AppendText(text);
 
     /// <inheritdoc />
-    public void AssignCmdKey(Key keyDefinition, Abstractions.Enumerations.Command sciCommand) => nativeControl.AssignCmdKey(keyDefinition, sciCommand);
+    public void AssignCmdKey(Keys keyDefinition, Abstractions.Enumerations.Command sciCommand) => nativeControl.AssignCmdKey(keyDefinition, sciCommand);
 
     /// <inheritdoc />
     public void AutoCCancel() => nativeControl.AutoCCancel();
@@ -452,7 +452,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public void ClearAll() => nativeControl.ClearAll();
 
     /// <inheritdoc />
-    public void ClearCmdKey(Key keyDefinition) => nativeControl.ClearCmdKey(keyDefinition);
+    public void ClearCmdKey(Keys keyDefinition) => nativeControl.ClearCmdKey(keyDefinition);
 
     /// <inheritdoc />
     public void ClearAllCmdKeys() => nativeControl.ClearAllCmdKeys();
@@ -677,21 +677,21 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     }
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotClick
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotClick
     {
         add => nativeControl.HotspotClick += value;
         remove => nativeControl.HotspotClick -= value;
     }
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotDoubleClick
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotDoubleClick
     {
         add => nativeControl.HotspotDoubleClick += value;
         remove => nativeControl.HotspotDoubleClick -= value;
     }
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs>? HotspotReleaseClick
+    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotReleaseClick
     {
         add => nativeControl.HotspotReleaseClick += value;
         remove => nativeControl.HotspotReleaseClick -= value;

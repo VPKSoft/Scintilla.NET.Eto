@@ -9,9 +9,7 @@ namespace Scintilla.NET.Abstractions.EventArguments;
 /// Provides data for the Scintilla.AutoCSelection event.
 /// </summary>
 public abstract class AutoCSelectionEventArgsBase : ScintillaEventArgs, IAutoCSelectionEventArgs
-
 {
-    private readonly IntPtr textPtr;
     private readonly int bytePosition;
     private int? position;
     private string? text;
@@ -23,6 +21,9 @@ public abstract class AutoCSelectionEventArgsBase : ScintillaEventArgs, IAutoCSe
     /// <remarks>Only a <see cref="ListCompletionMethod" /> of <see cref="Scintilla.NET.Abstractions.Enumerations.ListCompletionMethod.FillUp" /> will return a non-zero character.</remarks>
     /// <seealso cref="IScintillaMethods.AutoCSetFillUps" />
     public virtual int Char { get; }
+
+    /// <inheritdoc />
+    public IntPtr TextPtr { get; }
 
     /// <inheritdoc />
     public IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
@@ -61,10 +62,10 @@ public abstract class AutoCSelectionEventArgsBase : ScintillaEventArgs, IAutoCSe
             if (text == null)
             {
                 var len = 0;
-                while (((byte*)textPtr)[len] != 0)
+                while (((byte*)TextPtr)[len] != 0)
                     len++;
 
-                text = HelpersGeneral.GetString(textPtr, len, ScintillaApi.Encoding);
+                text = HelpersGeneral.GetString(TextPtr, len, ScintillaApi.Encoding);
             }
 
             return text;
@@ -87,7 +88,7 @@ public abstract class AutoCSelectionEventArgsBase : ScintillaEventArgs, IAutoCSe
         ListCompletionMethod listCompletionMethod) : base(scintilla)
     {
         this.bytePosition = bytePosition;
-        textPtr = text;
+        TextPtr = text;
         Char = ch;
         ListCompletionMethod = listCompletionMethod;
         LineCollectionGeneral = lineCollectionGeneral;
