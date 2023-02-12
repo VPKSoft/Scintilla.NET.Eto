@@ -54,18 +54,8 @@ public class Scintilla : Control, IScintillaWinForms
 
     private static string LocateNativeDllDirectory()
     {
-        var platform = IntPtr.Size == 4 ? "x86" : "x64";
         var managedLocation = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
-        var basePath = Path.Combine(managedLocation!, platform);
-
-        // Directory exists when application is built, but not if Scintilla is dragged on in the WinForms designer
-        if (Directory.Exists(basePath))
-        {
-            return basePath;
-        }
-
-        // In the Designer, look for the native DLLs in the nuget package
-        return Path.Combine(managedLocation, "..", "..", "build", platform);
+        return managedLocation;
     }
 
     #region Fields
