@@ -29,13 +29,4 @@
 	<!--<PropertyGroup>
 		<RestoreSources>$(RestoreSources);../foo/bin/Debug;https://api.nuget.org/v3/index.json</RestoreSources>
 	</PropertyGroup>-->
-
-	<ItemGroup>
-	  <None Update="Lexilla.dll">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	  <None Update="Scintilla.dll">
-	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	  </None>
-	</ItemGroup>
 </Project>

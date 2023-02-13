@@ -37,27 +37,27 @@
 		<Authors>Jacob Slusser, VPKSoft, cyber960</Authors>
 	</PropertyGroup>
 	<ItemGroup>
-		<Compile Update="Scintilla.cs" />
-	</ItemGroup>
-	<ItemGroup>
-	</ItemGroup>
-	<ItemGroup>
-	  <None Include="..\Assets\vpksoft_logo.png">
+	  <None Include="..\..\vpksoft_logo.png">
 	    <Pack>True</Pack>
 	    <PackagePath>\</PackagePath>
 	  </None>
-	  <None Include="..\native\x64\Lexilla.dll" Link="Lexilla.dll">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
-	  <None Include="..\native\x64\Scintilla.dll" Link="Scintilla.dll">
-	    <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	  </None>
+	</ItemGroup>
+	<ItemGroup>
+		<Compile Update="Scintilla.cs" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj">
 		  <ReferenceOutputAssembly>true</ReferenceOutputAssembly>
 		  <IncludeAssets>Scintilla.NET.Abstractions.dll</IncludeAssets>
 	  </ProjectReference>
+	</ItemGroup>
+	<ItemGroup>
+	  <None Update="Lexilla.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	  <None Update="Scintilla.dll">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
 	</ItemGroup>
 	<PropertyGroup>
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
