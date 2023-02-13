@@ -2,7 +2,6 @@
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
 using Scintilla.NET.EtoForms.Shared.Extensions;
 using static Scintilla.NET.Abstractions.ScintillaConstants;
