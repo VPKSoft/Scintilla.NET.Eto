@@ -1,6 +1,7 @@
 using Eto.Drawing;
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
+using Scintilla.NET.EtoForms.Shared.Extensions;
 
 namespace Scintilla.NET.EtoForms.Shared.Collections;
 
@@ -20,11 +21,13 @@ public class Style : StyleBase<Color>
     {
         get
         {
-            throw new NotImplementedException();
+            var color = ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETBACK, new IntPtr(Index), IntPtr.Zero).ToInt32();
+            return color.FromRgba();
         }
         set
         {
-            throw new NotImplementedException();
+            var color = value.ToRgba();
+            ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLESETBACK, new IntPtr(Index), new IntPtr(color));
         }
     }
 
@@ -37,11 +40,13 @@ public class Style : StyleBase<Color>
     {
         get
         {
-            throw new NotImplementedException();
+            var color = ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLEGETFORE, new IntPtr(Index), IntPtr.Zero).ToInt32();
+            return color.FromRgba();
         }
         set
         {
-            throw new NotImplementedException();
+            var color = value.ToRgba();
+            ScintillaApi.DirectMessage(ScintillaConstants.SCI_STYLESETFORE, new IntPtr(Index), new IntPtr(color));
         }
     }
     #endregion Properties

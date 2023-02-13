@@ -2,7 +2,10 @@
 using Scintilla.NET.Abstractions;
 using Scintilla.NET.Abstractions.Collections;
 using Scintilla.NET.Abstractions.Enumerations;
+using Scintilla.NET.Abstractions.Interfaces;
 using Scintilla.NET.Abstractions.Interfaces.Collections;
+using Scintilla.NET.EtoForms.Shared.Extensions;
+using static Scintilla.NET.Abstractions.ScintillaConstants;
 
 namespace Scintilla.NET.EtoForms.Shared.Collections;
 
@@ -32,7 +35,8 @@ public class Marker : MarkerBase<Image, Color>
     /// <seealso cref="MarkerBase{TImage, TColor}.SetAlpha" />
     public override void SetBackColor(Color color)
     {
-        throw new NotImplementedException();
+        var colorNum = color.ToRgba();
+        ScintillaApi.DirectMessage(SCI_MARKERSETBACK, new IntPtr(Index), new IntPtr(colorNum));
     }
 
     /// <summary>
@@ -41,7 +45,8 @@ public class Marker : MarkerBase<Image, Color>
     /// <param name="color">The <see cref="Marker" /> foreground Color. The default is Black.</param>
     public override void SetForeColor(Color color)
     {
-            throw new NotImplementedException();
+        var colorNum = color.ToRgba();
+        ScintillaApi.DirectMessage(SCI_MARKERSETFORE, new IntPtr(Index), new IntPtr(colorNum));
     }
     
     /// <summary>
