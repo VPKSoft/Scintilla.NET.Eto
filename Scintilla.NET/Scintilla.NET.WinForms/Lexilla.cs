@@ -60,11 +60,14 @@ public class Lexilla: ILexilla
     /// <returns>A <see cref="IntPtr"/> containing the lexer interface pointer.</returns>
     public IntPtr CreateLexer(string lexerName)
     {
-        return CreateLexerDll(lexerName);
+        var pointer = Marshal.StringToHGlobalAnsi(lexerName);
+        var result = CreateLexerDll(pointer);
+        Marshal.FreeHGlobal(pointer);
+        return result;
     }
 
     [DllImport("Lexilla.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode, EntryPoint = "CreateLexer")]
-    private static extern IntPtr CreateLexerDll(string lexerName);
+    private static extern IntPtr CreateLexerDll(IntPtr lexerName);
 
 
     [DllImport("Lexilla.dll", CallingConvention = CallingConvention.Cdecl, CharSet = CharSet.Unicode)]
