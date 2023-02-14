@@ -1,6 +1,6 @@
-﻿using Scintilla.NET.Abstractions.EventArguments;
+﻿using ScintillaNet.Abstractions.EventArguments;
 
-namespace Scintilla.NET.WinForms.EventArguments;
+namespace ScintillaNet.WinForms.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.CharAdded" /> event.

@@ -1,4 +1,4 @@
-﻿namespace Scintilla.NET.Abstractions.Enumerations;
+﻿namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// The font quality (anti-aliasing method) used to render text.

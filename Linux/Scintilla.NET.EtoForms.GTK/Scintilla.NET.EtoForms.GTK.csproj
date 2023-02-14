@@ -16,6 +16,7 @@
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <RootNamespace>ScintillaNet.EtoForms.GTK</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>
@@ -25,14 +26,5 @@
   <ItemGroup>
     <ProjectReference Include="..\..\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
     <ProjectReference Include="..\..\Scintilla.NET.Linux\Scintilla.NET.Linux.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-	<None Update="liblexilla.so">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
-	<None Update="libscintilla.so">
-	  <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-	</None>
   </ItemGroup>
 </Project>

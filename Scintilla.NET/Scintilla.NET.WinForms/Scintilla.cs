@@ -10,21 +10,21 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Extensions;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.Abstractions.Structs;
-using Scintilla.NET.WinForms.Collections;
-using Scintilla.NET.WinForms.EventArguments;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
-using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Extensions;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Structs;
+using ScintillaNet.WinForms.Collections;
+using ScintillaNet.WinForms.EventArguments;
+using static ScintillaNet.Abstractions.ScintillaConstants;
+using static ScintillaNet.Abstractions.Classes.ScintillaApiStructs;
 using Bitmap = System.Drawing.Bitmap;
-using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
+using TabDrawMode = ScintillaNet.Abstractions.Enumerations.TabDrawMode;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 /// <summary>
 /// Represents a Scintilla editor control.
@@ -434,7 +434,7 @@ public class Scintilla : Control, IScintillaWinForms
     /// Makes the specified key definition do nothing.
     /// </summary>
     /// <param name="keyDefinition">The key combination to bind.</param>
-    /// <remarks>This is equivalent to binding the keys to <see cref="global::Scintilla.NET.Abstractions.Enumerations.Command.Null" />.</remarks>
+    /// <remarks>This is equivalent to binding the keys to <see cref="Command.Null" />.</remarks>
     public void ClearCmdKey(Keys keyDefinition)
     {
         this.ClearCmdKeyExtension(keyDefinition, Helpers.TranslateKeys);
@@ -1159,7 +1159,7 @@ public class Scintilla : Control, IScintillaWinForms
     }
 
     /// <summary>
-    /// Specifies the long line indicator column number and color when <see cref="EdgeMode" /> is <see cref="global::Scintilla.NET.Abstractions.Enumerations.EdgeMode.MultiLine" />.
+    /// Specifies the long line indicator column number and color when <see cref="EdgeMode" /> is <see cref="ScintillaNet.Abstractions.Enumerations.EdgeMode.MultiLine" />.
     /// </summary>
     /// <param name="column">The zero-based column number to indicate.</param>
     /// <param name="edgeColor">The color of the vertical long line indicator.</param>
@@ -2429,8 +2429,8 @@ public class Scintilla : Control, IScintillaWinForms
     /// Gets or sets the automatic folding flags.
     /// </summary>
     /// <returns>
-    /// A bitwise combination of the <see cref="Abstractions.Enumerations.AutomaticFold" /> enumeration.
-    /// The default is <see cref="Abstractions.Enumerations.AutomaticFold.None" />.
+    /// A bitwise combination of the <see cref="ScintillaNet.Abstractions.Enumerations.AutomaticFold" /> enumeration.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.AutomaticFold.None" />.
     /// </returns>
     [DefaultValue(AutomaticFold.None)]
     [Category("Behavior")]
@@ -2627,7 +2627,7 @@ public class Scintilla : Control, IScintillaWinForms
     /// Gets or sets the caret display style.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Abstractions.Enumerations.CaretStyle" /> enumeration values.
+    /// One of the <see cref="ScintillaNet.Abstractions.Enumerations.CaretStyle" /> enumeration values.
     /// The default is <see cref="Line" />.
     /// </returns>
     [DefaultValue(CaretStyle.Line)]
@@ -2698,8 +2698,8 @@ public class Scintilla : Control, IScintillaWinForms
     /// <returns>The current <see cref="Document" />.</returns>
     /// <remarks>
     /// Setting this property is equivalent to calling <see cref="ReleaseDocument" /> on the current document, and
-    /// calling <see cref="CreateDocument" /> if the new <paramref name="value" /> is <see cref="Abstractions.Structs.Document.Empty" /> or
-    /// <see cref="AddRefDocument" /> if the new <paramref name="value" /> is not <see cref="Abstractions.Structs.Document.Empty" />.
+    /// calling <see cref="CreateDocument" /> if the new <paramref name="value" /> is <see cref="ScintillaNet.Abstractions.Structs.Document.Empty" /> or
+    /// <see cref="AddRefDocument" /> if the new <paramref name="value" /> is not <see cref="ScintillaNet.Abstractions.Structs.Document.Empty" />.
     /// </remarks>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -2747,8 +2747,8 @@ public class Scintilla : Control, IScintillaWinForms
     /// Gets or sets the mode for indicating long lines.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Abstractions.Enumerations.EdgeMode" /> enumeration values.
-    /// The default is <see cref="Abstractions.Enumerations.EdgeMode.None" />.
+    /// One of the <see cref="ScintillaNet.Abstractions.Enumerations.EdgeMode" /> enumeration values.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.EdgeMode.None" />.
     /// </returns>
     [DefaultValue(EdgeMode.None)]
     [Category("Long Lines")]
@@ -2841,8 +2841,8 @@ public class Scintilla : Control, IScintillaWinForms
     /// Gets or sets font quality (anti-aliasing method) used to render fonts.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Abstractions.Enumerations.FontQuality" /> enumeration values.
-    /// The default is <see cref="Abstractions.Enumerations.FontQuality.Default" />.
+    /// One of the <see cref="ScintillaNet.Abstractions.Enumerations.FontQuality" /> enumeration values.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.FontQuality.Default" />.
     /// </returns>
     [DefaultValue(FontQuality.Default)]
     [Category("Misc")]
@@ -2886,8 +2886,8 @@ public class Scintilla : Control, IScintillaWinForms
     /// Gets or sets the strategy used to perform styling using application idle time.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Abstractions.Enumerations.IdleStyling" /> enumeration values.
-    /// The default is <see cref="Abstractions.Enumerations.IdleStyling.None" />.
+    /// One of the <see cref="ScintillaNet.Abstractions.Enumerations.IdleStyling" /> enumeration values.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.IdleStyling.None" />.
     /// </returns>
     [DefaultValue(IdleStyling.None)]
     [Category("Misc")]
@@ -3140,7 +3140,7 @@ public class Scintilla : Control, IScintillaWinForms
     /// <summary>
     /// Gets or sets the behavior when pasting text into multiple selections.
     /// </summary>
-    /// <returns>One of the <see cref="MultiPaste" /> enumeration values. The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.MultiPaste.Once" />.</returns>
+    /// <returns>One of the <see cref="MultiPaste" /> enumeration values. The default is <see cref="ScintillaNet.Abstractions.Enumerations.MultiPaste.Once" />.</returns>
     [DefaultValue(MultiPaste.Once)]
     [Category("Multiple Selection")]
     [Description("Determines how pasted text is applied to multiple selections.")]
@@ -3308,7 +3308,7 @@ public class Scintilla : Control, IScintillaWinForms
     /// <summary>
     /// Gets or sets the search flags used when searching text.
     /// </summary>
-    /// <returns>A bitwise combination of <see cref="global::Scintilla.NET.Abstractions.Enumerations.SearchFlags" /> values. The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.SearchFlags.None" />.</returns>
+    /// <returns>A bitwise combination of <see cref="ScintillaNet.Abstractions.Enumerations.SearchFlags" /> values. The default is <see cref="ScintillaNet.Abstractions.Enumerations.SearchFlags.None" />.</returns>
     /// <seealso cref="SearchInTarget" />
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
@@ -3384,9 +3384,9 @@ public class Scintilla : Control, IScintillaWinForms
     /// </summary>
     /// <returns>
     /// One of the <see cref="Status" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.Status.Ok" />.
     /// </returns>
-    /// <remarks>The status can be reset by setting the property to <see cref="global::Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.</remarks>
+    /// <remarks>The status can be reset by setting the property to <see cref="ScintillaNet.Abstractions.Enumerations.Status.Ok" />.</remarks>
     [Browsable(false)]
     [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
     public Status Status
@@ -3400,8 +3400,8 @@ public class Scintilla : Control, IScintillaWinForms
     /// Gets or sets how tab characters are represented when whitespace is visible.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="global::Scintilla.NET.Abstractions.Enumerations.TabDrawMode" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.TabDrawMode.LongArrow" />.
+    /// One of the <see cref="ScintillaNet.Abstractions.Enumerations.TabDrawMode" /> enumeration values.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.TabDrawMode.LongArrow" />.
     /// </returns>
     /// <seealso cref="ViewWhitespace" />
     [DefaultValue(TabDrawMode.LongArrow)]
@@ -3490,7 +3490,7 @@ public class Scintilla : Control, IScintillaWinForms
     /// </summary>
     /// <returns>
     /// One of the <see cref="Technology" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.Technology.Default" />.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.Technology.Default" />.
     /// </returns>
     [DefaultValue(Technology.Default)]
     [Category("Misc")]
@@ -3633,8 +3633,8 @@ public class Scintilla : Control, IScintillaWinForms
     /// Gets or sets the line wrapping indent mode.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapIndentMode" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapIndentMode.Fixed" />.
+    /// One of the <see cref="ScintillaNet.Abstractions.Enumerations.WrapIndentMode" /> enumeration values.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.WrapIndentMode.Fixed" />.
     /// </returns>
     [DefaultValue(WrapIndentMode.Fixed)]
     [Category("Line Wrapping")]
@@ -3651,7 +3651,7 @@ public class Scintilla : Control, IScintillaWinForms
     /// </summary>
     /// <returns>
     /// One of the <see cref="WrapMode" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapMode.Word" />.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.WrapMode.Word" />.
     /// </returns>
     [DefaultValue(WrapMode.Word)]
     [Category("Line Wrapping")]
@@ -3668,7 +3668,7 @@ public class Scintilla : Control, IScintillaWinForms
     /// </summary>
     /// <returns>The indented size of wrapped sub-lines measured in pixels. The default is 0.</returns>
     /// <remarks>
-    /// Setting <see cref="WrapVisualFlags" /> to <see cref="Abstractions.Enumerations.WrapVisualFlags.Start" /> will add an
+    /// Setting <see cref="WrapVisualFlags" /> to <see cref="ScintillaNet.Abstractions.Enumerations.WrapVisualFlags.Start" /> will add an
     /// additional 1 pixel to the value specified.
     /// </remarks>
     [DefaultValue(0)]
@@ -3685,8 +3685,8 @@ public class Scintilla : Control, IScintillaWinForms
     /// Gets or sets the wrap visual flags.
     /// </summary>
     /// <returns>
-    /// A bitwise combination of the <see cref="Abstractions.Enumerations.WrapVisualFlags" /> enumeration.
-    /// The default is <see cref="Abstractions.Enumerations.WrapVisualFlags.None" />.
+    /// A bitwise combination of the <see cref="ScintillaNet.Abstractions.Enumerations.WrapVisualFlags" /> enumeration.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.WrapVisualFlags.None" />.
     /// </returns>
     [DefaultValue(WrapVisualFlags.None)]
     [Category("Line Wrapping")]
@@ -3703,8 +3703,8 @@ public class Scintilla : Control, IScintillaWinForms
     /// Gets or sets additional location options when displaying wrap visual flags.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Abstractions.Enumerations.WrapVisualFlagLocation" /> enumeration values.
-    /// The default is <see cref="Abstractions.Enumerations.WrapVisualFlagLocation.Default" />.
+    /// One of the <see cref="ScintillaNet.Abstractions.Enumerations.WrapVisualFlagLocation" /> enumeration values.
+    /// The default is <see cref="ScintillaNet.Abstractions.Enumerations.WrapVisualFlagLocation.Default" />.
     /// </returns>
     [DefaultValue(WrapVisualFlagLocation.Default)]
     [Category("Line Wrapping")]

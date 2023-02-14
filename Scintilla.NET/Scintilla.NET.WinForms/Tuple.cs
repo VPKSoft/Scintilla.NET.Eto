@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 static class Tuple
 {

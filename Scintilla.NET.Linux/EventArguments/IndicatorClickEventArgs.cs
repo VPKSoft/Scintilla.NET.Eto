@@ -1,8 +1,6 @@
-﻿using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.EventArguments;
-using Key = Gdk.Key;
+﻿using Key = Gdk.Key;
 
-namespace Scintilla.NET.Linux.EventArguments;
+namespace ScintillaNet.Linux.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.IndicatorClick" /> event.

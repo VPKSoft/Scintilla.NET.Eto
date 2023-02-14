@@ -3,7 +3,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 /// <summary>
 /// Non-generic class to produce instances of the generic class,

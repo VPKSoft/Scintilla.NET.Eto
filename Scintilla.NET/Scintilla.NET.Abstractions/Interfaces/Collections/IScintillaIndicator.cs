@@ -1,7 +1,7 @@
-﻿using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
+﻿using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Enumerations;
 
-namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+namespace ScintillaNet.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// Represents an indicator in a <see cref="ScintillaApi" /> control.
@@ -101,7 +101,7 @@ public interface IScintillaIndicator<TColor>
     /// <summary>
     /// Gets the zero-based indicator index this object represents.
     /// </summary>
-    /// <returns>The indicator definition index within the <see cref="IndicatorCollectionBase{TIndicator, TColor}" />.</returns>
+    /// <returns>The indicator definition index within the <see cref="IndicatorCollectionBase{TIndicator,TColor}" />.</returns>
     int Index { get; }
 
     /// <summary>

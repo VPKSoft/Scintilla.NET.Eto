@@ -1,7 +1,7 @@
-﻿using Scintilla.NET.Abstractions.Interfaces.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+﻿using ScintillaNet.Abstractions.Interfaces.Collections;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Collections;
+namespace ScintillaNet.Abstractions.Collections;
 
 /// <summary>
 /// Represents a selection when there are multiple active selections in a <see cref="Scintilla" /> control.

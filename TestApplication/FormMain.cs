@@ -26,23 +26,21 @@ SOFTWARE.
 
 using Eto.Drawing;
 using Eto.Forms;
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Classes.Lexers;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.EtoForms.Shared.Collections;
-using Scintilla.NET.EtoForms.Shared.Extensions;
+using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Classes.Lexers;
+using ScintillaNet.Abstractions.Enumerations;
 
 
 namespace TestApplication;
 public class FormMain : Form
 {
-    private Scintilla.NET.Eto.Scintilla scintilla; 
+    private ScintillaNet.Eto.Scintilla scintilla; 
     
     public FormMain()
     {
         ClientSize = new Size(500, 500);
         base.Size = new Size(600, 600);
-        scintilla = new Scintilla.NET.Eto.Scintilla();
+        scintilla = new ScintillaNet.Eto.Scintilla();
         Content = new TableLayout
         {
             Rows =

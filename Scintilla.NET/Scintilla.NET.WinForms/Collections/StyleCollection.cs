@@ -1,8 +1,8 @@
 ﻿using System.Drawing;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
 
-namespace Scintilla.NET.WinForms.Collections;
+namespace ScintillaNet.WinForms.Collections;
 
 /// <summary>
 /// An immutable collection of style definitions in a <see cref="Scintilla" /> control.

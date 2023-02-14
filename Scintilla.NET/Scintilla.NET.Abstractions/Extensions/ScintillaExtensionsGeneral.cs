@@ -26,15 +26,15 @@ SOFTWARE.
 
 using System.Runtime.InteropServices;
 using System.Text;
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.Abstractions.Structs;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Structs;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Extensions;
+namespace ScintillaNet.Abstractions.Extensions;
 
 /// <summary>
 /// Extension methods for the common Scintilla methods and properties.
@@ -1410,7 +1410,7 @@ public static class ScintillaExtensionsGeneral
     }
 
     /// <summary>
-    /// Specifies the long line indicator column number and color when <see cref="EdgeMode" /> is <see cref="global::Scintilla.NET.Abstractions.Enumerations.EdgeMode.MultiLine" />.
+    /// Specifies the long line indicator column number and color when <see cref="EdgeMode" /> is <see cref="EdgeMode.MultiLine" />.
     /// </summary>
     /// <param name="scintilla">A reference to the control implementing the <see cref="IScintillaApi"/>.</param>
     /// <param name="column">The zero-based column number to indicate.</param>

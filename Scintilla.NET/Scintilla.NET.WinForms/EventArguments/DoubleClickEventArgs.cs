@@ -1,9 +1,9 @@
 ﻿using System.Windows.Forms;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.EventArguments;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.EventArguments;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.WinForms.EventArguments;
+namespace ScintillaNet.WinForms.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.DoubleClick" /> event.

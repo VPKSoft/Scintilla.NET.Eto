@@ -24,7 +24,7 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Interfaces;
+namespace ScintillaNet.Abstractions.Interfaces;
 
 /// <summary>
 /// An interface to convert <see cref="int"/> values to and from to the platform-depended color structure.

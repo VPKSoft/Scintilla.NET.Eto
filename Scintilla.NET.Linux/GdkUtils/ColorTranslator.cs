@@ -26,7 +26,7 @@ SOFTWARE.
 
 using Color = Gdk.Color;
 
-namespace Scintilla.NET.Linux.GdkUtils;
+namespace ScintillaNet.Linux.GdkUtils;
 
 /// <summary>
 /// <see cref="Color"/> to and from translations with <see cref="int"/> values.

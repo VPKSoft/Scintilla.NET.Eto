@@ -1,7 +1,4 @@
-﻿using Scintilla.NET.Abstractions.EventArguments;
-using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
-
-namespace Scintilla.NET.Linux.EventArguments;
+﻿namespace ScintillaNet.Linux.EventArguments;
 
 /// <summary>
 /// Notifications are sent (fired) from the Scintilla control to its container when an event has occurred that may interest the container. This class cannot be inherited.

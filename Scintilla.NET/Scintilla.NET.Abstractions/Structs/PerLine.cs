@@ -24,9 +24,9 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Enumerations;
 
-namespace Scintilla.NET.Abstractions.Structs;
+namespace ScintillaNet.Abstractions.Structs;
 /// <summary>
 /// Stuff we track for each line.
 /// </summary>

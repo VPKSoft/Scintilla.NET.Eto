@@ -1,13 +1,9 @@
 ﻿using System;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
 using Color = Gdk.Color;
-using ColorTranslator = Scintilla.NET.Linux.GdkUtils.ColorTranslator;
+using ColorTranslator = ScintillaNet.Linux.GdkUtils.ColorTranslator;
 using Image = Gtk.Image;
 
-namespace Scintilla.NET.Linux.Collections;
+namespace ScintillaNet.Linux.Collections;
 
 /// <summary>
 /// Represents a margin marker in a <see cref="Scintilla" /> control.

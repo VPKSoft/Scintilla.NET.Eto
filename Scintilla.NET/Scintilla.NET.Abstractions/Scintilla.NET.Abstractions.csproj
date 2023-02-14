@@ -28,7 +28,7 @@
 	<GeneratePackageOnBuild>true</GeneratePackageOnBuild>
 	<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
 	<AssemblyName>Scintilla.NET.Abstractions</AssemblyName>
-	<RootNamespace>Scintilla.NET.Abstractions</RootNamespace>
+	<RootNamespace>ScintillaNet.Abstractions</RootNamespace>
 	<Authors>Jacob Slusser, VPKSoft, cyber960</Authors>
 	<PackageIcon>vpksoft_logo.png</PackageIcon>
   </PropertyGroup>

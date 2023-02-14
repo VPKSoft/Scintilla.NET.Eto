@@ -28,24 +28,18 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using Gtk;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Linux.Collections;
-using Scintilla.NET.Linux.EventArguments;
+using ScintillaNet.Linux.Collections;
+using ScintillaNet.Linux.EventArguments;
+using ScintillaNet.Linux.GdkUtils;
 using Color = Gdk.Color;
 using Image = Gtk.Image;
 using Key = Gdk.Key;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Extensions;
-using Scintilla.NET.Abstractions.Structs;
-using Scintilla.NET.Linux.GdkUtils;
-using Style = Scintilla.NET.Linux.Collections.Style;
+using Style = ScintillaNet.Linux.Collections.Style;
 using Status = Scintilla.NET.Abstractions.Enumerations.Status;
 using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
-namespace Scintilla.NET.Linux;
-using static ScintillaConstants;
+namespace ScintillaNet.Linux;
+
 using Keys = Gdk.Key;
 
 /// <summary>

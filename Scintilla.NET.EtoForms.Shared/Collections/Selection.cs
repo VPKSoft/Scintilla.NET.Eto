@@ -1,8 +1,8 @@
-﻿using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.EtoForms.Shared.Collections;
+namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
 /// Represents a selection when there are multiple active selections in a <see cref="WinForms.Scintilla" /> control.

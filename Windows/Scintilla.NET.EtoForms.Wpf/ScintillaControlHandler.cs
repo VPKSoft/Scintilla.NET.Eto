@@ -2,35 +2,34 @@
 using System.Text;
 using System.Windows.Forms;
 using Eto.Wpf.Forms;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Methods;
-using Scintilla.NET.Abstractions.Structs;
-using Scintilla.NET.EtoForms.Shared;
-using Scintilla.NET.EtoForms.WinForms;
-using Scintilla.NET.WinForms;
-using Scintilla.NET.WinForms.Collections;
-using Scintilla.NET.WinForms.EventArguments;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Methods;
+using ScintillaNet.Abstractions.Structs;
+using ScintillaNet.EtoForms.WinForms;
+using ScintillaNet.WinForms;
+using ScintillaNet.WinForms.Collections;
+using ScintillaNet.WinForms.EventArguments;
 using Control = Eto.Forms.Control;
-using Lexilla = Scintilla.NET.EtoForms.WinForms.Lexilla;
-using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
+using Lexilla = ScintillaNet.EtoForms.WinForms.Lexilla;
+using TabDrawMode = ScintillaNet.Abstractions.Enumerations.TabDrawMode;
 
-namespace Scintilla.NET.EtoForms.Wpf;
+namespace ScintillaNet.EtoForms.Wpf;
 
 /// <summary>
 /// Scintilla control handler for WPF.
 /// Implements the <see cref="Eto.Wpf.Forms.WindowsFormsHostHandler{TControl, TWidget, TCallback}" />
 /// Implements the <see cref="IScintillaControl" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
+/// Implements the <see cref="IScintillaApi{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
+/// Implements the <see cref="IScintillaProperties{TColor}" />
+/// Implements the <see cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
 /// Implements the <see cref="IScintillaMethods" />
 /// Implements the <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
 /// </summary>
-/// <seealso cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
+/// <seealso cref="IScintillaApi{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
+/// <seealso cref="IScintillaProperties{TColor}" />
+/// <seealso cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
 /// <seealso cref="IScintillaMethods" />
 /// <seealso cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
 public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForms, ScintillaControl, Control.ICallback>, IScintillaControl,

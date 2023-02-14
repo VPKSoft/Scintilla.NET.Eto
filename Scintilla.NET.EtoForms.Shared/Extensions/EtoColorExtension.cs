@@ -26,7 +26,7 @@ SOFTWARE.
 
 using Eto.Drawing;
 
-namespace Scintilla.NET.EtoForms.Shared.Extensions;
+namespace ScintillaNet.EtoForms.Extensions;
 
 /// <summary>
 /// Extension methods for <see cref="Color"/> &lt;--&gt; <see cref="int"/> RGBA conversions.

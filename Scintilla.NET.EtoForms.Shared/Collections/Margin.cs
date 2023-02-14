@@ -1,9 +1,9 @@
 ﻿using Eto.Drawing;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Enumerations;
 
-namespace Scintilla.NET.EtoForms.Shared.Collections;
+namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
 /// Represents a margin displayed on the left edge of a <see cref="WinForms.Scintilla" /> control.

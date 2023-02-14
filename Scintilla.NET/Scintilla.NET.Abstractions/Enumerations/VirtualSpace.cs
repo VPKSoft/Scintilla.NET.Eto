@@ -1,4 +1,4 @@
-﻿namespace Scintilla.NET.Abstractions.Enumerations;
+﻿namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// Enables virtual space for rectangular selections or in other circumstances or in both.

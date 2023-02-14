@@ -26,12 +26,12 @@ SOFTWARE.
 
 using System.ComponentModel;
 using System.Net.Mime;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces.EventArguments;
-using Scintilla.NET.Abstractions.Interfaces.Methods;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces.EventArguments;
+using ScintillaNet.Abstractions.Interfaces.Methods;
 
-namespace Scintilla.NET.Abstractions.Interfaces;
+namespace ScintillaNet.Abstractions.Interfaces;
 
 /// <summary>
 /// The events without generic types of the Scintilla API.
@@ -227,7 +227,7 @@ public interface IScintillaEvents<TKeys,
     /// Occurs when the mouse was right-clicked inside a margin that was marked as sensitive.
     /// </summary>
     /// <remarks>The <see cref="MarginBase{TColor}.Sensitive" /> property and <see cref="MediaTypeNames.Text" /> must be set for a margin to raise this event.</remarks>
-    /// <seealso cref="IScintillaMethods.UsePopup(Scintilla.NET.Abstractions.Enumerations.PopupMode)" />
+    /// <seealso cref="IScintillaMethods.UsePopup(ScintillaNet.Abstractions.Enumerations.PopupMode)" />
     event EventHandler<TMarginClickEventArgs> MarginRightClick;
 
     /// <summary>

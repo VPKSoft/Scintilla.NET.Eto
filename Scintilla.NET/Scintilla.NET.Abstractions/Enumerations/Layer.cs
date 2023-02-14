@@ -1,4 +1,4 @@
-namespace Scintilla.NET.Abstractions.Enumerations;
+namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// The layer on which a <see cref="Scintilla"/> control will draw elements like for example the text selection.

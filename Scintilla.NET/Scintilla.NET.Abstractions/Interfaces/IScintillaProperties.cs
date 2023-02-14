@@ -25,12 +25,12 @@ SOFTWARE.
 #endregion
 
 using System.ComponentModel;
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces.Methods;
-using Scintilla.NET.Abstractions.Structs;
+using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces.Methods;
+using ScintillaNet.Abstractions.Structs;
 
-namespace Scintilla.NET.Abstractions.Interfaces;
+namespace ScintillaNet.Abstractions.Interfaces;
 
 /// <summary>
 /// Properties for Scintilla API with common type members.
@@ -207,8 +207,8 @@ public interface IScintillaProperties
     /// Gets or sets the automatic folding flags.
     /// </summary>
     /// <returns>
-    /// A bitwise combination of the <see cref="Scintilla.NET.Abstractions.Enumerations.AutomaticFold" /> enumeration.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.AutomaticFold.None" />.
+    /// A bitwise combination of the <see cref="Enumerations.AutomaticFold" /> enumeration.
+    /// The default is <see cref="Enumerations.AutomaticFold.None" />.
     /// </returns>
     AutomaticFold AutomaticFold { get; set; }
 
@@ -297,8 +297,8 @@ public interface IScintillaProperties
     /// Gets or sets the caret display style.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Scintilla.NET.Abstractions.Enumerations.CaretStyle" /> enumeration values.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.CaretStyle.Line" />.
+    /// One of the <see cref="Enumerations.CaretStyle" /> enumeration values.
+    /// The default is <see cref="Enumerations.CaretStyle.Line" />.
     /// </returns>
     CaretStyle CaretStyle { get; set; }
 
@@ -308,7 +308,7 @@ public interface IScintillaProperties
     /// <returns>The width of the caret in pixels. The default is 1 pixel.</returns>
     /// <remarks>
     /// The caret width can only be set to a value of 0, 1, 2 or 3 pixels and is only effective
-    /// when the <see cref="CaretStyle" /> property is set to <see cref="Scintilla.NET.Abstractions.Enumerations.CaretStyle.Line" />.
+    /// when the <see cref="CaretStyle" /> property is set to <see cref="Enumerations.CaretStyle.Line" />.
     /// </remarks>
     int CaretWidth { get; set; }
 
@@ -340,8 +340,8 @@ public interface IScintillaProperties
     /// </summary>
     /// <returns>The number of columns in a long line. The default is 0.</returns>
     /// <remarks>
-    /// When using <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.Line"/>, a column is defined as the width of a space character in the <see cref="StyleConstants.Default" /> style.
-    /// When using <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.Background" /> a column is equal to a character (including tabs).
+    /// When using <see cref="Enumerations.EdgeMode.Line"/>, a column is defined as the width of a space character in the <see cref="StyleConstants.Default" /> style.
+    /// When using <see cref="Enumerations.EdgeMode.Background" /> a column is equal to a character (including tabs).
     /// </remarks>
     int EdgeColumn { get; set; }
 
@@ -349,8 +349,8 @@ public interface IScintillaProperties
     /// Gets or sets the mode for indicating long lines.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode" /> enumeration values.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.None" />.
+    /// One of the <see cref="Enumerations.EdgeMode" /> enumeration values.
+    /// The default is <see cref="Enumerations.EdgeMode.None" />.
     /// </returns>
     EdgeMode EdgeMode { get; set; }
 
@@ -390,8 +390,8 @@ public interface IScintillaProperties
     /// Gets or sets font quality (anti-aliasing method) used to render fonts.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Scintilla.NET.Abstractions.Enumerations.FontQuality" /> enumeration values.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.FontQuality.Default" />.
+    /// One of the <see cref="Enumerations.FontQuality" /> enumeration values.
+    /// The default is <see cref="Enumerations.FontQuality.Default" />.
     /// </returns>
     FontQuality FontQuality { get; set; }
 
@@ -412,8 +412,8 @@ public interface IScintillaProperties
     /// Gets or sets the strategy used to perform styling using application idle time.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Scintilla.NET.Abstractions.Enumerations.IdleStyling" /> enumeration values.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.IdleStyling.None" />.
+    /// One of the <see cref="Enumerations.IdleStyling" /> enumeration values.
+    /// The default is <see cref="Enumerations.IdleStyling.None" />.
     /// </returns>
     IdleStyling IdleStyling { get; set; }
 
@@ -578,7 +578,7 @@ public interface IScintillaProperties
     /// <summary>
     /// Gets or sets the behavior when pasting text into multiple selections.
     /// </summary>
-    /// <returns>One of the <see cref="Scintilla.NET.Abstractions.Enumerations.MultiPaste" /> enumeration values. The default is <see cref="Scintilla.NET.Abstractions.Enumerations.MultiPaste.Once" />.</returns>
+    /// <returns>One of the <see cref="Enumerations.MultiPaste" /> enumeration values. The default is <see cref="Enumerations.MultiPaste.Once" />.</returns>
     MultiPaste MultiPaste { get; set; }
 
     /// <summary>
@@ -636,7 +636,7 @@ public interface IScintillaProperties
     /// <summary>
     /// Gets or sets the search flags used when searching text.
     /// </summary>
-    /// <returns>A bitwise combination of <see cref="Scintilla.NET.Abstractions.Enumerations.SearchFlags" /> values. The default is <see cref="Scintilla.NET.Abstractions.Enumerations.SearchFlags.None" />.</returns>
+    /// <returns>A bitwise combination of <see cref="Enumerations.SearchFlags" /> values. The default is <see cref="Enumerations.SearchFlags.None" />.</returns>
     /// <seealso cref="IScintillaMethods.SearchInTarget" />
     SearchFlags SearchFlags { get; set; }
 
@@ -657,17 +657,17 @@ public interface IScintillaProperties
     /// </summary>
     /// <returns>
     /// One of the <see cref="Status" /> enumeration values.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.
+    /// The default is <see cref="Enumerations.Status.Ok" />.
     /// </returns>
-    /// <remarks>The status can be reset by setting the property to <see cref="Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.</remarks>
+    /// <remarks>The status can be reset by setting the property to <see cref="Enumerations.Status.Ok" />.</remarks>
     Status Status { get; set; }
 
     /// <summary>
     /// Gets or sets how tab characters are represented when whitespace is visible.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Scintilla.NET.Abstractions.Enumerations.TabDrawMode" /> enumeration values.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.TabDrawMode.LongArrow" />.
+    /// One of the <see cref="Enumerations.TabDrawMode" /> enumeration values.
+    /// The default is <see cref="Enumerations.TabDrawMode.LongArrow" />.
     /// </returns>
     /// <seealso cref="ViewWhitespace" />
     TabDrawMode TabDrawMode { get; set; }
@@ -716,7 +716,7 @@ public interface IScintillaProperties
     /// </summary>
     /// <returns>
     /// One of the <see cref="Technology" /> enumeration values.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.Technology.Default" />.
+    /// The default is <see cref="Enumerations.Technology.Default" />.
     /// </returns>
     Technology Technology { get; set; }
 
@@ -785,8 +785,8 @@ public interface IScintillaProperties
     /// Gets or sets the line wrapping indent mode.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Scintilla.NET.Abstractions.Enumerations.WrapIndentMode" /> enumeration values.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.WrapIndentMode.Fixed" />.
+    /// One of the <see cref="Enumerations.WrapIndentMode" /> enumeration values.
+    /// The default is <see cref="Enumerations.WrapIndentMode.Fixed" />.
     /// </returns>
     WrapIndentMode WrapIndentMode { get; set; }
 
@@ -794,8 +794,8 @@ public interface IScintillaProperties
     /// Gets or sets the line wrapping mode.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Scintilla.NET.Abstractions.Enumerations.WrapMode" /> enumeration values.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.WrapMode.Word" />.
+    /// One of the <see cref="Enumerations.WrapMode" /> enumeration values.
+    /// The default is <see cref="Enumerations.WrapMode.Word" />.
     /// </returns>
     WrapMode WrapMode { get; set; }
 
@@ -804,7 +804,7 @@ public interface IScintillaProperties
     /// </summary>
     /// <returns>The indented size of wrapped sublines measured in pixels. The default is 0.</returns>
     /// <remarks>
-    /// Setting <see cref="WrapVisualFlags" /> to <see cref="Scintilla.NET.Abstractions.Enumerations.WrapVisualFlags.Start" /> will add an
+    /// Setting <see cref="WrapVisualFlags" /> to <see cref="Enumerations.WrapVisualFlags.Start" /> will add an
     /// additional 1 pixel to the value specified.
     /// </remarks>
     int WrapStartIndent { get; set; }
@@ -813,8 +813,8 @@ public interface IScintillaProperties
     /// Gets or sets the wrap visual flags.
     /// </summary>
     /// <returns>
-    /// A bitwise combination of the <see cref="Scintilla.NET.Abstractions.Enumerations.WrapVisualFlags" /> enumeration.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.WrapVisualFlags.None" />.
+    /// A bitwise combination of the <see cref="Enumerations.WrapVisualFlags" /> enumeration.
+    /// The default is <see cref="Enumerations.WrapVisualFlags.None" />.
     /// </returns>
     WrapVisualFlags WrapVisualFlags { get; set; }
 
@@ -822,8 +822,8 @@ public interface IScintillaProperties
     /// Gets or sets additional location options when displaying wrap visual flags.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="Scintilla.NET.Abstractions.Enumerations.WrapVisualFlagLocation" /> enumeration values.
-    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.WrapVisualFlagLocation.Default" />.
+    /// One of the <see cref="Enumerations.WrapVisualFlagLocation" /> enumeration values.
+    /// The default is <see cref="Enumerations.WrapVisualFlagLocation.Default" />.
     /// </returns>
     WrapVisualFlagLocation WrapVisualFlagLocation { get; set; }
 
@@ -870,7 +870,7 @@ public interface IScintillaProperties<TColor>
 
     /// <summary>
     /// Gets or sets the background color to use when indicating long lines with
-    /// <see cref="Scintilla.NET.Abstractions.Enumerations.EdgeMode.Background" />.
+    /// <see cref="EdgeMode.Background" />.
     /// </summary>
     /// <returns>The background Color. The default is Silver.</returns>
     TColor EdgeColor { get; set; }

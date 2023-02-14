@@ -1,9 +1,9 @@
 using Eto.Drawing;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.EtoForms.Shared.Extensions;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.EtoForms.Extensions;
 
-namespace Scintilla.NET.EtoForms.Shared.Collections;
+namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
 /// A style definition in a <see cref="WinForms.Scintilla" /> control.

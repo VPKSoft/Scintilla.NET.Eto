@@ -28,22 +28,16 @@ using System.Text;
 using Eto.Forms;
 using Eto.GtkSharp.Forms;
 using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Methods;
-using Scintilla.NET.Abstractions.Structs;
-using Scintilla.NET.EtoForms.Shared;
-using Scintilla.NET.Linux.Collections;
-using Scintilla.NET.Linux.EventArguments;
+using ScintillaNet.Linux;
 using Color = Gdk.Color;
 using Keys = Gdk.Key;
 using Image = Gtk.Image;
-using Selection = Scintilla.NET.Linux.Collections.Selection;
+using Selection = ScintillaNet.Linux.Collections.Selection;
 using Status = Scintilla.NET.Abstractions.Enumerations.Status;
-using Style = Scintilla.NET.Linux.Collections.Style;
+using Style = ScintillaNet.Linux.Collections.Style;
 using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
 
-namespace Scintilla.NET.EtoForms.GTK;
+namespace ScintillaNet.EtoForms.GTK;
 
 /// <summary>
 /// Scintilla control handler for GTK.
@@ -383,7 +377,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public void AppendText(string text) => nativeControl.AppendText(text);
 
     /// <inheritdoc />
-    public void AssignCmdKey(Keys keyDefinition, Abstractions.Enumerations.Command sciCommand) => nativeControl.AssignCmdKey(keyDefinition, sciCommand);
+    public void AssignCmdKey(Keys keyDefinition, Scintilla.NET.Abstractions.Enumerations.Command sciCommand) => nativeControl.AssignCmdKey(keyDefinition, sciCommand);
 
     /// <inheritdoc />
     public void AutoCCancel() => nativeControl.AutoCCancel();
@@ -521,7 +515,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public void EndUndoAction() => nativeControl.EndUndoAction();
 
     /// <inheritdoc />
-    public void ExecuteCmd(Abstractions.Enumerations.Command sciCommand) => nativeControl.ExecuteCmd(sciCommand);
+    public void ExecuteCmd(Scintilla.NET.Abstractions.Enumerations.Command sciCommand) => nativeControl.ExecuteCmd(sciCommand);
 
     /// <summary>
     /// Performs the specified fold action on the entire document.
@@ -803,7 +797,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     }
 
 
-    /// <inheritdoc cref="global::Scintilla.NET.Linux.Scintilla.Markers" />
+    /// <inheritdoc cref="Scintilla.Markers" />
     public MarkerCollection Markers => nativeControl.Markers;
 
     /// <summary>
@@ -1125,7 +1119,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     /// <inheritdoc />
     public Technology Technology { get => nativeControl.Technology; set => nativeControl.Technology = value; }
 
-    /// <inheritdoc cref="global::Scintilla.NET.Linux.Scintilla.Text" />
+    /// <inheritdoc cref="Scintilla.Text" />
     public override string Text { get => nativeControl.Text; set => nativeControl.Text = value; }
 
     /// <inheritdoc />

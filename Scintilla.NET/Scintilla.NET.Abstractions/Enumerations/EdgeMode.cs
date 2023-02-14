@@ -1,6 +1,4 @@
-﻿using Scintilla.NET.Abstractions.Interfaces;
-
-namespace Scintilla.NET.Abstractions.Enumerations;
+﻿namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// The long line edge display mode.

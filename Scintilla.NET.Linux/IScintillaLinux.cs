@@ -24,16 +24,13 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Interfaces.Methods;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Linux.Collections;
-using Scintilla.NET.Linux.EventArguments;
+using ScintillaNet.Linux.Collections;
+using ScintillaNet.Linux.EventArguments;
 using Color = Gdk.Color;
 using Image = Gtk.Image;
 using Keys = Gdk.Key;
 
-namespace Scintilla.NET.Linux;
+namespace ScintillaNet.Linux;
 /// <summary>
 /// Interface for the Scintilla Linux control.
 /// Implements the <see cref="global::Scintilla.NET.Linux.IScintillaLinuxCollections" />

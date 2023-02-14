@@ -24,7 +24,7 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Interfaces.Methods;
+namespace ScintillaNet.Abstractions.Interfaces.Methods;
 
 /// <summary>
 /// An interface for Scintilla methods with generic image.

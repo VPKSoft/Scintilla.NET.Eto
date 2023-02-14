@@ -1,7 +1,7 @@
 ﻿using System.Text;
-using Scintilla.NET.Abstractions.Classes;
+using ScintillaNet.Abstractions.Classes;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 internal sealed class Loader : LoaderBase
 {

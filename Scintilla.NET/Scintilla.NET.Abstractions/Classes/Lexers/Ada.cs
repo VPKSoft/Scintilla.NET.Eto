@@ -24,11 +24,10 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Enumerations;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-using static Scintilla.NET.Abstractions.ScintillaConstants;
-
-namespace Scintilla.NET.Abstractions.Classes.Lexers;
+namespace ScintillaNet.Abstractions.Classes.Lexers;
 
     /// <summary>
     /// Style constants for use with the <see cref="Lexer.Ada" /> lexer.

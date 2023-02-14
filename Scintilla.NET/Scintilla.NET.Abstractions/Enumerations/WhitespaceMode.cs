@@ -1,4 +1,4 @@
-﻿namespace Scintilla.NET.Abstractions.Enumerations;
+﻿namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// Specifies the display mode of whitespace characters.

@@ -1,6 +1,6 @@
 using System.Runtime.InteropServices;
 
-namespace Scintilla.NET.EtoForms.WinForms;
+namespace ScintillaNet.EtoForms.WinForms;
 
 public static class NativeMethods
 {

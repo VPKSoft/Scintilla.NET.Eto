@@ -1,7 +1,7 @@
-﻿using Scintilla.NET.Abstractions.Classes.Lexers;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+﻿using ScintillaNet.Abstractions.Classes.Lexers;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.Abstractions.Enumerations;
+namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// Flags associated with a <see cref="IScintillaIndicator{TColor}" />.

@@ -15,6 +15,7 @@
 		<TargetFrameworks>net6.0-windows;net7.0-windows</TargetFrameworks>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
+		<RootNamespace>ScintillaNet.EtoForms.Wpf</RootNamespace>
 	</PropertyGroup>
 
 	<ItemGroup>

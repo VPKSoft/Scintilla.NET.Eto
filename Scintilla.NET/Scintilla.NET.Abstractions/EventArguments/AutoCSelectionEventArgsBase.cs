@@ -1,9 +1,9 @@
-﻿using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.Abstractions.Interfaces.EventArguments;
-using Scintilla.NET.Abstractions.Interfaces.Methods;
+﻿using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Interfaces.EventArguments;
+using ScintillaNet.Abstractions.Interfaces.Methods;
 
-namespace Scintilla.NET.Abstractions.EventArguments;
+namespace ScintillaNet.Abstractions.EventArguments;
 
 /// <summary>
 /// Provides data for the Scintilla.AutoCSelection event.
@@ -18,7 +18,7 @@ public abstract class AutoCSelectionEventArgsBase : ScintillaEventArgs, IAutoCSe
     /// Gets the fill-up character that caused the completion.
     /// </summary>
     /// <returns>The fill-up character used to cause the completion; otherwise, 0.</returns>
-    /// <remarks>Only a <see cref="ListCompletionMethod" /> of <see cref="Scintilla.NET.Abstractions.Enumerations.ListCompletionMethod.FillUp" /> will return a non-zero character.</remarks>
+    /// <remarks>Only a <see cref="ListCompletionMethod" /> of <see cref="Enumerations.ListCompletionMethod.FillUp" /> will return a non-zero character.</remarks>
     /// <seealso cref="IScintillaMethods.AutoCSetFillUps" />
     public virtual int Char { get; }
 
@@ -31,7 +31,7 @@ public abstract class AutoCSelectionEventArgsBase : ScintillaEventArgs, IAutoCSe
     /// <summary>
     /// Gets a value indicating how the completion occurred.
     /// </summary>
-    /// <returns>One of the <see cref="Scintilla.NET.Abstractions.Enumerations.ListCompletionMethod" /> enumeration values.</returns>
+    /// <returns>One of the <see cref="Enumerations.ListCompletionMethod" /> enumeration values.</returns>
     public virtual ListCompletionMethod ListCompletionMethod { get; }
 
     /// <summary>

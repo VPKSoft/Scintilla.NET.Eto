@@ -26,7 +26,7 @@ SOFTWARE.
 
 using System.Text;
 
-namespace Scintilla.NET.Abstractions.Interfaces;
+namespace ScintillaNet.Abstractions.Interfaces;
 
 /// <summary>
 /// An interface for an object with Encoding get-only property.

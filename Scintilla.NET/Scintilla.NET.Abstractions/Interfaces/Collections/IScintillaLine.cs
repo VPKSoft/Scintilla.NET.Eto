@@ -1,8 +1,8 @@
-﻿using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Structs;
+﻿using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Structs;
 
-namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+namespace ScintillaNet.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// Represents a line of text in a <see cref="ScintillaApi" /> control.
@@ -47,7 +47,7 @@ public interface IScintillaLine
     void Goto();
 
     /// <summary>
-    /// Adds the specified <see cref="MarkerBase{TImage, TColor}" /> to the line.
+    /// Adds the specified <see cref="MarkerBase{TImage,TColor}" /> to the line.
     /// </summary>
     /// <param name="marker">The zero-based index of the marker to add to the line.</param>
     /// <returns>A <see cref="MarkerHandle" /> which can be used to track the line.</returns>
@@ -92,7 +92,7 @@ public interface IScintillaLine
     /// <summary>
     /// Toggles the folding state of the line; expanding or contracting all child lines.
     /// </summary>
-    /// <remarks>The line must be set as a <see cref="global::Scintilla.NET.Abstractions.Enumerations.FoldLevelFlags.Header" />.</remarks>
+    /// <remarks>The line must be set as a <see cref="Enumerations.FoldLevelFlags.Header" />.</remarks>
     /// <seealso cref="ToggleFoldShowText"/>
     void ToggleFold();
 
@@ -194,7 +194,7 @@ public interface IScintillaLine
 
     /// <summary>
     /// Gets the zero-based line index of the first line before the current line that is marked as
-    /// <see cref="Scintilla.NET.Abstractions.Enumerations.FoldLevelFlags.Header" /> and has a <see cref="FoldLevel" /> less than the current line.
+    /// <see cref="Enumerations.FoldLevelFlags.Header" /> and has a <see cref="FoldLevel" /> less than the current line.
     /// </summary>
     /// <returns>The zero-based line index of the fold parent if present; otherwise, -1.</returns>
     int FoldParent { get; }

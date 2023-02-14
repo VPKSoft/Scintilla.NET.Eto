@@ -1,12 +1,4 @@
-﻿using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.Abstractions.Interfaces.EventArguments;
-using Scintilla.NET.Abstractions.Structs;
-using Scintilla.NET.Abstractions.UtilityClasses;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
-
-namespace Scintilla.NET.Linux.Collections;
+﻿namespace ScintillaNet.Linux.Collections;
 
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.

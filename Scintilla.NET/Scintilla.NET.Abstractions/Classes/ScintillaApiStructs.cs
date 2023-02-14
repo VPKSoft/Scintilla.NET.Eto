@@ -26,7 +26,7 @@ SOFTWARE.
 
 using System.Runtime.InteropServices;
 
-namespace Scintilla.NET.Abstractions.Classes;
+namespace ScintillaNet.Abstractions.Classes;
 public class ScintillaApiStructs
 {
     // http://www.openrce.org/articles/full_view/23

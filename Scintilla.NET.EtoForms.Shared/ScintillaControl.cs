@@ -27,9 +27,9 @@ SOFTWARE.
 using System.Text;
 using Eto;
 using Eto.Forms;
-using Scintilla.NET.Abstractions.EventArguments;
+using ScintillaNet.Abstractions.EventArguments;
 
-namespace Scintilla.NET.EtoForms.Shared;
+namespace ScintillaNet.EtoForms;
 
 /// <summary>
 /// The Scintilla control base wrapper for the actual Scintilla control.

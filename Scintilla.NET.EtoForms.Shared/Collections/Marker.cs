@@ -1,12 +1,12 @@
 ﻿using Eto.Drawing;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.EtoForms.Shared.Extensions;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using ScintillaNet.EtoForms.Extensions;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.EtoForms.Shared.Collections;
+namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
 /// Represents a margin marker in a <see cref="WinForms.Scintilla" /> control.

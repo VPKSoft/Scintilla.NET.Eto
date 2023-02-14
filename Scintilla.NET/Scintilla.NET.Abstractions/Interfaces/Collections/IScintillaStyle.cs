@@ -1,6 +1,6 @@
-using Scintilla.NET.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Enumerations;
 
-namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+namespace ScintillaNet.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// A style definition in a <see cref="ScintillaApi" /> control.

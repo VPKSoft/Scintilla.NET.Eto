@@ -24,7 +24,7 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Interfaces.EventArguments.Base;
+namespace ScintillaNet.Abstractions.Interfaces.EventArguments.Base;
 /// <summary>
 /// A base class for the event for the Scintilla control API.
 /// </summary>

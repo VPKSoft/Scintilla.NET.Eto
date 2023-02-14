@@ -1,14 +1,14 @@
 ﻿using System.Collections;
 using System.Diagnostics;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.Abstractions.Interfaces.EventArguments;
-using Scintilla.NET.Abstractions.Structs;
-using Scintilla.NET.Abstractions.UtilityClasses;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
-using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Interfaces.EventArguments;
+using ScintillaNet.Abstractions.Structs;
+using ScintillaNet.Abstractions.UtilityClasses;
+using static ScintillaNet.Abstractions.ScintillaConstants;
+using static ScintillaNet.Abstractions.Classes.ScintillaApiStructs;
 
-namespace Scintilla.NET.Abstractions.Collections;
+namespace ScintillaNet.Abstractions.Collections;
 
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.

@@ -25,9 +25,9 @@ SOFTWARE.
 #endregion
 
 using System.Runtime.InteropServices;
-using Scintilla.NET.Abstractions;
+using ScintillaNet.Abstractions;
 
-namespace Scintilla.NET.EtoForms.WinForms;
+namespace ScintillaNet.EtoForms.WinForms;
 
 /// <summary>
 /// Windows handler for the Scintilla's Lexilla library.

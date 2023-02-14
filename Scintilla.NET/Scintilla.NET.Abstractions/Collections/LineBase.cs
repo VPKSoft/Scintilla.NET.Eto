@@ -1,10 +1,10 @@
-﻿using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.Abstractions.Interfaces.Methods;
-using Scintilla.NET.Abstractions.Structs;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+﻿using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Interfaces.Methods;
+using ScintillaNet.Abstractions.Structs;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Collections;
+namespace ScintillaNet.Abstractions.Collections;
 
 /// <summary>
 /// Represents a line of text in a <see cref="Scintilla" /> control.
@@ -151,7 +151,7 @@ public abstract class LineBase : IScintillaLine
     /// <summary>
     /// Toggles the folding state of the line; expanding or contracting all child lines.
     /// </summary>
-    /// <remarks>The line must be set as a <see cref="Scintilla.NET.Abstractions.Enumerations.FoldLevelFlags.Header" />.</remarks>
+    /// <remarks>The line must be set as a <see cref="Enumerations.FoldLevelFlags.Header" />.</remarks>
     /// <seealso cref="ToggleFoldShowText"/>
     public virtual void ToggleFold()
     {
@@ -393,7 +393,7 @@ public abstract class LineBase : IScintillaLine
 
     /// <summary>
     /// Gets the zero-based line index of the first line before the current line that is marked as
-    /// <see cref="Scintilla.NET.Abstractions.Enumerations.FoldLevelFlags.Header" /> and has a <see cref="FoldLevel" /> less than the current line.
+    /// <see cref="Enumerations.FoldLevelFlags.Header" /> and has a <see cref="FoldLevel" /> less than the current line.
     /// </summary>
     /// <returns>The zero-based line index of the fold parent if present; otherwise, -1.</returns>
     public virtual int FoldParent => ScintillaApi.DirectMessage(SCI_GETFOLDPARENT, new IntPtr(Index)).ToInt32();

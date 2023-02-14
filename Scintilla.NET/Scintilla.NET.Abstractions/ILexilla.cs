@@ -24,7 +24,7 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions;
+namespace ScintillaNet.Abstractions;
 
 /// <summary>
 /// Interface for the Lexilla library.

@@ -1,9 +1,7 @@
 ﻿using System.ComponentModel;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
 using Color = Gdk.Color;
 
-namespace Scintilla.NET.Linux.Collections;
+namespace ScintillaNet.Linux.Collections;
 
 /// <summary>
 /// An immutable collection of margins in a <see cref="Scintilla" /> control.

@@ -27,7 +27,7 @@ SOFTWARE.
 using Eto.Drawing;
 using Eto.GtkSharp;
 
-namespace Scintilla.NET.EtoForms.GTK;
+namespace ScintillaNet.EtoForms.GTK;
 
 /// <summary>
 /// Eto.Forms &lt;--&gt; GTK image conversions.

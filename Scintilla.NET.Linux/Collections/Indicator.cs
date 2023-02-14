@@ -1,12 +1,8 @@
 ﻿using System;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
 using Color = Gdk.Color;
-using ColorTranslator = Scintilla.NET.Linux.GdkUtils.ColorTranslator;
+using ColorTranslator = ScintillaNet.Linux.GdkUtils.ColorTranslator;
 
-namespace Scintilla.NET.Linux.Collections;
+namespace ScintillaNet.Linux.Collections;
 
 /// <summary>
 /// Represents an indicator in a <see cref="Scintilla" /> control.

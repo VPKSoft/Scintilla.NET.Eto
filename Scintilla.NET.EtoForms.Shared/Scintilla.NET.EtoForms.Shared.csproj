@@ -16,6 +16,7 @@
 	  <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	  <Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+	  <RootNamespace>ScintillaNet.EtoForms</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

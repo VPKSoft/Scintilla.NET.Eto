@@ -1,13 +1,9 @@
 using System;
 using Gdk;
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.Linux.EventArguments;
+using ScintillaNet.Linux.EventArguments;
 
-namespace Scintilla.NET.Linux;
+namespace ScintillaNet.Linux;
 using static Abstractions.ScintillaConstants;
-using static ScintillaApiStructs;
 using Keys = Gdk.Key;
 
 /// <summary>

@@ -26,7 +26,7 @@ SOFTWARE.
 
 using System.Text;
 
-namespace Scintilla.NET.Abstractions;
+namespace ScintillaNet.Abstractions;
 
 public static class HelpersGeneral
 {

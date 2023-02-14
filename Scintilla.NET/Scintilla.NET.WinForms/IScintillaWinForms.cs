@@ -24,35 +24,35 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions;
 using System.Drawing;
 using System.Windows.Forms;
-using Scintilla.NET.Abstractions.Interfaces.Methods;
-using Scintilla.NET.WinForms.Collections;
-using Scintilla.NET.WinForms.EventArguments;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Methods;
+using ScintillaNet.WinForms.Collections;
+using ScintillaNet.WinForms.EventArguments;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 /// <summary>
 /// Interface for the Scintilla WinForms control.
-/// Implements the <see cref="global::Scintilla.NET.WinForms.IScintillaWinFormsCollections" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
+/// Implements the <see cref="IScintillaWinFormsCollections" />
+/// Implements the <see cref="IScintillaProperties{TColor}" />
 /// Implements the <see cref="IScintillaProperties" />
 /// Implements the <see cref="IScintillaMethods" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsColor{TColor}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsKeys{TKeys}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsImage{TImage}" />
-/// Implements the <see cref="global::Scintilla.NET.WinForms.IScintillaWinFormsEvents" />
+/// Implements the <see cref="IScintillaMethodsColor{TColor}" />
+/// Implements the <see cref="IScintillaMethodsKeys{TKeys}" />
+/// Implements the <see cref="IScintillaMethodsImage{TImage}" />
+/// Implements the <see cref="IScintillaWinFormsEvents" />
 /// </summary>
-/// <seealso cref="global::Scintilla.NET.WinForms.IScintillaWinFormsCollections" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
+/// <seealso cref="IScintillaWinFormsCollections" />
+/// <seealso cref="IScintillaProperties{TColor}" />
 /// <seealso cref="IScintillaProperties" />
 /// <seealso cref="IScintillaMethods" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsColor{TColor}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsKeys{TKeys}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsImage{TImage}" />
-/// <seealso cref="global::Scintilla.NET.WinForms.IScintillaWinFormsEvents" />
+/// <seealso cref="IScintillaMethodsColor{TColor}" />
+/// <seealso cref="IScintillaMethodsKeys{TKeys}" />
+/// <seealso cref="IScintillaMethodsImage{TImage}" />
+/// <seealso cref="IScintillaWinFormsEvents" />
 public interface IScintillaWinForms: 
     IScintillaWinFormsCollections,
     IScintillaProperties<Color>,
@@ -68,9 +68,9 @@ public interface IScintillaWinForms:
 
 /// <summary>
 /// An interface for the Scintilla WinForms events.
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaEvents{TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs, TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs, TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs, TStyleNeededEventArgs, TUpdateUIEventArgs, TSCNotificationEventArgs}" />
+/// Implements the <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUIEventArgs,TSCNotificationEventArgs}" />
 /// </summary>
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaEvents{TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs, TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs, TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs, TStyleNeededEventArgs, TUpdateUIEventArgs, TSCNotificationEventArgs}" />
+/// <seealso cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUIEventArgs,TSCNotificationEventArgs}" />
 public interface IScintillaWinFormsEvents : IScintillaEvents<Keys, AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs<Keys>, IndicatorClickEventArgs, IndicatorReleaseEventArgs, InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
 {
 
@@ -78,9 +78,9 @@ public interface IScintillaWinFormsEvents : IScintillaEvents<Keys, AutoCSelectio
 
 /// <summary>
 /// An interface for the Scintilla WinForms collections.
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkerCollection, TStyleCollection, TIndicatorCollection, TLineCollection, TMarginCollection, TSelectionCollection, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TImage, TColor}" />
+/// Implements the <see cref="IScintillaApi{TMarkerCollection,TStyleCollection,TIndicatorCollection,TLineCollection,TMarginCollection,TSelectionCollection,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TImage,TColor}" />
 /// </summary>
-/// <seealso cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkerCollection, TStyleCollection, TIndicatorCollection, TLineCollection, TMarginCollection, TSelectionCollection, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TImage, TColor}" />
+/// <seealso cref="IScintillaApi{TMarkerCollection,TStyleCollection,TIndicatorCollection,TLineCollection,TMarginCollection,TSelectionCollection,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TImage,TColor}" />
 public interface IScintillaWinFormsCollections : IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection,
     LineCollection, MarginCollection,
     SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>

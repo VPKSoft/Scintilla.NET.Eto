@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
 using System.Drawing;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.WinForms.Collections;
+namespace ScintillaNet.WinForms.Collections;
 
 /// <summary>
 /// An immutable collection of margins in a <see cref="Scintilla" /> control.

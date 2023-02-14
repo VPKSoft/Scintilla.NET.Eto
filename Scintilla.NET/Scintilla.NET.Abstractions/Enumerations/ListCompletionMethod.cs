@@ -1,4 +1,4 @@
-﻿namespace Scintilla.NET.Abstractions.Enumerations;
+﻿namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// Indicates how an auto-completion occurred.
@@ -17,12 +17,12 @@ public enum ListCompletionMethod
     DoubleClick = ScintillaConstants.SC_AC_DOUBLECLICK,
 
     /// <summary>
-    /// A tab key or the <see cref="Scintilla.NET.Abstractions.Enumerations.Command.Tab" /> command triggered the completion.
+    /// A tab key or the <see cref="Enumerations.Command.Tab" /> command triggered the completion.
     /// </summary>
     Tab = ScintillaConstants.SC_AC_TAB,
 
     /// <summary>
-    /// A new line or <see cref="Scintilla.NET.Abstractions.Enumerations.Command.NewLine" /> command triggered the completion.
+    /// A new line or <see cref="Enumerations.Command.NewLine" /> command triggered the completion.
     /// </summary>
     NewLine = ScintillaConstants.SC_AC_NEWLINE,
 

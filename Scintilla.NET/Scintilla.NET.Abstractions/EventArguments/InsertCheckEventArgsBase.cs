@@ -1,9 +1,9 @@
-﻿using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.Abstractions.Interfaces.EventArguments;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+﻿using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Interfaces.EventArguments;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.EventArguments;
+namespace ScintillaNet.Abstractions.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}.InsertCheck" /> event.

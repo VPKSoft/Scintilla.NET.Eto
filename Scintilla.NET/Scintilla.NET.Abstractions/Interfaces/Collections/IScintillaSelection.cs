@@ -1,4 +1,4 @@
-﻿namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+﻿namespace ScintillaNet.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// Represents a selection when there are multiple active selections in a <see cref="ScintillaApi" /> control.

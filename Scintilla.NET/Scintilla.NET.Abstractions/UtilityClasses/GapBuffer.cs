@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Diagnostics;
 
-namespace Scintilla.NET.Abstractions.UtilityClasses;
+namespace ScintillaNet.Abstractions.UtilityClasses;
 
 // Do error checking higher up
 // http://www.codeproject.com/Articles/20910/Generic-Gap-Buffer

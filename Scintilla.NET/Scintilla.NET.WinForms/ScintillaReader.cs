@@ -1,8 +1,8 @@
 ﻿using System;
 using System.IO;
-using Scintilla.NET.Abstractions;
+using ScintillaNet.Abstractions;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 /// <summary>
 /// Implements a TextReader that reads from a Scintilla control.

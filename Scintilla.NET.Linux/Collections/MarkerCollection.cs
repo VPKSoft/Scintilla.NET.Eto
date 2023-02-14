@@ -1,9 +1,7 @@
-﻿using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Color = Gdk.Color;
+﻿using Color = Gdk.Color;
 using Image = Gtk.Image;
 
-namespace Scintilla.NET.Linux.Collections;
+namespace ScintillaNet.Linux.Collections;
 
 /// <summary>
 /// An immutable collection of markers in a <see cref="Scintilla" /> control.

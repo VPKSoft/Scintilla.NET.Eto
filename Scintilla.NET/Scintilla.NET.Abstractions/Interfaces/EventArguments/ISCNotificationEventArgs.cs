@@ -24,9 +24,9 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Classes;
+using ScintillaNet.Abstractions.Classes;
 
-namespace Scintilla.NET.Abstractions.Interfaces.EventArguments;
+namespace ScintillaNet.Abstractions.Interfaces.EventArguments;
 
 /// <summary>
 /// An interface for the SCNotificationEventArgs event argument classes.

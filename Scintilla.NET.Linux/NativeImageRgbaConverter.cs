@@ -24,9 +24,7 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Interfaces;
-
-namespace Scintilla.NET.Linux;
+namespace ScintillaNet.Linux;
 
 /// <summary>
 /// A class to convert <see cref="Gtk.Image"/>s to RGBA byte data.

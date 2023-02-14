@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.InteropServices;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 /// <summary>
 /// Like an UnmanagedMemoryStream execpt it can grow.

@@ -1,8 +1,8 @@
 ﻿using Eto.Forms;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.EventArguments;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.EventArguments;
 
-namespace Scintilla.NET.Eto.Windows.EventArguments;
+namespace ScintillaNet.EtoForms.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="WinForms.Scintilla.IndicatorClick" /> event.
