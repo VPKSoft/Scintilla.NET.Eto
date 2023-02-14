@@ -1,5 +1,8 @@
 using System;
 using Gdk;
+using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 using ScintillaNet.Linux.EventArguments;
 
 namespace ScintillaNet.Linux;
@@ -13,7 +16,7 @@ internal static class NativeEventHandling
 {
     internal static void ScnModified(this Scintilla scintilla,
         IScintillaLineCollectionGeneral lineCollectionGeneral, 
-        ref SCNotification scn,
+        ref ScintillaApiStructs.SCNotification scn,
         EventHandler<InsertCheckEventArgs>? insertCheck,
         EventHandler<BeforeModificationEventArgs>? beforeInsert,
         EventHandler<BeforeModificationEventArgs>? beforeDelete, 
@@ -93,7 +96,7 @@ internal static class NativeEventHandling
     internal static void ScnMarginClick(
         this Scintilla scintilla, 
         IScintillaLineCollectionGeneral lineCollectionGeneral,
-        ref SCNotification scn,
+        ref ScintillaApiStructs.SCNotification scn,
         EventHandler<MarginClickEventArgs>? marginClick,
         EventHandler<MarginClickEventArgs>? marginRightClick)
     {
@@ -113,7 +116,7 @@ internal static class NativeEventHandling
     internal static void ScnDoubleClick(
         this Scintilla scintilla, 
         IScintillaLineCollectionGeneral lineCollectionGeneral,
-        ref SCNotification scn,
+        ref ScintillaApiStructs.SCNotification scn,
         EventHandler<DoubleClickEventArgs>? doubleClick)
     {
         var keys = (Key)(scn.modifiers << 16);
@@ -123,7 +126,7 @@ internal static class NativeEventHandling
     
     internal static void ScnHotspotClick(this Scintilla scintilla, 
         IScintillaLineCollectionGeneral lineCollectionGeneral,
-        ref SCNotification scn,
+        ref ScintillaApiStructs.SCNotification scn,
         EventHandler<HotspotClickEventArgs<Keys>>? hotspotClick,
         EventHandler<HotspotClickEventArgs<Keys>>? hotspotDoubleClick)
     {
@@ -148,7 +151,7 @@ internal static class NativeEventHandling
     internal static void ScnIndicatorClick(
         this Scintilla scintilla, 
         IScintillaLineCollectionGeneral lineCollectionGeneral, 
-        ref SCNotification scn,
+        ref ScintillaApiStructs.SCNotification scn,
         EventHandler<IndicatorClickEventArgs>? indicatorClick,
         EventHandler<IndicatorReleaseEventArgs>? indicatorRelease)
     {

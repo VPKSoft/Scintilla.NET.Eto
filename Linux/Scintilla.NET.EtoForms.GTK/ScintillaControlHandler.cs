@@ -27,15 +27,21 @@ SOFTWARE.
 using System.Text;
 using Eto.Forms;
 using Eto.GtkSharp.Forms;
-using Scintilla.NET.Abstractions;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Methods;
+using ScintillaNet.Abstractions.Structs;
 using ScintillaNet.Linux;
+using ScintillaNet.Linux.Collections;
+using ScintillaNet.Linux.EventArguments;
 using Color = Gdk.Color;
 using Keys = Gdk.Key;
 using Image = Gtk.Image;
 using Selection = ScintillaNet.Linux.Collections.Selection;
-using Status = Scintilla.NET.Abstractions.Enumerations.Status;
+using Status = ScintillaNet.Abstractions.Enumerations.Status;
 using Style = ScintillaNet.Linux.Collections.Style;
-using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
+using WrapMode = ScintillaNet.Abstractions.Enumerations.WrapMode;
 
 namespace ScintillaNet.EtoForms.GTK;
 
