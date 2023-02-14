@@ -1,4 +1,8 @@
-﻿namespace ScintillaNet.Linux.Collections;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+
+namespace ScintillaNet.Linux.Collections;
 
 /// <summary>
 /// Represents a selection when there are multiple active selections in a <see cref="Scintilla" /> control.

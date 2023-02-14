@@ -1,4 +1,8 @@
-﻿namespace ScintillaNet.Linux.EventArguments;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.EventArguments;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+
+namespace ScintillaNet.Linux.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.InsertCheck" /> event.

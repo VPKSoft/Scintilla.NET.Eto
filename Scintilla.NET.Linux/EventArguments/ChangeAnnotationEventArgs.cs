@@ -1,4 +1,6 @@
-﻿namespace ScintillaNet.Linux.EventArguments;
+﻿using ScintillaNet.Abstractions.EventArguments;
+
+namespace ScintillaNet.Linux.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.ChangeAnnotation" /> event.

@@ -1,4 +1,8 @@
-﻿namespace ScintillaNet.Linux.EventArguments;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.EventArguments;
+
+namespace ScintillaNet.Linux.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.CallTipClick" /> event.

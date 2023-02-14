@@ -1,4 +1,6 @@
 using System;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
 using Color = Gdk.Color;
 using ColorTranslator = ScintillaNet.Linux.GdkUtils.ColorTranslator;
 

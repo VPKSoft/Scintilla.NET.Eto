@@ -1,4 +1,11 @@
-﻿namespace ScintillaNet.Linux.Collections;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Interfaces.EventArguments;
+using ScintillaNet.Abstractions.Structs;
+using ScintillaNet.Abstractions.UtilityClasses;
+
+namespace ScintillaNet.Linux.Collections;
 
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.

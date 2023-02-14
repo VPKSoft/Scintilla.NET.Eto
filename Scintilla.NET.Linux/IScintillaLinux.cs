@@ -24,6 +24,9 @@ SOFTWARE.
 */
 #endregion
 
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Methods;
 using ScintillaNet.Linux.Collections;
 using ScintillaNet.Linux.EventArguments;
 using Color = Gdk.Color;
@@ -33,23 +36,23 @@ using Keys = Gdk.Key;
 namespace ScintillaNet.Linux;
 /// <summary>
 /// Interface for the Scintilla Linux control.
-/// Implements the <see cref="global::Scintilla.NET.Linux.IScintillaLinuxCollections" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
+/// Implements the <see cref="IScintillaLinuxCollections" />
+/// Implements the <see cref="IScintillaProperties" />
 /// Implements the <see cref="IScintillaProperties" />
 /// Implements the <see cref="IScintillaMethods" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsColor{TColor}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsKeys{TKeys}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsImage{TImage}" />
-/// Implements the <see cref="global::Scintilla.NET.Linux.IScintillaLinuxEvents" />
+/// Implements the <see cref="IScintillaMethodsColor{TColor}" />
+/// Implements the <see cref="IScintillaMethodsKeys{TKeys}" />
+/// Implements the <see cref="IScintillaMethodsImage{TImage}" />
+/// Implements the <see cref="IScintillaLinuxEvents" />
 /// </summary>
-/// <seealso cref="global::Scintilla.NET.Linux.IScintillaLinuxCollections" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
+/// <seealso cref="IScintillaLinuxCollections" />
+/// <seealso cref="IScintillaProperties" />
 /// <seealso cref="IScintillaProperties" />
 /// <seealso cref="IScintillaMethods" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsColor{TColor}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsKeys{TKeys}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.Methods.IScintillaMethodsImage{TImage}" />
-/// <seealso cref="global::Scintilla.NET.Linux.IScintillaLinuxEvents" />
+/// <seealso cref="IScintillaMethodsColor{TColor}" />
+/// <seealso cref="IScintillaMethodsKeys{TKeys}" />
+/// <seealso cref="IScintillaMethodsImage{TImage}" />
+/// <seealso cref="IScintillaLinuxEvents" />
 public interface IScintillaLinux: 
     IScintillaLinuxCollections,
     IScintillaProperties<Color>,
@@ -65,9 +68,9 @@ public interface IScintillaLinux:
 
 /// <summary>
 /// An interface for the Scintilla Linux events.
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaEvents{TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs, TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs, TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs, TStyleNeededEventArgs, TUpdateUIEventArgs, TSCNotificationEventArgs}" />
+/// Implements the <see cref="IScintillaEvents" />
 /// </summary>
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaEvents{TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs, TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs, TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs, TStyleNeededEventArgs, TUpdateUIEventArgs, TSCNotificationEventArgs}" />
+/// <seealso cref="IScintillaEvents" />
 public interface IScintillaLinuxEvents : IScintillaEvents<Keys, AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs, DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs<Keys>, IndicatorClickEventArgs, IndicatorReleaseEventArgs, InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
 {
 
@@ -75,9 +78,9 @@ public interface IScintillaLinuxEvents : IScintillaEvents<Keys, AutoCSelectionEv
 
 /// <summary>
 /// An interface for the Scintilla Linux collections.
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkerCollection, TStyleCollection, TIndicatorCollection, TLineCollection, TMarginCollection, TSelectionCollection, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TImage, TColor}" />
+/// Implements the <see cref="IScintillaApi" />
 /// </summary>
-/// <seealso cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkerCollection, TStyleCollection, TIndicatorCollection, TLineCollection, TMarginCollection, TSelectionCollection, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TImage, TColor}" />
+/// <seealso cref="IScintillaApi" />
 public interface IScintillaLinuxCollections : IScintillaApi<MarkerCollection, StyleCollection, IndicatorCollection,
     LineCollection, MarginCollection,
     SelectionCollection, Marker, Style, Indicator, Line, Margin, Selection, Image, Color>

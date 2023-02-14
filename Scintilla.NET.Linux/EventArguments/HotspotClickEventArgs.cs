@@ -1,4 +1,7 @@
 ﻿using System;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.EventArguments;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
 namespace ScintillaNet.Linux.EventArguments;
 

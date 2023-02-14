@@ -1,4 +1,6 @@
-﻿using Key = Gdk.Key;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.EventArguments;
+using Key = Gdk.Key;
 
 namespace ScintillaNet.Linux.EventArguments;
 

@@ -1,4 +1,6 @@
 ﻿using System.ComponentModel;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
 using Color = Gdk.Color;
 
 namespace ScintillaNet.Linux.Collections;

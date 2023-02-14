@@ -1,4 +1,8 @@
-﻿namespace ScintillaNet.Linux.Collections;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+
+namespace ScintillaNet.Linux.Collections;
 
 /// <summary>
 /// Represents a line of text in a <see cref="Scintilla" /> control.

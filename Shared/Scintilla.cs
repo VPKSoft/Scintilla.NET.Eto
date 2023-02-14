@@ -38,6 +38,8 @@ using ScintillaNet.EtoForms.Collections;
 using Command = ScintillaNet.Abstractions.Enumerations.Command;
 using WrapMode = ScintillaNet.Abstractions.Enumerations.WrapMode;
 
+
+
 #if Windows
 using ScintillaNet.WinForms;
 using Eto.WinForms;

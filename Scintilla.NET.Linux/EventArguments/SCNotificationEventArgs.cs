@@ -1,4 +1,7 @@
-﻿namespace ScintillaNet.Linux.EventArguments;
+﻿using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.EventArguments;
+
+namespace ScintillaNet.Linux.EventArguments;
 
 /// <summary>
 /// Notifications are sent (fired) from the Scintilla control to its container when an event has occurred that may interest the container. This class cannot be inherited.
@@ -12,7 +15,7 @@ public sealed class SCNotificationEventArgs : SCNotificationEventArgsBase
     /// Initializes a new instance of the <see cref="SCNotificationEventArgs"/> class.
     /// </summary>
     /// <param name="scn">The Scintilla notification data structure.</param>
-    public SCNotificationEventArgs(SCNotification scn) : base(scn)
+    public SCNotificationEventArgs(ScintillaApiStructs.SCNotification scn) : base(scn)
     {
     }
 }

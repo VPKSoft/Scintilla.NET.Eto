@@ -1,4 +1,6 @@
-﻿using Color = Gdk.Color;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using Color = Gdk.Color;
 using Image = Gtk.Image;
 
 namespace ScintillaNet.Linux.Collections;
