@@ -2,11 +2,11 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<ItemGroup>
 		<None Include="$(MSBuildThisFileDirectory)libscintilla.so">
-			<Link>Scintilla.dll</Link>
+			<Link>libscintilla.so</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 		<None Include="$(MSBuildThisFileDirectory)liblexilla.so">
-			<Link>Lexilla.dll</Link>
+			<Link>liblexilla.so</Link>
 			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
 		</None>
 	</ItemGroup>

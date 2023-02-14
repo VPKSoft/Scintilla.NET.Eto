@@ -55,7 +55,7 @@ public class FormMain : Form
     }
 
 
-        private void CreateCsStyling()
+    private void CreateCsStyling()
     {
         scintilla.Styles[Cpp.Preprocessor].ForeColor = Color.Parse("#804000");
         scintilla.Styles[Cpp.Preprocessor].BackColor = Color.Parse("#FFFFFF");
