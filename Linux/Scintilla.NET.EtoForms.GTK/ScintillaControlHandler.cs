@@ -383,7 +383,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public void AppendText(string text) => nativeControl.AppendText(text);
 
     /// <inheritdoc />
-    public void AssignCmdKey(Keys keyDefinition, Scintilla.NET.Abstractions.Enumerations.Command sciCommand) => nativeControl.AssignCmdKey(keyDefinition, sciCommand);
+    public void AssignCmdKey(Keys keyDefinition, ScintillaNet.Abstractions.Enumerations.Command sciCommand) => nativeControl.AssignCmdKey(keyDefinition, sciCommand);
 
     /// <inheritdoc />
     public void AutoCCancel() => nativeControl.AutoCCancel();
@@ -521,7 +521,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     public void EndUndoAction() => nativeControl.EndUndoAction();
 
     /// <inheritdoc />
-    public void ExecuteCmd(Scintilla.NET.Abstractions.Enumerations.Command sciCommand) => nativeControl.ExecuteCmd(sciCommand);
+    public void ExecuteCmd(ScintillaNet.Abstractions.Enumerations.Command sciCommand) => nativeControl.ExecuteCmd(sciCommand);
 
     /// <summary>
     /// Performs the specified fold action on the entire document.

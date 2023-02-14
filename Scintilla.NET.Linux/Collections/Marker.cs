@@ -5,6 +5,7 @@ using ScintillaNet.Abstractions.Enumerations;
 using Color = Gdk.Color;
 using ColorTranslator = ScintillaNet.Linux.GdkUtils.ColorTranslator;
 using Image = Gtk.Image;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
 namespace ScintillaNet.Linux.Collections;
 

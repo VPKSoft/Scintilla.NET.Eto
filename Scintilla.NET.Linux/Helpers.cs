@@ -25,6 +25,7 @@ SOFTWARE.
 #endregion
 
 using Gdk;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
 namespace ScintillaNet.Linux;
 

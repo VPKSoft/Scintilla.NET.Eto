@@ -4,6 +4,7 @@ using ScintillaNet.Abstractions.Collections;
 using ScintillaNet.Abstractions.Interfaces.Collections;
 using Color = Gdk.Color;
 using ColorTranslator = ScintillaNet.Linux.GdkUtils.ColorTranslator;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
 namespace ScintillaNet.Linux.Collections;
 

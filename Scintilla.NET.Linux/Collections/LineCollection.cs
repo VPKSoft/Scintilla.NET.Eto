@@ -4,6 +4,7 @@ using ScintillaNet.Abstractions.Interfaces.Collections;
 using ScintillaNet.Abstractions.Interfaces.EventArguments;
 using ScintillaNet.Abstractions.Structs;
 using ScintillaNet.Abstractions.UtilityClasses;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
 namespace ScintillaNet.Linux.Collections;
 
