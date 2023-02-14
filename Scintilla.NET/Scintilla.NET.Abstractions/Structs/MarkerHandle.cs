@@ -1,4 +1,4 @@
-﻿namespace Scintilla.NET.Abstractions.Structs;
+﻿namespace ScintillaNet.Abstractions.Structs;
 
 /// <summary>
 /// A <see cref="Marker" /> handle.

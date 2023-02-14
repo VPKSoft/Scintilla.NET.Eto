@@ -24,7 +24,7 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Enumerations;
+namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// An enumeration indicating multi-byte state.

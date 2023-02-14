@@ -24,14 +24,14 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.EtoForms.WinForms;
+namespace ScintillaNet.EtoForms.WinForms;
 
 /// <summary>
 /// A wrapper for the <see cref="Scintilla.NET.WinForms.Scintilla"/> control.
 /// Implements the <see cref="Scintilla.NET.WinForms.Scintilla" />
 /// </summary>
 /// <seealso cref="Scintilla.NET.WinForms.Scintilla" />
-public class ScintillaWinForms : Scintilla.NET.WinForms.Scintilla
+public class ScintillaWinForms : ScintillaNet.WinForms.Scintilla
 {
     
 }

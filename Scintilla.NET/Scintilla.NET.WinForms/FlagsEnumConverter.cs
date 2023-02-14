@@ -5,7 +5,7 @@ using System;
 using System.ComponentModel;
 using System.Reflection;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 /// <summary>
 /// Flags enumeration type converter.

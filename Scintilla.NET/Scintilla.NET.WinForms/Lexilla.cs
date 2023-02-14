@@ -27,9 +27,9 @@ SOFTWARE.
 using System;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
-using Scintilla.NET.Abstractions;
+using ScintillaNet.Abstractions;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 /// <summary>
 /// Linux handler for the Scintilla's Lexilla library.

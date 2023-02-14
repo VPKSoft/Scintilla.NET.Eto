@@ -1,10 +1,10 @@
-﻿using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+﻿using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Collections;
+namespace ScintillaNet.Abstractions.Collections;
 
 /// <summary>
 /// Represents a margin displayed on the left edge of a <see cref="Scintilla" /> control.
@@ -45,7 +45,7 @@ public abstract class MarginBase<TColor> : IScintillaMargin<TColor>
     /// <summary>
     /// Gets the zero-based margin index this object represents.
     /// </summary>
-    /// <returns>The margin index within the <see cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}.Margins" />.</returns>
+    /// <returns>The margin index within the <see cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TImage,TColor}.Margins" />.</returns>
     public virtual int Index { get; private set; }
 
     /// <summary>

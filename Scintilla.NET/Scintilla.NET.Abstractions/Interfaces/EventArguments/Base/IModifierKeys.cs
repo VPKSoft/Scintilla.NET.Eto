@@ -24,7 +24,7 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Interfaces.EventArguments.Base;
+namespace ScintillaNet.Abstractions.Interfaces.EventArguments.Base;
 
 /// <summary>
 /// An interface for an event with modifier keys

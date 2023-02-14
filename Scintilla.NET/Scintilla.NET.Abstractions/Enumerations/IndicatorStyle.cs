@@ -1,6 +1,6 @@
-﻿using Scintilla.NET.Abstractions.Interfaces.Collections;
+﻿using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.Abstractions.Enumerations;
+namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// The visual appearance of an indicator.

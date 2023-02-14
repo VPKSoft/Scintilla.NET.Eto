@@ -1,7 +1,7 @@
-﻿using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.Abstractions.Interfaces.EventArguments;
+﻿using ScintillaNet.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Interfaces.EventArguments;
 
-namespace Scintilla.NET.Abstractions.EventArguments;
+namespace ScintillaNet.Abstractions.EventArguments;
 
 /// <summary>
 /// </summary>

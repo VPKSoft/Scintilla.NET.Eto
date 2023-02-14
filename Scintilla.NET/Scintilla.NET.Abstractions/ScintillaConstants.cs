@@ -28,7 +28,7 @@ SOFTWARE.
 // ReSharper disable IdentifierTypo
 // ReSharper disable UnusedMember.Global
 #pragma warning disable CS1591
-namespace Scintilla.NET.Abstractions;
+namespace ScintillaNet.Abstractions;
 
 /// <summary>
 /// Constants for the Scintilla native API.

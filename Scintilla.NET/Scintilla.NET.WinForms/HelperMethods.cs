@@ -1,9 +1,9 @@
 ﻿using System.Linq;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 /// <summary>
 /// Helper methods for the <see cref="Scintilla"/> control.

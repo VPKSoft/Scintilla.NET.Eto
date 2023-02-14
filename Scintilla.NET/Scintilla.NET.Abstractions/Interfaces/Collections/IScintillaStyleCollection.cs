@@ -1,4 +1,4 @@
-﻿namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+﻿namespace ScintillaNet.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// An immutable collection of style definitions in a <see cref="ScintillaApi" /> control.

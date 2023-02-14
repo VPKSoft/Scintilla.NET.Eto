@@ -24,194 +24,193 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions;
 using Eto.Forms;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Eto.Windows.EventArguments;
-using Scintilla.NET.EtoForms.Shared.EventArguments;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.EtoForms.EventArguments;
 
 #if Windows
 using Eto.WinForms;
-using Scintilla.NET.WinForms;
+using ScintillaNet.WinForms;
 #elif Linux
 using Eto.GtkSharp;
-using Scintilla.NET.Linux;
+using ScintillaNet.Linux;
 #elif OSX
 #endif
 
-namespace Scintilla.NET.Eto;
+namespace ScintillaNet.Eto;
 partial class Scintilla
 {
     #region EventHandlerFields
     #if Windows
     private readonly
         List<KeyValuePair<EventHandler<AutoCSelectionEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.AutoCSelectionEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.AutoCSelectionEventArgs>>?>
         autoCSelectionEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<BeforeModificationEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.BeforeModificationEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.BeforeModificationEventArgs>>?>
         beforeModificationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<ChangeAnnotationEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.ChangeAnnotationEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.ChangeAnnotationEventArgs>>?>
         changeAnnotationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<CharAddedEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.CharAddedEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.CharAddedEventArgs>>?>
         charAddedEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<ModificationEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.ModificationEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.ModificationEventArgs>>?>
         modificationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<DoubleClickEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.DoubleClickEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.DoubleClickEventArgs>>?>
         doubleClickEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<DwellEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.DwellEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.DwellEventArgs>>?>
         dwellEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<CallTipClickEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.CallTipClickEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.CallTipClickEventArgs>>?>
         callTipClickEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<UpdateUIEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.UpdateUIEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.UpdateUIEventArgs>>?>
         updateUiEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<StyleNeededEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.StyleNeededEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.StyleNeededEventArgs>>?>
         styleNeededEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<SCNotificationEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.SCNotificationEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.SCNotificationEventArgs>>?>
         sCNotificationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<NeedShownEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.NeedShownEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.NeedShownEventArgs>>?>
         needShownEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<MarginClickEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.MarginClickEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.MarginClickEventArgs>>?>
         marginClickEventHandlers = new();
     
     private readonly
         List<KeyValuePair<EventHandler<InsertCheckEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.InsertCheckEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.InsertCheckEventArgs>>?>
         insertCheckEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<IndicatorReleaseEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.IndicatorReleaseEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.IndicatorReleaseEventArgs>>?>
         indicatorReleaseEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<IndicatorClickEventArgs>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.IndicatorClickEventArgs>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.IndicatorClickEventArgs>>?>
         indicatorClickEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
-            EventHandler<global::Scintilla.NET.WinForms.EventArguments.HotspotClickEventArgs<System.Windows.Forms.Keys>>>?>
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.HotspotClickEventArgs<System.Windows.Forms.Keys>>>?>
         hotspotClickEventHandlers = new();
 #elif Linux
     private readonly
         List<KeyValuePair<EventHandler<AutoCSelectionEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.AutoCSelectionEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.AutoCSelectionEventArgs>>?>
         autoCSelectionEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<BeforeModificationEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.BeforeModificationEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.BeforeModificationEventArgs>>?>
         beforeModificationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<ChangeAnnotationEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.ChangeAnnotationEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.ChangeAnnotationEventArgs>>?>
         changeAnnotationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<CharAddedEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.CharAddedEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.CharAddedEventArgs>>?>
         charAddedEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<ModificationEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.ModificationEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.ModificationEventArgs>>?>
         modificationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<DoubleClickEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.DoubleClickEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.DoubleClickEventArgs>>?>
         doubleClickEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<DwellEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.DwellEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.DwellEventArgs>>?>
         dwellEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<CallTipClickEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.CallTipClickEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.CallTipClickEventArgs>>?>
         callTipClickEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<UpdateUIEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.UpdateUIEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.UpdateUIEventArgs>>?>
         updateUiEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<StyleNeededEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.StyleNeededEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.StyleNeededEventArgs>>?>
         styleNeededEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<SCNotificationEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.SCNotificationEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.SCNotificationEventArgs>>?>
         sCNotificationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<NeedShownEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.NeedShownEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.NeedShownEventArgs>>?>
         needShownEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<MarginClickEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.MarginClickEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.MarginClickEventArgs>>?>
         marginClickEventHandlers = new();
     
     private readonly
         List<KeyValuePair<EventHandler<InsertCheckEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.InsertCheckEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.InsertCheckEventArgs>>?>
         insertCheckEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<IndicatorReleaseEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.IndicatorReleaseEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.IndicatorReleaseEventArgs>>?>
         indicatorReleaseEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<IndicatorClickEventArgs>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.IndicatorClickEventArgs>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.IndicatorClickEventArgs>>?>
         indicatorClickEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
-            EventHandler<global::Scintilla.NET.Linux.EventArguments.HotspotClickEventArgs<Gdk.Key>>>?>
+            EventHandler<ScintillaNet.Linux.EventArguments.HotspotClickEventArgs<Gdk.Key>>>?>
         hotspotClickEventHandlers = new();    
 #elif OSX
 #endif

@@ -24,10 +24,10 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Enumerations;
 
-namespace Scintilla.NET.Abstractions.Interfaces.Methods;
+namespace ScintillaNet.Abstractions.Interfaces.Methods;
 
 /// <summary>
 /// An interface for Scintilla methods with generic color.

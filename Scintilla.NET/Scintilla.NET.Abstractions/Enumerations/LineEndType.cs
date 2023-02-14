@@ -1,6 +1,4 @@
-﻿using Scintilla.NET.Abstractions.Interfaces;
-
-namespace Scintilla.NET.Abstractions.Enumerations;
+﻿namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// Line endings types supported by lexers and allowed by a <see cref="Scintilla" /> control.

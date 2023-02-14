@@ -1,4 +1,4 @@
-﻿namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+﻿namespace ScintillaNet.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// A multiple selection collection.

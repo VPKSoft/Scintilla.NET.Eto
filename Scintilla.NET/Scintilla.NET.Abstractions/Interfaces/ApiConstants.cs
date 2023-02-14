@@ -24,9 +24,9 @@ SOFTWARE.
 */
 #endregion
 
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Interfaces;
+namespace ScintillaNet.Abstractions.Interfaces;
 
 /// <summary>
 /// Public constants for the Scintilla API.

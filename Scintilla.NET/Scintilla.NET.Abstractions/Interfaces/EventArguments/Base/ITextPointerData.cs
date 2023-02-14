@@ -26,7 +26,7 @@ SOFTWARE.
 
 using static System.Net.Mime.MediaTypeNames;
 
-namespace Scintilla.NET.Abstractions.Interfaces.EventArguments.Base;
+namespace ScintillaNet.Abstractions.Interfaces.EventArguments.Base;
 
 /// <summary>
 /// Text pointer data for event delegation.

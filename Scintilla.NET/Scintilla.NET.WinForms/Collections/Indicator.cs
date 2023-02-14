@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Drawing;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.WinForms.Collections;
+namespace ScintillaNet.WinForms.Collections;
 
 /// <summary>
 /// Represents an indicator in a <see cref="Scintilla" /> control.

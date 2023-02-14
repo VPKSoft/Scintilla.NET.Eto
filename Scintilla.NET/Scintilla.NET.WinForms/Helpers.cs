@@ -6,13 +6,13 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.WinForms.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
-using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
-namespace Scintilla.NET.WinForms;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.WinForms.Collections;
+using static ScintillaNet.Abstractions.ScintillaConstants;
+using static ScintillaNet.Abstractions.Classes.ScintillaApiStructs;
+namespace ScintillaNet.WinForms;
 
 internal static class Helpers
 {

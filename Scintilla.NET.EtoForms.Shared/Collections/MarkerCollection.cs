@@ -1,8 +1,8 @@
 ﻿using Eto.Drawing;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
 
-namespace Scintilla.NET.EtoForms.Shared.Collections;
+namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
 /// An immutable collection of markers in a <see cref="WinForms.Scintilla" /> control.

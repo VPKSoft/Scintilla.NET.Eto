@@ -1,7 +1,6 @@
-﻿using Scintilla.NET.Abstractions.Interfaces;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+﻿using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Enumerations;
+namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// Actions which can be performed by the application or bound to keys in a <see cref="Scintilla" /> control.

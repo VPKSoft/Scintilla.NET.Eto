@@ -25,9 +25,9 @@ SOFTWARE.
 #endregion
 
 using Eto.Forms;
-using Scintilla.NET.Abstractions;
+using ScintillaNet.Abstractions;
 
-namespace Scintilla.NET.EtoForms.Shared;
+namespace ScintillaNet.EtoForms;
 
 /// <summary>
 /// An interface for the Scintilla control.

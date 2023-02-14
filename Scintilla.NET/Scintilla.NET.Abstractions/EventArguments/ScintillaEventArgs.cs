@@ -1,6 +1,6 @@
-﻿using Scintilla.NET.Abstractions.Interfaces.EventArguments.Base;
+﻿using ScintillaNet.Abstractions.Interfaces.EventArguments.Base;
 
-namespace Scintilla.NET.Abstractions.EventArguments;
+namespace ScintillaNet.Abstractions.EventArguments;
 
 /// <summary>
 /// A base class for the event for the Scintilla control API.

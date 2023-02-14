@@ -25,11 +25,11 @@ SOFTWARE.
 #endregion
 
 using System.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.Abstractions;
+namespace ScintillaNet.Abstractions;
 
 /// <summary>
 /// An interface for interacting with the Scintilla API
@@ -121,7 +121,7 @@ public interface IScintillaApi : IHasEncoding
 
 /// <summary>
 /// Interface IScintillaApi
-/// Implements the <see cref="Scintilla.NET.Abstractions.IScintillaApi" />
+/// Implements the <see cref="IScintillaApi" />
 /// </summary>
 /// <typeparam name="TMarkers">The type of the markers collection of the Scintilla control implementation.</typeparam>
 /// <typeparam name="TStyles">The type of the styles collection of the Scintilla control implementation.</typeparam>
@@ -137,7 +137,7 @@ public interface IScintillaApi : IHasEncoding
 /// <typeparam name="TSelection">The type of the item in the <typeparamref name="TSelections"/> collection.</typeparam>
 /// <typeparam name="TImage">The type of the image used in the platform.</typeparam>
 /// <typeparam name="TColor">The type of the color used in the platform.</typeparam>
-/// <seealso cref="Scintilla.NET.Abstractions.IScintillaApi" />
+/// <seealso cref="IScintillaApi" />
 public interface IScintillaApi<
     out TMarkers, 
     out TStyles,

@@ -1,8 +1,8 @@
-﻿using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.EventArguments;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.EventArguments;
 
-namespace Scintilla.NET.WinForms.EventArguments;
+namespace ScintillaNet.WinForms.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.CallTipClick" /> event.

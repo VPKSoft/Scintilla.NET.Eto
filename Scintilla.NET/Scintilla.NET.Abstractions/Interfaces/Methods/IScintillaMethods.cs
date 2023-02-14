@@ -24,12 +24,12 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Structs;
+using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Structs;
 
-namespace Scintilla.NET.Abstractions.Interfaces.Methods;
+namespace ScintillaNet.Abstractions.Interfaces.Methods;
 
 /// <summary>
 /// Interface for Scintilla control methods without generic types.

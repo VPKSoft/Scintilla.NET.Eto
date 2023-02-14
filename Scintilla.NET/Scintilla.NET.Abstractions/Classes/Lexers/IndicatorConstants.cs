@@ -24,12 +24,12 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Classes.Lexers;
+namespace ScintillaNet.Abstractions.Classes.Lexers;
 
 /// <summary>
 /// Constants related to <see cref="IScintillaIndicator{TColor}"/>.

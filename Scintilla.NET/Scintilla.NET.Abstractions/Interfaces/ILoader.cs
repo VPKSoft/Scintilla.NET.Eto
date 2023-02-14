@@ -1,6 +1,6 @@
-﻿using Scintilla.NET.Abstractions.Structs;
+﻿using ScintillaNet.Abstractions.Structs;
 
-namespace Scintilla.NET.Abstractions.Interfaces;
+namespace ScintillaNet.Abstractions.Interfaces;
 
 /// <summary>
 /// Provides methods for loading and creating a <see cref="Document" /> on a background (non-UI) thread.

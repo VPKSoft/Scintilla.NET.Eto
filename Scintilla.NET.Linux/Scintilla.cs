@@ -28,24 +28,26 @@ using System;
 using System.Runtime.InteropServices;
 using System.Text;
 using Gtk;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Linux.Collections;
-using Scintilla.NET.Linux.EventArguments;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Extensions;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Structs;
+using ScintillaNet.Linux.Collections;
+using ScintillaNet.Linux.EventArguments;
+using ScintillaNet.Linux.GdkUtils;
 using Color = Gdk.Color;
 using Image = Gtk.Image;
 using Key = Gdk.Key;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Extensions;
-using Scintilla.NET.Abstractions.Structs;
-using Scintilla.NET.Linux.GdkUtils;
-using Style = Scintilla.NET.Linux.Collections.Style;
-using Status = Scintilla.NET.Abstractions.Enumerations.Status;
-using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
-using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
-namespace Scintilla.NET.Linux;
-using static ScintillaConstants;
+using Style = ScintillaNet.Linux.Collections.Style;
+using Status = ScintillaNet.Abstractions.Enumerations.Status;
+using TabDrawMode = ScintillaNet.Abstractions.Enumerations.TabDrawMode;
+using WrapMode = ScintillaNet.Abstractions.Enumerations.WrapMode;
+using static ScintillaNet.Abstractions.ScintillaConstants;
+
+namespace ScintillaNet.Linux;
+
 using Keys = Gdk.Key;
 
 /// <summary>
@@ -1175,7 +1177,7 @@ public class Scintilla : Widget, IScintillaLinux
     }
 
     /// <summary>
-    /// Specifies the long line indicator column number and color when <see cref="EdgeMode" /> is <see cref="global::Scintilla.NET.Abstractions.Enumerations.EdgeMode.MultiLine" />.
+    /// Specifies the long line indicator column number and color when <see cref="EdgeMode" /> is <see cref="Abstractions.Enumerations.EdgeMode.MultiLine" />.
     /// </summary>
     /// <param name="column">The zero-based column number to indicate.</param>
     /// <param name="edgeColor">The color of the vertical long line indicator.</param>
@@ -2750,7 +2752,7 @@ public class Scintilla : Widget, IScintillaLinux
     /// <summary>
     /// Gets or sets the behavior when pasting text into multiple selections.
     /// </summary>
-    /// <returns>One of the <see cref="MultiPaste" /> enumeration values. The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.MultiPaste.Once" />.</returns>
+    /// <returns>One of the <see cref="MultiPaste" /> enumeration values. The default is <see cref="Abstractions.Enumerations.MultiPaste.Once" />.</returns>
     public MultiPaste MultiPaste
     {
         get => this.MultiPasteGet();
@@ -2886,7 +2888,7 @@ public class Scintilla : Widget, IScintillaLinux
     /// <summary>
     /// Gets or sets the search flags used when searching text.
     /// </summary>
-    /// <returns>A bitwise combination of <see cref="global::Scintilla.NET.Abstractions.Enumerations.SearchFlags" /> values. The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.SearchFlags.None" />.</returns>
+    /// <returns>A bitwise combination of <see cref="Abstractions.Enumerations.SearchFlags" /> values. The default is <see cref="Abstractions.Enumerations.SearchFlags.None" />.</returns>
     /// <seealso cref="SearchInTarget" />
     public SearchFlags SearchFlags
     {
@@ -2945,9 +2947,9 @@ public class Scintilla : Widget, IScintillaLinux
     /// </summary>
     /// <returns>
     /// One of the <see cref="Status" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.
+    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.
     /// </returns>
-    /// <remarks>The status can be reset by setting the property to <see cref="global::Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.</remarks>
+    /// <remarks>The status can be reset by setting the property to <see cref="Scintilla.NET.Abstractions.Enumerations.Status.Ok" />.</remarks>
     public Status Status
     {
         get => this.StatusGet();
@@ -2959,8 +2961,8 @@ public class Scintilla : Widget, IScintillaLinux
     /// Gets or sets how tab characters are represented when whitespace is visible.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="global::Scintilla.NET.Abstractions.Enumerations.TabDrawMode" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.TabDrawMode.LongArrow" />.
+    /// One of the <see cref="Abstractions.Enumerations.TabDrawMode" /> enumeration values.
+    /// The default is <see cref="Abstractions.Enumerations.TabDrawMode.LongArrow" />.
     /// </returns>
     /// <seealso cref="ViewWhitespace" />
     public TabDrawMode TabDrawMode
@@ -3034,7 +3036,7 @@ public class Scintilla : Widget, IScintillaLinux
     /// </summary>
     /// <returns>
     /// One of the <see cref="Technology" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.Technology.Default" />.
+    /// The default is <see cref="Abstractions.Enumerations.Technology.Default" />.
     /// </returns>
     public Technology Technology
     {
@@ -3148,8 +3150,8 @@ public class Scintilla : Widget, IScintillaLinux
     /// Gets or sets the line wrapping indent mode.
     /// </summary>
     /// <returns>
-    /// One of the <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapIndentMode" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapIndentMode.Fixed" />.
+    /// One of the <see cref="Abstractions.Enumerations.WrapIndentMode" /> enumeration values.
+    /// The default is <see cref="Fixed" />.
     /// </returns>
     public WrapIndentMode WrapIndentMode
     {
@@ -3163,7 +3165,7 @@ public class Scintilla : Widget, IScintillaLinux
     /// </summary>
     /// <returns>
     /// One of the <see cref="WrapMode" /> enumeration values.
-    /// The default is <see cref="global::Scintilla.NET.Abstractions.Enumerations.WrapMode.Word" />.
+    /// The default is <see cref="Scintilla.NET.Abstractions.Enumerations.WrapMode.Word" />.
     /// </returns>
     public WrapMode WrapMode
     {

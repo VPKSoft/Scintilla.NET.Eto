@@ -1,10 +1,10 @@
 ﻿using System.Runtime.InteropServices;
 using System.Text;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Structs;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Structs;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Classes;
+namespace ScintillaNet.Abstractions.Classes;
 
 public abstract class LoaderBase : ILoader
 {

@@ -1,12 +1,12 @@
-﻿using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using Scintilla.NET.Abstractions.Interfaces.EventArguments;
-using Scintilla.NET.Abstractions.Structs;
-using Scintilla.NET.Abstractions.UtilityClasses;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Interfaces.EventArguments;
+using ScintillaNet.Abstractions.Structs;
+using ScintillaNet.Abstractions.UtilityClasses;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.WinForms.Collections;
+namespace ScintillaNet.WinForms.Collections;
 
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="Scintilla" /> control.

@@ -24,12 +24,14 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.EtoForms.GTK;
+using ScintillaNet.Linux;
+
+namespace ScintillaNet.EtoForms.GTK;
 
 /// <summary>
 /// A dummy inheritance of the Scintilla GTK control to be used with Eto.Forms wrapper.
 /// </summary>
-public class ScintillaGtk : Linux.Scintilla
+public class ScintillaGtk : Scintilla
 {
     
 }

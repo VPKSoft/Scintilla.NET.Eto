@@ -1,7 +1,7 @@
-﻿using Scintilla.NET.Abstractions.Interfaces.EventArguments;
-using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
+﻿using ScintillaNet.Abstractions.Interfaces.EventArguments;
+using static ScintillaNet.Abstractions.Classes.ScintillaApiStructs;
 
-namespace Scintilla.NET.Abstractions.EventArguments;
+namespace ScintillaNet.Abstractions.EventArguments;
 
 /// <summary>
 /// A base class for events for the Scintilla native control signals.

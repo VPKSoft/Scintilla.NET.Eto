@@ -1,6 +1,6 @@
-using Scintilla.NET.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces;
 
-namespace Scintilla.NET.Abstractions.Enumerations;
+namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// Specifies the lexer to use for syntax highlighting in a <see cref="Scintilla" /> control.

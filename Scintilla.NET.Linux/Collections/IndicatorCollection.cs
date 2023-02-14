@@ -1,10 +1,10 @@
 ﻿using System.ComponentModel;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 using Color = Gdk.Color;
 
-namespace Scintilla.NET.Linux.Collections;
+namespace ScintillaNet.Linux.Collections;
 
 /// <summary>
 /// An immutable collection of indicators in a <see cref="Scintilla" /> control.

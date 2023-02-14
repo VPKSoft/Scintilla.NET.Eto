@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using System.ComponentModel;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Collections;
+namespace ScintillaNet.Abstractions.Collections;
 
 /// <summary>
 /// An immutable collection of indicators in a <see cref="Scintilla" /> control.

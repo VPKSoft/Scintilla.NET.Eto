@@ -24,9 +24,9 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions;
+using ScintillaNet.Abstractions;
 
-namespace Scintilla.NET.EtoForms.Shared;
+namespace ScintillaNet.EtoForms;
 /// <summary>
 /// Provides direct call to the Scintilla native API.
 /// </summary>

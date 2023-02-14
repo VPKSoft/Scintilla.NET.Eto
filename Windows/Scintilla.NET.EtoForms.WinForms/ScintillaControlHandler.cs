@@ -1,38 +1,37 @@
 ﻿using System.Text;
 using Eto.WinForms.Forms;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Methods;
-using Scintilla.NET.Abstractions.Structs;
-using Scintilla.NET.EtoForms.Shared;
-using Scintilla.NET.WinForms;
-using Scintilla.NET.WinForms.EventArguments;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Methods;
+using ScintillaNet.Abstractions.Structs;
+using ScintillaNet.WinForms;
+using ScintillaNet.WinForms.EventArguments;
 using Control = Eto.Forms.Control;
-using IndicatorCollection = Scintilla.NET.WinForms.Collections.IndicatorCollection;
-using LineCollection = Scintilla.NET.WinForms.Collections.LineCollection;
-using MarginCollection = Scintilla.NET.WinForms.Collections.MarginCollection;
-using MarkerCollection = Scintilla.NET.WinForms.Collections.MarkerCollection;
-using NeedShownEventArgs = Scintilla.NET.WinForms.EventArguments.NeedShownEventArgs;
-using SelectionCollection = Scintilla.NET.WinForms.Collections.SelectionCollection;
-using StyleCollection = Scintilla.NET.WinForms.Collections.StyleCollection;
-using TabDrawMode = Scintilla.NET.Abstractions.Enumerations.TabDrawMode;
+using IndicatorCollection = ScintillaNet.WinForms.Collections.IndicatorCollection;
+using LineCollection = ScintillaNet.WinForms.Collections.LineCollection;
+using MarginCollection = ScintillaNet.WinForms.Collections.MarginCollection;
+using MarkerCollection = ScintillaNet.WinForms.Collections.MarkerCollection;
+using NeedShownEventArgs = ScintillaNet.WinForms.EventArguments.NeedShownEventArgs;
+using SelectionCollection = ScintillaNet.WinForms.Collections.SelectionCollection;
+using StyleCollection = ScintillaNet.WinForms.Collections.StyleCollection;
+using TabDrawMode = ScintillaNet.Abstractions.Enumerations.TabDrawMode;
 
-namespace Scintilla.NET.EtoForms.WinForms;
+namespace ScintillaNet.EtoForms.WinForms;
 
 /// <summary>
 /// Scintilla control handler for WinForms.
 /// Implements the <see cref="WindowsControl{TControl,TWidget,TCallback}" />
 /// Implements the <see cref="IScintillaControl" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
-/// Implements the <see cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
+/// Implements the <see cref="IScintillaApi{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
+/// Implements the <see cref="IScintillaProperties{TColor}" />
+/// Implements the <see cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
 /// Implements the <see cref="IScintillaMethods" />
 /// Implements the <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
 /// </summary>
-/// <seealso cref="global::Scintilla.NET.Abstractions.IScintillaApi{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaProperties{TColor}" />
-/// <seealso cref="global::Scintilla.NET.Abstractions.Interfaces.IScintillaCollectionProperties{TMarkers, TStyles, TIndicators, TLines, TMargins, TSelections, TMarker, TStyle, TIndicator, TLine, TMargin, TSelection, TBitmap, TColor}" />
+/// <seealso cref="IScintillaApi{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
+/// <seealso cref="IScintillaProperties{TColor}" />
+/// <seealso cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
 /// <seealso cref="IScintillaMethods" />
 /// <seealso cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
 public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, ScintillaControl, Control.ICallback>, IScintillaControl,
@@ -775,7 +774,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     }
 
 
-    /// <inheritdoc cref="global::Scintilla.NET.WinForms.Scintilla.Markers" />
+    /// <inheritdoc cref="Scintilla.Markers" />
     public MarkerCollection Markers => nativeControl.Markers;
 
     /// <summary>
@@ -1097,7 +1096,7 @@ public class ScintillaControlHandler : WindowsControl<ScintillaWinForms, Scintil
     /// <inheritdoc />
     public Technology Technology { get => nativeControl.Technology; set => nativeControl.Technology = value; }
 
-    /// <inheritdoc cref="global::Scintilla.NET.WinForms.Scintilla.Text" />
+    /// <inheritdoc cref="Scintilla.Text" />
     public override string Text { get => nativeControl.Text; set => nativeControl.Text = value; }
 
     /// <inheritdoc />

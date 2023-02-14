@@ -1,7 +1,7 @@
 using System;
 using System.Runtime.InteropServices;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 
 public static class NativeMethods
 {

@@ -1,6 +1,6 @@
-﻿using Scintilla.NET.Abstractions.Classes;
+﻿using ScintillaNet.Abstractions.Classes;
 
-namespace Scintilla.NET.Abstractions.Enumerations;
+namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// Options for displaying indentation guides in a <see cref="Scintilla" /> control.

@@ -1,11 +1,11 @@
 ﻿using System.Collections;
 using System.ComponentModel;
 using Eto.Drawing;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.EtoForms.Shared.Collections;
+namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
 /// An immutable collection of indicators in a <see cref="WinForms.Scintilla" /> control.

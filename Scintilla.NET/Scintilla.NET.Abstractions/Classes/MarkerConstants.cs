@@ -24,11 +24,11 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Enumerations;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Classes;
+namespace ScintillaNet.Abstractions.Classes;
 
 /// <summary>
 /// Marker-related constants.

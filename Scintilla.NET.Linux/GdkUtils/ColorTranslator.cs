@@ -26,7 +26,7 @@ SOFTWARE.
 
 using Color = Gdk.Color;
 
-namespace Scintilla.NET.Linux.GdkUtils;
+namespace ScintillaNet.Linux.GdkUtils;
 
 /// <summary>
 /// <see cref="Color"/> to and from translations with <see cref="int"/> values.
@@ -41,10 +41,10 @@ public static class ColorTranslator
     /// <returns>A 32-bit ARGB integer value with full opacity.</returns>
     public static int ToInt(Color value)
     {
-        var r = (value.Red / 256) << 24;
-        var g = (value.Green / 256) << 16;
-        var b = (value.Blue / 256) << 8;
-        var intColor = r | g | b | 255; // 255 for full opacity.
+        var r = (value.Red / 256);
+        var g = (value.Green / 256) << 8;
+        var b = (value.Blue / 256) << 16;
+        var intColor = r | g | b | (255 << 24); // 255 for full opacity.
         return intColor;
     }
 
@@ -56,10 +56,10 @@ public static class ColorTranslator
     /// <returns>A <see cref="Color"/> value.</returns>
     public static Color ToColor(int value)
     {
-        var b = value & 0xFF;
-        var g = (value >> 8) & 0xFF;
-        var r = (value >> 16) & 0xFF;
         var _ = (value >> 24) & 0xFF; // Opacity
+        var b = (value >> 16) & 0xFF;
+        var g = (value >> 8) & 0xFF;
+        var r = value & 0xFF;
         
         return new Color
         {

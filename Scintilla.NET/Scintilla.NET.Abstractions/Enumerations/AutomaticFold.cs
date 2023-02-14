@@ -1,6 +1,6 @@
-﻿using Scintilla.NET.Abstractions.Interfaces;
+﻿using ScintillaNet.Abstractions.Interfaces;
 
-namespace Scintilla.NET.Abstractions.Enumerations;
+namespace ScintillaNet.Abstractions.Enumerations;
 
 /// <summary>
 /// Configuration options for automatic code folding.

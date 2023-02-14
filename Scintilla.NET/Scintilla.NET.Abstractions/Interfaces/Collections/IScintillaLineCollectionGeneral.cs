@@ -24,11 +24,11 @@ SOFTWARE.
 */
 #endregion
 
-using Scintilla.NET.Abstractions.Interfaces.EventArguments;
-using Scintilla.NET.Abstractions.Collections;
-using static Scintilla.NET.Abstractions.Classes.ScintillaApiStructs;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Interfaces.EventArguments;
+using static ScintillaNet.Abstractions.Classes.ScintillaApiStructs;
 
-namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+namespace ScintillaNet.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// An interface for the <see cref="IScintillaLineCollection{TLine}"/> methods and properties.

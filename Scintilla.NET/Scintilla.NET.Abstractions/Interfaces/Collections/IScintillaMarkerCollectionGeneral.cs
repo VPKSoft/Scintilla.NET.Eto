@@ -24,7 +24,7 @@ SOFTWARE.
 */
 #endregion
 
-namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+namespace ScintillaNet.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// An interface for the <see cref="IScintillaMarkerCollection{TMarker, TImage, TColor}"/> methods and properties.

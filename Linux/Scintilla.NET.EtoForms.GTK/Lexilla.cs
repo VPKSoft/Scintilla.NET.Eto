@@ -25,9 +25,9 @@ SOFTWARE.
 #endregion
 
 using System.Runtime.InteropServices;
-using Scintilla.NET.Abstractions;
+using ScintillaNet.Abstractions;
 
-namespace Scintilla.NET.EtoForms.GTK;
+namespace ScintillaNet.EtoForms.GTK;
 
 /// <summary>
 /// Linux handler for the Scintilla's Lexilla library.

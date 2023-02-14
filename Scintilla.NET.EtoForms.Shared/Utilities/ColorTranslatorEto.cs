@@ -25,9 +25,10 @@ SOFTWARE.
 #endregion
 
 using Eto.Drawing;
+
 // ReSharper disable CommentTypo
 
-namespace Scintilla.NET.EtoForms.Shared.Utilities;
+namespace ScintillaNet.EtoForms.Utilities;
 
 /// <summary>
 /// Some color helper methods to Eto.Forms framework.

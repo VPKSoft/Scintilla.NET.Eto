@@ -1,6 +1,6 @@
-﻿using Scintilla.NET.Abstractions.Collections;
+﻿using ScintillaNet.Abstractions.Collections;
 
-namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+namespace ScintillaNet.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// An immutable collection of lines of text in a <see cref="ScintillaApi" /> control.

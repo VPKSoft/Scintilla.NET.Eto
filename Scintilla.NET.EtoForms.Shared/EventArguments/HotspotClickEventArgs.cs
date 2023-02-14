@@ -1,8 +1,8 @@
-﻿using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.EventArguments;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.EventArguments;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.Eto.Windows.EventArguments;
+namespace ScintillaNet.EtoForms.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="WinForms.Scintilla.HotspotClick" />, <see cref="WinForms.Scintilla.HotspotDoubleClick" />,

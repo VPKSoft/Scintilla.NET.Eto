@@ -1,8 +1,8 @@
-﻿using Scintilla.NET.Abstractions.Interfaces.Collections;
-using System.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
+﻿using System.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
-namespace Scintilla.NET.Abstractions.Collections;
+namespace ScintillaNet.Abstractions.Collections;
 
 /// <summary>
 /// A multiple selection collection.

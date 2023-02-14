@@ -25,9 +25,9 @@ SOFTWARE.
 #endregion
 
 using System.Collections;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.Abstractions.Interfaces;
+namespace ScintillaNet.Abstractions.Interfaces;
 
 /// <summary>
 /// Properties for Scintilla API with without generic type members.

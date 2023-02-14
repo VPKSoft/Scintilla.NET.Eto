@@ -1,9 +1,9 @@
-﻿using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.EventArguments;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+﻿using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.EventArguments;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.Linux.EventArguments;
+namespace ScintillaNet.Linux.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.Insert" /> and <see cref="Scintilla.Delete" /> events.

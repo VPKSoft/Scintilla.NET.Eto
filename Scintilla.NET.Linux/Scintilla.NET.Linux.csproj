@@ -1,27 +1,59 @@
 <Project Sdk="Microsoft.NET.Sdk">
 	<PropertyGroup>
-	  <TargetFramework>netstandard2.1</TargetFramework>
-	  <OutputType>Library</OutputType>
-	  <ImplicitUsings>disable</ImplicitUsings>
-	  <Nullable>enable</Nullable>
-	  <AssemblyTitle>Scintilla.NET.Linux</AssemblyTitle>
-	  <Company>Jacob Slusser, VPKSoft, cyber960</Company>
-	  <Product>Scintilla.NET.Linux</Product>
-	  <Description>Source Editing Component based on Scintilla 5 series.</Description>
-	  <Copyright>Copyright © VPKSoft 2023.</Copyright>
-	  <Version>1.0.0.5320</Version>
-	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-	  <DocumentationFile>bin\$(Configuration)\Scintilla.NET.Linux.xml</DocumentationFile>
-	  <UseWindowsForms>true</UseWindowsForms>
-	  <OutputPath>bin\$(Configuration)\</OutputPath>
-	  <LangVersion>latest</LangVersion>
+		<TargetFramework>netstandard2.1</TargetFramework>
+		<OutputType>Library</OutputType>
+		<ImplicitUsings>disable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<AssemblyTitle>Scintilla.NET.Linux</AssemblyTitle>
+		<Company>Jacob Slusser, VPKSoft, cyber960</Company>
+		<Product>Scintilla.NET.Linux</Product>
+		<Description>Source Editing Component based on Scintilla 5 series.</Description>
+		<Copyright>Copyright © VPKSoft 2023.</Copyright>
+		<Version>1.0.0.5320</Version>
+		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+		<DocumentationFile>bin\$(Configuration)\Scintilla.NET.Linux.xml</DocumentationFile>
+		<UseWindowsForms>true</UseWindowsForms>
+		<OutputPath>bin\$(Configuration)\</OutputPath>
+		<LangVersion>latest</LangVersion>
+		<RootNamespace>ScintillaNet.Linux</RootNamespace>
+		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 	</PropertyGroup>
-  <ItemGroup>
-    <PackageReference Include="GtkSharp" Version="3.24.24.38" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="GtkSharp" Version="3.24.24.38" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<!-- For the native libraries to embed into NuGet generation -->
+		<None Include="Scintilla.NET.Linux.targets">
+			<PackagePath>build\</PackagePath>
+			<Pack>true</Pack>
+		</None>
+		<None Include="liblexilla.so">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<PackagePath>build\</PackagePath>
+			<Pack>true</Pack>
+			<Visible>False</Visible>
+		</None>
+		<None Include="libscintilla.so">
+			<CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+			<PackagePath>build\</PackagePath>
+			<Pack>true</Pack>
+			<Visible>False</Visible>
+		</None>
+	</ItemGroup>
 
+	<ItemGroup>
+		<ProjectReference Include="..\Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj">
+			<ReferenceOutputAssembly>true</ReferenceOutputAssembly>
+			<IncludeAssets>Scintilla.NET.Abstractions.dll</IncludeAssets>
+		</ProjectReference>
+	</ItemGroup>
+	<PropertyGroup>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+	</PropertyGroup>
+	<Target DependsOnTargets="BuildOnlySettings;ResolveReferences" Name="CopyProjectReferencesToPackage">
+		<ItemGroup>
+			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
+		</ItemGroup>
+	</Target>
 </Project>

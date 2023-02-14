@@ -1,9 +1,9 @@
 ﻿using System;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.EventArguments;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.EventArguments;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.Linux.EventArguments;
+namespace ScintillaNet.Linux.EventArguments;
 
 /// <summary>
 /// Provides data for the <see cref="Scintilla.HotspotClick" />, <see cref="Scintilla.HotspotDoubleClick" />,

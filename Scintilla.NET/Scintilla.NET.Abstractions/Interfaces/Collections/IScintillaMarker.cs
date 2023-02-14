@@ -1,7 +1,7 @@
-﻿using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Enumerations;
+﻿using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Enumerations;
 
-namespace Scintilla.NET.Abstractions.Interfaces.Collections;
+namespace ScintillaNet.Abstractions.Interfaces.Collections;
 
 /// <summary>
 /// Represents a margin marker in a <see cref="Scintilla" /> control.

@@ -2,11 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Collections;
-using Scintilla.NET.Abstractions.Interfaces.Collections;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Collections;
+using ScintillaNet.Abstractions.Interfaces.Collections;
 
-namespace Scintilla.NET.WinForms.Collections;
+namespace ScintillaNet.WinForms.Collections;
 
 /// <summary>
 /// An immutable collection of indicators in a <see cref="Scintilla" /> control.

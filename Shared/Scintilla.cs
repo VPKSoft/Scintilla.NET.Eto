@@ -28,27 +28,29 @@ using System.Runtime.InteropServices;
 using System.Text;
 using Eto.Drawing;
 using Eto.Forms;
-using Scintilla.NET.Abstractions;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.Abstractions.Interfaces;
-using Scintilla.NET.Abstractions.Interfaces.Methods;
-using Scintilla.NET.Abstractions.Structs;
-using Scintilla.NET.EtoForms.Shared;
-using Scintilla.NET.EtoForms.Shared.Collections;
-using Command = Scintilla.NET.Abstractions.Enumerations.Command;
-using WrapMode = Scintilla.NET.Abstractions.Enumerations.WrapMode;
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.Abstractions.Interfaces;
+using ScintillaNet.Abstractions.Interfaces.Methods;
+using ScintillaNet.Abstractions.Structs;
+using ScintillaNet.EtoForms;
+using ScintillaNet.EtoForms.Collections;
+using Command = ScintillaNet.Abstractions.Enumerations.Command;
+using WrapMode = ScintillaNet.Abstractions.Enumerations.WrapMode;
+
+
 
 #if Windows
-using Scintilla.NET.WinForms;
+using ScintillaNet.WinForms;
 using Eto.WinForms;
 #elif Linux
-using Scintilla.NET.Linux;
+using ScintillaNet.Linux;
 using Eto.GtkSharp;
 #elif OSX
 #endif
 
 
-namespace Scintilla.NET.Eto;
+namespace ScintillaNet.Eto;
 
 /// <summary>
 /// A Scintilla control wrapper for Eto.Forms.

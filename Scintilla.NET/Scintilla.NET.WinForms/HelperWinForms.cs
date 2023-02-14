@@ -7,14 +7,12 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
-using Scintilla.NET.Abstractions.Classes;
-using Scintilla.NET.Abstractions.Enumerations;
-using Scintilla.NET.WinForms.Collections;
-using Scintilla.NET.WinForms.Collections;
-using static Scintilla.NET.Abstractions.ScintillaConstants;
-using static Scintilla.NET.WinForms.Helpers;
+using ScintillaNet.Abstractions.Classes;
+using ScintillaNet.Abstractions.Enumerations;
+using static ScintillaNet.Abstractions.ScintillaConstants;
+using static ScintillaNet.WinForms.Helpers;
 
-namespace Scintilla.NET.WinForms;
+namespace ScintillaNet.WinForms;
 internal class HelperWinForms
 {
     
