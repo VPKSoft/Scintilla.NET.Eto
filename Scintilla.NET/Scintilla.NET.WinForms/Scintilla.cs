@@ -79,6 +79,7 @@ public class Scintilla : Control, IScintillaWinForms
     private static readonly object insertEventKey = new();
     private static readonly object deleteEventKey = new();
     private static readonly object updateUiEventKey = new();
+    private static readonly object autoCSelectionChangeEventKey = new object();
     private static readonly object modifyAttemptEventKey = new();
     private static readonly object styleNeededEventKey = new();
     private static readonly object savePointReachedEventKey = new();
@@ -1565,6 +1566,18 @@ public class Scintilla : Control, IScintillaWinForms
         this.SetEmptySelectionExtension(pos, TextLength, Lines);
     }
 
+    /// <inheritdoc />
+    public void SetXCaretPolicy(CaretPolicy caretPolicy, int caretSlop)
+    {
+        this.SetXCaretPolicyExtension(caretPolicy, caretSlop);
+    }
+
+    /// <inheritdoc />
+    public void SetYCaretPolicy(CaretPolicy caretPolicy, int caretSlop)
+    {
+        this.SetYCaretPolicyExtension(caretPolicy, caretSlop);
+    }
+
     /// <summary>
     /// Sets additional options for displaying folds.
     /// </summary>
@@ -1969,6 +1982,10 @@ public class Scintilla : Control, IScintillaWinForms
 
                 case SCN_DWELLSTART:
                     OnDwellStart(new DwellEventArgs(this, Lines, scn.position.ToInt32(), scn.x, scn.y));
+                    break;
+
+                case SCN_AUTOCSELECTIONCHANGE:
+                    OnAutoCSelectionChange(new AutoCSelectionChangeEventArgs(this, Lines, scn.text, scn.position.ToInt32(), scn.listType));
                     break;
 
                 case SCN_DWELLEND:
@@ -3915,6 +3932,15 @@ public class Scintilla : Control, IScintillaWinForms
             return count;
         }
     }
+
+    /// <inheritdoc />
+    public string WhitespaceChars
+    {
+        get => this.WhitespaceCharsGet();
+        
+        set => this.WhitespaceCharsSet(value);
+    }
+
     #endregion
 
     #region CollectionProperties
@@ -4426,6 +4452,17 @@ public class Scintilla : Control, IScintillaWinForms
     }
 
     /// <summary>
+    /// Occurs when a user has highlighted an item in an auto-completion list.
+    /// </summary>
+    [Category("Notifications")]
+    [Description("Occurs when a user has highlighted an item in an autocompletion list.")]
+    public event EventHandler<AutoCSelectionChangeEventArgs> AutoCSelectionChange
+    {
+        add => Events.AddHandler(autoCSelectionChangeEventKey, value);
+        remove => Events.RemoveHandler(autoCSelectionChangeEventKey, value);
+    }
+
+    /// <summary>
     /// Occurs when the user zooms the display using the keyboard or the <see cref="Zoom" /> property is changed.
     /// </summary>
     [Category("Notifications")]
@@ -4482,6 +4519,18 @@ public class Scintilla : Control, IScintillaWinForms
     protected virtual void OnAutoCSelection(AutoCSelectionEventArgs e)
     {
         if (Events[autoCSelectionEventKey] is EventHandler<AutoCSelectionEventArgs> handler)
+        {
+            handler(this, e);
+        }
+    }
+
+    /// <summary>
+    /// Raises the <see cref="AutoCSelectionChange" /> event.
+    /// </summary>
+    /// <param name="e">An <see cref="AutoCSelectionChangeEventArgs" /> that contains the event data.</param>
+    protected virtual void OnAutoCSelectionChange(AutoCSelectionChangeEventArgs e)
+    {
+        if (Events[autoCSelectionChangeEventKey] is EventHandler<AutoCSelectionChangeEventArgs> handler)
         {
             handler(this, e);
         }

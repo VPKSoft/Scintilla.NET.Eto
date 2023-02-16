@@ -20,10 +20,10 @@
 	</PropertyGroup>
 	<ItemGroup>
 	  <PackageReference Include="Eto.Platform.Windows" Version="2.7.3" />
+	  <PackageReference Include="Scintilla.NET.Abstractions" Version="1.0.2" />
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
-	  <ProjectReference Include="..\..\Scintilla.NET\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj" />
 	  <ProjectReference Include="..\..\Scintilla.NET\Scintilla.NET.WinForms\Scintilla.NET.WinForms.csproj" />
 	</ItemGroup>
 

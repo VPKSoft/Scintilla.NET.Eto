@@ -25,13 +25,13 @@ namespace ScintillaNet.EtoForms.Wpf;
 /// Implements the <see cref="IScintillaProperties{TColor}" />
 /// Implements the <see cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
 /// Implements the <see cref="IScintillaMethods" />
-/// Implements the <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
+/// Implements the <see cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs,TAutoCSelectionChangeEventArgs}" />
 /// </summary>
 /// <seealso cref="IScintillaApi{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
 /// <seealso cref="IScintillaProperties{TColor}" />
 /// <seealso cref="IScintillaCollectionProperties{TMarkers,TStyles,TIndicators,TLines,TMargins,TSelections,TMarker,TStyle,TIndicator,TLine,TMargin,TSelection,TBitmap,TColor}" />
 /// <seealso cref="IScintillaMethods" />
-/// <seealso cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs}" />
+/// <seealso cref="IScintillaEvents{TKeys,TAutoCSelectionEventArgs,TBeforeModificationEventArgs,TModificationEventArgs,TChangeAnnotationEventArgs,TCharAddedEventArgs,TDoubleClickEventArgs,TDwellEventArgs,TCallTipClickEventArgs,THotspotClickEventArgs,TIndicatorClickEventArgs,TIndicatorReleaseEventArgs,TInsertCheckEventArgs,TMarginClickEventArgs,TNeedShownEventArgs,TStyleNeededEventArgs,TUpdateUiEventArgs,TScNotificationEventArgs,TAutoCSelectionChangeEventArgs}" />
 public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForms, ScintillaControl, Control.ICallback>, IScintillaControl,
     IScintillaWinForms
 {
@@ -183,6 +183,14 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
 
     /// <inheritdoc />
     public void SetEmptySelection(int pos) => nativeControl.SetEmptySelection(pos);
+
+    /// <inheritdoc />
+    public void SetXCaretPolicy(CaretPolicy caretPolicy, int caretSlop) =>
+        nativeControl.SetXCaretPolicy(caretPolicy, caretSlop);
+
+    /// <inheritdoc />
+    public void SetYCaretPolicy(CaretPolicy caretPolicy, int caretSlop) =>
+        nativeControl.SetYCaretPolicy(caretPolicy, caretSlop);
 
     /// <inheritdoc />
     public void SetFoldFlags(FoldFlags flags) => nativeControl.SetFoldFlags(flags);
@@ -766,6 +774,13 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
     }
 
     /// <inheritdoc />
+    public event EventHandler<AutoCSelectionChangeEventArgs>? AutoCSelectionChange
+    {
+        add => nativeControl.AutoCSelectionChange += value;
+        remove => nativeControl.AutoCSelectionChange -= value;
+    }
+
+    /// <inheritdoc />
     public event EventHandler<EventArgs>? ZoomChanged
     {
         add => nativeControl.ZoomChanged += value;
@@ -1114,6 +1129,13 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
 
     /// <inheritdoc />
     public int VisibleLineCount => nativeControl.VisibleLineCount;
+
+    /// <inheritdoc />
+    public string WhitespaceChars
+    {
+        get => nativeControl.WhitespaceChars;
+        set => nativeControl.WhitespaceChars = value;
+    }
 
     /// <inheritdoc />
     public int WhitespaceSize { get => nativeControl.WhitespaceSize; set => nativeControl.WhitespaceSize = value; }

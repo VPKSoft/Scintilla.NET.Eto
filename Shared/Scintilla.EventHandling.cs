@@ -49,6 +49,11 @@ partial class Scintilla
         autoCSelectionEventHandlers = new();
 
     private readonly
+        List<KeyValuePair<EventHandler<AutoCSelectionChangeEventArgs>,
+            EventHandler<global::ScintillaNet.WinForms.EventArguments.AutoCSelectionChangeEventArgs>>?>
+        autoCSelectionChangeEventHandlers = new();
+
+    private readonly
         List<KeyValuePair<EventHandler<BeforeModificationEventArgs>,
             EventHandler<global::ScintillaNet.WinForms.EventArguments.BeforeModificationEventArgs>>?>
         beforeModificationEventHandlers = new();
@@ -347,6 +352,67 @@ partial class Scintilla
                 {
                     autoCSelectionEventHandlers.RemoveAll(f => f!.Value.Key == value);
                     ((IScintillaLinux)BaseControl.NativeControl).AutoCCompleted -= handlers.Value.Value;
+                }                
+#elif OSX
+#endif
+            }
+        }
+    }
+
+        /// <inheritdoc />
+    public event EventHandler<AutoCSelectionChangeEventArgs>? AutoCSelectionChange
+    {
+        add
+        {
+            if (value != null)
+            {
+#if Windows
+                void Handler(object? sender, WinForms.EventArguments.AutoCSelectionChangeEventArgs args) =>
+                    value.Invoke(
+                        sender,
+                        new AutoCSelectionChangeEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.TextPtr,
+                            args.BytePosition, args.ListType));
+
+                autoCSelectionChangeEventHandlers.Add(
+                    new KeyValuePair<EventHandler<AutoCSelectionChangeEventArgs>,
+                        EventHandler<WinForms.EventArguments.AutoCSelectionChangeEventArgs>>(value, Handler));
+
+                ((IScintillaWinForms)BaseControl.NativeControl).AutoCSelectionChange += Handler;
+#elif Linux
+                void Handler(object? sender, Linux.EventArguments.AutoCSelectionChangeEventArgs args) => value.Invoke(
+                    sender,
+                    new AutoCSelectionChangeEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Position,
+                        args.TextPtr, args.Char, args.ListCompletionMethod));
+
+                autoCSelectionChangeEventHandlers.Add(
+                    new KeyValuePair<EventHandler<AutoCSelectionChangeEventArgs>,
+                        EventHandler<Linux.EventArguments.AutoCSelectionChangeEventArgs>>(value, Handler));
+
+                ((IScintillaLinux)BaseControl.NativeControl).AutoCSelectionChange += Handler;
+#elif OSX
+#endif
+            }
+        }
+
+        remove
+        {
+            if (value != null)
+            {
+#if Windows
+                var handlers = autoCSelectionChangeEventHandlers.FirstOrDefault(f => f!.Value.Key == value);
+
+                if (handlers != null)
+                {
+                    autoCSelectionChangeEventHandlers.RemoveAll(f => f!.Value.Key == value);
+                    ((IScintillaWinForms)BaseControl.NativeControl).AutoCSelectionChange -= handlers.Value.Value;
+                }
+#elif Linux
+                var handlers = autoCSelectionChangeEventHandlers.FirstOrDefault(f => f!.Value.Key == value);
+
+                if (handlers != null)
+                {
+                    autoCSelectionChangeEventHandlers.RemoveAll(f => f!.Value.Key == value);
+                    ((IScintillaLinux)BaseControl.NativeControl).AutoCSelectionChange -= handlers.Value.Value;
                 }                
 #elif OSX
 #endif

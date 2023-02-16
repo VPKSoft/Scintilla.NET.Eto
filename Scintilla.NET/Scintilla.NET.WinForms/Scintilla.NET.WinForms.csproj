@@ -39,12 +39,6 @@
 	<ItemGroup>
 		<Compile Update="Scintilla.cs" />
 	</ItemGroup>
-	<ItemGroup>
-		<ProjectReference Include="..\Scintilla.NET.Abstractions\Scintilla.NET.Abstractions.csproj">
-			<ReferenceOutputAssembly>true</ReferenceOutputAssembly>
-			<IncludeAssets>Scintilla.NET.Abstractions.dll</IncludeAssets>
-		</ProjectReference>
-	</ItemGroup>
 
 	<ItemGroup>
 		<None Include="Scintilla.NET.Winforms.targets">
@@ -64,12 +58,8 @@
 			<Visible>False</Visible>
 		</None>
 	</ItemGroup>
-	<PropertyGroup>
-		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-	</PropertyGroup>
-	<Target DependsOnTargets="BuildOnlySettings;ResolveReferences" Name="CopyProjectReferencesToPackage">
-		<ItemGroup>
-			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'ProjectReference'))" />
-		</ItemGroup>
-	</Target>
+
+	<ItemGroup>
+	  <PackageReference Include="Scintilla.NET.Abstractions" Version="1.0.2" />
+	</ItemGroup>
 </Project>
