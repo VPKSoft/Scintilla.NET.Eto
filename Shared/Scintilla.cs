@@ -1,4 +1,6 @@
-﻿#region License
+﻿#undef Windows
+#define Linux
+#region License
 /*
 MIT License
 
@@ -45,7 +47,7 @@ using WrapMode = ScintillaNet.Abstractions.Enumerations.WrapMode;
 using ScintillaNet.WinForms;
 using Eto.WinForms;
 #elif Linux
-using ScintillaNet.Linux;
+using ScintillaNet.Gtk;
 using Eto.GtkSharp;
 #elif OSX
 #endif

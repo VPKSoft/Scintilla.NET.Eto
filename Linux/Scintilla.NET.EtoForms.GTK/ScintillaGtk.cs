@@ -24,7 +24,7 @@ SOFTWARE.
 */
 #endregion
 
-using ScintillaNet.Linux;
+using ScintillaNet.Gtk;
 
 namespace ScintillaNet.EtoForms.GTK;
 

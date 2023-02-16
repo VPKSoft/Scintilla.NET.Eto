@@ -34,7 +34,7 @@ using Eto.WinForms;
 using ScintillaNet.WinForms;
 #elif Linux
 using Eto.GtkSharp;
-using ScintillaNet.Linux;
+using ScintillaNet.Gtk;
 #elif OSX
 #endif
 
@@ -135,88 +135,93 @@ partial class Scintilla
 #elif Linux
     private readonly
         List<KeyValuePair<EventHandler<AutoCSelectionEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.AutoCSelectionEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.AutoCSelectionEventArgs>>?>
         autoCSelectionEventHandlers = new();
 
     private readonly
+        List<KeyValuePair<EventHandler<AutoCSelectionChangeEventArgs>,
+            EventHandler<global::ScintillaNet.Gtk.EventArguments.AutoCSelectionChangeEventArgs>>?>
+        autoCSelectionChangeEventHandlers = new();
+
+    private readonly
         List<KeyValuePair<EventHandler<BeforeModificationEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.BeforeModificationEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.BeforeModificationEventArgs>>?>
         beforeModificationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<ChangeAnnotationEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.ChangeAnnotationEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.ChangeAnnotationEventArgs>>?>
         changeAnnotationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<CharAddedEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.CharAddedEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.CharAddedEventArgs>>?>
         charAddedEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<ModificationEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.ModificationEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.ModificationEventArgs>>?>
         modificationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<DoubleClickEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.DoubleClickEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.DoubleClickEventArgs>>?>
         doubleClickEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<DwellEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.DwellEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.DwellEventArgs>>?>
         dwellEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<CallTipClickEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.CallTipClickEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.CallTipClickEventArgs>>?>
         callTipClickEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<UpdateUIEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.UpdateUIEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.UpdateUIEventArgs>>?>
         updateUiEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<StyleNeededEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.StyleNeededEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.StyleNeededEventArgs>>?>
         styleNeededEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<SCNotificationEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.SCNotificationEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.SCNotificationEventArgs>>?>
         sCNotificationEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<NeedShownEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.NeedShownEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.NeedShownEventArgs>>?>
         needShownEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<MarginClickEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.MarginClickEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.MarginClickEventArgs>>?>
         marginClickEventHandlers = new();
     
     private readonly
         List<KeyValuePair<EventHandler<InsertCheckEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.InsertCheckEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.InsertCheckEventArgs>>?>
         insertCheckEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<IndicatorReleaseEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.IndicatorReleaseEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.IndicatorReleaseEventArgs>>?>
         indicatorReleaseEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<IndicatorClickEventArgs>,
-            EventHandler<ScintillaNet.Linux.EventArguments.IndicatorClickEventArgs>>?>
+            EventHandler<ScintillaNet.Gtk.EventArguments.IndicatorClickEventArgs>>?>
         indicatorClickEventHandlers = new();
 
     private readonly
         List<KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
-            EventHandler<ScintillaNet.Linux.EventArguments.HotspotClickEventArgs<Gdk.Key>>>?>
-        hotspotClickEventHandlers = new();    
+            EventHandler<ScintillaNet.Gtk.EventArguments.HotspotClickEventArgs<Gdk.Key>>>?>
+        hotspotClickEventHandlers = new();
 #elif OSX
 #endif
 
@@ -257,14 +262,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).AutoCCompleted += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.AutoCSelectionEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.AutoCSelectionEventArgs args) => value.Invoke(
                     sender,
                     new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Position,
                         args.TextPtr, args.Char, args.ListCompletionMethod));
 
                 autoCSelectionEventHandlers.Add(
                     new KeyValuePair<EventHandler<AutoCSelectionEventArgs>,
-                        EventHandler<Linux.EventArguments.AutoCSelectionEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.AutoCSelectionEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).AutoCCompleted += Handler;
 #elif OSX
@@ -318,14 +323,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).AutoCCompleted += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.AutoCSelectionEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.AutoCSelectionEventArgs args) => value.Invoke(
                     sender,
                     new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Position,
                         args.TextPtr, args.Char, args.ListCompletionMethod));
 
                 autoCSelectionEventHandlers.Add(
                     new KeyValuePair<EventHandler<AutoCSelectionEventArgs>,
-                        EventHandler<Linux.EventArguments.AutoCSelectionEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.AutoCSelectionEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).AutoCCompleted += Handler;
 #elif OSX
@@ -379,14 +384,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).AutoCSelectionChange += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.AutoCSelectionChangeEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.AutoCSelectionChangeEventArgs args) => value.Invoke(
                     sender,
-                    new AutoCSelectionChangeEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Position,
-                        args.TextPtr, args.Char, args.ListCompletionMethod));
+                    new AutoCSelectionChangeEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.TextPtr,
+                        args.BytePosition, args.ListType));
 
                 autoCSelectionChangeEventHandlers.Add(
                     new KeyValuePair<EventHandler<AutoCSelectionChangeEventArgs>,
-                        EventHandler<Linux.EventArguments.AutoCSelectionChangeEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.AutoCSelectionChangeEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).AutoCSelectionChange += Handler;
 #elif OSX
@@ -438,13 +443,13 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).BeforeDelete += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.BeforeModificationEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.BeforeModificationEventArgs args) => value.Invoke(
                     sender,
                     new BeforeModificationEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Source, args.Position, args.ByteLength, args.TextPtr));
 
                 beforeModificationEventHandlers.Add(
                     new KeyValuePair<EventHandler<BeforeModificationEventArgs>,
-                        EventHandler<Linux.EventArguments.BeforeModificationEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.BeforeModificationEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).BeforeDelete += Handler;
 #elif OSX
@@ -496,13 +501,13 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).BeforeDelete += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.BeforeModificationEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.BeforeModificationEventArgs args) => value.Invoke(
                     sender,
                     new BeforeModificationEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Source, args.Position, args.ByteLength, args.TextPtr));
 
                 beforeModificationEventHandlers.Add(
                     new KeyValuePair<EventHandler<BeforeModificationEventArgs>,
-                        EventHandler<Linux.EventArguments.BeforeModificationEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.BeforeModificationEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).BeforeDelete += Handler;
 #elif OSX
@@ -554,13 +559,13 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).ChangeAnnotation += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.ChangeAnnotationEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.ChangeAnnotationEventArgs args) => value.Invoke(
                     sender,
                     new ChangeAnnotationEventArgs(args.Line));
 
                 changeAnnotationEventHandlers.Add(
                     new KeyValuePair<EventHandler<ChangeAnnotationEventArgs>,
-                        EventHandler<Linux.EventArguments.ChangeAnnotationEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.ChangeAnnotationEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).ChangeAnnotation += Handler;
 #elif OSX
@@ -612,13 +617,13 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).CharAdded += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.CharAddedEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.CharAddedEventArgs args) => value.Invoke(
                     sender,
                     new CharAddedEventArgs(args.Char));
 
                 charAddedEventHandlers.Add(
                     new KeyValuePair<EventHandler<CharAddedEventArgs>,
-                        EventHandler<Linux.EventArguments.CharAddedEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.CharAddedEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).CharAdded += Handler;
 #elif OSX
@@ -672,7 +677,7 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).Delete += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.ModificationEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.ModificationEventArgs args) => value.Invoke(
                     sender,
                     new ModificationEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Source, args.Position,
@@ -680,7 +685,7 @@ partial class Scintilla
 
                 modificationEventHandlers.Add(
                     new KeyValuePair<EventHandler<ModificationEventArgs>,
-                        EventHandler<Linux.EventArguments.ModificationEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.ModificationEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).Delete += Handler;
 #elif OSX
@@ -733,14 +738,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).DoubleClick += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.DoubleClickEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.DoubleClickEventArgs args) => value.Invoke(
                     sender,
                     new DoubleClickEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Line));
 
                 doubleClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<DoubleClickEventArgs>,
-                        EventHandler<Linux.EventArguments.DoubleClickEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.DoubleClickEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).DoubleClick += Handler;
 #elif OSX
@@ -793,14 +798,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).DwellEnd += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.DwellEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.DwellEventArgs args) => value.Invoke(
                     sender,
                     new DwellEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position, args.X, args.Y));
 
                 dwellEventHandlers.Add(
                     new KeyValuePair<EventHandler<DwellEventArgs>,
-                        EventHandler<Linux.EventArguments.DwellEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.DwellEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).DwellEnd += Handler;
 #elif OSX
@@ -853,14 +858,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).CallTipClick += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.CallTipClickEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.CallTipClickEventArgs args) => value.Invoke(
                     sender,
                     new CallTipClickEventArgs((IScintillaApi)BaseControl.NativeControl,
                         args.CallTipClickType));
 
                 callTipClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<CallTipClickEventArgs>,
-                        EventHandler<Linux.EventArguments.CallTipClickEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.CallTipClickEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).CallTipClick += Handler;
 #elif OSX
@@ -913,14 +918,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).DwellStart += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.DwellEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.DwellEventArgs args) => value.Invoke(
                     sender,
                     new DwellEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position, args.X, args.Y));
 
                 dwellEventHandlers.Add(
                     new KeyValuePair<EventHandler<DwellEventArgs>,
-                        EventHandler<Linux.EventArguments.DwellEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.DwellEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).DwellStart += Handler;
 #elif OSX
@@ -973,14 +978,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).HotspotClick += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.HotspotClickEventArgs<Gdk.Key> args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.HotspotClickEventArgs<Gdk.Key> args) => value.Invoke(
                     sender,
                     new HotspotClickEventArgs<Keys>(
                         (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.Position));
 
                 hotspotClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
-                        EventHandler<Linux.EventArguments.HotspotClickEventArgs<Gdk.Key>>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.HotspotClickEventArgs<Gdk.Key>>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).HotspotClick += Handler;
 #elif OSX
@@ -1033,14 +1038,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).HotspotDoubleClick += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.HotspotClickEventArgs<Gdk.Key> args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.HotspotClickEventArgs<Gdk.Key> args) => value.Invoke(
                     sender,
                     new HotspotClickEventArgs<Keys>(
                         (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.Position));
 
                 hotspotClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
-                        EventHandler<Linux.EventArguments.HotspotClickEventArgs<Gdk.Key>>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.HotspotClickEventArgs<Gdk.Key>>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).HotspotDoubleClick += Handler;
 #elif OSX
@@ -1093,14 +1098,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).HotspotReleaseClick += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.HotspotClickEventArgs<Gdk.Key> args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.HotspotClickEventArgs<Gdk.Key> args) => value.Invoke(
                     sender,
                     new HotspotClickEventArgs<Keys>(
                         (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.Position));
 
                 hotspotClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
-                        EventHandler<Linux.EventArguments.HotspotClickEventArgs<Gdk.Key>>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.HotspotClickEventArgs<Gdk.Key>>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).HotspotReleaseClick += Handler;
 #elif OSX
@@ -1152,13 +1157,13 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).IndicatorClick += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.IndicatorClickEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.IndicatorClickEventArgs args) => value.Invoke(
                     sender,
                     new IndicatorClickEventArgs((IScintillaApi)BaseControl.NativeControl, args.Modifiers.ToEto()));
 
                 indicatorClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<IndicatorClickEventArgs>,
-                        EventHandler<Linux.EventArguments.IndicatorClickEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.IndicatorClickEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).IndicatorClick += Handler;
 #elif OSX
@@ -1211,14 +1216,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).IndicatorRelease += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.IndicatorReleaseEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.IndicatorReleaseEventArgs args) => value.Invoke(
                     sender,
                     new IndicatorReleaseEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position));
 
                 indicatorReleaseEventHandlers.Add(
                     new KeyValuePair<EventHandler<IndicatorReleaseEventArgs>,
-                        EventHandler<Linux.EventArguments.IndicatorReleaseEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.IndicatorReleaseEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).IndicatorRelease += Handler;
 #elif OSX
@@ -1272,7 +1277,7 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).Insert += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.ModificationEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.ModificationEventArgs args) => value.Invoke(
                     sender,
                     new ModificationEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Source, args.Position,
@@ -1280,7 +1285,7 @@ partial class Scintilla
 
                 modificationEventHandlers.Add(
                     new KeyValuePair<EventHandler<ModificationEventArgs>,
-                        EventHandler<Linux.EventArguments.ModificationEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.ModificationEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).Insert += Handler;
 #elif OSX
@@ -1333,14 +1338,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).InsertCheck += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.InsertCheckEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.InsertCheckEventArgs args) => value.Invoke(
                     sender,
                     new InsertCheckEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position, args.ByteLength, args.TextPtr));
 
                 insertCheckEventHandlers.Add(
                     new KeyValuePair<EventHandler<InsertCheckEventArgs>,
-                        EventHandler<Linux.EventArguments.InsertCheckEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.InsertCheckEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).InsertCheck += Handler;
 #elif OSX
@@ -1394,14 +1399,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).MarginClick += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.MarginClickEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.MarginClickEventArgs args) => value.Invoke(
                     sender,
                     new MarginClickEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Margin));
 
                 marginClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<MarginClickEventArgs>,
-                        EventHandler<Linux.EventArguments.MarginClickEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.MarginClickEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).MarginClick += Handler;
 #elif OSX
@@ -1454,14 +1459,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).MarginRightClick += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.MarginClickEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.MarginClickEventArgs args) => value.Invoke(
                     sender,
                     new MarginClickEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Margin));
 
                 marginClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<MarginClickEventArgs>,
-                        EventHandler<Linux.EventArguments.MarginClickEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.MarginClickEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).MarginRightClick += Handler;
 #elif OSX
@@ -1522,14 +1527,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).NeedShown += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.NeedShownEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.NeedShownEventArgs args) => value.Invoke(
                     sender,
                     new NeedShownEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position, args.Length));
 
                 needShownEventHandlers.Add(
                     new KeyValuePair<EventHandler<NeedShownEventArgs>,
-                        EventHandler<Linux.EventArguments.NeedShownEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.NeedShownEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).NeedShown += Handler;
 #elif OSX
@@ -1581,13 +1586,13 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).SCNotification += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.SCNotificationEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.SCNotificationEventArgs args) => value.Invoke(
                     sender,
                     new SCNotificationEventArgs(args.SCNotification));
 
                 sCNotificationEventHandlers.Add(
                     new KeyValuePair<EventHandler<SCNotificationEventArgs>,
-                        EventHandler<Linux.EventArguments.SCNotificationEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.SCNotificationEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).SCNotification += Handler;
 #elif OSX
@@ -1664,14 +1669,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).StyleNeeded += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.StyleNeededEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.StyleNeededEventArgs args) => value.Invoke(
                     sender,
                     new StyleNeededEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position));
 
                 styleNeededEventHandlers.Add(
                     new KeyValuePair<EventHandler<StyleNeededEventArgs>,
-                        EventHandler<Linux.EventArguments.StyleNeededEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.StyleNeededEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).StyleNeeded += Handler;
 #elif OSX
@@ -1724,14 +1729,14 @@ partial class Scintilla
 
                 ((IScintillaWinForms)BaseControl.NativeControl).UpdateUi += Handler;
 #elif Linux
-                void Handler(object? sender, Linux.EventArguments.UpdateUIEventArgs args) => value.Invoke(
+                void Handler(object? sender, Gtk.EventArguments.UpdateUIEventArgs args) => value.Invoke(
                     sender,
                     new UpdateUIEventArgs((IScintillaApi)BaseControl.NativeControl,
                         args.Change));
 
                 updateUiEventHandlers.Add(
                     new KeyValuePair<EventHandler<UpdateUIEventArgs>,
-                        EventHandler<Linux.EventArguments.UpdateUIEventArgs>>(value, Handler));
+                        EventHandler<Gtk.EventArguments.UpdateUIEventArgs>>(value, Handler));
 
                 ((IScintillaLinux)BaseControl.NativeControl).UpdateUi += Handler;                
 #elif OSX

@@ -49,7 +49,7 @@ internal class ImageConversions
     /// </summary>
     /// <param name="image">The image to covert.</param>
     /// <returns>The bitmap converted to ARGB byte array (<see cref="byte"/>[]).</returns>
-    public static byte[] BitmapToArgb(Gtk.Image image)
+    public static byte[] BitmapToArgb(global::Gtk.Image image)
     {
         return BitmapToArgb(image.Pixbuf);
     }
