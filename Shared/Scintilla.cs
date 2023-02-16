@@ -1,6 +1,4 @@
-﻿#undef Windows
-#define Linux
-#region License
+﻿#region License
 /*
 MIT License
 
