@@ -24,25 +24,31 @@ SOFTWARE.
 */
 #endregion
 
+using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.EventArguments;
 using ScintillaNet.Abstractions.Interfaces.Collections;
-using ScintillaNet.Abstractions.Interfaces.EventArguments.Base;
 
-namespace ScintillaNet.Abstractions.Interfaces.EventArguments;
+namespace ScintillaNet.EtoForms.EventArguments;
 
 /// <summary>
-/// Provides data for the <see cref="IScintillaEvents{TKeys, TAutoCSelectionEventArgs, TBeforeModificationEventArgs, TModificationEventArgs, TChangeAnnotationEventArgs, TCharAddedEventArgs,TDoubleClickEventArgs, TDwellEventArgs, TCallTipClickEventArgs, THotspotClickEventArgs, TIndicatorClickEventArgs,TIndicatorReleaseEventArgs, TInsertCheckEventArgs, TMarginClickEventArgs, TNeedShownEventArgs,TStyleNeededEventArgs, TUpdateUiEventArgs, TScNotificationEventArgs}.IndicatorRelease" /> events.
+/// Provides data for the Scintilla.AutoCSelectionChange event.
 /// </summary>
-public interface IIndicatorReleaseEventArgs : IScintillaEventArgs, IPosition
+public class AutoCSelectionChangeEventArgs : AutoCSelectionChangeEventArgsBase
 {
     /// <summary>
-    /// Gets the zero-based document position of the text clicked.
+    /// Initializes a new instance of the <see cref="AutoCSelectionChangeEventArgs" /> class.
     /// </summary>
-    /// <returns>The zero-based character position within the document of the clicked text.</returns>
-    new int Position { get; }
-
-    /// <summary>
-    /// Gets the line collection general members.
-    /// </summary>
-    /// <value>The line collection  general members.</value>
-    IScintillaLineCollectionGeneral LineCollectionGeneral { get; }
+    /// <param name="scintilla">The Scintilla control that generated this event.</param>
+    /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>/// 
+    /// <param name="text">A pointer to the selected auto-completion text.</param>
+    /// <param name="bytePosition">The zero-based byte position within the document where the list was displayed.</param>
+    /// <param name="listType">The list type of the user list, or 0 for an auto-completion.</param>    
+    public AutoCSelectionChangeEventArgs(
+        IScintillaApi scintilla,
+        IScintillaLineCollectionGeneral lineCollectionGeneral, 
+        IntPtr text, 
+        int bytePosition, 
+        int listType) : base(scintilla, lineCollectionGeneral, text, bytePosition, listType)
+    {
+    }
 }

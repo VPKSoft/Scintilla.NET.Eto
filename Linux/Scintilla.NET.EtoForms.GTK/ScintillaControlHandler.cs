@@ -32,15 +32,31 @@ using ScintillaNet.Abstractions.Enumerations;
 using ScintillaNet.Abstractions.Interfaces;
 using ScintillaNet.Abstractions.Interfaces.Methods;
 using ScintillaNet.Abstractions.Structs;
-using ScintillaNet.Linux;
-using ScintillaNet.Linux.Collections;
-using ScintillaNet.Linux.EventArguments;
+using ScintillaNet.Gtk.EventArguments;
+using ScintillaNet.Gtk;
+using ScintillaNet.Gtk.Collections;
+using AutoCSelectionEventArgs = ScintillaNet.Gtk.EventArguments.AutoCSelectionEventArgs;
+using BeforeModificationEventArgs = ScintillaNet.Gtk.EventArguments.BeforeModificationEventArgs;
+using CallTipClickEventArgs = ScintillaNet.Gtk.EventArguments.CallTipClickEventArgs;
+using ChangeAnnotationEventArgs = ScintillaNet.Gtk.EventArguments.ChangeAnnotationEventArgs;
+using CharAddedEventArgs = ScintillaNet.Gtk.EventArguments.CharAddedEventArgs;
 using Color = Gdk.Color;
+using DoubleClickEventArgs = ScintillaNet.Gtk.EventArguments.DoubleClickEventArgs;
+using DwellEventArgs = ScintillaNet.Gtk.EventArguments.DwellEventArgs;
 using Keys = Gdk.Key;
 using Image = Gtk.Image;
-using Selection = ScintillaNet.Linux.Collections.Selection;
+using IndicatorClickEventArgs = ScintillaNet.Gtk.EventArguments.IndicatorClickEventArgs;
+using IndicatorReleaseEventArgs = ScintillaNet.Gtk.EventArguments.IndicatorReleaseEventArgs;
+using InsertCheckEventArgs = ScintillaNet.Gtk.EventArguments.InsertCheckEventArgs;
+using MarginClickEventArgs = ScintillaNet.Gtk.EventArguments.MarginClickEventArgs;
+using ModificationEventArgs = ScintillaNet.Gtk.EventArguments.ModificationEventArgs;
+using NeedShownEventArgs = ScintillaNet.Gtk.EventArguments.NeedShownEventArgs;
+using SCNotificationEventArgs = ScintillaNet.Gtk.EventArguments.SCNotificationEventArgs;
+using Selection = ScintillaNet.Gtk.Collections.Selection;
 using Status = ScintillaNet.Abstractions.Enumerations.Status;
-using Style = ScintillaNet.Linux.Collections.Style;
+using Style = ScintillaNet.Gtk.Collections.Style;
+using StyleNeededEventArgs = ScintillaNet.Gtk.EventArguments.StyleNeededEventArgs;
+using UpdateUIEventArgs = ScintillaNet.Gtk.EventArguments.UpdateUIEventArgs;
 using WrapMode = ScintillaNet.Abstractions.Enumerations.WrapMode;
 
 namespace ScintillaNet.EtoForms.GTK;
@@ -64,7 +80,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     IScintillaEvents<Keys, 
     AutoCSelectionEventArgs, BeforeModificationEventArgs, ModificationEventArgs, ChangeAnnotationEventArgs, CharAddedEventArgs, DoubleClickEventArgs,
     DwellEventArgs, CallTipClickEventArgs, HotspotClickEventArgs<Keys>, IndicatorClickEventArgs, IndicatorReleaseEventArgs,
-    InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs>
+    InsertCheckEventArgs, MarginClickEventArgs, NeedShownEventArgs, StyleNeededEventArgs, UpdateUIEventArgs, SCNotificationEventArgs,AutoCSelectionChangeEventArgs>
 {
     private readonly ScintillaGtk nativeControl;
 
@@ -211,6 +227,14 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
 
     /// <inheritdoc />
     public void SetEmptySelection(int pos) => nativeControl.SetEmptySelection(pos);
+
+    /// <inheritdoc />
+    public void SetXCaretPolicy(CaretPolicy caretPolicy, int caretSlop) =>
+        nativeControl.SetXCaretPolicy(caretPolicy, caretSlop);
+
+    /// <inheritdoc />
+    public void SetYCaretPolicy(CaretPolicy caretPolicy, int caretSlop) =>
+        nativeControl.SetYCaretPolicy(caretPolicy, caretSlop);
 
     /// <inheritdoc />
     public void SetFoldFlags(FoldFlags flags) => nativeControl.SetFoldFlags(flags);
@@ -677,21 +701,21 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     }
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotClick
+    public event EventHandler<Gtk.EventArguments.HotspotClickEventArgs<Keys>>? HotspotClick
     {
         add => nativeControl.HotspotClick += value;
         remove => nativeControl.HotspotClick -= value;
     }
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotDoubleClick
+    public event EventHandler<Gtk.EventArguments.HotspotClickEventArgs<Keys>>? HotspotDoubleClick
     {
         add => nativeControl.HotspotDoubleClick += value;
         remove => nativeControl.HotspotDoubleClick -= value;
     }
 
     /// <inheritdoc />
-    public event EventHandler<HotspotClickEventArgs<Keys>>? HotspotReleaseClick
+    public event EventHandler<Gtk.EventArguments.HotspotClickEventArgs<Keys>>? HotspotReleaseClick
     {
         add => nativeControl.HotspotReleaseClick += value;
         remove => nativeControl.HotspotReleaseClick -= value;
@@ -793,6 +817,13 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
     {
         add => nativeControl.UpdateUi += value;
         remove => nativeControl.UpdateUi -= value;
+    }
+
+    /// <inheritdoc />
+    public event EventHandler<AutoCSelectionChangeEventArgs>? AutoCSelectionChange
+    {
+        add => nativeControl.AutoCSelectionChange += value;
+        remove => nativeControl.AutoCSelectionChange -= value;
     }
 
     /// <inheritdoc />
@@ -1145,6 +1176,14 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
 
     /// <inheritdoc />
     public int VisibleLineCount => nativeControl.VisibleLineCount;
+
+    /// <inheritdoc />
+    public string WhitespaceChars
+    {
+        get => nativeControl.WhitespaceChars;
+
+        set => nativeControl.WhitespaceChars = value;
+    }
 
     /// <inheritdoc />
     public int WhitespaceSize { get => nativeControl.WhitespaceSize; set => nativeControl.WhitespaceSize = value; }

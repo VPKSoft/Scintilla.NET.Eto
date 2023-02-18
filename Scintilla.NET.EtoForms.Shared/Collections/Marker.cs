@@ -9,7 +9,7 @@ using static ScintillaNet.Abstractions.ScintillaConstants;
 namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
-/// Represents a margin marker in a <see cref="WinForms.Scintilla" /> control.
+/// Represents a margin marker in a Scintilla control.
 /// </summary>
 public class Marker : MarkerBase<Image, Color>
 {
@@ -51,7 +51,7 @@ public class Marker : MarkerBase<Image, Color>
     /// <summary>
     /// Initializes a new instance of the <see cref="Marker" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="WinForms.Scintilla" /> control that created this marker.</param>
+    /// <param name="scintilla">The Scintilla control that created this marker.</param>
     /// <param name="index">The index of this style within the <see cref="MarkerCollection" /> that created it.</param>
     public Marker(IScintillaApi scintilla, int index) : base(scintilla, index)
     {

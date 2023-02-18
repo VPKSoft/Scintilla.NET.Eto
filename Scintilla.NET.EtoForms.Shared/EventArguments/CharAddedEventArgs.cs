@@ -3,7 +3,7 @@
 namespace ScintillaNet.EtoForms.EventArguments;
 
 /// <summary>
-/// Provides data for the <see cref="WinForms.Scintilla.CharAdded" /> event.
+/// Provides data for the <see cref="IScintillaEtoFormsEvents.CharAdded" /> event.
 /// </summary>
 public class CharAddedEventArgs : CharAddedEventArgsBase
 {

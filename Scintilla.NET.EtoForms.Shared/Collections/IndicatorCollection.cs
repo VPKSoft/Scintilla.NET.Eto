@@ -8,7 +8,7 @@ using ScintillaNet.Abstractions.Interfaces.Collections;
 namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
-/// An immutable collection of indicators in a <see cref="WinForms.Scintilla" /> control.
+/// An immutable collection of indicators in a Scintilla control.
 /// </summary>
 public class IndicatorCollection: IndicatorCollectionBase<Indicator, Color>, IEnumerable<Indicator>
 {
@@ -46,7 +46,7 @@ public class IndicatorCollection: IndicatorCollectionBase<Indicator, Color>, IEn
     /// <summary>
     /// Initializes a new instance of the <see cref="IndicatorCollection" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
+    /// <param name="scintilla">The Scintilla control that created this collection.</param>
     /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     public IndicatorCollection(IScintillaApi scintilla, IScintillaLineCollectionGeneral lineCollectionGeneral) : base(scintilla)
     {

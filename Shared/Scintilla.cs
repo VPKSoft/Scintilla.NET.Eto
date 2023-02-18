@@ -35,6 +35,7 @@ using ScintillaNet.Abstractions.Interfaces.Methods;
 using ScintillaNet.Abstractions.Structs;
 using ScintillaNet.EtoForms;
 using ScintillaNet.EtoForms.Collections;
+using ScintillaNet.EtoForms.EventArguments;
 using Command = ScintillaNet.Abstractions.Enumerations.Command;
 using WrapMode = ScintillaNet.Abstractions.Enumerations.WrapMode;
 
@@ -44,7 +45,7 @@ using WrapMode = ScintillaNet.Abstractions.Enumerations.WrapMode;
 using ScintillaNet.WinForms;
 using Eto.WinForms;
 #elif Linux
-using ScintillaNet.Linux;
+using ScintillaNet.Gtk;
 using Eto.GtkSharp;
 #elif OSX
 #endif
@@ -1061,6 +1062,14 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
     public int VisibleLineCount => ((IScintillaProperties)BaseControl).VisibleLineCount;
 
     /// <inheritdoc />
+    public string WhitespaceChars
+    {
+        get => ((IScintillaProperties)BaseControl).WhitespaceChars;
+
+        set => ((IScintillaProperties)BaseControl).WhitespaceChars = value;
+    }
+
+    /// <inheritdoc />
     public int WhitespaceSize
     {
         get => ((IScintillaProperties)BaseControl).WhitespaceSize;
@@ -1425,6 +1434,14 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 
     /// <inheritdoc />
     public void SetEmptySelection(int pos) => ((IScintillaMethods)BaseControl.NativeControl).SetEmptySelection(pos);
+
+    /// <inheritdoc />
+    public void SetXCaretPolicy(CaretPolicy caretPolicy, int caretSlop) =>
+        ((IScintillaMethods)BaseControl.NativeControl).SetXCaretPolicy(caretPolicy, caretSlop);
+
+    /// <inheritdoc />
+    public void SetYCaretPolicy(CaretPolicy caretPolicy, int caretSlop) =>
+        ((IScintillaMethods)BaseControl.NativeControl).SetYCaretPolicy(caretPolicy, caretSlop);
 
     /// <inheritdoc />
     public void SetFoldFlags(FoldFlags flags) => ((IScintillaMethods)BaseControl.NativeControl).SetFoldFlags(flags);

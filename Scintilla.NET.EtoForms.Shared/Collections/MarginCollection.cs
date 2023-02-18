@@ -7,7 +7,7 @@ using static ScintillaNet.Abstractions.ScintillaConstants;
 namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
-/// An immutable collection of margins in a <see cref="WinForms.Scintilla" /> control.
+/// An immutable collection of margins in a Scintilla control.
 /// </summary>
 public class MarginCollection : MarginCollectionBase<Margin, Color>
 {
@@ -70,7 +70,7 @@ public class MarginCollection : MarginCollectionBase<Margin, Color>
     /// <summary>
     /// Initializes a new instance of the <see cref="MarginCollection" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="WinForms.Scintilla" /> control that created this collection.</param>
+    /// <param name="scintilla">The Scintilla control that created this collection.</param>
     public MarginCollection(IScintillaApi scintilla) : base(scintilla)
     {
     }

@@ -6,7 +6,7 @@ using ScintillaNet.Abstractions.Enumerations;
 namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
-/// Represents a margin displayed on the left edge of a <see cref="WinForms.Scintilla" /> control.
+/// Represents a margin displayed on the left edge of a Scintilla control.
 /// </summary>
 public class Margin : MarginBase<Color>
 {
@@ -36,7 +36,7 @@ public class Margin : MarginBase<Color>
     /// <summary>
     /// Initializes a new instance of the <see cref="Margin" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="WinForms.Scintilla" /> control that created this margin.</param>
+    /// <param name="scintilla">The Scintilla control that created this margin.</param>
     /// <param name="index">The index of this margin within the <see cref="MarginCollection" /> that created it.</param>
     public Margin(IScintillaApi scintilla, int index) : base(scintilla, index)
     {

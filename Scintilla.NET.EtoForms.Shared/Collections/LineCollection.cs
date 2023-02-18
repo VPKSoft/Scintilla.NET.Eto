@@ -9,7 +9,7 @@ using static ScintillaNet.Abstractions.ScintillaConstants;
 namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
-/// An immutable collection of lines of text in a <see cref="WinForms.Scintilla" /> control.
+/// An immutable collection of lines of text in a Scintilla control.
 /// </summary>
 public class LineCollection : LineCollectionBase<Line>
 {
@@ -69,7 +69,7 @@ public class LineCollection : LineCollectionBase<Line>
     /// <summary>
     /// Initializes a new instance of the <see cref="LineCollection" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="Scintilla" /> control that created this collection.</param>
+    /// <param name="scintilla">The Scintilla control that created this collection.</param>
     /// <param name="styleCollectionGeneral">A reference to Scintilla's style collection.</param>
     /// <param name="markerCollectionGeneral">A reference to Scintilla's marker collection.</param>
     public LineCollection(IScintillaApi scintilla,
