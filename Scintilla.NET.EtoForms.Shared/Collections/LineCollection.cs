@@ -82,7 +82,7 @@ public class LineCollection : LineCollectionBase<Line>
         PerLineData = new GapBuffer<PerLine>
         {
             new() { Start = 0, },
-            new() { Start = 0, }, // Terminal
+            new() { Start = 0, } // Terminal
         };
     }
 

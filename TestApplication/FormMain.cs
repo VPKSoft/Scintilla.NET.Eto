@@ -46,8 +46,8 @@ public class FormMain : Form
             Rows =
             {
                 new TableRow(scintilla),
-                new TableRow(new Button(Click) { Text = "Click me"}),
-            },
+                new TableRow(new Button(Click) { Text = "Click me",})
+            }
         };
         scintilla.Size = new Size(500, 500);
         

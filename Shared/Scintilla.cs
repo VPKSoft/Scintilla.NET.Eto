@@ -35,8 +35,9 @@ using ScintillaNet.Abstractions.Interfaces.Methods;
 using ScintillaNet.Abstractions.Structs;
 using ScintillaNet.EtoForms;
 using ScintillaNet.EtoForms.Collections;
-using ScintillaNet.EtoForms.EventArguments;
+using Color = Eto.Drawing.Color;
 using Command = ScintillaNet.Abstractions.Enumerations.Command;
+using Status = ScintillaNet.Abstractions.Enumerations.Status;
 using WrapMode = ScintillaNet.Abstractions.Enumerations.WrapMode;
 
 
@@ -47,6 +48,7 @@ using Eto.WinForms;
 #elif Linux
 using ScintillaNet.Gtk;
 using Eto.GtkSharp;
+
 #elif OSX
 #endif
 
@@ -122,7 +124,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
         #if Windows
         ((IScintillaMethodsImage<System.Drawing.Image>)BaseControl).RegisterRgbaImage(type, image.ToSD());
         #elif Linux
-        throw new NotImplementedException();
+        ((IScintillaMethodsImage<global::Gtk.Image>)BaseControl).RegisterRgbaImage(type, image.ToGtk());
         #elif OSX
         #endif
     }
@@ -1530,6 +1532,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).CallTipSetForeHlt(color.ToSD());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).CallTipSetForeHlt(color.ToGdk());
 #elif OSX
 #endif
     }
@@ -1540,6 +1543,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).MultiEdgeAddLine(column, edgeColor.ToSD());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).MultiEdgeAddLine(column, edgeColor.ToGdk());
 #elif OSX
 #endif
     }
@@ -1550,6 +1554,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).SetAdditionalSelBack(color.ToSD());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).SetAdditionalSelBack(color.ToGdk());
 #elif OSX
 #endif
     }
@@ -1560,6 +1565,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).SetAdditionalSelFore(color.ToSD());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).SetAdditionalSelFore(color.ToGdk());
 #elif OSX
 #endif
     }
@@ -1570,6 +1576,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).SetFoldMarginColor(use, color.ToSD());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).SetFoldMarginColor(use, color.ToGdk());
 #elif OSX
 #endif
     }
@@ -1580,6 +1587,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).SetFoldMarginHighlightColor(use, color.ToSD());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).SetFoldMarginHighlightColor(use, color.ToGdk());
 #elif OSX
 #endif
     }
@@ -1590,6 +1598,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).SetSelectionBackColor(use, color.ToSD());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).SetSelectionBackColor(use, color.ToGdk());
 #elif OSX
 #endif
     }
@@ -1600,6 +1609,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).SetSelectionForeColor(use, color.ToSD());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).SetSelectionForeColor(use, color.ToGdk());
 #elif OSX
 #endif
     }
@@ -1610,6 +1620,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).SetWhitespaceBackColor(use, color.ToSD());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).SetWhitespaceBackColor(use, color.ToGdk());
 #elif OSX
 #endif
     }
@@ -1620,6 +1631,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).SetWhitespaceForeColor(use, color.ToSD());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).SetWhitespaceForeColor(use, color.ToGdk());
 #elif OSX
 #endif
     }
@@ -1630,6 +1642,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).AssignCmdKey(keyDefinition.ToSWF(), sciCommand);
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).AssignCmdKey(keyDefinition.ToGdkKey(), sciCommand);
 #elif OSX
 #endif
     }
@@ -1640,6 +1653,7 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 #if Windows
         ((IScintillaWinForms)BaseControl.NativeControl).ClearCmdKey(keyDefinition.ToSWF());
 #elif Linux
+        ((IScintillaLinux)BaseControl.NativeControl).ClearCmdKey(keyDefinition.ToGdkKey());
 #elif OSX
 #endif
     }
