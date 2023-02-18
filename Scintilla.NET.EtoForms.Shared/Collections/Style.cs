@@ -6,7 +6,7 @@ using ScintillaNet.EtoForms.Extensions;
 namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
-/// A style definition in a <see cref="WinForms.Scintilla" /> control.
+/// A style definition in a Scintilla control.
 /// </summary>
 public class Style : StyleBase<Color>
 {
@@ -56,7 +56,7 @@ public class Style : StyleBase<Color>
     /// <summary>
     /// Initializes a new instances of the <see cref="Style" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="WinForms.Scintilla" /> control that created this style.</param>
+    /// <param name="scintilla">The Scintilla control that created this style.</param>
     /// <param name="index">The index of this style within the <see cref="StyleCollection" /> that created it.</param>
     public Style(IScintillaApi scintilla, int index) : base(scintilla, index)
     {

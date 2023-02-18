@@ -110,7 +110,7 @@ partial class Scintilla
 
     private readonly
         List<KeyValuePair<EventHandler<MarginClickEventArgs>,
-            EventHandler<global::ScintillaNet.WinForms.EventArguments.MarginClickEventArgs>>?>
+            EventHandler<WinForms.EventArguments.MarginClickEventArgs<System.Windows.Forms.Keys>>>?>
         marginClickEventHandlers = new();
     
     private readonly
@@ -125,7 +125,7 @@ partial class Scintilla
 
     private readonly
         List<KeyValuePair<EventHandler<IndicatorClickEventArgs>,
-            EventHandler<global::ScintillaNet.WinForms.EventArguments.IndicatorClickEventArgs>>?>
+            EventHandler<WinForms.EventArguments.IndicatorClickEventArgs<System.Windows.Forms.Keys>>>?>
         indicatorClickEventHandlers = new();
 
     private readonly
@@ -1147,13 +1147,13 @@ partial class Scintilla
             if (value != null)
             {
 #if Windows
-                void Handler(object? sender, WinForms.EventArguments.IndicatorClickEventArgs args) => value.Invoke(
+                void Handler(object? sender, WinForms.EventArguments.IndicatorClickEventArgs<System.Windows.Forms.Keys> args) => value.Invoke(
                     sender,
                     new IndicatorClickEventArgs((IScintillaApi)BaseControl.NativeControl, args.Modifiers.ToEto()));
 
                 indicatorClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<IndicatorClickEventArgs>,
-                        EventHandler<WinForms.EventArguments.IndicatorClickEventArgs>>(value, Handler));
+                        EventHandler<WinForms.EventArguments.IndicatorClickEventArgs<System.Windows.Forms.Keys>>>(value, Handler));
 
                 ((IScintillaWinForms)BaseControl.NativeControl).IndicatorClick += Handler;
 #elif Linux
@@ -1388,14 +1388,14 @@ partial class Scintilla
             if (value != null)
             {
 #if Windows
-                void Handler(object? sender, WinForms.EventArguments.MarginClickEventArgs args) => value.Invoke(
+                void Handler(object? sender, WinForms.EventArguments.MarginClickEventArgs<System.Windows.Forms.Keys> args) => value.Invoke(
                     sender,
                     new MarginClickEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Margin));
 
                 marginClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<MarginClickEventArgs>,
-                        EventHandler<WinForms.EventArguments.MarginClickEventArgs>>(value, Handler));
+                        EventHandler<WinForms.EventArguments.MarginClickEventArgs<System.Windows.Forms.Keys>>>(value, Handler));
 
                 ((IScintillaWinForms)BaseControl.NativeControl).MarginClick += Handler;
 #elif Linux
@@ -1448,14 +1448,14 @@ partial class Scintilla
             if (value != null)
             {
 #if Windows
-                void Handler(object? sender, WinForms.EventArguments.MarginClickEventArgs args) => value.Invoke(
+                void Handler(object? sender, WinForms.EventArguments.MarginClickEventArgs<System.Windows.Forms.Keys> args) => value.Invoke(
                     sender,
                     new MarginClickEventArgs((IScintillaApi)BaseControl.NativeControl,
                         ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Margin));
 
                 marginClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<MarginClickEventArgs>,
-                        EventHandler<WinForms.EventArguments.MarginClickEventArgs>>(value, Handler));
+                        EventHandler<WinForms.EventArguments.MarginClickEventArgs<System.Windows.Forms.Keys>>>(value, Handler));
 
                 ((IScintillaWinForms)BaseControl.NativeControl).MarginRightClick += Handler;
 #elif Linux

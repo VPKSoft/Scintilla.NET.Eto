@@ -30,10 +30,10 @@ namespace ScintillaNet.EtoForms.WinForms;
 
 /// <summary>
 /// A wrapper for the <see cref="Scintilla"/> control.
-/// Implements the <see cref="Scintilla" />
+/// Implements the Scintilla
 /// </summary>
 /// <seealso cref="Scintilla" />
-public class ScintillaWinForms : ScintillaNet.WinForms.Scintilla
+public class ScintillaWinForms : Scintilla
 {
     
 }

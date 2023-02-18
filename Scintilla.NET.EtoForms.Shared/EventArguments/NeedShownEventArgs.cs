@@ -5,14 +5,14 @@ using ScintillaNet.Abstractions.Interfaces.Collections;
 namespace ScintillaNet.EtoForms.EventArguments;
 
 /// <summary>
-/// Provides data for the <see cref="WinForms.Scintilla.NeedShown" /> event.
+/// Provides data for the <see cref="IScintillaEtoFormsEvents.NeedShown" /> event.
 /// </summary>
 public class NeedShownEventArgs : NeedShownEventArgsBase
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="NeedShownEventArgs" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="WinForms.Scintilla" /> control that generated this event.</param>
+    /// <param name="scintilla">The Scintilla control that generated this event.</param>
     /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     /// <param name="bytePosition">The zero-based byte position within the document where text needs to be shown.</param>
     /// <param name="byteLength">The length in bytes of the text that needs to be shown.</param>

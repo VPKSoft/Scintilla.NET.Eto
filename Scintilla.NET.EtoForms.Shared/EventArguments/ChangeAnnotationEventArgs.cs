@@ -3,7 +3,7 @@
 namespace ScintillaNet.EtoForms.EventArguments;
 
 /// <summary>
-/// Provides data for the <see cref="WinForms.Scintilla.ChangeAnnotation" /> event.
+/// Provides data for the <see cref="IScintillaEtoFormsEvents.ChangeAnnotation" /> event.
 /// </summary>
 public class ChangeAnnotationEventArgs : ChangeAnnotationEventArgsBase
 {

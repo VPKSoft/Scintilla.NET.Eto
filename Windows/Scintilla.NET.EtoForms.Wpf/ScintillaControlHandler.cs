@@ -676,7 +676,7 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
     }
 
     /// <inheritdoc />
-    public event EventHandler<IndicatorClickEventArgs>? IndicatorClick
+    public event EventHandler<IndicatorClickEventArgs<Keys>>? IndicatorClick
     {
         add => nativeControl.IndicatorClick += value;
         remove => nativeControl.IndicatorClick -= value;
@@ -704,14 +704,14 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
     }
 
     /// <inheritdoc />
-    public event EventHandler<MarginClickEventArgs>? MarginClick
+    public event EventHandler<MarginClickEventArgs<Keys>>? MarginClick
     {
         add => nativeControl.MarginClick += value;
         remove => nativeControl.MarginClick -= value;
     }
 
     /// <inheritdoc />
-    public event EventHandler<MarginClickEventArgs>? MarginRightClick
+    public event EventHandler<MarginClickEventArgs<Keys>>? MarginRightClick
     {
         add => nativeControl.MarginRightClick += value;
         remove => nativeControl.MarginRightClick -= value;

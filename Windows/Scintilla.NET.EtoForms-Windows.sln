@@ -13,8 +13,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Eto.Windows",
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.Shared", "..\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj", "{82967AEE-5E4A-4BD6-A9D8-5FD9997576E8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.WinForms", "..\Scintilla.NET\Scintilla.NET.WinForms\Scintilla.NET.WinForms.csproj", "{22AE2386-60F1-476E-9303-61CDB0AAC4CF}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,14 +61,6 @@ Global
 		{82967AEE-5E4A-4BD6-A9D8-5FD9997576E8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{82967AEE-5E4A-4BD6-A9D8-5FD9997576E8}.ReleaseLinux|Any CPU.ActiveCfg = ReleaseLinux|Any CPU
 		{82967AEE-5E4A-4BD6-A9D8-5FD9997576E8}.ReleaseLinux|Any CPU.Build.0 = ReleaseLinux|Any CPU
-		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.DebugLinux|Any CPU.ActiveCfg = Debug|Any CPU
-		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.DebugLinux|Any CPU.Build.0 = Debug|Any CPU
-		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.ReleaseLinux|Any CPU.ActiveCfg = Release|Any CPU
-		{22AE2386-60F1-476E-9303-61CDB0AAC4CF}.ReleaseLinux|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

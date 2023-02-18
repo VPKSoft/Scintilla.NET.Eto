@@ -5,7 +5,7 @@ using ScintillaNet.Abstractions.Collections;
 namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
-/// An immutable collection of style definitions in a <see cref="WinForms.Scintilla" /> control.
+/// An immutable collection of style definitions in a Scintilla control.
 /// </summary>
 public class StyleCollection : StyleCollectionBase<Style, Color>
 {

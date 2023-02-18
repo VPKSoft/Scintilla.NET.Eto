@@ -7,7 +7,7 @@ using static ScintillaNet.Abstractions.ScintillaConstants;
 namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
-/// Represents an indicator in a <see cref="WinForms.Scintilla" /> control.
+/// Represents an indicator in a Scintilla control.
 /// </summary>
 public class Indicator : IndicatorBase<Color>
 {
@@ -64,7 +64,7 @@ public class Indicator : IndicatorBase<Color>
     /// <summary>
     /// Initializes a new instance of the <see cref="Indicator" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="Scintilla" /> control that created this indicator.</param>
+    /// <param name="scintilla">The Scintilla control that created this indicator.</param>
     /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     /// <param name="index">The index of this style within the <see cref="IndicatorCollection" /> that created it.</param>
     public Indicator(IScintillaApi scintilla, IScintillaLineCollectionGeneral lineCollectionGeneral, int index) : base(scintilla, lineCollectionGeneral, index)

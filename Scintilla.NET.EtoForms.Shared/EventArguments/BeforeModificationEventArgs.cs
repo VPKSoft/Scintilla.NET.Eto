@@ -6,14 +6,14 @@ using ScintillaNet.Abstractions.Interfaces.Collections;
 namespace ScintillaNet.EtoForms.EventArguments;
 
 /// <summary>
-/// Provides data for the <see cref="WinForms.Scintilla.BeforeInsert" /> and <see cref="WinForms.Scintilla.BeforeDelete" /> events.
+/// Provides data for the <see cref="IScintillaEtoFormsEvents.BeforeInsert" /> and <see cref="IScintillaEtoFormsEvents.BeforeDelete" /> events.
 /// </summary>
 public class BeforeModificationEventArgs : BeforeModificationEventArgsBase
 {
     /// <summary>
     /// Initializes a new instance of the <see cref="BeforeModificationEventArgs" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="WinForms.Scintilla" /> control that generated this event.</param>
+    /// <param name="scintilla">The Scintilla control that generated this event.</param>
     /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     /// <param name="source">The source of the modification.</param>
     /// <param name="bytePosition">The zero-based byte position within the document where text is being modified.</param>
@@ -27,5 +27,6 @@ public class BeforeModificationEventArgs : BeforeModificationEventArgsBase
         int byteLength, 
         nint text) : base(scintilla, lineCollectionGeneral, source, bytePosition, byteLength, text)
     {
+        
     }
 }

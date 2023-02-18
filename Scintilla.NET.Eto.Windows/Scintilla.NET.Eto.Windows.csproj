@@ -55,7 +55,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.WinForms\Scintilla.NET.EtoForms.WinForms.csproj" />
 		<ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj" />
 	</ItemGroup>
 </Project>

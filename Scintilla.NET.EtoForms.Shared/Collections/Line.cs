@@ -5,7 +5,7 @@ using ScintillaNet.Abstractions.Interfaces.Collections;
 namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
-/// Represents a line of text in a <see cref="WinForms.Scintilla" /> control.
+/// Represents a line of text in a Scintilla control.
 /// </summary>
 public class Line : LineBase
 {
@@ -14,7 +14,7 @@ public class Line : LineBase
     /// <summary>
     /// Initializes a new instance of the <see cref="Line" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="WinForms.Scintilla" /> control that created this line.</param>
+    /// <param name="scintilla">The Scintilla control that created this line.</param>
     /// <param name="styleCollectionGeneral">A reference to Scintilla's style collection.</param>
     /// <param name="lineCollectionGeneral">A reference to Scintilla's line collection.</param>
     /// <param name="markerCollectionGeneral">A reference to Scintilla's marker collection.</param>

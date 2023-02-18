@@ -5,7 +5,7 @@ using ScintillaNet.Abstractions.Collections;
 namespace ScintillaNet.EtoForms.Collections;
 
 /// <summary>
-/// An immutable collection of markers in a <see cref="WinForms.Scintilla" /> control.
+/// An immutable collection of markers in a Scintilla control.
 /// </summary>
 public class MarkerCollection : MarkerCollectionBase<Marker, Image, Color>
 {
@@ -27,7 +27,7 @@ public class MarkerCollection : MarkerCollectionBase<Marker, Image, Color>
     /// <summary>
     /// Initializes a new instance of the <see cref="MarkerCollection" /> class.
     /// </summary>
-    /// <param name="scintilla">The <see cref="WinForms.Scintilla" /> control that created this collection.</param>
+    /// <param name="scintilla">The Scintilla control that created this collection.</param>
     public MarkerCollection(IScintillaApi scintilla) : base(scintilla)
     {
 
