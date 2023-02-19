@@ -30,12 +30,9 @@
 	  <ProjectReference Include="..\Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IsLinux)'=='true'">
-		<ProjectReference Include="..\Scintilla.NET.Eto.Linux\Scintilla.NET.Eto.Linux.csproj" />
-	</ItemGroup>
-
 	<ItemGroup>
 	  <PackageReference Update="Eto.Forms" Version="2.7.3" />
+	  <PackageReference Include="Scintilla.NET.Eto.Linux" Version="1.0.0.5320" />
 	</ItemGroup>
 
 </Project>
