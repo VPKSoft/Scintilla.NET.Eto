@@ -1,0 +1,66 @@
+# This workflow will build a .NET project
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
+
+name: .NET NuGet Windows Release
+
+on:
+  create:
+    tags:
+    - 'v*'
+  workflow_dispatch:
+
+jobs:
+  build:
+    environment: NuGet
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: Windows\Scintilla.NET.EtoForms.Windows.Nugets.sln
+      App_Project_Path1: Windows\Scintilla.NET.EtoForms.WinForms\Scintilla.NET.EtoForms.WinForms.csproj
+      App_Project_Path2: Windows\Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj
+      NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
+      NUGETAPI: ${{ secrets.NUGETAPI }}      
+      GH_PACKAGES_APIKEY: ${{ secrets.GH_PACKAGES_APIKEY }}
+      PACKAGESAPI: ${{ secrets.PACKAGESAPI }}
+      NUGETCONFIG: ${{ secrets.NUGETCONFIG }}
+
+    steps:
+    - uses: actions/checkout@v3
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    - name: Restore dependencies
+      run: dotnet restore $Solution_Name
+    - name: Build WinForms
+      run: dotnet build --no-restore --configuration Release $App_Project_Path1
+#    - name: Build Wpf
+#      run: dotnet build --no-restore --configuration Release $App_Project_Path2
+    - name: Decode nuget.config
+      if: ${{ github.event_name != 'pull_request' }}
+      run: |
+        $nuget_config_bytes = [System.Convert]::FromBase64String("$env:NUGETCONFIG")
+        $currentDirectory = Get-Location
+        $nugetConfigFile = Join-Path -Path $currentDirectory -ChildPath "nuget.config"
+        [IO.File]::WriteAllBytes("$nugetConfigFile", $nuget_config_bytes)
+    - name: NuGet push
+      run: |
+        $currentDirectory = Get-Location
+        $files = Get-ChildItem $currentDirectory -r -Filter *Scintilla.NET.Eto*.nupkg # use the mask to discard possible third party packages..
+
+        Write-Output $files.Count
+
+        for ($i = 0; $i -lt $files.Count; $i++) 
+        { 
+            $file = $files[$i].FullName
+            
+            $arguments = @("push", $file, "$env:NUGET_APIKEY", "-Source", "$env:NUGETAPI", "-SkipDuplicate")
+            
+            # sign the NuGet packages.
+            Write-Output (-join("Pushing NuGet:", $file, " ..."))
+            nuget.exe $arguments
+            
+            $arguments = @("push", $file, "$env:GH_PACKAGES_APIKEY", "-Source", "$env:PACKAGESAPI", "-SkipDuplicate")
+            nuget.exe $arguments
+        }
+
