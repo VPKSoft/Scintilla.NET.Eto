@@ -66,10 +66,6 @@
 		<PackageReference Include="Eto.Forms" Version="2.7.3" />
 	</ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj" PrivateAssets="All" />
-	</ItemGroup>
-
 	<PropertyGroup>
 		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
 		<PackageIcon>vpksoft_logo.png</PackageIcon>

@@ -1,0 +1,41 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.4.33213.308
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.WinForms", "Scintilla.NET.EtoForms.WinForms\Scintilla.NET.EtoForms.WinForms.csproj", "{2EB24B35-F3EB-41AB-B3AB-8B7E085E36D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.Wpf", "Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj", "{47FA5F0B-E32C-48BE-992B-C39B56A0EDCF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		DebugLinux|Any CPU = DebugLinux|Any CPU
+		Release|Any CPU = Release|Any CPU
+		ReleaseLinux|Any CPU = ReleaseLinux|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2EB24B35-F3EB-41AB-B3AB-8B7E085E36D7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2EB24B35-F3EB-41AB-B3AB-8B7E085E36D7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2EB24B35-F3EB-41AB-B3AB-8B7E085E36D7}.DebugLinux|Any CPU.ActiveCfg = DebugLinux|Any CPU
+		{2EB24B35-F3EB-41AB-B3AB-8B7E085E36D7}.DebugLinux|Any CPU.Build.0 = DebugLinux|Any CPU
+		{2EB24B35-F3EB-41AB-B3AB-8B7E085E36D7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2EB24B35-F3EB-41AB-B3AB-8B7E085E36D7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2EB24B35-F3EB-41AB-B3AB-8B7E085E36D7}.ReleaseLinux|Any CPU.ActiveCfg = ReleaseLinux|Any CPU
+		{2EB24B35-F3EB-41AB-B3AB-8B7E085E36D7}.ReleaseLinux|Any CPU.Build.0 = ReleaseLinux|Any CPU
+		{47FA5F0B-E32C-48BE-992B-C39B56A0EDCF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47FA5F0B-E32C-48BE-992B-C39B56A0EDCF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47FA5F0B-E32C-48BE-992B-C39B56A0EDCF}.DebugLinux|Any CPU.ActiveCfg = DebugLinux|Any CPU
+		{47FA5F0B-E32C-48BE-992B-C39B56A0EDCF}.DebugLinux|Any CPU.Build.0 = DebugLinux|Any CPU
+		{47FA5F0B-E32C-48BE-992B-C39B56A0EDCF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47FA5F0B-E32C-48BE-992B-C39B56A0EDCF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47FA5F0B-E32C-48BE-992B-C39B56A0EDCF}.ReleaseLinux|Any CPU.ActiveCfg = ReleaseLinux|Any CPU
+		{47FA5F0B-E32C-48BE-992B-C39B56A0EDCF}.ReleaseLinux|Any CPU.Build.0 = ReleaseLinux|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {01EFCA4D-2652-4910-BD40-9D145F875938}
+	EndGlobalSection
+EndGlobal
