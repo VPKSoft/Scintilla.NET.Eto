@@ -37,6 +37,6 @@ jobs:
       with:
         dotnet-version: 7.0.x
     - name: Restore dependencies
-      run: dotnet restore "$Env:$GITHUB_WORKSPACE/TestApplication.sln"
+      run: dotnet restore "$Env:GITHUB_WORKSPACE/TestApplication.sln"
     - name: Build
       run: dotnet build --no-restore "$Env:GITHUB_WORKSPACE//TestApplication.sln"
