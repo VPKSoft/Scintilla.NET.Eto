@@ -4,12 +4,12 @@
 		<Nullable>enable</Nullable>
 		<DocumentationFile>bin\$(Configuration)\Scintilla.NET.EtoForms.WinForms.xml</DocumentationFile>
 		<OutputType>Library</OutputType>
-		<Title>Scintilla.NET.EtoForms</Title>
+		<Title>Scintilla.NET.EtoForms.WinForms</Title>
 		<Company>VPKSoft</Company>
 		<Description>Eto.Forms wrapper for Scintilla control.</Description>
 		<Copyright>Copyright © VPKSoft 2023</Copyright>
-		<PackageProjectUrl>https://github.com/VPKSoft/ScintillaNET</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/VPKSoft/ScintillaNET</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/VPKSoft/Scintilla.NET.Eto</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/VPKSoft/Scintilla.NET.Eto</RepositoryUrl>
 		<LangVersion>latest</LangVersion>
 		<TargetFrameworks>net6.0-windows;net7.0-windows</TargetFrameworks>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -17,14 +17,29 @@
 		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<RootNamespace>ScintillaNet.EtoForms.WinForms</RootNamespace>
+		<Version>1.0.0.5320</Version>
+		<PackageReleaseNotes>See: https://github.com/VPKSoft/Scintilla.NET.Eto</PackageReleaseNotes>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageIcon>vpksoft_logo.png</PackageIcon>
+		<PackageTags>scintilla;scintillanet;wrapper;winforms;eto.forms</PackageTags>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 	<ItemGroup>
-	  <PackageReference Include="Eto.Platform.Windows" Version="2.7.3" />
-	  <PackageReference Include="Scintilla.NET.Abstractions" Version="1.0.2" />
-	  <PackageReference Include="Scintilla.NET.WinForms" Version="1.0.1.5320" />
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\..\vpksoft_logo.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 	<ItemGroup>
-	  <ProjectReference Include="..\..\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
+		<PackageReference Include="Eto.Platform.Windows" Version="2.7.3" />
+		<PackageReference Include="Scintilla.NET.Abstractions" Version="1.0.2" />
+		<PackageReference Include="Scintilla.NET.WinForms" Version="1.0.1.5320" />
+		<PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.0.5320" />
 	</ItemGroup>
 
 	<!--<PropertyGroup>
