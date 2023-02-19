@@ -9,8 +9,8 @@
 		<Company>VPKSoft</Company>
 		<Description>Eto.Forms wrapper for Scintilla control.</Description>
 		<Copyright>Copyright © VPKSoft 2023</Copyright>
-		<PackageProjectUrl>https://github.com/VPKSoft/ScintillaNET</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/VPKSoft/ScintillaNET</RepositoryUrl>
+		<PackageProjectUrl>https://github.com/VPKSoft/Scintilla.NET.Eto</PackageProjectUrl>
+		<RepositoryUrl>https://github.com/VPKSoft/Scintilla.NET.Eto</RepositoryUrl>
 		<LangVersion>latest</LangVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<PackageOutputPath>$(SolutionDir)LocalNuGets</PackageOutputPath>
@@ -19,6 +19,13 @@
 		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
 		<IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
 		<RootNamespace>ScintillaNet.Eto.Linux</RootNamespace>
+		<Version>1.0.0.5320</Version>
+		<PackageIcon>vpksoft_logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>scintilla;scintilla.net;eto.forms;gtk;wrapper</PackageTags>
+		<PackageReleaseNotes>See: https://github.com/VPKSoft/Scintilla.NET.Eto</PackageReleaseNotes>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsOSX)'=='true'">
@@ -51,10 +58,18 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Eto.Forms" Version="2.7.3" />
+	  <None Include="..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\vpksoft_logo.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Linux\Scintilla.NET.EtoForms.GTK\Scintilla.NET.EtoForms.GTK.csproj" />
+		<PackageReference Include="Eto.Forms" Version="2.7.3" />
+		<PackageReference Include="Scintilla.NET.EtoForms.GTK" Version="1.0.0.5320" />
 	</ItemGroup>
 </Project>
