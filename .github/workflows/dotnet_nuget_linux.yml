@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      Solution_Name: Linux\Scintilla.NET.EtoForms-Linux.sln
+      Solution_Name: Linux\Scintilla.NET.Eto.Linux.NuGets.sln
       App_Project_Path1: Linux\Scintilla.NET.EtoForms.GTK\Scintilla.NET.EtoForms.GTK.csproj
       App_Project_Path2: Scintilla.NET.Eto.Linux\Scintilla.NET.Eto.Linux.csproj
       NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
