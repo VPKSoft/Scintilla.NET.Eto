@@ -10,7 +10,7 @@
 		<Description>Eto.Forms wrapper for Scintilla control.</Description>
 		<Copyright>Copyright © VPKSoft 2023</Copyright>
 		<PackageProjectUrl>https://github.com/VPKSoft/Scintilla.NET.Eto</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/VPKSoft/ScintillaNET</RepositoryUrl>
+		<RepositoryUrl>https://github.com/VPKSoft/Scintilla.NET.Eto</RepositoryUrl>
 		<LangVersion>latest</LangVersion>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
@@ -20,6 +20,12 @@
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<RootNamespace>ScintillaNet.Eto.Windows</RootNamespace>
 		<Version>1.0.0.5320</Version>
+		<PackageIcon>vpksoft_logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>windows;eto.forms;wrapper</PackageTags>
+		<PackageReleaseNotes>See: https://github.com/VPKSoft/Scintilla.NET.Eto</PackageReleaseNotes>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(IsOSX)'=='true'">
@@ -64,20 +70,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Eto.Forms" Version="2.7.3" />
+		<PackageReference Include="Scintilla.NET.EtoForms.WinForms" Version="1.0.0.5320" />
+		<PackageReference Include="Scintilla.NET.EtoForms.Wpf" Version="1.0.0.5320" />
 	</ItemGroup>
-
-	<PropertyGroup>
-		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
-		<PackageIcon>vpksoft_logo.png</PackageIcon>
-		<PackageReadmeFile>README.md</PackageReadmeFile>
-		<PackageTags>wrapper;scintilla;scintilla;scintilla.net;eto.forms</PackageTags>
-		<PackageReleaseNotes>See: https://github.com/VPKSoft/Scintilla.NET.Eto</PackageReleaseNotes>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
-	</PropertyGroup>
-	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
-		<ItemGroup>
-			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths-&gt;WithMetadataValue('ReferenceSourceTarget', 'Scintilla.NET.EtoForms.Wpf'))" />
-		</ItemGroup>
-	</Target>
 </Project>

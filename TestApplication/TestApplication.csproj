@@ -26,10 +26,6 @@
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(IsWindows)'=='true'">
-	  <ProjectReference Include="..\Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj" />
-	</ItemGroup>
-
 	<ItemGroup>
 	  <PackageReference Include="Scintilla.NET.Abstractions" Version="1.0.2" />
 	  <PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.0.5320" />
