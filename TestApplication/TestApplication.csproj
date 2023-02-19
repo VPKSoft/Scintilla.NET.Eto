@@ -23,16 +23,20 @@
 
 
 	<PropertyGroup Condition="'$(Configuration)'=='DebugLinux'">
-	  <PlatformTarget>AnyCPU</PlatformTarget>
+		<PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 
-	<ItemGroup>
-	  <PackageReference Include="Scintilla.NET.Abstractions" Version="1.0.2" />
-	  <PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.0.5320" />
+	<ItemGroup Condition="'$(IsWindows)'=='true'">
+		<PackageReference Include="Scintilla.NET.WinForms" Version="1.0.1.5320" />
+		<PackageReference Include="Scintilla.NET.Eto.Windows" Version="1.0.0.5320" />
+		<PackageReference Include="Scintilla.NET.EtoForms.Wpf" Version="1.0.0.5320" />
+		<PackageReference Include="Scintilla.NET.EtoForms.WinForms" Version="1.0.0.5320" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <PackageReference Update="Eto.Forms" Version="2.7.3" />
+		<PackageReference Update="Eto.Forms" Version="2.7.3" />
+		<PackageReference Include="Scintilla.NET.Abstractions" Version="1.0.2" />
+		<PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.0.5320" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(IsLinux)'=='true'">
