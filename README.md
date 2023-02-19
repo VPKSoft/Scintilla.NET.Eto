@@ -16,9 +16,12 @@ To run the test application (Linux / Windows):
 ```
 git clone https://github.com/VPKSoft/Scintilla.NET.Eto.git
 cd Scintilla.NET.Eto
-otnet run TestApplication.sln
+dotnet run TestApplication.sln
 dotnet run --project TestApplication/TestApplication.csproj
 ```
+
+The version:
+The package versioning is semantic except the fourth number indicates the native Scintilla control. E.g. 5320 --> 5.3.2.0.
 
 Linux, GTK:
 
