@@ -16,7 +16,24 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 		<RootNamespace>ScintillaNet.EtoForms.Wpf</RootNamespace>
+		<Version>1.0.0.5320</Version>
+		<PackageIcon>vpksoft_logo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
+		<PackageTags>scintilla;scintillanet;wrapper;wpf;eto.forms</PackageTags>
+		<PackageReleaseNotes>See: https://github.com/VPKSoft/Scintilla.NET.Eto</PackageReleaseNotes>
+		<PackageLicenseExpression>MIT</PackageLicenseExpression>
+		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
+	<ItemGroup>
+	  <None Include="..\..\README.md">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	  <None Include="..\..\vpksoft_logo.png">
+	    <Pack>True</Pack>
+	    <PackagePath>\</PackagePath>
+	  </None>
+	</ItemGroup>
 
 	<ItemGroup>
 		<PackageReference Include="Eto.Platform.Wpf" Version="2.7.3" />

@@ -75,9 +75,6 @@
 		<PackageIcon>vpksoft_logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>wrapper;scintilla;scintilla;scintilla.net;eto.forms</PackageTags>
-		<PackageReleaseNotes>See: https://github.com/VPKSoft/Scintilla.NET.Eto</PackageReleaseNotes>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageRequireLicenseAcceptance>True</PackageRequireLicenseAcceptance>
 	</PropertyGroup>
 	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
 		<ItemGroup>
