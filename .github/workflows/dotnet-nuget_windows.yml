@@ -18,6 +18,7 @@ jobs:
       Solution_Name: Windows\Scintilla.NET.EtoForms.Windows.Nugets.sln
       App_Project_Path1: Windows\Scintilla.NET.EtoForms.WinForms\Scintilla.NET.EtoForms.WinForms.csproj
       App_Project_Path2: Windows\Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj
+      App_Project_Path3: Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj
       NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
       NUGETAPI: ${{ secrets.NUGETAPI }}      
       GH_PACKAGES_APIKEY: ${{ secrets.GH_PACKAGES_APIKEY }}
@@ -36,6 +37,8 @@ jobs:
       run: dotnet build --no-restore --configuration Release $Env:App_Project_Path1
     - name: Build Wpf
       run: dotnet build --no-restore --configuration Release $Env:App_Project_Path2
+    - name: Build Windows (Wpf & WinForms)
+      run: dotnet build --no-restore --configuration Release $Env:App_Project_Path3
     - name: Decode nuget.config
       if: ${{ github.event_name != 'pull_request' }}
       run: |
