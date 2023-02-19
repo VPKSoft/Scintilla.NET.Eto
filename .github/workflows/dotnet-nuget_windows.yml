@@ -34,8 +34,8 @@ jobs:
       run: dotnet restore $Env:Solution_Name
     - name: Build WinForms
       run: dotnet build --no-restore --configuration Release $Env:App_Project_Path1
-#    - name: Build Wpf
-#      run: dotnet build --no-restore --configuration Release $Env:App_Project_Path2
+    - name: Build Wpf
+      run: dotnet build --no-restore --configuration Release $Env:App_Project_Path2
     - name: Decode nuget.config
       if: ${{ github.event_name != 'pull_request' }}
       run: |
