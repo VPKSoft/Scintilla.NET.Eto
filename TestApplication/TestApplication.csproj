@@ -35,10 +35,6 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <ProjectReference Include="..\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
-	</ItemGroup>
-
-	<ItemGroup>
 	  <PackageReference Update="Eto.Forms" Version="2.7.3" />
 	</ItemGroup>
 
