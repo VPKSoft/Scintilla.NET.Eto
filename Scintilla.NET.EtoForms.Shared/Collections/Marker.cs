@@ -26,7 +26,6 @@ public class Marker : MarkerBase<Image, Color>
             return;
         }
 
-
         using var bitmap = new Bitmap(image);
 
         ScintillaApi.DirectMessage(SCI_RGBAIMAGESETWIDTH, new IntPtr(bitmap.Width));

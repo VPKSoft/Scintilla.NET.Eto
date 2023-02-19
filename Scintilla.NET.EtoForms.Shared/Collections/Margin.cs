@@ -2,6 +2,8 @@
 using ScintillaNet.Abstractions;
 using ScintillaNet.Abstractions.Collections;
 using ScintillaNet.Abstractions.Enumerations;
+using ScintillaNet.EtoForms.Utilities;
+using static ScintillaNet.Abstractions.ScintillaConstants;
 
 namespace ScintillaNet.EtoForms.Collections;
 
@@ -21,11 +23,13 @@ public class Margin : MarginBase<Color>
     {
         get
         {
-            throw new NotImplementedException();
+            var color = ScintillaApi.DirectMessage(SCI_GETMARGINBACKN, new IntPtr(Index)).ToInt32();
+            return ColorTranslatorEto.ToColor(color);
         }
         set
         {
-            throw new NotImplementedException();
+            var color = ColorTranslatorEto.ToArgb(value);
+            ScintillaApi.DirectMessage(SCI_SETMARGINBACKN, new IntPtr(Index), new IntPtr(color));
         }
     }
     
