@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      Solution_Name: Scintilla.NET.Eto\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.sln
-      App_Project_Path: Scintilla.NET.Eto\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj
+      Solution_Name: Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.sln
+      App_Project_Path: Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj
       NUGET_APIKEY: ${{ secrets.NUGET_APIKEY }}
       NUGETAPI: ${{ secrets.NUGETAPI }}      
       GH_PACKAGES_APIKEY: ${{ secrets.GH_PACKAGES_APIKEY }}
