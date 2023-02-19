@@ -4,6 +4,7 @@ using ScintillaNet.Abstractions.Collections;
 using ScintillaNet.Abstractions.Enumerations;
 using ScintillaNet.Abstractions.Interfaces.Collections;
 using ScintillaNet.EtoForms.Extensions;
+using ScintillaNet.EtoForms.Utilities;
 using static ScintillaNet.Abstractions.ScintillaConstants;
 
 namespace ScintillaNet.EtoForms.Collections;
@@ -18,9 +19,23 @@ public class Marker : MarkerBase<Image, Color>
     /// </summary>
     /// <param name="image">The Bitmap to use as a marker symbol.</param>
     /// <remarks>Calling this method will also update the <see cref="MarkerBase{TImage, TColor}.Symbol" /> property to <see cref="MarkerSymbol.RgbaImage" />.</remarks>
-    public override void DefineRgbaImage(Image image)
+    public override unsafe void DefineRgbaImage(Image? image)
     {
-        throw new NotImplementedException();
+        if (image == null)
+        {
+            return;
+        }
+
+        using var bitmap = new Bitmap(image);
+
+        ScintillaApi.DirectMessage(SCI_RGBAIMAGESETWIDTH, new IntPtr(bitmap.Width));
+        ScintillaApi.DirectMessage(SCI_RGBAIMAGESETHEIGHT, new IntPtr(bitmap.Height));
+
+        var bytes = BitmapBytesConverter.BitmapToArgb(bitmap);
+        fixed (byte* bp = bytes)
+        {
+            ScintillaApi.DirectMessage(SCI_MARKERDEFINERGBAIMAGE, new IntPtr(Index), new IntPtr(bp));
+        }
     }
 
     /// <summary>

@@ -98,7 +98,7 @@ public class FormMain : Form
         scintilla.Styles[Cpp.PreprocessorComment].BackColor = Color.Parse("#FFFFFF");
         scintilla.Styles[Cpp.PreprocessorCommentDoc].ForeColor = Color.Parse("#008080");
         scintilla.Styles[Cpp.PreprocessorCommentDoc].BackColor = Color.Parse("#FFFFFF");
-        var test = scintilla.Lexilla.CreateLexer("cpp");
+
         scintilla.LexerName = "cpp";
         
         scintilla.SetKeywords(0, "alignof and and_eq bitand bitor break case catch compl const_cast continue default delete do dynamic_cast else false for goto if namespace new not not_eq nullptr operator or or_eq reinterpret_cast return sizeof static_assert static_cast switch this throw true try typedef typeid using while xor xor_eq NULL");

@@ -26,12 +26,16 @@
 	  <PlatformTarget>AnyCPU</PlatformTarget>
 	</PropertyGroup>
 
-	<ItemGroup Condition="'$(IsWindows)'=='true'" >
+	<ItemGroup Condition="'$(IsWindows)'=='true'">
 	  <ProjectReference Include="..\Scintilla.NET.Eto.Windows\Scintilla.NET.Eto.Windows.csproj" />
 	</ItemGroup>
 
-	<ItemGroup Condition="'$(IsLinux)'=='true'" >
+	<ItemGroup Condition="'$(IsLinux)'=='true'">
 		<ProjectReference Include="..\Scintilla.NET.Eto.Linux\Scintilla.NET.Eto.Linux.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\Scintilla.NET.EtoForms.Shared\Scintilla.NET.EtoForms.Shared.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>
