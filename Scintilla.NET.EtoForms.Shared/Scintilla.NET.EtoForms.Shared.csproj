@@ -5,7 +5,7 @@
 	  <Nullable>enable</Nullable>
 	  <DocumentationFile>bin\$(Configuration)\Scintilla.NET.EtoForms.xml</DocumentationFile>
 	  <OutputType>Library</OutputType>
-	  <Title>Scintilla.NET.EtoForms</Title>
+	  <Title>Scintilla.NET.EtoForms.Shared</Title>
 	  <Company>VPKSoft</Company>
 	  <Description>Eto.Forms wrapper for Scintilla control.</Description>
 	  <Copyright>Copyright © VPKSoft 2023</Copyright>
@@ -17,6 +17,7 @@
 	  <Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <RootNamespace>ScintillaNet.EtoForms</RootNamespace>
+	  <Version>1.0.0.5320</Version>
   </PropertyGroup>
 
   <ItemGroup>

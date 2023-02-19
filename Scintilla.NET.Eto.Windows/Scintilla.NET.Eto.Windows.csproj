@@ -55,6 +55,15 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj" />
+		<ProjectReference Include="..\Windows\Scintilla.NET.EtoForms.Wpf\Scintilla.NET.EtoForms.Wpf.csproj" PrivateAssets="All" />
 	</ItemGroup>
+
+	<PropertyGroup>
+		<TargetsForTfmSpecificBuildOutput>$(TargetsForTfmSpecificBuildOutput);CopyProjectReferencesToPackage</TargetsForTfmSpecificBuildOutput>
+	</PropertyGroup>
+	<Target Name="CopyProjectReferencesToPackage" DependsOnTargets="ResolveReferences">
+		<ItemGroup>
+			<BuildOutputInPackage Include="@(ReferenceCopyLocalPaths->WithMetadataValue('ReferenceSourceTarget', 'Scintilla.NET.EtoForms.Wpf'))" />
+		</ItemGroup>
+	</Target>
 </Project>
