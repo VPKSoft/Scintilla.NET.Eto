@@ -37,11 +37,8 @@
 
 	<ItemGroup>
 		<PackageReference Include="Eto.Platform.Wpf" Version="2.7.3" />
+		<PackageReference Include="Scintilla.NET.EtoForms.WinForms" Version="1.0.0.5320" />
 		<PackageReference Include="Scintilla.NET.WinForms" Version="1.0.1.5320" />
 		<PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.0.5320" />
-	</ItemGroup>
-
-	<ItemGroup>
-	  <ProjectReference Include="..\Scintilla.NET.EtoForms.WinForms\Scintilla.NET.EtoForms.WinForms.csproj" />
 	</ItemGroup>
 </Project>
