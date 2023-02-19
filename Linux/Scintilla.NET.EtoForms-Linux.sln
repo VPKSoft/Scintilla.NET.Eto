@@ -5,8 +5,6 @@ VisualStudioVersion = 17.4.33205.214
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestApplication", "..\TestApplication\TestApplication.csproj", "{5EEED95E-E2DC-4A2A-AB9E-F261316104CC}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.EtoForms.GTK", "Scintilla.NET.EtoForms.GTK\Scintilla.NET.EtoForms.GTK.csproj", "{DFE93268-D701-4089-9B13-3E98561335A8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Scintilla.NET.Eto.Linux", "..\Scintilla.NET.Eto.Linux\Scintilla.NET.Eto.Linux.csproj", "{B2298968-16E5-4A3A-9184-4671A061E8B1}"
 EndProject
 Global
@@ -25,14 +23,6 @@ Global
 		{5EEED95E-E2DC-4A2A-AB9E-F261316104CC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{5EEED95E-E2DC-4A2A-AB9E-F261316104CC}.ReleaseLinux|Any CPU.ActiveCfg = ReleaseLinux|Any CPU
 		{5EEED95E-E2DC-4A2A-AB9E-F261316104CC}.ReleaseLinux|Any CPU.Build.0 = ReleaseLinux|Any CPU
-		{DFE93268-D701-4089-9B13-3E98561335A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{DFE93268-D701-4089-9B13-3E98561335A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{DFE93268-D701-4089-9B13-3E98561335A8}.DebugLinux|Any CPU.ActiveCfg = DebugLinux|Any CPU
-		{DFE93268-D701-4089-9B13-3E98561335A8}.DebugLinux|Any CPU.Build.0 = DebugLinux|Any CPU
-		{DFE93268-D701-4089-9B13-3E98561335A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{DFE93268-D701-4089-9B13-3E98561335A8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{DFE93268-D701-4089-9B13-3E98561335A8}.ReleaseLinux|Any CPU.ActiveCfg = ReleaseLinux|Any CPU
-		{DFE93268-D701-4089-9B13-3E98561335A8}.ReleaseLinux|Any CPU.Build.0 = ReleaseLinux|Any CPU
 		{B2298968-16E5-4A3A-9184-4671A061E8B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B2298968-16E5-4A3A-9184-4671A061E8B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B2298968-16E5-4A3A-9184-4671A061E8B1}.DebugLinux|Any CPU.ActiveCfg = DebugLinux|Any CPU

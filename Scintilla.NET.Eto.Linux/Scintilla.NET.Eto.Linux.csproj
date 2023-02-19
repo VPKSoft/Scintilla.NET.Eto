@@ -52,9 +52,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Eto.Forms" Version="2.7.3" />
-	</ItemGroup>
-
-	<ItemGroup>
-		<ProjectReference Include="..\Linux\Scintilla.NET.EtoForms.GTK\Scintilla.NET.EtoForms.GTK.csproj" />
+		<PackageReference Include="Scintilla.NET.EtoForms.GTK" Version="1.0.0.5320" />
 	</ItemGroup>
 </Project>
