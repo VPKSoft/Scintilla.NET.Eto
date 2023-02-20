@@ -33,6 +33,6 @@ Windows (Eto.Wpf):
 
 
 ### Thanks to
-* [JetBrains](https://www.jetbrains.com/?from=Scintilla.NET.Abstractions) for their open source license(s).
+* [JetBrains](https://www.jetbrains.com/?from=Scintilla.NET.Eto) for their open source license(s).
 
 ![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
