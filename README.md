@@ -21,7 +21,7 @@ dotnet run --project TestApplication/TestApplication.csproj
 ```
 
 The version:
-The package versioning is semantic except the fourth number indicates the native Scintilla control. E.g. 5320 --> 5.3.2.0.
+The package versioning is semantic except the fourth number indicates the native Scintilla control. E.g. 5320 &rarr; 5.3.2.0.
 
 Linux, GTK:
 
