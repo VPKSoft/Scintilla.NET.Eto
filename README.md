@@ -30,3 +30,9 @@ Linux, GTK:
 Windows (Eto.Wpf):
 
 ![image](https://user-images.githubusercontent.com/40712699/218517561-703e6fae-9d38-438b-a55a-6a2c8340a4e2.png)
+
+
+### Thanks to
+* [JetBrains](https://www.jetbrains.com/?from=Scintilla.NET.Abstractions) for their open source license(s).
+
+![JetBrains Logo (Main) logo](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
