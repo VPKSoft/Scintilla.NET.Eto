@@ -253,7 +253,7 @@ partial class Scintilla
 #if Windows
                 void Handler(object? sender, WinForms.EventArguments.AutoCSelectionEventArgs args) => value.Invoke(
                     sender,
-                    new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Position,
+                    new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args,
                         args.TextPtr, args.Char, args.ListCompletionMethod));
 
                 autoCSelectionEventHandlers.Add(
