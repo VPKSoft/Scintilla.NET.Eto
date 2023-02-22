@@ -17,7 +17,7 @@
 	  <Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <RootNamespace>ScintillaNet.EtoForms</RootNamespace>
-	  <Version>1.0.0.5320</Version>
+	  <Version>1.0.3.5320</Version>
 	  <PackageIcon>vpksoft_logo.png</PackageIcon>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageTags>wrapper;scintilla;eto.form;control</PackageTags>
@@ -39,6 +39,6 @@
 
   <ItemGroup>
     <PackageReference Include="Eto.Forms" Version="2.7.3" />
-    <PackageReference Include="Scintilla.NET.Abstractions" Version="1.0.2" />
+    <PackageReference Include="Scintilla.NET.Abstractions" Version="1.0.3" />
   </ItemGroup>
 </Project>
