@@ -27,7 +27,7 @@
 	</PropertyGroup>
 
 	<ItemGroup Condition="'$(IsWindows)'=='true'">
-		<PackageReference Include="Scintilla.NET.WinForms" Version="1.0.1.5320" />
+		<PackageReference Include="Scintilla.NET.WinForms" Version="1.0.4.5320" />
 		<PackageReference Include="Scintilla.NET.Eto.Windows" Version="1.0.0.5320" />
 		<PackageReference Include="Scintilla.NET.EtoForms.Wpf" Version="1.0.0.5320" />
 		<PackageReference Include="Scintilla.NET.EtoForms.WinForms" Version="1.0.0.5320" />
