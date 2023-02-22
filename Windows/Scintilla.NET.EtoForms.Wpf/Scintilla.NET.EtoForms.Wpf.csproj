@@ -16,7 +16,7 @@
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 		<RootNamespace>ScintillaNet.EtoForms.Wpf</RootNamespace>
-		<Version>1.0.3.5320</Version>
+		<Version>1.0.4.5320</Version>
 		<PackageIcon>vpksoft_logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>scintilla;scintillanet;wrapper;wpf;eto.forms</PackageTags>
@@ -37,7 +37,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="Eto.Platform.Wpf" Version="2.7.3" />
-		<PackageReference Include="Scintilla.NET.EtoForms.WinForms" Version="1.0.0.5320" />
+		<PackageReference Include="Scintilla.NET.EtoForms.WinForms" Version="1.0.3.5320" />
 		<PackageReference Include="Scintilla.NET.WinForms" Version="1.0.4.5320" />
 		<PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.3.5320" />
 	</ItemGroup>
