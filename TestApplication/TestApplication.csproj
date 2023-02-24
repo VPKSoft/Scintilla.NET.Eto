@@ -36,7 +36,7 @@
 	<ItemGroup>
 		<PackageReference Update="Eto.Forms" Version="2.7.3" />
 		<PackageReference Include="Scintilla.NET.Abstractions" Version="1.0.8" />
-		<PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.0.5320" />
+		<PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.8.5320" />
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(IsLinux)'=='true'">
