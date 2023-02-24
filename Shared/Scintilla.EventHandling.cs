@@ -264,7 +264,7 @@ partial class Scintilla
 #elif Linux
                 void Handler(object? sender, Gtk.EventArguments.AutoCSelectionEventArgs args) => value.Invoke(
                     sender,
-                    new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Position,
+                    new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.BytePosition,
                         args.TextPtr, args.Char, args.ListCompletionMethod));
 
                 autoCSelectionEventHandlers.Add(
@@ -325,7 +325,7 @@ partial class Scintilla
 #elif Linux
                 void Handler(object? sender, Gtk.EventArguments.AutoCSelectionEventArgs args) => value.Invoke(
                     sender,
-                    new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Position,
+                    new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.BytePosition,
                         args.TextPtr, args.Char, args.ListCompletionMethod));
 
                 autoCSelectionEventHandlers.Add(
@@ -445,7 +445,7 @@ partial class Scintilla
 #elif Linux
                 void Handler(object? sender, Gtk.EventArguments.BeforeModificationEventArgs args) => value.Invoke(
                     sender,
-                    new BeforeModificationEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Source, args.Position, args.ByteLength, args.TextPtr));
+                    new BeforeModificationEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Source, args.BytePosition, args.ByteLength, args.TextPtr));
 
                 beforeModificationEventHandlers.Add(
                     new KeyValuePair<EventHandler<BeforeModificationEventArgs>,
@@ -503,7 +503,7 @@ partial class Scintilla
 #elif Linux
                 void Handler(object? sender, Gtk.EventArguments.BeforeModificationEventArgs args) => value.Invoke(
                     sender,
-                    new BeforeModificationEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Source, args.Position, args.ByteLength, args.TextPtr));
+                    new BeforeModificationEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Source, args.BytePosition, args.ByteLength, args.TextPtr));
 
                 beforeModificationEventHandlers.Add(
                     new KeyValuePair<EventHandler<BeforeModificationEventArgs>,
@@ -680,7 +680,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.ModificationEventArgs args) => value.Invoke(
                     sender,
                     new ModificationEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Source, args.Position,
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Source, args.BytePosition,
                         args.ByteLength, args.TextPtr, args.LinesAdded));
 
                 modificationEventHandlers.Add(
@@ -741,7 +741,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.DoubleClickEventArgs args) => value.Invoke(
                     sender,
                     new DoubleClickEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Line));
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.BytePosition, args.Line));
 
                 doubleClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<DoubleClickEventArgs>,
@@ -801,7 +801,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.DwellEventArgs args) => value.Invoke(
                     sender,
                     new DwellEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position, args.X, args.Y));
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.BytePosition, args.X, args.Y));
 
                 dwellEventHandlers.Add(
                     new KeyValuePair<EventHandler<DwellEventArgs>,
@@ -921,7 +921,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.DwellEventArgs args) => value.Invoke(
                     sender,
                     new DwellEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position, args.X, args.Y));
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.BytePosition, args.X, args.Y));
 
                 dwellEventHandlers.Add(
                     new KeyValuePair<EventHandler<DwellEventArgs>,
@@ -981,7 +981,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.HotspotClickEventArgs<Gdk.Key> args) => value.Invoke(
                     sender,
                     new HotspotClickEventArgs<Keys>(
-                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.Position));
+                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.BytePosition));
 
                 hotspotClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
@@ -1041,7 +1041,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.HotspotClickEventArgs<Gdk.Key> args) => value.Invoke(
                     sender,
                     new HotspotClickEventArgs<Keys>(
-                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.Position));
+                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.BytePosition));
 
                 hotspotClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
@@ -1101,7 +1101,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.HotspotClickEventArgs<Gdk.Key> args) => value.Invoke(
                     sender,
                     new HotspotClickEventArgs<Keys>(
-                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.Position));
+                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.BytePosition));
 
                 hotspotClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
@@ -1219,7 +1219,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.IndicatorReleaseEventArgs args) => value.Invoke(
                     sender,
                     new IndicatorReleaseEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position));
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.BytePosition));
 
                 indicatorReleaseEventHandlers.Add(
                     new KeyValuePair<EventHandler<IndicatorReleaseEventArgs>,
@@ -1280,7 +1280,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.ModificationEventArgs args) => value.Invoke(
                     sender,
                     new ModificationEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Source, args.Position,
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Source, args.BytePosition,
                         args.ByteLength, args.TextPtr, args.LinesAdded));
 
                 modificationEventHandlers.Add(
@@ -1341,7 +1341,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.InsertCheckEventArgs args) => value.Invoke(
                     sender,
                     new InsertCheckEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position, args.ByteLength, args.TextPtr));
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.BytePosition, args.ByteLength, args.TextPtr));
 
                 insertCheckEventHandlers.Add(
                     new KeyValuePair<EventHandler<InsertCheckEventArgs>,
@@ -1402,7 +1402,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.MarginClickEventArgs args) => value.Invoke(
                     sender,
                     new MarginClickEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Margin));
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.BytePosition, args.Margin));
 
                 marginClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<MarginClickEventArgs>,
@@ -1462,7 +1462,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.MarginClickEventArgs args) => value.Invoke(
                     sender,
                     new MarginClickEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Margin));
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.BytePosition, args.Margin));
 
                 marginClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<MarginClickEventArgs>,
@@ -1530,7 +1530,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.NeedShownEventArgs args) => value.Invoke(
                     sender,
                     new NeedShownEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position, args.Length));
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.BytePosition, args.Length));
 
                 needShownEventHandlers.Add(
                     new KeyValuePair<EventHandler<NeedShownEventArgs>,
@@ -1672,7 +1672,7 @@ partial class Scintilla
                 void Handler(object? sender, Gtk.EventArguments.StyleNeededEventArgs args) => value.Invoke(
                     sender,
                     new StyleNeededEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.Position));
+                        ((IScintillaLinux)BaseControl.NativeControl).Lines, args.BytePosition));
 
                 styleNeededEventHandlers.Add(
                     new KeyValuePair<EventHandler<StyleNeededEventArgs>,
