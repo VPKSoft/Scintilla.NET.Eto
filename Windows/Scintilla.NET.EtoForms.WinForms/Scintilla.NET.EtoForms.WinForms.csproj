@@ -17,7 +17,7 @@
 		<Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<RootNamespace>ScintillaNet.EtoForms.WinForms</RootNamespace>
-		<Version>1.0.8.5320</Version>
+		<Version>1.0.9.5320</Version>
 		<PackageReleaseNotes>See: https://github.com/VPKSoft/Scintilla.NET.Eto</PackageReleaseNotes>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageIcon>vpksoft_logo.png</PackageIcon>
