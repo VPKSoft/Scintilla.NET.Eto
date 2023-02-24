@@ -19,7 +19,7 @@
 		<IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
 		<AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 		<RootNamespace>ScintillaNet.Eto.Windows</RootNamespace>
-		<Version>1.0.8.5320</Version>
+		<Version>1.0.0.5320</Version>
 		<PackageIcon>vpksoft_logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>windows;eto.forms;wrapper</PackageTags>
