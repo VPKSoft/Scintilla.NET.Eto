@@ -253,7 +253,7 @@ partial class Scintilla
 #if Windows
                 void Handler(object? sender, WinForms.EventArguments.AutoCSelectionEventArgs args) => value.Invoke(
                     sender,
-                    new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Position,
+                    new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.BytePosition,
                         args.TextPtr, args.Char, args.ListCompletionMethod));
 
                 autoCSelectionEventHandlers.Add(
@@ -314,7 +314,7 @@ partial class Scintilla
 #if Windows
                 void Handler(object? sender, WinForms.EventArguments.AutoCSelectionEventArgs args) => value.Invoke(
                     sender,
-                    new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Position,
+                    new AutoCSelectionEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.BytePosition,
                         args.TextPtr, args.Char, args.ListCompletionMethod));
 
                 autoCSelectionEventHandlers.Add(
@@ -435,7 +435,7 @@ partial class Scintilla
 #if Windows
                 void Handler(object? sender, WinForms.EventArguments.BeforeModificationEventArgs args) => value.Invoke(
                     sender,
-                    new BeforeModificationEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Source, args.Position, args.ByteLength, args.TextPtr));
+                    new BeforeModificationEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Source, args.BytePosition, args.ByteLength, args.TextPtr));
 
                 beforeModificationEventHandlers.Add(
                     new KeyValuePair<EventHandler<BeforeModificationEventArgs>,
@@ -493,7 +493,7 @@ partial class Scintilla
 #if Windows
                 void Handler(object? sender, WinForms.EventArguments.BeforeModificationEventArgs args) => value.Invoke(
                     sender,
-                    new BeforeModificationEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Source, args.Position, args.ByteLength, args.TextPtr));
+                    new BeforeModificationEventArgs((IScintillaApi)BaseControl.NativeControl, Lines, args.Source, args.BytePosition, args.ByteLength, args.TextPtr));
 
                 beforeModificationEventHandlers.Add(
                     new KeyValuePair<EventHandler<BeforeModificationEventArgs>,
@@ -668,7 +668,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.ModificationEventArgs args) => value.Invoke(
                     sender,
                     new ModificationEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Source, args.Position,
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Source, args.BytePosition,
                         args.ByteLength, args.TextPtr, args.LinesAdded));
 
                 modificationEventHandlers.Add(
@@ -730,7 +730,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.DoubleClickEventArgs args) => value.Invoke(
                     sender,
                     new DoubleClickEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Line));
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.BytePosition, args.Line));
 
                 doubleClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<DoubleClickEventArgs>,
@@ -790,7 +790,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.DwellEventArgs args) => value.Invoke(
                     sender,
                     new DwellEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Position, args.X, args.Y));
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.BytePosition, args.X, args.Y));
 
                 dwellEventHandlers.Add(
                     new KeyValuePair<EventHandler<DwellEventArgs>,
@@ -910,7 +910,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.DwellEventArgs args) => value.Invoke(
                     sender,
                     new DwellEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Position, args.X, args.Y));
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.BytePosition, args.X, args.Y));
 
                 dwellEventHandlers.Add(
                     new KeyValuePair<EventHandler<DwellEventArgs>,
@@ -970,7 +970,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.HotspotClickEventArgs<System.Windows.Forms.Keys> args) => value.Invoke(
                     sender,
                     new HotspotClickEventArgs<Keys>(
-                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.Position));
+                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.BytePosition));
 
                 hotspotClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
@@ -1030,7 +1030,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.HotspotClickEventArgs<System.Windows.Forms.Keys> args) => value.Invoke(
                     sender,
                     new HotspotClickEventArgs<Keys>(
-                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.Position));
+                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.BytePosition));
 
                 hotspotClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
@@ -1090,7 +1090,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.HotspotClickEventArgs<System.Windows.Forms.Keys> args) => value.Invoke(
                     sender,
                     new HotspotClickEventArgs<Keys>(
-                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.Position));
+                        (IScintillaApi)BaseControl.NativeControl, args.LineCollectionGeneral, args.Modifiers.ToEto(), args.BytePosition));
 
                 hotspotClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<HotspotClickEventArgs<Keys>>,
@@ -1208,7 +1208,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.IndicatorReleaseEventArgs args) => value.Invoke(
                     sender,
                     new IndicatorReleaseEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Position));
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.BytePosition));
 
                 indicatorReleaseEventHandlers.Add(
                     new KeyValuePair<EventHandler<IndicatorReleaseEventArgs>,
@@ -1268,7 +1268,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.ModificationEventArgs args) => value.Invoke(
                     sender,
                     new ModificationEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Source, args.Position,
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Source, args.BytePosition,
                         args.ByteLength, args.TextPtr, args.LinesAdded));
 
                 modificationEventHandlers.Add(
@@ -1330,7 +1330,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.InsertCheckEventArgs args) => value.Invoke(
                     sender,
                     new InsertCheckEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Position, args.ByteLength, args.TextPtr));
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.BytePosition, args.ByteLength, args.TextPtr));
 
                 insertCheckEventHandlers.Add(
                     new KeyValuePair<EventHandler<InsertCheckEventArgs>,
@@ -1391,7 +1391,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.MarginClickEventArgs<System.Windows.Forms.Keys> args) => value.Invoke(
                     sender,
                     new MarginClickEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Margin));
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.BytePosition, args.Margin));
 
                 marginClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<MarginClickEventArgs>,
@@ -1451,7 +1451,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.MarginClickEventArgs<System.Windows.Forms.Keys> args) => value.Invoke(
                     sender,
                     new MarginClickEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.Position, args.Margin));
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Modifiers.ToEto(), args.BytePosition, args.Margin));
 
                 marginClickEventHandlers.Add(
                     new KeyValuePair<EventHandler<MarginClickEventArgs>,
@@ -1519,7 +1519,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.NeedShownEventArgs args) => value.Invoke(
                     sender,
                     new NeedShownEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Position, args.Length));
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.BytePosition, args.Length));
 
                 needShownEventHandlers.Add(
                     new KeyValuePair<EventHandler<NeedShownEventArgs>,
@@ -1661,7 +1661,7 @@ partial class Scintilla
                 void Handler(object? sender, WinForms.EventArguments.StyleNeededEventArgs args) => value.Invoke(
                     sender,
                     new StyleNeededEventArgs((IScintillaApi)BaseControl.NativeControl,
-                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.Position));
+                        ((IScintillaWinForms)BaseControl.NativeControl).Lines, args.BytePosition));
 
                 styleNeededEventHandlers.Add(
                     new KeyValuePair<EventHandler<StyleNeededEventArgs>,
