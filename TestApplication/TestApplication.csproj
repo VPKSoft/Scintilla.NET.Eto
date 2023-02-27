@@ -40,7 +40,7 @@
 	</ItemGroup>
 
 	<ItemGroup Condition="'$(IsLinux)'=='true'">
-		<PackageReference Include="Scintilla.NET.Eto.Linux" Version="1.0.1.5320" />
+		<PackageReference Include="Scintilla.NET.Eto.Linux" Version="1.0.9.5320" />
 		<PackageReference Include="Scintilla.NET.Gtk" Version="1.0.8.5320" />
 	</ItemGroup>
 </Project>
