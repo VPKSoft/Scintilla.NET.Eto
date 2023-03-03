@@ -3,6 +3,7 @@ using System.Text;
 using System.Windows.Forms;
 using Eto.Wpf.Forms;
 using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Classes;
 using ScintillaNet.Abstractions.Enumerations;
 using ScintillaNet.Abstractions.Interfaces;
 using ScintillaNet.Abstractions.Interfaces.Methods;
@@ -64,31 +65,31 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
         }
     }
 
-    /// <inheritdoc cref="IScintillaControl.SetParameter"/>
+    /// <inheritdoc cref="IScintillaApi.SetParameter(int, IntPtr, IntPtr)"/>
     public IntPtr SetParameter(int message, IntPtr wParam, IntPtr lParam)
     {
         return WinFormsControl.DirectMessage(editor, message, wParam, lParam);
     }
 
-    /// <inheritdoc cref="IScintillaControl.DirectMessage(int)"/>
+    /// <inheritdoc cref="IScintillaApi.DirectMessage(int)"/>
     public IntPtr DirectMessage(int msg)
     {
         return WinFormsControl.DirectMessage(msg, IntPtr.Zero, IntPtr.Zero);
     }
 
-    /// <inheritdoc cref="IScintillaControl.DirectMessage(int, IntPtr)"/>
+    /// <inheritdoc cref="IScintillaApi.DirectMessage(int, IntPtr)"/>
     public IntPtr DirectMessage(int msg, IntPtr wParam)
     {
         return WinFormsControl.DirectMessage(msg, wParam, IntPtr.Zero);
     }
 
-    /// <inheritdoc cref="IScintillaControl.DirectMessage(int, IntPtr, IntPtr)"/>
+    /// <inheritdoc cref="IScintillaApi.DirectMessage(int, IntPtr, IntPtr)"/>
     public IntPtr DirectMessage(int msg, IntPtr wParam, IntPtr lParam)
     {
         return WinFormsControl.DirectMessage(msg, wParam, lParam);
     }
 
-    /// <inheritdoc cref="IScintillaControl.DirectMessage(int, IntPtr, IntPtr)"/>
+    /// <inheritdoc cref="IScintillaApi.DirectMessage(int, IntPtr, IntPtr)"/>
     public IntPtr DirectMessage(IntPtr sciPtr, int msg, IntPtr wParam, IntPtr lParam)
     {
         return WinFormsControl.DirectMessage(sciPtr, msg, wParam, lParam);
@@ -1163,4 +1164,7 @@ public class ScintillaControlHandler :  WindowsFormsHostHandler<ScintillaWinForm
 
     /// <inheritdoc />
     public int Zoom { get => nativeControl.Zoom; set => nativeControl.Zoom = value; }
+
+    /// <inheritdoc />
+    public StyleCollectionPrimitive StylesPrimitive => nativeControl.StylesPrimitive;
 }
