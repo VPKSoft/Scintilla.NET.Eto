@@ -19,7 +19,7 @@
 		<IsWindows Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Windows)))' == 'true'">true</IsWindows>
 		<IsLinux Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::Linux)))' == 'true'">true</IsLinux>
 		<RootNamespace>ScintillaNet.Eto.Linux</RootNamespace>
-		<Version>1.0.9.5320</Version>
+		<Version>1.0.11.5320</Version>
 		<PackageIcon>vpksoft_logo.png</PackageIcon>
 		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>scintilla;scintilla.net;eto.forms;gtk;wrapper</PackageTags>
@@ -70,6 +70,6 @@
 
 	<ItemGroup>
 		<PackageReference Include="Eto.Forms" Version="2.7.3" />
-		<PackageReference Include="Scintilla.NET.EtoForms.GTK" Version="1.0.8.5320" />
+		<PackageReference Include="Scintilla.NET.EtoForms.GTK" Version="1.0.11.5320" />
 	</ItemGroup>
 </Project>
