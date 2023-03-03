@@ -17,7 +17,7 @@
 	  <Configurations>Debug;Release;DebugLinux;ReleaseLinux</Configurations>
 	  <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 	  <RootNamespace>ScintillaNet.EtoForms.GTK</RootNamespace>
-	  <Version>1.0.8.5320</Version>
+	  <Version>1.0.11.5320</Version>
 	  <PackageIcon>vpksoft_logo.png</PackageIcon>
 	  <PackageReadmeFile>README.md</PackageReadmeFile>
 	  <PackageTags>shared;scintilla;gtk;linux;eto.forms</PackageTags>
@@ -38,7 +38,7 @@
 
   <ItemGroup>
     <PackageReference Include="Eto.Platform.Gtk" Version="2.7.3" />
-    <PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.8.5320" />
-    <PackageReference Include="Scintilla.NET.Gtk" Version="1.0.8.5320" />
+    <PackageReference Include="Scintilla.NET.EtoForms.Shared" Version="1.0.11.5320" />
+    <PackageReference Include="Scintilla.NET.Gtk" Version="1.0.11.5320" />
   </ItemGroup>
 </Project>

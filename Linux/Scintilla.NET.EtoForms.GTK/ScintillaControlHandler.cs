@@ -28,6 +28,7 @@ using System.Text;
 using Eto.Forms;
 using Eto.GtkSharp.Forms;
 using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Classes;
 using ScintillaNet.Abstractions.Enumerations;
 using ScintillaNet.Abstractions.Interfaces;
 using ScintillaNet.Abstractions.Interfaces.Methods;
@@ -1211,4 +1212,7 @@ public class ScintillaControlHandler : GtkControl<ScintillaGtk, ScintillaControl
 
     /// <inheritdoc />
     public int Zoom { get => nativeControl.Zoom; set => nativeControl.Zoom = value; }
+
+    /// <inheritdoc />
+    public StyleCollectionPrimitive StylesPrimitive => nativeControl.StylesPrimitive;
 }
