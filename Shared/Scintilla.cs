@@ -1142,8 +1142,10 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
         set => ((IScintillaProperties)BaseControl).Zoom = value;
     }
 
+    #if !Linux
     /// <inheritdoc />
     public StyleCollectionPrimitive StylesPrimitive => ((IScintillaProperties)BaseControl).StylesPrimitive;
+    #endif
 
     /// <inheritdoc />
     public void AddRefDocument(Document document) => ((IScintillaMethods)BaseControl.NativeControl).AddRefDocument(document);
