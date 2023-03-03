@@ -29,6 +29,7 @@ using System.Text;
 using Eto.Drawing;
 using Eto.Forms;
 using ScintillaNet.Abstractions;
+using ScintillaNet.Abstractions.Classes;
 using ScintillaNet.Abstractions.Enumerations;
 using ScintillaNet.Abstractions.Interfaces;
 using ScintillaNet.Abstractions.Interfaces.Methods;
@@ -1140,6 +1141,9 @@ public partial class Scintilla: ScintillaControl, IScintillaEtoForms
 
         set => ((IScintillaProperties)BaseControl).Zoom = value;
     }
+
+    /// <inheritdoc />
+    public StyleCollectionPrimitive StylesPrimitive => ((IScintillaProperties)BaseControl).StylesPrimitive;
 
     /// <inheritdoc />
     public void AddRefDocument(Document document) => ((IScintillaMethods)BaseControl.NativeControl).AddRefDocument(document);
